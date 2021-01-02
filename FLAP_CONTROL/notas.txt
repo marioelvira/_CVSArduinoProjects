@@ -1,0 +1,64 @@
+GRIS - Subir
+AZUL -  Bajar
+MARRON - Aut/Manual
+
+
+Minimo 840
+Maximo 900
+
+La histeresis en -8 + 8 para no trener parpedeo.
+Por que ne Manual parpedean?
+
+Memoria:
+Si subir + bajar de 5 a 10 segundos: p10
+Si subir + bajar de 5 a 10 segundos: p15
+Si subir + bajar de 10 a 15 segundos: p30
+Si subir + bajar de 15 a 20 segundos: p45
+
+Con los dos a la vez subir + bajar
+se dan puslos -> 
+2 pulsos -> 0
+3 pulsos -> 15
+4 pulsos -> 30
+5 pulsos -> 45
+
+#define EEPROM_VALUE_PHIST_INF  8 //20    // para histeresis inferior
+#define EEPROM_VALUE_PHIST_SUP  8 //20    // para histeresis superior
+#define EEPROM_VALUE_PMIN       833 // 500    // para MINº
+#define EEPROM_VALUE_P1         852   // para 15º 
+#define EEPROM_VALUE_P2         868   // para 30º  
+#define EEPROM_VALUE_P3         884   // para 45º
+#define EEPROM_VALUE_PMAX       900 //930   // para MAXº
+
+
+  // Tramos...
+  if (AnaInValue <= 833 + 8)
+    FlapAdcTramo = FLAP_EN_MIN;
+  else if (AnaInValue <= 852 - 8
+    FlapAdcTramo = FLAP_TRAMO_Tm1;
+  else if ((AnaInValue > 852 - 8) && (AnaInValue <= 852 + 8))
+    FlapAdcTramo = FLAP_EN_P1;
+  else if ((AnaInValue > 852 + 8) && (AnaInValue <= 868 - 8))
+    FlapAdcTramo = FLAP_TRAMO_T12;
+  else if ((AnaInValue > 868 - 8) && (AnaInValue <= 868 + 8))
+    FlapAdcTramo = FLAP_EN_P2;
+  else if ((AnaInValue > 868 + 8) && (AnaInValue <= 884 - 8))
+    FlapAdcTramo = FLAP_TRAMO_T2M;
+  else if (AnaInValue > 884 - 8)
+    FlapAdcTramo = FLAP_EN_P3;
+
+
+  if (AnaInValue <= 841)
+    FlapAdcTramo = FLAP_EN_MIN;
+  else if (AnaInValue <= 846)
+    FlapAdcTramo = FLAP_TRAMO_Tm1;
+  else if ((AnaInValue > 846) && (AnaInValue <= 860))
+    FlapAdcTramo = FLAP_EN_P1;
+  else if ((AnaInValue > 860) && (AnaInValue <= 860))
+    FlapAdcTramo = FLAP_TRAMO_T12;
+  else if ((AnaInValue > 860) && (AnaInValue <= 874))
+    FlapAdcTramo = FLAP_EN_P2;
+  else if ((AnaInValue > 874) && (AnaInValue <= 876))
+    FlapAdcTramo = FLAP_TRAMO_T2M;
+  else if (AnaInValue > 876)
+    FlapAdcTramo = FLAP_EN_P3;

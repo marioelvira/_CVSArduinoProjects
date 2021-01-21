@@ -99,16 +99,16 @@ void _PINSetup(void)
   // OUTS //
   //------//
   
-  pinMode(PIN_LED, OUTPUT);
-  digitalWrite(PIN_LED, PIN_OUT_OFF);
+  //pinMode(PIN_LED, OUTPUT);
+  //digitalWrite(PIN_LED, PIN_OUT_OFF);
   outLed = OUT_OFF;
 
   pinMode(PIN_RELE_CORTE, OUTPUT);
   digitalWrite(PIN_RELE_CORTE, PIN_OUT_OFF);
   outReleCorte = OUT_OFF;
   
-  //pinMode(PIN_LED_IND, OUTPUT);
-  //digitalWrite(PIN_LED_IND, PIN_OUT_OFF);
+  pinMode(PIN_LED_IND, OUTPUT);
+  digitalWrite(PIN_LED_IND, PIN_OUT_OFF);
   outLedInd = OUT_OFF;
 
   //-----//
@@ -156,18 +156,18 @@ void _PINLoop()
   //------//
   // OUTS //
   //------//
-  
+  /*
   if (outLed == OUT_OFF)
     digitalWrite(PIN_LED, PIN_OUT_OFF);
   else
     digitalWrite(PIN_LED, PIN_OUT_ON);
-
-  /*
+  */
+  
   if (outLedInd == OUT_OFF)
     digitalWrite(PIN_LED_IND, PIN_OUT_OFF);
   else
     digitalWrite(PIN_LED_IND, PIN_OUT_ON);
-  */
+  
   if (outReleCorte == OUT_OFF)
     digitalWrite(PIN_RELE_CORTE, PIN_OUT_OFF);
   else

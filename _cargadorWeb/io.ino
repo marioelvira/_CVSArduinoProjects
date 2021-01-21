@@ -55,6 +55,8 @@ void _IOLoop(void)
       if (inValue == IN_ON)
         inState = IN_STATUS_ON;
 
+      _TimeSetup();
+
 	    break;
   }
 }

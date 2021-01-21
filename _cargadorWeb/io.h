@@ -9,20 +9,20 @@ extern "C" {
 // IO definition //
 ///////////////////
 /* ----------------------------------
- *   |                     --------
- *   |__  |            RX -|7    8|- VCC
- *    __| |         GPIO0 -|5    6|- RST
- *   |__  |         GPIO2 -|3    4|- CH_PD
- *    __| |           GND -|1*   2|- GPIO1 - TX
- *   |____|                --------
+ *   |                      --------
+ *   |__  |     GPIO3 - RX -|7    8|- VCC-----
+ *    __| |          GPIO0 -|5    6|- RST    |
+ *   |__  |    LED - GPIO2 -|3    4|- CH_PD---
+ *    __| |            GND -|1*   2|- GPIO1 - TX
+ *   |____|                 --------
  *  ---------------------------------
  */
 
 // PIN definition
-#define PIN_RELE_CORTE    1
-#define PIN_LED           2
-//#define PIN_LED_IND       4
-#define PIN_AUX1          3
+#define PIN_RELE_CORTE    1  // OUT
+//#define PIN_LED         2
+#define PIN_LED_IND       2 // LED IND
+#define PIN_AUX1          3 // IN
 
 #define PIN_OUT_ON        1
 #define PIN_OUT_OFF       0

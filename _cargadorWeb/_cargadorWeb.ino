@@ -162,7 +162,6 @@ void _PINLoop()
   else
     digitalWrite(PIN_LED, PIN_OUT_ON);
   */
-  
   if (outLedInd == OUT_OFF)
     digitalWrite(PIN_LED_IND, PIN_OUT_OFF);
   else

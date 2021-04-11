@@ -9,6 +9,8 @@
 Adafruit_BNO055 bno = Adafruit_BNO055(55, 0x29);
 bool foundCalib = false;
 
+int numberCalib = 0;
+
 void setup(void)
 {
   Serial.begin(115200);
@@ -105,27 +107,42 @@ void setSensorCalibration()
   
   bno.setMode( bno.OPERATION_MODE_CONFIG );    // Put into CONFIG_Mode
   delay(25);
- 
+
+  // Acc Radius
   calData = bno.setCalvalARL(232);
   calData = bno.setCalvalARM(3);
+  
+  // Mag Radius
   calData = bno.setCalvalMRL(87);
   calData = bno.setCalvalMRM(3);
+
+  // Acc Offset X
   calData = bno.setCalvalAOXL(231);
   calData = bno.setCalvalAOXM(255);
+  // Acc Offset Y
   calData = bno.setCalvalAOYL(253);
   calData = bno.setCalvalAOYM(255);
+  // Acc Offset Z
   calData = bno.setCalvalAOZL(5);
   calData = bno.setCalvalAOZM(0);
+  
+  // Mag Offset X
   calData = bno.setCalvalMOXL(14);
   calData = bno.setCalvalMOXM(1);
+  // Mag Offset Y
   calData = bno.setCalvalMOYL(127);
   calData = bno.setCalvalMOYM(0);
+  // Mag Offset Z
   calData = bno.setCalvalMOZL(173);
   calData = bno.setCalvalMOZM(1);
+
+  // Gyro Offset X
   calData = bno.setCalvalGOXL(155);
   calData = bno.setCalvalGOXM(255);
+  // Gyro Offset Y
   calData = bno.setCalvalGOYL(255);
   calData = bno.setCalvalGOYM(255);
+  // Gyro Offset Z
   calData = bno.setCalvalGOZL(254);
   calData = bno.setCalvalGOZM(255);
  
@@ -139,72 +156,62 @@ void getSensorCalibration()
   
   bno.setMode( bno.OPERATION_MODE_CONFIG );    // Put into CONFIG_Mode
 
+  Serial.println("******************");
   Serial.println("Calibration Data: ");
   Serial.println("******************");
  
   calData = bno.getCalvalARL();
   Serial.println(calData);
- 
   calData = bno.getCalvalARM();
   Serial.println(calData);
  
   calData = bno.getCalvalMRL();
   Serial.println(calData);
- 
   calData = bno.getCalvalMRM();
   Serial.println(calData);
  
   calData = bno.getCalvalAOXL();
   Serial.println(calData);
- 
   calData = bno.getCalvalAOXM();
   Serial.println(calData);
  
   calData = bno.getCalvalAOYL();
   Serial.println(calData);
- 
   calData = bno.getCalvalAOYM();
   Serial.println(calData);
  
   calData = bno.getCalvalAOZL();
   Serial.println(calData);
- 
   calData = bno.getCalvalAOZM();
   Serial.println(calData);
  
   calData = bno.getCalvalMOXL();
   Serial.println(calData);
- 
   calData = bno.getCalvalMOXM();
   Serial.println(calData);
  
   calData = bno.getCalvalMOYL();
   Serial.println(calData);
- 
   calData = bno.getCalvalMOYM();
   Serial.println(calData);
  
   calData = bno.getCalvalMOZL();
   Serial.println(calData);
- 
   calData = bno.getCalvalMOZM();
   Serial.println(calData);
  
   calData = bno.getCalvalGOXL();
   Serial.println(calData);
- 
   calData = bno.getCalvalGOXM();
   Serial.println(calData);
  
   calData = bno.getCalvalGOYL();
   Serial.println(calData);
- 
   calData = bno.getCalvalGOYM();
   Serial.println(calData);
  
   calData = bno.getCalvalGOZL();
   Serial.println(calData);
- 
   calData = bno.getCalvalGOZM();
   Serial.println(calData);
 
@@ -224,6 +231,8 @@ void displayCalStatus()
 
   Serial.print("Cal:");
   Serial.print(cal, HEX);
+  Serial.print(" Num:");
+  Serial.print(numberCalib);
 
   Serial.print(" Sys:");
   Serial.print(calSys);
@@ -240,5 +249,9 @@ void displayCalStatus()
   {
     getSensorCalibration();
     foundCalib = true;
+    numberCalib ++;
   }
+
+  if (cal != 255)
+   foundCalib = false;
 }

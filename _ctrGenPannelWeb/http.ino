@@ -52,6 +52,7 @@ void _serveMAIN()
   html = html + "<p>";
   //html = html + "  <a href=\"settings.htm\"><input type=\"button\" value=\"Settings\"></a>";
   html = html + "  <a href=\"timeSettings.htm\"><input type=\"button\" value=\"Cambiar\"></a>";
+  html = html + "  <input type=\"button\" value=\"Reset Timers\" onclick=\"sendOUT(20)\">";
   html = html + "</p>";
   html = html + "</div>";
 
@@ -723,7 +724,6 @@ void _readOUTS()
   httpServer.send(200, "text/plane", html);
 }
 
-/*
 void _setOUTS()
 {
   String out_number = httpServer.arg("OUTNumber");
@@ -734,6 +734,7 @@ void _setOUTS()
   Serial.println(out_number);
   #endif
 
+  /*
   // Cambiar Modo
   if(out_number == "0")
   {
@@ -817,10 +818,20 @@ void _setOUTS()
       html = "Disp ON";
     }
   }
+  */
+
+  // Reset Timers
+  if(out_number == "20")
+  {
+    _ResetEEPROM();
+    #if (_HTTP_SERIAL_DEBUG_ == 1)
+    Serial.println("Reset Timers");
+    #endif
+    html = "Reset Timers";
+  }
   
   httpServer.send(200, "text/plane", html);
 }
-*/
 
 void _readTEMPS()
 { 
@@ -862,7 +873,7 @@ void _HttpLoop()
       httpServer.on("/timeSettings.htm",  _serveTimeSETTINGS);
 
       // acctions
-      //httpServer.on("/setOUTS",          _setOUTS);
+      httpServer.on("/setOUTS",          _setOUTS);
       httpServer.on("/readOUTS",         _readOUTS);
       httpServer.on("/readINS",          _readINS);
       httpServer.on("/readTEMPS",        _readTEMPS);

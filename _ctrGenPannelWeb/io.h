@@ -41,8 +41,8 @@ extern "C" {
 //#define PIN_LED_STATUS  9
 
 #define PIN_LED           2
-
 */
+
 
 /*
  *                        --------
@@ -78,7 +78,7 @@ extern "C" {
 #define PIN_OUT_ON        1
 #define PIN_OUT_OFF       0
 
-#define PIN_IN_OFF        1
+#define PIN_IN_OFF        0 // 1
 
 // IO definition
 #define IO_ON             1

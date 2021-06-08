@@ -7,7 +7,7 @@ void _CtrSetup(void)
   //controlMode = MODE_AUTO;
   ControlState = STATE_GEN_ON;
   ControlTick = 0;
-  TimeControlSec = TimeGenerador1P*60;
+  TimeControlSec = TimeGenerador1P*X_60;
   DisplayIndicador = 1;
 }
 

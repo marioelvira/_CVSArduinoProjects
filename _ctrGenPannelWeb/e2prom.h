@@ -67,7 +67,7 @@ extern "C" {
 #define STATION_MODE              1
 #define EEPROM_VAL_WIFI_MODE      ACCESSPOINT_MODE // STATION_MODE
 
-#define EEPROM_VAL_BUZZER_ON      15  // Secs
+#define EEPROM_VAL_BUZZER_ON      10  // Secs
 
 #define EEPROM_VAL_1P_TIMER_GEN   15  // Min
 #define EEPROM_VAL_2P_TIMER_GEN   30  // Min
@@ -79,6 +79,15 @@ extern "C" {
 #define EEPROM_VAL_8P_TIMER_GEN   5   // Horas
 #define EEPROM_VAL_9P_TIMER_GEN   7   // Horas
 
+#define _DEBUG_TIME   1
+
+#if (_DEBUG_TIME == 1)
+  #define X_60    1
+  #define X_3600  60
+#else
+  #define X_60    60
+  #define X_3600  3600
+#endif
 
 #endif // _E2PROM_H_
 

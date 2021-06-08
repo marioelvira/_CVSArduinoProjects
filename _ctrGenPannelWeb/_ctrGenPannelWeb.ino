@@ -229,7 +229,7 @@ void _PINLoop()
   if (OutD5 == OUT_ON)
     digitalWrite(PIN_D5, PIN_OUT_ON);
   else
-    digitalWrite(PIN_D6, PIN_OUT_OFF);
+    digitalWrite(PIN_D5, PIN_OUT_OFF);
 
   if (OutD6 == OUT_ON)
     digitalWrite(PIN_D6, PIN_OUT_ON);

@@ -55,8 +55,8 @@ extern "C" {
  *                    CS -|      |- G
  *          S0 <-   MISO -|      |- GPIO14 -> D6
  *          SK <-   SCLK -|      |- GPIO12 -> DISP
- *                     G -|      |- GPIO13 -> ZUMB
- *                    3V -|      |- GPIO15 <- PULSADOR
+ *                     G -|      |- GPIO13 <- PULSADOR
+ *                    3V -|      |- GPIO15 -> ZUMB
  *                    EN -|      |- GPIO3  
  *                   RST -|      |- GPIO1  
  *                     G -|      |- G
@@ -66,19 +66,19 @@ extern "C" {
 
 #define PIN_GEN           5
 #define PIN_DISP          12   
-#define PIN_ZUMB          13
+#define PIN_ZUMB          15
 #define PIN_D3            4
 #define PIN_D4            0
 #define PIN_D5            2
 #define PIN_D6            14
-#define PIN_PULSADOR      15
+#define PIN_PULSADOR      13
 
 #define PIN_LED           16
 
 #define PIN_OUT_ON        1
 #define PIN_OUT_OFF       0
 
-#define PIN_IN_OFF        0 // 1
+#define PIN_IN_OFF        1 // 1
 
 // IO definition
 #define IO_ON             1

@@ -166,7 +166,7 @@ void setup(void)
   _IOSetup();
 
   #if (_SERIAL_DEBUG_ == 1)
-  delay(5000);  // 5 secs
+  delay(100);  // 100ms
   Serial.begin(115200);
   Serial.println("");
   #endif

@@ -8,55 +8,20 @@ extern "C" {
 ///////////////////
 // IO definition //
 ///////////////////
+
 /*
  *                        --------
- *                    A0 -|      |- GPIO16 -> GEN
- *                    G  -|      |- GPIO5  -> DISP
- *                    VU -|      |- GPIO4  -> ZUMB
- *         AS3 <- GPIO10 -|      |- GPIO0  <- PULSADOR
- *         AS2 <-  GPIO9 -|      |- GPIO2  -> LED INTERNO*
+ *                    A0 -|      |- GPIO16 -> A
+ *                    G  -|      |- GPIO5  -> B
+ *                    VU -|      |- GPIO4  -> C
+ *       BOMBA <- GPIO10 -|      |- GPIO0  -> D
+ *     AUTOOFF <-  GPIO9 -|      |- GPIO2  -> ZUMB*
  *          S1 <-   MOSI -|      |- 3V
  *                    CS -|      |- G
- *          S0 <-   MISO -|      |- GPIO14 -> D3
- *          SK <-   SCLK -|      |- GPIO12 -> D4
- *                     G -|      |- GPIO13 -> D5
- *                    3V -|      |- GPIO15 -> D6
- *                    EN -|      |- GPIO3 
- *                   RST -|      |- GPIO1
- *                     G -|      |- G
- *                   VIN -|      |- 3V
- *                        --------
- */
-
-/*
-// PIN definition
-#define PIN_GEN           16
-#define PIN_DISP          5    
-#define PIN_ZUMB          4     
-#define PIN_D3            14
-#define PIN_D4            12
-#define PIN_D5            13
-#define PIN_D6            15
-#define PIN_PULSADOR      0
-//#define PIN_LED_STATUS  9
-
-#define PIN_LED           2
-*/
-
-
-/*
- *                        --------
- *                    A0 -|      |- GPIO16 -> LED EXT
- *                    G  -|      |- GPIO5  -> GEN
- *                    VU -|      |- GPIO4  -> D3
- *         AS3 <- GPIO10 -|      |- GPIO0  -> D4
- *         AS2 <-  GPIO9 -|      |- GPIO2  -> D5
- *          S1 <-   MOSI -|      |- 3V
- *                    CS -|      |- G
- *          S0 <-   MISO -|      |- GPIO14 -> D6
+ *          S0 <-   MISO -|      |- GPIO14 -> GEN
  *          SK <-   SCLK -|      |- GPIO12 -> DISP
  *                     G -|      |- GPIO13 <- PULSADOR
- *                    3V -|      |- GPIO15 -> ZUMB
+ *                    3V -|      |- GPIO15 <- RESET
  *                    EN -|      |- GPIO3  
  *                   RST -|      |- GPIO1  
  *                     G -|      |- G
@@ -64,16 +29,24 @@ extern "C" {
  *                        --------
  */
 
-#define PIN_GEN           5
-#define PIN_DISP          12   
-#define PIN_ZUMB          15
-#define PIN_D3            4
-#define PIN_D4            0
-#define PIN_D5            2
-#define PIN_D6            14
-#define PIN_PULSADOR      13
+// PIN definition
+#define PIN_A             16  // A
+#define PIN_B             5   // B
+#define PIN_C             4   // C
+#define PIN_D             0   // D
 
-#define PIN_LED           16
+#define PIN_ZUMB          2 
+
+#define PIN_GEN           14
+#define PIN_DISP          12
+
+#define PIN_PULSADOR      13
+#define PIN_RESET         15
+
+#define PIN_AUTOOFF       9
+#define PIN_BOMBA         10
+
+//#define PIN_LED         XX
 
 #define PIN_OUT_ON        1
 #define PIN_OUT_OFF       0

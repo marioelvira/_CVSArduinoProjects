@@ -657,13 +657,20 @@ void _readINS()
   */
   
   html = html + "<tr>";
-  html = html + "<td>Pulsador</td>";
-  if (PulsadorDigInStatus == IO_ON)
+  html = html + "<td>Marcha</td>";
+  
+  if (InStartState == IO_ON)
    html = html + "<td><font style=\"color:green\">ON </font></td>";
   else
    html = html + "<td><font style=\"color:grey\">OFF</font></td>";
-  html = html + "</tr>";
 
+  html = html + "<td>Reset</td>";
+  if (InEndState == IO_ON)
+   html = html + "<td><font style=\"color:green\">ON </font></td>";
+  else
+   html = html + "<td><font style=\"color:grey\">OFF</font></td>";
+   
+  html = html + "</tr>";
   html = html + "</table>";
   
   httpServer.send(200, "text/plane", html);
@@ -677,18 +684,24 @@ void _readOUTS()
 
   html = html + "<tr>";
   html = html + "<td>Control Status</td>";
-  if (ControlState == STATE_GEN_ON)
-    html = html + "<td><font style=\"color:green\">Generador ON</font></td>";
-  else if (ControlState == STATE_GEN_ON2OFF)
-    html = html + "<td><font style=\"color:red\">Buzzer</font></td>";
+  if (ControlState == STATE_BOMBA_ON)
+    html = html + "<td><font style=\"color:blue\">Bomba ON</font></td>";
+  else if (ControlState == STATE_GEN_ON)
+    html = html + "<td><font style=\"color:green\">Bomba ON y Generador ON</font></td>";
+  else if (ControlState == STATE_GEN_ZUMB)
+    html = html + "<td><font style=\"color:green\">Buzzer</font></td>";
+  else if (ControlState == STATE_GEN_OFF)
+    html = html + "<td><font style=\"color:blue\">Bomba ON y Generador OFF</font></td>";
+  else if (ControlState == STATE_BOMBA_OFF)
+    html = html + "<td><font style=\"color:blue\">Bomba OFF y Generador OFF</font></td>";
   else
-    html = html + "<td><font style=\"color:grey\">OFF</font></td>";
+    html = html + "<td><font style=\"color:grey\">Auto OFF</font></td>";
 
   html = html + "</tr>";
 
   html = html + "<tr>";
   html = html + "<td>Indicador LCD</td>";
-  html = html + "<td>" + String(DisplayIndicador) + " -> " + String(OutD6) + "-" + String(OutD5) + "-" + String(OutD4) + "-" + String(OutD3) + "</td>";
+  html = html + "<td>" + String(DisplayIndicador) + " -> " + String(OutD) + "-" + String(OutC) + "-" + String(OutB) + "-" + String(OutA) + "</td>";
   html = html + "</tr>";
 
   html = html + "<tr>";
@@ -698,6 +711,14 @@ void _readOUTS()
   html = html + "<tr>";
   html = html + "<td>Generador</td>";
   if (OutGen == OUT_ON)
+   html = html + "<td><font style=\"color:green\">Activado</font></td>";
+  else
+   html = html + "<td><font style=\"color:grey\">Desactivado</font></td>";
+  html = html + "</tr>";
+
+  html = html + "<tr>";
+  html = html + "<td>Bomba</td>";
+  if (OutBomba == OUT_ON)
    html = html + "<td><font style=\"color:green\">Activado</font></td>";
   else
    html = html + "<td><font style=\"color:grey\">Desactivado</font></td>";
@@ -714,6 +735,14 @@ void _readOUTS()
   html = html + "<tr>";
   html = html + "<td>Display</td>";
   if (OutDisp == OUT_ON)
+   html = html + "<td><font style=\"color:blue\">Activado</font></td>";
+  else
+   html = html + "<td><font style=\"color:grey\">Desactivado</font></td>";
+  html = html + "</tr>";
+
+  html = html + "<tr>";
+  html = html + "<td>Auto Off</td>";
+  if (OutAutoOff == OUT_ON)
    html = html + "<td><font style=\"color:blue\">Activado</font></td>";
   else
    html = html + "<td><font style=\"color:grey\">Desactivado</font></td>";

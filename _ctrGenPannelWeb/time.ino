@@ -46,10 +46,10 @@ void _TimeLoop(void)
     Serial.print("Indicador LCD: ");
     Serial.print(DisplayIndicador);
     Serial.print(" -> ");
-    Serial.print(OutD6); Serial.print("-"); Serial.print(OutD5); Serial.print("-"); Serial.print(OutD4); Serial.print("-"); Serial.print(OutD3);
+    Serial.print(OutD); Serial.print("-"); Serial.print(OutC); Serial.print("-"); Serial.print(OutB); Serial.print("-"); Serial.print(OutA);
     Serial.println(" ");
      
-    if (PulsadorDigInStatus == IO_ON)
+    if (InStartVal == IO_ON)
      Serial.println("Pulsador: ON");
     else
      Serial.println("Pulsador: OFF");
@@ -58,6 +58,11 @@ void _TimeLoop(void)
      Serial.println("Generador: ON");
     else
      Serial.println("Generador: OFF");
+
+    if (OutBomba == OUT_ON)
+     Serial.println("Bomba: ON");
+    else
+     Serial.println("Bomba: OFF");
     
     if (OutZumb == OUT_ON)
      Serial.println("Zumbador: ON");
@@ -68,6 +73,11 @@ void _TimeLoop(void)
      Serial.println("Display: ON");
     else
      Serial.println("Display: OFF");
+
+    if (OutAutoOff == OUT_ON)
+     Serial.println("Auto Off: ON");
+    else
+     Serial.println("Auto Off: OFF");
 
     Serial.println(">>>>>>>>>");
     Serial.println(" ");

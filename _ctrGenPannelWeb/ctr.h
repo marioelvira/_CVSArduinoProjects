@@ -43,12 +43,18 @@ extern "C" {
 #define MODE_TEST   1
 #define MODE_AUTO   0
 
-#define CTR_BUZZER_TICK       500   // 500ms
+#define CTR_BUZZER_TICK          500     // 500ms
+#define CTR_BOMBA_ON_TICK        5000
+#define CTR_BOMBA_OFF_TICK       5000
+#define CTR_AUTO_OFF_TICK        2000
 
 // Estados principales...
-#define STATE_GEN_ON        0
-#define STATE_GEN_ON2OFF    1
-#define STATE_GEN_OFF       2
+#define STATE_BOMBA_ON      0
+#define STATE_GEN_ON        1
+#define STATE_GEN_ZUMB      2
+#define STATE_GEN_OFF       3
+#define STATE_BOMBA_OFF     4     
+#define STATE_AUTO_OFF      5
 
 #endif // _CTR_H_
 

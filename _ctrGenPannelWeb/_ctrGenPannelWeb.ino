@@ -15,18 +15,25 @@
 // DIO definition //
 ////////////////////
 int   OutGen;
+int   OutBomba;
 int   OutDisp;
 int   OutZumb;
+int   OutAutoOff;
 
-int   OutD3;
-int   OutD4;
-int   OutD5;
-int   OutD6;
+int   OutA;
+int   OutB;
+int   OutC;
+int   OutD;
 
-int   PulsadorDigInStatus = 0;
-int   PulsadorDigInStatus_ant = 0;
-int   PulsadorDigInCounter = 0;
-int   PulsadorPulsacion = 0;
+int   InStartVal = 0;
+int   InStartVal_ant = 0;
+int   InStartCounter = 0;
+int   InStartState = 0;
+
+int   InEndVal = 0;
+int   InEndVal_ant = 0;
+int   InEndCounter = 0;
+int   InEndState = 0;
 
 int   outLed;
 
@@ -120,13 +127,19 @@ void _PINSetup(void)
   // OUTS //
   //------//
 
+  #if (_USE_LED_INDICATOR_ == 1)
   pinMode(PIN_LED, OUTPUT);
   digitalWrite(PIN_LED, PIN_OUT_OFF);
   outLed = IO_OFF;
+  #endif
 
   pinMode(PIN_GEN, OUTPUT);
   digitalWrite(PIN_GEN, PIN_OUT_ON);
   OutGen   = OUT_ON;
+
+  pinMode(PIN_BOMBA, OUTPUT);
+  digitalWrite(PIN_BOMBA, PIN_OUT_ON);
+  OutBomba  = OUT_ON;
 
   pinMode(PIN_DISP, OUTPUT);
   digitalWrite(PIN_DISP, PIN_OUT_ON);
@@ -136,24 +149,29 @@ void _PINSetup(void)
   digitalWrite(PIN_ZUMB, PIN_OUT_OFF);
   OutZumb  = OUT_OFF;
 
-  pinMode(PIN_D3, OUTPUT);
-  digitalWrite(PIN_D3, PIN_OUT_OFF);
-  pinMode(PIN_D4, OUTPUT);
-  digitalWrite(PIN_D4, PIN_OUT_OFF);
-  pinMode(PIN_D5, OUTPUT);
-  digitalWrite(PIN_D5, PIN_OUT_OFF);
-  pinMode(PIN_D6, OUTPUT);
-  digitalWrite(PIN_D6, PIN_OUT_OFF);
+  pinMode(PIN_AUTOOFF, OUTPUT);
+  digitalWrite(PIN_AUTOOFF, PIN_OUT_OFF);
+  OutAutoOff  = OUT_OFF;
+  
+  pinMode(PIN_A, OUTPUT);
+  digitalWrite(PIN_A, PIN_OUT_OFF);
+  pinMode(PIN_B, OUTPUT);
+  digitalWrite(PIN_B, PIN_OUT_OFF);
+  pinMode(PIN_C, OUTPUT);
+  digitalWrite(PIN_C, PIN_OUT_OFF);
+  pinMode(PIN_D, OUTPUT);
+  digitalWrite(PIN_D, PIN_OUT_OFF);
 
-  OutD3 = OUT_OFF;
-  OutD4 = OUT_OFF;
-  OutD5 = OUT_OFF;
-  OutD6 = OUT_OFF;
+  OutA = OUT_OFF;
+  OutB = OUT_OFF;
+  OutC = OUT_OFF;
+  OutD = OUT_OFF;
 
   //-----//
   // INS //
   //-----//
   pinMode(PIN_PULSADOR, INPUT);
+  pinMode(PIN_RESET, INPUT);
 }
 
 //============//
@@ -196,15 +214,22 @@ void _PINLoop()
   // OUTS //
   //------//
 
+  #if (_USE_LED_INDICATOR_ == 1)
   if (outLed == OUT_OFF)
     digitalWrite(PIN_LED, PIN_OUT_ON);
   else
     digitalWrite(PIN_LED, PIN_OUT_OFF);
+  #endif
     
   if (OutGen == OUT_ON)
     digitalWrite(PIN_GEN, PIN_OUT_ON);
   else
     digitalWrite(PIN_GEN, PIN_OUT_OFF);
+
+  if (OutBomba == OUT_ON)
+    digitalWrite(PIN_BOMBA, PIN_OUT_ON);
+  else
+    digitalWrite(PIN_BOMBA, PIN_OUT_OFF);
 
   if (OutZumb == OUT_ON)
     digitalWrite(PIN_ZUMB, PIN_OUT_ON);
@@ -216,34 +241,39 @@ void _PINLoop()
   else if (OutDisp == IO_OFF)
     digitalWrite(PIN_DISP, PIN_OUT_OFF);
 
-  if (OutD3 == OUT_ON)
-    digitalWrite(PIN_D3, PIN_OUT_ON);
-  else
-    digitalWrite(PIN_D3, PIN_OUT_OFF);
+  if (OutAutoOff == OUT_ON)
+    digitalWrite(PIN_AUTOOFF, PIN_OUT_ON);
+  else if (OutDisp == IO_OFF)
+    digitalWrite(PIN_AUTOOFF, PIN_OUT_OFF);
 
-  if (OutD4 == OUT_ON)
-    digitalWrite(PIN_D4, PIN_OUT_ON);
+  if (OutA == OUT_ON)
+    digitalWrite(PIN_A, PIN_OUT_ON);
   else
-    digitalWrite(PIN_D4, PIN_OUT_OFF);
+    digitalWrite(PIN_A, PIN_OUT_OFF);
 
-  if (OutD5 == OUT_ON)
-    digitalWrite(PIN_D5, PIN_OUT_ON);
+  if (OutB == OUT_ON)
+    digitalWrite(PIN_B, PIN_OUT_ON);
   else
-    digitalWrite(PIN_D5, PIN_OUT_OFF);
+    digitalWrite(PIN_B, PIN_OUT_OFF);
 
-  if (OutD6 == OUT_ON)
-    digitalWrite(PIN_D6, PIN_OUT_ON);
+  if (OutC == OUT_ON)
+    digitalWrite(PIN_C, PIN_OUT_ON);
+  else
+    digitalWrite(PIN_C, PIN_OUT_OFF);
+
+  if (OutD == OUT_ON)
+    digitalWrite(PIN_D, PIN_OUT_ON);
    else
-    digitalWrite(PIN_D6, PIN_OUT_OFF);   
+    digitalWrite(PIN_D, PIN_OUT_OFF);   
 
   //-----//
   // INS //
   //-----//
   
   if (digitalRead(PIN_PULSADOR) == PIN_IN_OFF)
-    PulsadorDigInStatus = IO_OFF;
+    InStartVal = IO_OFF;
   else
-    PulsadorDigInStatus = IO_ON;
+    InStartVal = IO_ON;
 }
 
 //===========//

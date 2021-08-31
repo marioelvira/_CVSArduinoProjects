@@ -10,6 +10,8 @@ extern "C" {
 ///////////
 #define _SERIAL_DEBUG_             1
 
+#define _USE_LED_INDICATOR_        0
+
 #define _PULS_SERIAL_DEBUG_        1
 #define _EEPROM_SERIAL_DEBUG_      1
 #define _HTTP_SERIAL_DEBUG_        1

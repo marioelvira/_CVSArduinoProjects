@@ -32,7 +32,7 @@ extern "C" {
 #define EEPROM_ADD_WIFI_PSWD      0x2F
 #define WIFI_PSWD_MAX             32 // Password max 32 char -> Next 0x4F
 
-#define EEPROM_ADD_BUZZER_ON      0x4F
+//#define EEPROM_ADD_RESERVA        0x4F
 
 #define EEPROM_ADD_1P_TIMER_GEN   0x50
 #define EEPROM_ADD_2P_TIMER_GEN   0x51
@@ -44,10 +44,14 @@ extern "C" {
 #define EEPROM_ADD_8P_TIMER_GEN   0x57
 #define EEPROM_ADD_9P_TIMER_GEN   0x58
 
+#define EEPROM_ADD_BUZZER_ON      0x59
+#define EEPROM_ADD_TSTART         0x5A
+#define EEPROM_ADD_TSTOP          0x5B
+
 //#define EEPROM_ADD_MAX              0xFA // 250
 
 // Values
-#define EEPROM_VAL_OK             0xA0
+#define EEPROM_VAL_OK             0xA5
 
 #define EEPROM_VAL_IP_MODE        DHCP_MODE
 #define EEPROM_VAL_IP1            192
@@ -67,7 +71,7 @@ extern "C" {
 #define STATION_MODE              1
 #define EEPROM_VAL_WIFI_MODE      ACCESSPOINT_MODE // STATION_MODE
 
-#define EEPROM_VAL_BUZZER_ON      10  // Secs
+//#define EEPROM_VAL_RESERVA      
 
 #define EEPROM_VAL_1P_TIMER_GEN   15  // Min
 #define EEPROM_VAL_2P_TIMER_GEN   30  // Min
@@ -79,11 +83,15 @@ extern "C" {
 #define EEPROM_VAL_8P_TIMER_GEN   5   // Horas
 #define EEPROM_VAL_9P_TIMER_GEN   7   // Horas
 
-#define _DEBUG_TIME   1
+#define EEPROM_VAL_BUZZER_ON      10  // Secs
+#define EEPROM_VAL_TSTART         10  // Secs
+#define EEPROM_VAL_TSTOP          20  // Secs
+
+#define _DEBUG_TIME   0
 
 #if (_DEBUG_TIME == 1)
-  #define X_60    1
-  #define X_3600  60
+  #define X_60    3
+  #define X_3600  30
 #else
   #define X_60    60
   #define X_3600  3600

@@ -52,7 +52,7 @@ void _serveMAIN()
   html = html + "<p>";
   //html = html + "  <a href=\"settings.htm\"><input type=\"button\" value=\"Settings\"></a>";
   html = html + "  <a href=\"timeSettings.htm\"><input type=\"button\" value=\"Cambiar\"></a>";
-  html = html + "  <input type=\"button\" value=\"Reset Timers\" onclick=\"sendOUT(20)\">";
+  //html = html + "  <input type=\"button\" value=\"Reset Timers\" onclick=\"sendOUT(20)\">";
   html = html + "</p>";
   html = html + "</div>";
 
@@ -141,6 +141,12 @@ void _serveTimeSETTINGS()
   html = html + "<div class=\"inner-wrap\">";
   
   html = html + "<label>Tiempo Buzzer (segundos)<input type=\"text\"  maxlength=\"16\" value=\"" + String(TimeBuzzerOn) + "\" name=\"timeBZ\"/></label>";
+  html = html + "<label>Tiempo Start (segundos)<input type=\"text\"  maxlength=\"16\" value=\"" + String(TimeOutStart) + "\" name=\"timeStart\"/></label>";
+  html = html + "<label>Tiempo Stop (segundos)<input type=\"text\"  maxlength=\"16\" value=\"" + String(TimeOutStop) + "\" name=\"timeStop\"/></label>";
+
+  html = html + "</div>";
+  html = html + "<div class=\"section\"><span>2</span>Temps Generador</div>";
+  html = html + "<div class=\"inner-wrap\">";
   
   html = html + "<label>Tiempo P1 (minutos)<input type=\"text\"  maxlength=\"16\" value=\"" + String(TimeGenerador1P) + "\" name=\"time1\"/></label>";
   html = html + "<label>Tiempo P2 (minutos)<input type=\"text\"  maxlength=\"16\" value=\"" + String(TimeGenerador2P) + "\" name=\"time2\"/></label>";
@@ -176,6 +182,8 @@ void _setTimeSETTINGS()
   String html = "";
   
   String rtimeBZ = httpServer.arg("timeBZ");
+  String rtimeStart = httpServer.arg("timeStart");
+  String rtimeStop = httpServer.arg("timeStop");
   
   String rtime1 = httpServer.arg("time1");
   String rtime2 = httpServer.arg("time2");
@@ -189,7 +197,9 @@ void _setTimeSETTINGS()
 
   int error = 0;
 
-  if ((rtimeBZ.length() == 0) ||
+  if ((rtimeBZ.length() == 0)     ||
+      (rtimeStart.length() == 0)  ||
+      (rtimeStop.length() == 0)   ||
       (rtime1.length() == 0)  ||
       (rtime2.length() == 0)  ||
       (rtime3.length() == 0)  ||
@@ -210,6 +220,8 @@ void _setTimeSETTINGS()
   if (error == 0)
   {
     TimeBuzzerOn = rtimeBZ.toInt();
+    TimeOutStart = rtimeStart.toInt();
+    TimeOutStop = rtimeStop.toInt();
     
     TimeGenerador1P = rtime1.toInt();
     TimeGenerador2P = rtime2.toInt();
@@ -221,9 +233,7 @@ void _setTimeSETTINGS()
     TimeGenerador8P = rtime8.toInt();
     TimeGenerador9P = rtime9.toInt();
     
-    #if (_HTTP_SERIAL_DEBUG_ == 1)
-
-    Serial.print("Time Buzzer: ");  Serial.print (TimeBuzzerOn);  Serial.println(" secs");
+    #if (_HTTP_SERIAL_DEBUG_ == 1)  
     
     Serial.print("Time 1P: ");  Serial.print (TimeGenerador1P);  Serial.println(" min");
     Serial.print("Time 2P: ");  Serial.print (TimeGenerador2P);  Serial.println(" min");
@@ -234,10 +244,12 @@ void _setTimeSETTINGS()
     Serial.print("Time 7P: ");  Serial.print (TimeGenerador7P);  Serial.println(" hour");
     Serial.print("Time 8P: ");  Serial.print (TimeGenerador8P);  Serial.println(" hour");
     Serial.print("Time 9P: ");  Serial.print (TimeGenerador9P);  Serial.println(" hour");
-    
-    #endif
 
-    EEPROM.write(EEPROM_ADD_BUZZER_ON,   TimeBuzzerOn);
+    Serial.print("Time Buzzer: "); Serial.print (TimeBuzzerOn);  Serial.println(" secs");
+    Serial.print("Time Start: ");  Serial.print (TimeOutStart);  Serial.println(" secs");
+    Serial.print("Time Stop: ");   Serial.print (TimeOutStop);  Serial.println(" secs");
+    
+    #endif   
     
     EEPROM.write(EEPROM_ADD_1P_TIMER_GEN,   TimeGenerador1P);
     EEPROM.write(EEPROM_ADD_2P_TIMER_GEN,   TimeGenerador2P);
@@ -248,6 +260,10 @@ void _setTimeSETTINGS()
     EEPROM.write(EEPROM_ADD_7P_TIMER_GEN,   TimeGenerador7P);
     EEPROM.write(EEPROM_ADD_8P_TIMER_GEN,   TimeGenerador8P);
     EEPROM.write(EEPROM_ADD_9P_TIMER_GEN,   TimeGenerador9P);
+
+    EEPROM.write(EEPROM_ADD_BUZZER_ON, TimeBuzzerOn);
+    EEPROM.write(EEPROM_ADD_TSTART,    TimeOutStart);
+    EEPROM.write(EEPROM_ADD_TSTOP,     TimeOutStop);
     
     EEPROM.commit();    //Store data to EEPROM
   }
@@ -664,9 +680,11 @@ void _readINS()
   else
    html = html + "<td><font style=\"color:grey\">OFF</font></td>";
 
-  html = html + "<td>Reset</td>";
+  html = html + "</tr>";
+
+  html = html + "<td>Paro</td>";
   if (InEndState == IO_ON)
-   html = html + "<td><font style=\"color:green\">ON </font></td>";
+   html = html + "<td><font style=\"color:red\">ON </font></td>";
   else
    html = html + "<td><font style=\"color:grey\">OFF</font></td>";
    
@@ -683,19 +701,17 @@ void _readOUTS()
   html = "<table style=\"width:100%\">";
 
   html = html + "<tr>";
-  html = html + "<td>Control Status</td>";
-  if (ControlState == STATE_BOMBA_ON)
-    html = html + "<td><font style=\"color:blue\">Bomba ON</font></td>";
+  html = html + "<td>Control Status " + String(ControlState) + "</td>";
+  if (ControlState == STATE_START)
+    html = html + "<td><font style=\"color:blue\">Arrancando...</font></td>";
   else if (ControlState == STATE_GEN_ON)
-    html = html + "<td><font style=\"color:green\">Bomba ON y Generador ON</font></td>";
+    html = html + "<td><font style=\"color:green\">Bomba: ON - Gen: ON</font></td>";
   else if (ControlState == STATE_GEN_ZUMB)
-    html = html + "<td><font style=\"color:green\">Buzzer</font></td>";
+    html = html + "<td><font style=\"color:red\">Buzzer aviso...</font></td>";
   else if (ControlState == STATE_GEN_OFF)
-    html = html + "<td><font style=\"color:blue\">Bomba ON y Generador OFF</font></td>";
-  else if (ControlState == STATE_BOMBA_OFF)
-    html = html + "<td><font style=\"color:blue\">Bomba OFF y Generador OFF</font></td>";
+    html = html + "<td><font style=\"color:red\">Bomba: ON - Gen: OFF</font></td>";
   else
-    html = html + "<td><font style=\"color:grey\">Auto OFF</font></td>";
+    html = html + "<td><font style=\"color:grey\">Bomba: OFF - Gen: OFF</font></td>";
 
   html = html + "</tr>";
 
@@ -741,8 +757,8 @@ void _readOUTS()
   html = html + "</tr>";
 
   html = html + "<tr>";
-  html = html + "<td>Auto Off</td>";
-  if (OutAutoOff == OUT_ON)
+  html = html + "<td>Auto Encendido</td>";
+  if (OutAutoOn == OUT_ON)
    html = html + "<td><font style=\"color:blue\">Activado</font></td>";
   else
    html = html + "<td><font style=\"color:grey\">Desactivado</font></td>";
@@ -876,6 +892,11 @@ void _readTEMPS()
   html = html + "<tr>";
   html = html + "<td>Cuenta Atras (Segundos)</td>";
   html = html + "<td>" + String(TimeControlSec) + "</td>";
+  html = html + "</tr>";
+
+  html = html + "<tr>";
+  html = html + "<td>Cuenta Ticks (ms)</td>";
+  html = html + "<td>" + String(millis() - ControlTick) + "</td>";
   html = html + "</tr>";
   
   html = html + "</table>";

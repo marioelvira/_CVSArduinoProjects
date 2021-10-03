@@ -83,8 +83,8 @@ void _readCONFIG (void)
     */
 
     // Data Data
-    EEPROM.write(EEPROM_ADD_BUZZER_ON,   EEPROM_VAL_BUZZER_ON);
-    
+    //EEPROM.write(EEPROM_ADD_RESERVA,   EEPROM_VAL_RESERVA);
+       
     EEPROM.write(EEPROM_ADD_1P_TIMER_GEN,   EEPROM_VAL_1P_TIMER_GEN);
     EEPROM.write(EEPROM_ADD_2P_TIMER_GEN,   EEPROM_VAL_2P_TIMER_GEN);
     EEPROM.write(EEPROM_ADD_3P_TIMER_GEN,   EEPROM_VAL_3P_TIMER_GEN);
@@ -94,6 +94,10 @@ void _readCONFIG (void)
     EEPROM.write(EEPROM_ADD_7P_TIMER_GEN,   EEPROM_VAL_7P_TIMER_GEN);
     EEPROM.write(EEPROM_ADD_8P_TIMER_GEN,   EEPROM_VAL_8P_TIMER_GEN);
     EEPROM.write(EEPROM_ADD_9P_TIMER_GEN,   EEPROM_VAL_9P_TIMER_GEN);
+
+    EEPROM.write(EEPROM_ADD_BUZZER_ON, EEPROM_VAL_BUZZER_ON);
+    EEPROM.write(EEPROM_ADD_TSTART,    EEPROM_VAL_TSTART);
+    EEPROM.write(EEPROM_ADD_TSTOP,     EEPROM_VAL_TSTOP);
     
     EEPROM.commit();    //Store data to EEPROM
   }
@@ -177,8 +181,6 @@ void _readCONFIG (void)
     #endif
   }
   */
-
-  TimeBuzzerOn = (int)EEPROM.read(EEPROM_ADD_BUZZER_ON);       // Secs
   
   TimeGenerador1P = (int)EEPROM.read(EEPROM_ADD_1P_TIMER_GEN);//*60; // Min
   TimeGenerador2P = (int)EEPROM.read(EEPROM_ADD_2P_TIMER_GEN);//*60; // Min
@@ -190,9 +192,11 @@ void _readCONFIG (void)
   TimeGenerador8P = (int)EEPROM.read(EEPROM_ADD_8P_TIMER_GEN);//*3600; // Hour
   TimeGenerador9P = (int)EEPROM.read(EEPROM_ADD_9P_TIMER_GEN);//*3600; // Hour
 
+  TimeBuzzerOn = (int)EEPROM.read(EEPROM_ADD_BUZZER_ON);    // Secs
+  TimeOutStart = (int)EEPROM.read(EEPROM_ADD_TSTART);       // Secs
+  TimeOutStop  = (int)EEPROM.read(EEPROM_ADD_TSTOP);        // Secs
+  
   #if (_EEPROM_SERIAL_DEBUG_ == 1)
- 
-  Serial.print("Time Buzzer: ");  Serial.print (TimeBuzzerOn);  Serial.println(" secs");
   
   Serial.print("Time 1P: ");  Serial.print (TimeGenerador1P);  Serial.println(" min");
   Serial.print("Time 2P: ");  Serial.print (TimeGenerador2P);  Serial.println(" min");
@@ -203,6 +207,10 @@ void _readCONFIG (void)
   Serial.print("Time 7P: ");  Serial.print (TimeGenerador7P);  Serial.println(" hour");
   Serial.print("Time 8P: ");  Serial.print (TimeGenerador8P);  Serial.println(" hour");
   Serial.print("Time 9P: ");  Serial.print (TimeGenerador9P);  Serial.println(" hour");
+
+  Serial.print("Time Buzzer: "); Serial.print (TimeBuzzerOn);  Serial.println(" secs");
+  Serial.print("Time Start: ");  Serial.print (TimeOutStart);  Serial.println(" secs");
+  Serial.print("Time Stop: ");   Serial.print (TimeOutStop);  Serial.println(" secs");
   
   #endif
 }

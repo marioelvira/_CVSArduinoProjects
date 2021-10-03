@@ -18,7 +18,7 @@ int   OutGen;
 int   OutBomba;
 int   OutDisp;
 int   OutZumb;
-int   OutAutoOff;
+int   OutAutoOn;
 
 int   OutA;
 int   OutB;
@@ -106,8 +106,6 @@ int   ControlState;
 int   TimeControlSec;
 int   DisplayIndicador;
 
-int   TimeBuzzerOn;
-
 int   TimeGenerador1P;
 int   TimeGenerador2P;
 int   TimeGenerador3P;
@@ -117,6 +115,10 @@ int   TimeGenerador6P;
 int   TimeGenerador7P;
 int   TimeGenerador8P;
 int   TimeGenerador9P;
+
+int   TimeBuzzerOn;
+int   TimeOutStart;
+int   TimeOutStop;
 
 ///////////////
 // PIN steup //
@@ -148,10 +150,10 @@ void _PINSetup(void)
   pinMode(PIN_ZUMB, OUTPUT);
   digitalWrite(PIN_ZUMB, PIN_OUT_OFF);
   OutZumb  = OUT_OFF;
-
-  pinMode(PIN_AUTOOFF, OUTPUT);
-  digitalWrite(PIN_AUTOOFF, PIN_OUT_OFF);
-  OutAutoOff  = OUT_OFF;
+  
+  pinMode(PIN_AUTOON, OUTPUT);
+  digitalWrite(PIN_AUTOON, PIN_OUT_OFF);
+  OutAutoOn  = OUT_OFF;
   
   pinMode(PIN_A, OUTPUT);
   digitalWrite(PIN_A, PIN_OUT_OFF);
@@ -171,7 +173,7 @@ void _PINSetup(void)
   // INS //
   //-----//
   pinMode(PIN_PULSADOR, INPUT);
-  pinMode(PIN_RESET, INPUT);
+  pinMode(PIN_END, INPUT);
 }
 
 //============//
@@ -180,7 +182,7 @@ void _PINSetup(void)
 void setup(void)
 { 
   _PINSetup();
-  
+
   _IOSetup();
 
   #if (_SERIAL_DEBUG_ == 1)
@@ -225,12 +227,12 @@ void _PINLoop()
     digitalWrite(PIN_GEN, PIN_OUT_ON);
   else
     digitalWrite(PIN_GEN, PIN_OUT_OFF);
-
+  
   if (OutBomba == OUT_ON)
     digitalWrite(PIN_BOMBA, PIN_OUT_ON);
   else
     digitalWrite(PIN_BOMBA, PIN_OUT_OFF);
-
+  
   if (OutZumb == OUT_ON)
     digitalWrite(PIN_ZUMB, PIN_OUT_ON);
   else if (OutZumb == IO_OFF)
@@ -240,11 +242,11 @@ void _PINLoop()
     digitalWrite(PIN_DISP, PIN_OUT_ON);
   else if (OutDisp == IO_OFF)
     digitalWrite(PIN_DISP, PIN_OUT_OFF);
-
-  if (OutAutoOff == OUT_ON)
-    digitalWrite(PIN_AUTOOFF, PIN_OUT_ON);
+  
+  if (OutAutoOn == OUT_ON)
+    digitalWrite(PIN_AUTOON, PIN_OUT_ON);
   else if (OutDisp == IO_OFF)
-    digitalWrite(PIN_AUTOOFF, PIN_OUT_OFF);
+    digitalWrite(PIN_AUTOON, PIN_OUT_OFF);
 
   if (OutA == OUT_ON)
     digitalWrite(PIN_A, PIN_OUT_ON);
@@ -274,6 +276,11 @@ void _PINLoop()
     InStartVal = IO_OFF;
   else
     InStartVal = IO_ON;
+
+  if (digitalRead(PIN_END) == PIN_IN_OFF)
+    InEndVal = IO_OFF;
+  else
+    InEndVal = IO_ON;
 }
 
 //===========//
@@ -283,6 +290,7 @@ void loop()
 {
   _PINLoop();
   _IOLoop();
+  
   _IOPulsLoop();
   _IOLcdLoop();
 
@@ -298,5 +306,6 @@ void loop()
   }
 
   _CtrLoop();
+  
   _TimeLoop();
 }

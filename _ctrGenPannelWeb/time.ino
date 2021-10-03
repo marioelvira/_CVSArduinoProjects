@@ -17,7 +17,8 @@ void _TimeLoop(void)
 {
   if (millis() - timeTick >= 1000)
   {
-    TimeControlSec--;
+    if (TimeControlSec != 0)
+      TimeControlSec--;
     
     timeSec++;
     if (timeSec >= 60)
@@ -34,7 +35,8 @@ void _TimeLoop(void)
     timeTick = millis();
 
     #if (_STATUS_SERIAL_DEBUG_ == 1)
-
+    
+    Serial.println("<><><><><><><>");
     Serial.print("Tiempo Encendio: ");
     Serial.print(timeHour); Serial.print(" : "); Serial.print(timeMin); Serial.print(" : "); Serial.print(timeSec);
     Serial.println(" ");
@@ -43,16 +45,42 @@ void _TimeLoop(void)
     Serial.print(TimeControlSec);
     Serial.println(" ");
 
+    Serial.print("Cuenta Ticks (ms): ");
+    Serial.print(millis() - ControlTick);
+    Serial.println(" ");
+
     Serial.print("Indicador LCD: ");
     Serial.print(DisplayIndicador);
     Serial.print(" -> ");
     Serial.print(OutD); Serial.print("-"); Serial.print(OutC); Serial.print("-"); Serial.print(OutB); Serial.print("-"); Serial.print(OutA);
     Serial.println(" ");
+    Serial.println("---------------");
+    
+    Serial.print("Control Status "); Serial.println(ControlState);
+    if (ControlState == STATE_START)
+      Serial.println("  Arrancando...");
+    else if (ControlState == STATE_GEN_ON)
+      Serial.println("  Bomba: ON - Gen: ON");
+    else if (ControlState == STATE_GEN_ZUMB)
+      Serial.println("  Buzzer aviso...");
+    else if (ControlState == STATE_GEN_OFF)
+      Serial.println("  Bomba: ON - Gen: OFF");
+    else
+      Serial.println("  Bomba: OFF - Gen: OFF");
+
+    Serial.println("---------------");
      
     if (InStartVal == IO_ON)
-     Serial.println("Pulsador: ON");
+     Serial.println("Marcha: ON");
     else
-     Serial.println("Pulsador: OFF");
+     Serial.println("Marcha: OFF");
+
+    if (InEndVal == IO_ON)
+     Serial.println("Paro: ON");
+    else
+     Serial.println("Paro: OFF");
+
+    Serial.println("---------------");
 
     if (OutGen == OUT_ON)
      Serial.println("Generador: ON");
@@ -74,12 +102,12 @@ void _TimeLoop(void)
     else
      Serial.println("Display: OFF");
 
-    if (OutAutoOff == OUT_ON)
-     Serial.println("Auto Off: ON");
+    if (OutAutoOn == OUT_ON)
+     Serial.println("Auto encendido: ON");
     else
-     Serial.println("Auto Off: OFF");
+     Serial.println("Auto encendido: OFF");
 
-    Serial.println(">>>>>>>>>");
+    Serial.println("<><><><><><><>");
     Serial.println(" ");
 
     #endif

@@ -88,14 +88,14 @@ void _IOLoop()
 
 void _IOPulsLoop(void) {
 
-  // Si se pulsa el pulsador...
+  // Si se pulsa el incrementador...
   if (InStartState != NO_PULSACION)
   {
     #if (_PULS_SERIAL_DEBUG_ == 1)
     Serial.println(">> Pulsador -> Incrementa");
     #endif
 
-    ControlState = STATE_GEN_ON;  // reseteamos el estado...
+    ControlState = STATE_GEN_ON;
 
     if (DisplayIndicador == 9)
       TimeControlSec = TimeGenerador9P*X_3600; // TIMER_GEN_7H_00M_SEC;
@@ -128,8 +128,13 @@ void _IOPulsLoop(void) {
       TimeControlSec = TimeGenerador1P*X_60; //TIMER_GEN_0H_15M_SEC;
   }
 
+  // Si se pulsa el pulsador...
+  if (InEndState != NO_PULSACION)
+    ControlState = STATE_GEN_OFF;
+
   // Reset de Pulsaciones...
   InStartState   = NO_PULSACION;
+  InEndState   = NO_PULSACION;
 }
 
 void _IOLcdLoop(void) {

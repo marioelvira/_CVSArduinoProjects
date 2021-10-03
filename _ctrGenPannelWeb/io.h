@@ -15,13 +15,13 @@ extern "C" {
  *                    G  -|      |- GPIO5  -> B
  *                    VU -|      |- GPIO4  -> C
  *       BOMBA <- GPIO10 -|      |- GPIO0  -> D
- *     AUTOOFF <-  GPIO9 -|      |- GPIO2  -> ZUMB*
+ *       RESET ->  GPIO9 -|      |- GPIO2  -> ZUMB*
  *          S1 <-   MOSI -|      |- 3V
  *                    CS -|      |- G
  *          S0 <-   MISO -|      |- GPIO14 -> GEN
  *          SK <-   SCLK -|      |- GPIO12 -> DISP
  *                     G -|      |- GPIO13 <- PULSADOR
- *                    3V -|      |- GPIO15 <- RESET
+ *                    3V -|      |- GPIO15 -> AUTOOFF
  *                    EN -|      |- GPIO3  
  *                   RST -|      |- GPIO1  
  *                     G -|      |- G
@@ -41,9 +41,9 @@ extern "C" {
 #define PIN_DISP          12
 
 #define PIN_PULSADOR      13
-#define PIN_RESET         15
+#define PIN_END           9
 
-#define PIN_AUTOOFF       9
+#define PIN_AUTOON        15
 #define PIN_BOMBA         10
 
 //#define PIN_LED         XX
@@ -51,7 +51,9 @@ extern "C" {
 #define PIN_OUT_ON        1
 #define PIN_OUT_OFF       0
 
-#define PIN_IN_OFF        1 // 1
+// Pull-up INs
+#define PIN_IN_OFF        1   
+#define PIN_IN_ON         0
 
 // IO definition
 #define IO_ON             1

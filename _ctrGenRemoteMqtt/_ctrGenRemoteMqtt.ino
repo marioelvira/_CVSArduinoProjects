@@ -1,4 +1,3 @@
-
 #include <ESP8266WiFi.h>
 #include <ESP8266WebServer.h>
 #include <PubSubClient.h>
@@ -72,7 +71,7 @@ byte mac[6];
 /////////////////
 // Device Name //
 /////////////////
-#define DEVICENAME      "REMOTE8266"
+#define DEVICENAME      "rem8266"
 char* deviceName = DEVICENAME;
 
 /////////////////
@@ -172,8 +171,8 @@ void setup(void)
   _TimeSetup();
 
   // MQTT setup
-  _MQTTSetup();
-
+  //_MQTTSetup();
+  
   // Ctr setup
   _CtrSetup();
 }
@@ -226,7 +225,7 @@ void _PINLoop()
   if (digitalRead(PIN_BOMBAA) == PIN_IN_OFF)
     InBombaa = IO_OFF;
   else
-    InBombaa = IO_ON;    
+    InBombaa = IO_ON;
 }
 
 //===========//
@@ -236,7 +235,7 @@ void loop()
 {
   _PINLoop();
   _IOLoop();
-  
+
   _IOLcdLoop();
 
   //if (controlMode == MODE_AUTO)
@@ -248,11 +247,13 @@ void loop()
   if ((wifiStatus == WIFI_ON_ACCESSPOINT) || (wifiStatus == WIFI_STATION_CONNECTED))
     _HttpLoop();
 
+  /*
   if (wifiStatus == WIFI_STATION_CONNECTED)
     _MQTTLoop();
   else
     mqttStatus = MQTT_NOT_CONNECTED;
-    
+  */
+  
   _CtrLoop();
   
   _TimeLoop();

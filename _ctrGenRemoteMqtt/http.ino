@@ -50,8 +50,8 @@ void _serveMAIN()
   //html = html + "</p>";
   html = html + "<div class=\"section\"><span>4</span>Configuraci&oacuten</div>";
   html = html + "<p>";
-  html = html + "  <a href=\"settings.htm\"><input type=\"button\" value=\"Wi-Fi Mode\"></a>";
-  html = html + "  <a href=\"timeSettings.htm\"><input type=\"button\" value=\"Cambiar\"></a>";
+  html = html + "  <a href=\"settings.htm\"><input type=\"button\" value=\"Wi-Fi\"></a>";
+  html = html + "  <a href=\"timeSettings.htm\"><input type=\"button\" value=\"Config\"></a>";
   //html = html + "  <input type=\"button\" value=\"Reset Timers\" onclick=\"sendOUT(20)\">";
   html = html + "</p>";
   html = html + "</div>";
@@ -60,6 +60,11 @@ void _serveMAIN()
   
   html = html + "function sendOUT(out) {";
   html = html + "  var xhttp = new XMLHttpRequest();";
+  //html = html + "  xhttp.onreadystatechange = function() {";
+  //html = html + "   if (this.readyState == 4 && this.status == 200) {";
+  //html = html + "     document.getElementById(\"OUTNumber\").innerHTML = this.responseText;";
+  //html = html + "   }";
+  //html = html + "  };";
   html = html + "  xhttp.open(\"GET\", \"setOUTS?OUTNumber=\"+out, true);";
   html = html + "  xhttp.send();";
   html = html + "}";

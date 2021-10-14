@@ -40,7 +40,7 @@ int   outLed;
 ///////////
 // Wi-Fi //
 ///////////
-//unsigned long wifiAPTick = 0;
+unsigned long wifiAPTick = 0;
 unsigned long wifiLEDTick = 0;
 
 /*
@@ -51,8 +51,8 @@ const char* passwordSt = PSKST;
 */
 
 // Station Mode
-//char ssid[WIFI_SSID_MAX];
-//char password[WIFI_PSWD_MAX];
+char ssid[WIFI_SSID_MAX];
+char password[WIFI_PSWD_MAX];
 
 IPAddress wifiIP;
 
@@ -61,12 +61,11 @@ const char* ssidAp = SSIDAP;
 const char* passwordAp = PSKAP;
 
 int wifiStatus;
-//int wifiMode;
+int wifiMode;
 
 ////////////////
 // IP Address //
 ////////////////
-/*
 int       ipMode;
 
 IPAddress ipAddress (192, 168, 43, 200);
@@ -74,7 +73,6 @@ IPAddress gateWay   (192, 168, 43, 1);
 IPAddress netMask   (255, 255, 255, 0);
 
 byte mac[6];
-*/
 
 /////////////////
 // Device Name //

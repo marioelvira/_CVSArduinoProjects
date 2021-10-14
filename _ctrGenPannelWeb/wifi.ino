@@ -44,7 +44,6 @@ void _WifiLoop()
       break;
 
     case WIFI_ON_ACCESSPOINT:
-      /*
       // Station mode...
       if (wifiMode == STATION_MODE)
       {       
@@ -60,10 +59,8 @@ void _WifiLoop()
       {
         wifiAPTick = millis();
       }
-      */    
       break;
 
-    /*
     case WIFI_START_STATION:
     
       WiFi.begin(ssid, password);
@@ -108,7 +105,9 @@ void _WifiLoop()
         netMask   = WiFi.subnetMask();
                 
         #if (_WIFI_SERIAL_DEBUG_ == 1)
-        Serial.println("");
+        Serial.println("*******************************************************");
+        Serial.println("*******************************************************");
+        Serial.println("*******************************************************");
         Serial.print("Connected to ");
         Serial.println(ssid);
         if (ipMode == FIXIP_MODE)
@@ -152,7 +151,6 @@ void _WifiLoop()
       }
 
       break;
-    */
   }
 }
 
@@ -186,7 +184,7 @@ void _WifiLedLoop()
         //#endif
       } 
       break;
-    /*
+
     case WIFI_START_STATION:
     case WIFI_ON_STATION:
     case WIFI_STATION_CONNECTING:
@@ -213,6 +211,5 @@ void _WifiLedLoop()
     
       outLed = IO_ON;
       break;
-    */
   }
 }

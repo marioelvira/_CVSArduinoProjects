@@ -10,16 +10,16 @@ extern "C" {
 ///////////
 // Wi-Fi //
 ///////////
-#define WIFI_BLINK_ACCESSPOINT      1000
-#define WIFI_BLINK_CONNECTING       500
-#define WIFI_BLINK_STATION          3000
+#define WIFI_BLINK_ACCESSPOINT     1000
+#define WIFI_BLINK_CONNECTING      500
+#define WIFI_BLINK_STATION         3000
 
-#define WIFI_ACCESSPOINT_TIMEOUT    30000 // 30 sec
+#define WIFI_ACCESSPOINT_TIMEOUT  30000 // 30 sec
 /*
 #define SSIDST   "SSID"
 #define PSKST    "password"
 */
-#define SSIDAP    "REMOTE8266"
+#define SSIDAP    "REM8266"
 #define PSKAP     "topsecret"
 
 #define WIFI_START_ACCESSPOINT     0

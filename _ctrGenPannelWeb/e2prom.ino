@@ -44,7 +44,6 @@ void _readCONFIG (void)
   
     EEPROM.write(EEPROM_ADD_OK,      EEPROM_VAL_OK);
 
-    /*
     // IP Mode
     EEPROM.write(EEPROM_ADD_IP_MODE, EEPROM_VAL_IP_MODE);
     EEPROM.write(EEPROM_ADD_IP1,     EEPROM_VAL_IP1);
@@ -80,7 +79,6 @@ void _readCONFIG (void)
     for (i = 0; i < j; i++)
       EEPROM.write(EEPROM_ADD_WIFI_PSWD + i, passwordSt[i]);
     #endif
-    */
 
     // Data Data
     //EEPROM.write(EEPROM_ADD_RESERVA,   EEPROM_VAL_RESERVA);
@@ -108,7 +106,6 @@ void _readCONFIG (void)
     #endif
   }
 
-  /*
   // IP Mode
   ipMode = EEPROM.read(EEPROM_ADD_IP_MODE);
   
@@ -180,7 +177,6 @@ void _readCONFIG (void)
     Serial.println(password);
     #endif
   }
-  */
   
   TimeGenerador1P = (int)EEPROM.read(EEPROM_ADD_1P_TIMER_GEN);//*60; // Min
   TimeGenerador2P = (int)EEPROM.read(EEPROM_ADD_2P_TIMER_GEN);//*60; // Min

@@ -50,8 +50,8 @@ void _serveMAIN()
   //html = html + "</p>";
   html = html + "<div class=\"section\"><span>4</span>Configuraci&oacuten</div>";
   html = html + "<p>";
-  //html = html + "  <a href=\"settings.htm\"><input type=\"button\" value=\"Settings\"></a>";
-  html = html + "  <a href=\"timeSettings.htm\"><input type=\"button\" value=\"Cambiar\"></a>";
+  html = html + "  <a href=\"settings.htm\"><input type=\"button\" value=\"Wi-Fi\"></a>";
+  html = html + "  <a href=\"timeSettings.htm\"><input type=\"button\" value=\"Config\"></a>";
   //html = html + "  <input type=\"button\" value=\"Reset Timers\" onclick=\"sendOUT(20)\">";
   html = html + "</p>";
   html = html + "</div>";
@@ -298,7 +298,6 @@ void _setTimeSETTINGS()
   httpServer.send (200, "text/html", html);
 }
 
-/*
 void _serveSETTINGS()
 {
   //int mobile = 0;
@@ -372,8 +371,8 @@ void _serveSETTINGS()
   // End
                         
   html = html + "<div class=\"button-section\">";
-  html = html + "  <input type=\"submit\" value=\"Save\">";
-  html = html + "  <a href=\"index.htm\"><input type=\"button\" value=\"Back\"></a>";
+  html = html + "  <input type=\"submit\" value=\"Guardar\">";
+  html = html + "  <a href=\"index.htm\"><input type=\"button\" value=\"Volver\"></a>";
   html = html + "</div>";
   
   html = html + "</div>";
@@ -651,7 +650,6 @@ void _setSETTINGS()
 
   httpServer.send (200, "text/html", html);
 }
-*/
 
 /////////////
 // Actions //
@@ -919,7 +917,7 @@ void _HttpLoop()
       // html pages
       httpServer.on("/",                  _serveMAIN);
       httpServer.on("/index.htm",         _serveMAIN);
-      //httpServer.on("/settings.htm",    _serveSETTINGS);
+      httpServer.on("/settings.htm",      _serveSETTINGS);
       httpServer.on("/timeSettings.htm",  _serveTimeSETTINGS);
 
       // acctions
@@ -927,7 +925,7 @@ void _HttpLoop()
       httpServer.on("/readOUTS",         _readOUTS);
       httpServer.on("/readINS",          _readINS);
       httpServer.on("/readTEMPS",        _readTEMPS);
-      //httpServer.on("/networSettings", _setSETTINGS);
+      httpServer.on("/networSettings",   _setSETTINGS);
       httpServer.on("/setTimeSettings",  _setTimeSETTINGS);
 
       httpServer.begin();

@@ -81,8 +81,8 @@ void _readCONFIG (void)
     #endif
 
     // Data Data
-    EEPROM.write(EEPROM_ADD_RPUSL_MSEC,   EEPROM_VAL_RPUSL_MSEC);  
-    
+    EEPROM.write(EEPROM_ADD_RPUSL_MSEC,   EEPROM_VAL_RPUSL_MSEC);
+
     EEPROM.commit();    //Store data to EEPROM
   }
   else
@@ -163,13 +163,11 @@ void _readCONFIG (void)
     Serial.println(password);
     #endif
   }
- 
+  
   RemotePulsTick = (int)EEPROM.read(EEPROM_ADD_RPUSL_MSEC);
-     
+  
   #if (_EEPROM_SERIAL_DEBUG_ == 1)
-  
   Serial.print("Remote Pulse: ");  Serial.print (RemotePulsTick);  Serial.println(" *100 ms");
-  
   #endif
 }
 

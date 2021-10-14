@@ -10,11 +10,11 @@ extern "C" {
 ///////////
 // Wi-Fi //
 ///////////
-#define WIFI_BLINK_ACCESSPOINT      1000
-//#define WIFI_BLINK_CONNECTING      500
-//#define WIFI_BLINK_STATION        3000
+#define WIFI_BLINK_ACCESSPOINT     1000
+#define WIFI_BLINK_CONNECTING      500
+#define WIFI_BLINK_STATION         3000
 
-//#define WIFI_ACCESSPOINT_TIMEOUT  30000 // 30 sec
+#define WIFI_ACCESSPOINT_TIMEOUT  30000 // 30 sec
 /*
 #define SSIDST   "SSID"
 #define PSKST    "password"
@@ -24,12 +24,11 @@ extern "C" {
 
 #define WIFI_START_ACCESSPOINT     0
 #define WIFI_ON_ACCESSPOINT        1
-/*
 #define WIFI_START_STATION         2
 #define WIFI_ON_STATION            3
 #define WIFI_STATION_CONNECTING    4
 #define WIFI_STATION_CONNECTED     5
-*/
+
 #endif // _HTTP_H_
 
 #ifdef __cplusplus

@@ -35,7 +35,7 @@ extern "C" {
 #define PIN_C             4   // C
 #define PIN_D             0   // D
 
-#define PIN_ZUMB          2 
+#define PIN_ZUMB          2
 
 #define PIN_GEN           14
 #define PIN_DISP          12
@@ -46,7 +46,7 @@ extern "C" {
 #define PIN_AUTOON        15
 #define PIN_BOMBA         10
 
-//#define PIN_LED         XX
+//#define PIN_LED         2
 
 #define PIN_OUT_ON        1
 #define PIN_OUT_OFF       0

@@ -17,6 +17,7 @@ extern "C" {
 #define _HTTP_SERIAL_DEBUG_        1
 #define _WIFI_SERIAL_DEBUG_        1
 #define _STATUS_SERIAL_DEBUG_      1
+#define _MQTT_SERIAL_DEBUG_        1
 
 #endif // _MAIN_H_
 

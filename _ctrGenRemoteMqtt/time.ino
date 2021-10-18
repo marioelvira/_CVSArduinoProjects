@@ -34,7 +34,7 @@ void _TimeLoop(void)
     
     timeTick = millis();
 
-#if (_STATUS_SERIAL_DEBUG_ == 1)
+    #if (_STATUS_SERIAL_DEBUG_ == 1)
     
     Serial.println("<><><><><><><>");
     Serial.print("Tiempo Encendio: ");
@@ -77,6 +77,8 @@ void _TimeLoop(void)
     else
      Serial.println("Remote Puls: OFF");
 
+    _IOLoop();
+    
     Serial.print("Vbatt: ");
     Serial.println(VbattInValue);
 

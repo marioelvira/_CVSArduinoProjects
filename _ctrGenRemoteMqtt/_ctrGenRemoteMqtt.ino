@@ -90,6 +90,7 @@ PubSubClient mqttClient(wifiClient);
 String mqttClientId = "remoteMQTT-" + String(ESP.getChipId());
 
 int mqttStatus;
+int mqttTopic2send;
 unsigned long mqttTick = 0;
 
 int vbatt = 0;
@@ -171,7 +172,7 @@ void setup(void)
   _TimeSetup();
 
   // MQTT setup
-  //_MQTTSetup();
+  _MQTTSetup();
   
   // Ctr setup
   _CtrSetup();
@@ -234,7 +235,7 @@ void _PINLoop()
 void loop()
 {
   _PINLoop();
-  _IOLoop();
+  //_IOLoop();
 
   _IOLcdLoop();
 
@@ -247,12 +248,10 @@ void loop()
   if ((wifiStatus == WIFI_ON_ACCESSPOINT) || (wifiStatus == WIFI_STATION_CONNECTED))
     _HttpLoop();
 
-  /*
   if (wifiStatus == WIFI_STATION_CONNECTED)
     _MQTTLoop();
   else
     mqttStatus = MQTT_NOT_CONNECTED;
-  */
   
   _CtrLoop();
   

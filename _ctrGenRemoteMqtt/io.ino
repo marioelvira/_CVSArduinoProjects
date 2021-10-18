@@ -19,7 +19,6 @@ void _IOSetup()
 //////////////////////
 void _IOLoop()
 {
-  /*
   int vbattAcc = 0;
 
   VbattInArray[VbattInPointer] = analogRead(PIN_VBATT_IN);
@@ -32,7 +31,6 @@ void _IOLoop()
     vbattAcc = vbattAcc + VbattInArray[i];
   
   VbattInValue = vbattAcc/VBATT_ARRAY_SIZE;
-  */
 }
 
 void _IOLcdLoop(void) {

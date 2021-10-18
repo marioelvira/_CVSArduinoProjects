@@ -1,15 +1,35 @@
 #include "MQTT.h"
 
-void mqttDataCallback(char* topic, byte* payload, unsigned int length)
+void mqttDataCallback(char* rtopic, byte* rpayload, unsigned int rlength)
 {
-  char payloadStr[length + 1];
-  memset(payloadStr, 0, length + 1);
-  strncpy(payloadStr, (char*)payload, length);
-  
+  String rtopicStr((char*)rtopic);
+  String rpayloadStr((char*)rpayload);
+  rpayloadStr[rlength] = 0;
+    
   #if (_MQTT_SERIAL_DEBUG_ == 1)
-  Serial.printf("Data    : dataCallback. Topic : [%s]\n", topic);
-  Serial.printf("Data    : dataCallback. Payload : %s\n", payloadStr);
+ 
+  Serial.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+  Serial.print (" Topic :");    Serial.println (rtopic);
+  Serial.print (" Payload :");  Serial.println (rpayloadStr);
+  Serial.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
   #endif
+
+  if(rtopicStr.equals(TOPIC_GENCTR))
+  {
+    Serial.print("TOPIC_GENCTR ->>>>>> ");
+    if(rpayloadStr.equals("1"))
+      Serial.println("1");
+    else
+      Serial.println("0");
+  }
+  else if (rtopicStr.equals(TOPIC_BOMCTR))
+  {
+    Serial.print("TOPIC_BOMCTR ->>>>>> ");
+    if(rpayloadStr.equals("1"))
+      Serial.println("1");
+    else
+      Serial.println("0");
+  }
 }
 
 boolean mqttPublish(const char* topic, char* payload)
@@ -24,6 +44,54 @@ boolean mqttSubscribe(const char* topicToSubscribe)
   boolean retval = false;
   retval = mqttClient.subscribe(topicToSubscribe);
   return retval;
+}
+
+
+///////////////
+// MQTT send //
+///////////////
+void _MQTTSend(void)
+{
+  char    spayload[10];
+  String  str;
+  int     str_len;
+
+  if (mqttTopic2send == 1)
+  {    
+    vbatt++;
+
+    str = String(vbatt);
+    str_len = str.length() + 1;
+    str.toCharArray(spayload, str_len);
+        
+    if(mqttPublish(TOPIC_VBATT, (char*)spayload))
+    {
+      #if (_MQTT_SERIAL_DEBUG_ == 1)
+      Serial.println("TOPIC_VBATT publish was succeeded");
+      Serial.println(spayload);
+      #endif
+    }
+  } else if (mqttTopic2send == 2) {
+    
+    str = String(DisplayIndicador);
+    str_len = str.length() + 1;
+    str.toCharArray(spayload, str_len);
+
+    if(mqttPublish(TOPIC_GENDISP, (char*)spayload))
+    {
+      #if (_MQTT_SERIAL_DEBUG_ == 1)
+      Serial.println("TOPIC_GENDISP publish was succeeded");
+      Serial.println(spayload);
+      #endif
+    }
+  } else {
+    
+  }
+
+  // Next topic
+  mqttTopic2send ++;
+  if (mqttTopic2send > 2)
+    mqttTopic2send = 1;
 }
 
 /////////////////
@@ -42,10 +110,7 @@ void _MQTTSetup(void)
 ////////////////////////
 void _MQTTLoop(void)
 {
-  char    vbatPayload[10];
-  String  str;
-  int     str_len; 
-  
+ 
   switch (mqttStatus)
   {
     case MQTT_NOT_CONNECTED:
@@ -94,9 +159,13 @@ void _MQTTLoop(void)
           break;
         
         mqttTick = millis();
-                
-        if (mqttSubscribe(TOPIC_VBATT))
+        
+        if (mqttSubscribe(TOPIC_GENCTR) &&
+            mqttSubscribe(TOPIC_BOMCTR))
+        {
           mqttStatus = MQTT_SUBSCRIBED;
+          mqttTopic2send = 1;
+        }
       }
       else
       {
@@ -116,20 +185,9 @@ void _MQTTLoop(void)
           break;
         
         mqttTick = millis();
-
-        vbatt++;
-        str = String(vbatt);
-        str_len = str.length() + 1;
-        str.toCharArray(vbatPayload, str_len);
         
-        if(mqttPublish(TOPIC_VBATT, (char*)vbatPayload))
-        {
-          #if (_MQTT_SERIAL_DEBUG_ == 1)
-          Serial.println("MQTTPublish was succeeded");
-          Serial.println(vbatPayload);
-          #endif
-        }
-        
+        mqttClient.loop();
+        _MQTTSend();        
       }
       else
       {

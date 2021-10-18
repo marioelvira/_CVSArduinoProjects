@@ -12,7 +12,7 @@ extern "C" {
 
 #define MQTT_CONNECTION_TIMEOUT   5000  // 5 sec
 #define MQTT_SUBSCRIBE_TIMEOUT    1000  // 1 sec
-#define MQTT_PUBLISH_TIMEOUT      1000  // 1 sec
+#define MQTT_PUBLISH_TIMEOUT      750   // 750 ms
 
 // MQTT broker credentials
 #define MQTT_BROKER       "maqiatto.com"
@@ -22,6 +22,14 @@ extern "C" {
 
 // MQTT Topics
 #define TOPIC_VBATT       "sdpelicanos@gmail.com/vbatt"
+
+#define TOPIC_GENDISP     "sdpelicanos@gmail.com/genDisp"
+#define TOPIC_GENCTR      "sdpelicanos@gmail.com/genCtr"
+
+#define TOPIC_BOMSTATE    "sdpelicanos@gmail.com/bomState"
+#define TOPIC_BOMCTR      "sdpelicanos@gmail.com/bomCtr"
+
+#define TOPIC_OFFSET      21
 
 #endif // _MQTT_H_
 

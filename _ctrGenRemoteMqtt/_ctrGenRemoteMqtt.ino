@@ -19,17 +19,20 @@ int   InA;
 int   InB;
 int   InC;
 int   InD;
-int   InBombaa;
+int   InBomba;
 
-int   OutRemotePuls;
+int   OutGenPuls;
+int   OutBomPuls;
 int   outLed;
 
 ///////////
 // Vbatt //
 ///////////
-int   VbattInValue;
-int   VbattInArray[VBATT_ARRAY_SIZE];
-int   VbattInPointer;
+int    VbattInADC;
+int    VbattInArray[VBATT_ARRAY_SIZE];
+int    VbattInPointer;
+float  VbattIn;
+float  VbatEOS;
 
 ///////////
 // Wi-Fi //
@@ -93,8 +96,6 @@ int mqttStatus;
 int mqttTopic2send;
 unsigned long mqttTick = 0;
 
-int vbatt = 0;
-
 //////////
 // Time //
 //////////
@@ -129,9 +130,13 @@ void _PINSetup(void)
   outLed = IO_OFF;
   #endif
 
-  pinMode(PIN_RPULS, OUTPUT);
-  digitalWrite(PIN_RPULS, PIN_OUT_ON);
-  OutRemotePuls = OUT_ON;
+  pinMode(PIN_GEN_PULS, OUTPUT);
+  digitalWrite(PIN_GEN_PULS, PIN_OUT_ON);
+  OutGenPuls = OUT_ON;
+
+  pinMode(PIN_BOM_PULS, OUTPUT);
+  digitalWrite(PIN_BOM_PULS, PIN_OUT_ON);
+  OutBomPuls = OUT_ON; 
   
   //-----//
   // INS //
@@ -141,7 +146,7 @@ void _PINSetup(void)
   pinMode(PIN_C, INPUT);
   pinMode(PIN_D, INPUT);
 
-  pinMode(PIN_BOMBAA, INPUT);
+  pinMode(PIN_BOMBA, INPUT);
 }
 
 //============//
@@ -193,12 +198,17 @@ void _PINLoop()
   else
     digitalWrite(PIN_LED, PIN_OUT_OFF);
   #endif
-    
-  if (OutRemotePuls == OUT_ON)
-    digitalWrite(PIN_RPULS, PIN_OUT_ON);
-  else
-    digitalWrite(PIN_RPULS, PIN_OUT_OFF); 
 
+  if (OutGenPuls == OUT_ON)
+    digitalWrite(PIN_GEN_PULS, PIN_OUT_ON);
+  else
+    digitalWrite(PIN_GEN_PULS, PIN_OUT_OFF); 
+
+  if (OutBomPuls == OUT_ON)
+    digitalWrite(PIN_BOM_PULS, PIN_OUT_ON);
+  else
+    digitalWrite(PIN_BOM_PULS, PIN_OUT_OFF);
+    
   //-----//
   // INS //
   //-----//
@@ -222,11 +232,10 @@ void _PINLoop()
   else
     InD = IO_ON;
 
-
-  if (digitalRead(PIN_BOMBAA) == PIN_IN_OFF)
-    InBombaa = IO_OFF;
+  if (digitalRead(PIN_BOMBA) == PIN_IN_OFF)
+    InBomba = IO_OFF;
   else
-    InBombaa = IO_ON;
+    InBomba = IO_ON;
 }
 
 //===========//

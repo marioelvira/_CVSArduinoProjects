@@ -38,7 +38,7 @@ void _WifiLoop()
       // Http setup
       _HttpSetup();
 
-      //wifiAPTick = millis();
+      wifiAPTick = millis();
         
       wifiStatus = WIFI_ON_ACCESSPOINT;
       break;

@@ -7,7 +7,6 @@ void mqttDataCallback(char* rtopic, byte* rpayload, unsigned int rlength)
   rpayloadStr[rlength] = 0;
     
   #if (_MQTT_SERIAL_DEBUG_ == 1)
- 
   Serial.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
   Serial.print (" Topic :");    Serial.println (rtopic);
   Serial.print (" Payload :");  Serial.println (rpayloadStr);
@@ -16,19 +15,40 @@ void mqttDataCallback(char* rtopic, byte* rpayload, unsigned int rlength)
 
   if(rtopicStr.equals(TOPIC_GENCTR))
   {
-    Serial.print("TOPIC_GENCTR ->>>>>> ");
+    Serial.print(" ");
     if(rpayloadStr.equals("1"))
-      Serial.println("1");
+    {
+      if (ControlState == STATE_STANDBY)
+        ControlState = STATE_RPULS_ON;
+    
+      #if (_MQTT_SERIAL_DEBUG_ == 1)
+      Serial.println("TOPIC_GENCTR ->> 1");
+      #endif
+    }
     else
-      Serial.println("0");
+    {
+      #if (_MQTT_SERIAL_DEBUG_ == 1)
+      Serial.println("TOPIC_GENCTR ->> Error");
+      #endif
+    }
   }
   else if (rtopicStr.equals(TOPIC_BOMCTR))
   {
-    Serial.print("TOPIC_BOMCTR ->>>>>> ");
     if(rpayloadStr.equals("1"))
-      Serial.println("1");
+    {
+      //if (ControlState == STATE_STANDBY)
+      //  ControlState = STATE_RPULS_ON;
+    
+      #if (_MQTT_SERIAL_DEBUG_ == 1)
+      Serial.println("TOPIC_BOMCTR ->> 1");
+      #endif
+    }
     else
-      Serial.println("0");
+    {
+      #if (_MQTT_SERIAL_DEBUG_ == 1)
+      Serial.println("TOPIC_BOMCTR ->> Error");
+      #endif
+    }
   }
 }
 
@@ -58,9 +78,7 @@ void _MQTTSend(void)
 
   if (mqttTopic2send == 1)
   {    
-    vbatt++;
-
-    str = String(vbatt);
+    str = String(VbattIn);
     str_len = str.length() + 1;
     str.toCharArray(spayload, str_len);
         
@@ -84,13 +102,32 @@ void _MQTTSend(void)
       Serial.println(spayload);
       #endif
     }
+
+  } else if (mqttTopic2send == 3) {
+
+    if (DisplayIndicador == 0)
+      str = String(0);
+    else
+      str = String(1);
+      
+    str_len = str.length() + 1;
+    str.toCharArray(spayload, str_len);
+
+    if(mqttPublish(TOPIC_GENSTATE, (char*)spayload))
+    {
+      #if (_MQTT_SERIAL_DEBUG_ == 1)
+      Serial.println("TOPIC_GENSTATE publish was succeeded");
+      Serial.println(spayload);
+      #endif
+    }
+    
   } else {
     
   }
 
   // Next topic
   mqttTopic2send ++;
-  if (mqttTopic2send > 2)
+  if (mqttTopic2send > 3)
     mqttTopic2send = 1;
 }
 

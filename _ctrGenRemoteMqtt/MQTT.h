@@ -24,6 +24,7 @@ extern "C" {
 #define TOPIC_VBATT       "sdpelicanos@gmail.com/vbatt"
 
 #define TOPIC_GENDISP     "sdpelicanos@gmail.com/genDisp"
+#define TOPIC_GENSTATE    "sdpelicanos@gmail.com/genState"
 #define TOPIC_GENCTR      "sdpelicanos@gmail.com/genCtr"
 
 #define TOPIC_BOMSTATE    "sdpelicanos@gmail.com/bomState"

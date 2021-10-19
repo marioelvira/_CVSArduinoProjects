@@ -6,12 +6,14 @@ void _IOSetup()
 {  
   DisplayIndicador = 1;
 
-  VbattInValue = 0;
+  VbattInADC = 0;
 
   for (int i = 0; i < VBATT_ARRAY_SIZE; i++)
     VbattInArray[i] = 0;
 
   VbattInPointer = 0;
+  
+  VbatEOS = VBATT_ANA_EOS / VBATT_SCALE;
 }
 
 //////////////////////
@@ -19,7 +21,7 @@ void _IOSetup()
 //////////////////////
 void _IOLoop()
 {
-  int vbattAcc = 0;
+  int   vbattAcc = 0;
 
   VbattInArray[VbattInPointer] = analogRead(PIN_VBATT_IN);
   VbattInPointer++;
@@ -30,7 +32,8 @@ void _IOLoop()
   for (int i = 0; i < VBATT_ARRAY_SIZE; i++)
     vbattAcc = vbattAcc + VbattInArray[i];
   
-  VbattInValue = vbattAcc/VBATT_ARRAY_SIZE;
+  VbattInADC = vbattAcc/VBATT_ARRAY_SIZE;
+  VbattIn = (float)VbattInADC * (VbatEOS /(VBATT_DIG_EOS /*- VBATT_DIG_OFFSET*/));
 }
 
 void _IOLcdLoop(void) {

@@ -56,31 +56,31 @@ void _TimeLoop(void)
     Serial.println(" ");
     Serial.println("---------------");
 
-    /*
-    Serial.print("Control Status "); Serial.println(ControlState);
-    if (ControlState == STATE_START)
-      Serial.println("  Arrancando...");
-    else if (ControlState == STATE_GEN_ON)
-      Serial.println("  Bomba: ON - Gen: ON");
-    else if (ControlState == STATE_GEN_ZUMB)
-      Serial.println("  Buzzer aviso...");
-    else if (ControlState == STATE_GEN_OFF)
-      Serial.println("  Bomba: ON - Gen: OFF");
+    if (InBomba == IO_ON)
+     Serial.println("In bomba: ON");
     else
-      Serial.println("  Bomba: OFF - Gen: OFF");
-    
-    Serial.println("---------------");
-    */
-    
-    if (OutRemotePuls == OUT_ON)
-     Serial.println("Remote Puls: ON");
-    else
-     Serial.println("Remote Puls: OFF");
+     Serial.println("In bomba: OFF");
 
-    _IOLoop();
+    Serial.println("---------------");
     
-    Serial.print("Vbatt: ");
-    Serial.println(VbattInValue);
+    Serial.print("Control Status: ");
+    Serial.println(ControlState);  
+    Serial.println("---------------");
+
+    Serial.print("Wi-Fi Status: ");
+    Serial.println(wifiStatus);  
+    Serial.println("---------------");
+        
+    if (OutGenPuls == OUT_ON)
+     Serial.println("Gen Puls: ON");
+    else
+     Serial.println("Gen Puls: OFF");
+
+    _IOLoop();    
+    Serial.print("Vbatt In Dig: ");
+    Serial.println(VbattInADC);
+    Serial.print("Vbatt In: ");
+    Serial.println(VbattIn);    
 
     Serial.println("<><><><><><><>");
     Serial.println(" ");

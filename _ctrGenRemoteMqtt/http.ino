@@ -629,8 +629,8 @@ void _readOUTS()
   html = html + "</tr>";
   
   html = html + "<tr>";
-  html = html + "<td>Remote Pulsador</td>";
-  if (OutRemotePuls == OUT_ON)
+  html = html + "<td>Gen Pulsador</td>";
+  if (OutGenPuls == OUT_ON)
    html = html + "<td><font style=\"color:green\">Activado</font></td>";
   else
    html = html + "<td><font style=\"color:grey\">Desactivado</font></td>";

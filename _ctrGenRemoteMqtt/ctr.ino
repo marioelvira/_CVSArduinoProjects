@@ -16,12 +16,12 @@ void _CtrLoop(void)
   switch (ControlState)
   {
     case STATE_STANDBY:
-      OutRemotePuls = OUT_OFF;
+      OutGenPuls = OUT_OFF;
       ControlTick = millis();
       break;
       
     case STATE_RPULS_ON:
-      OutRemotePuls = OUT_ON;
+      OutGenPuls = OUT_ON;
 
       if (millis() - ControlTick >= (RemotePulsTick*100))
         ControlState = STATE_STANDBY;      

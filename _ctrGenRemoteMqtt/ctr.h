@@ -9,8 +9,9 @@ extern "C" {
 #define MODE_AUTO   0
 
 // Estados principales...
-#define STATE_STANDBY       0
-#define STATE_RPULS_ON      1
+#define STATE_STANDBY         0
+#define STATE_GEN_PULSE       1
+#define STATE_BOM_PULSE       2
 
 #endif // _CTR_H_
 

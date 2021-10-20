@@ -32,7 +32,6 @@ int    VbattInADC;
 int    VbattInArray[VBATT_ARRAY_SIZE];
 int    VbattInPointer;
 float  VbattIn;
-float  VbatEOS;
 
 ///////////
 // Wi-Fi //
@@ -113,7 +112,11 @@ int   ControlState;
 int   TimeControlSec;
 int   DisplayIndicador;
 
-int   RemotePulsTick;
+////////////
+// Config //
+////////////
+int     cfgRemotePulsTick;
+float   cfgVbatEOS;
 
 ///////////////
 // PIN steup //

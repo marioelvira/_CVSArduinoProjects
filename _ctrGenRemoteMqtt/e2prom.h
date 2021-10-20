@@ -33,6 +33,7 @@ extern "C" {
 #define WIFI_PSWD_MAX             32 // Password max 32 char -> Next 0x4F
 
 #define EEPROM_ADD_RPUSL_MSEC     0x4F
+#define EEPROM_ADD_ANA_EOS        0x50
 
 //#define EEPROM_ADD_MAX              0xFA // 250
 
@@ -58,6 +59,7 @@ extern "C" {
 #define EEPROM_VAL_WIFI_MODE      ACCESSPOINT_MODE // STATION_MODE
 
 #define EEPROM_VAL_RPUSL_MSEC     10  // 1 Sec
+#define EEPROM_VAL_ANA_EOS        24
 
 #endif // _E2PROM_H_
 

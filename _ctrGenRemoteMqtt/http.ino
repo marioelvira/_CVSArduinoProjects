@@ -140,7 +140,8 @@ void _serveTimeSETTINGS()
   html = html + "<div class=\"section\"><span>1</span>Temporizaciones</div>";
   html = html + "<div class=\"inner-wrap\">";
   
-  html = html + "<label>Pulso Remoto (*100ms)<input type=\"text\"  maxlength=\"16\" value=\"" + String(RemotePulsTick) + "\" name=\"timeRP\"/></label>";
+  html = html + "<label>Pulso Remoto (*100ms)<input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgRemotePulsTick) + "\" name=\"timeRP\"/></label>";
+  html = html + "<label>Vbat EoS (Volts)<input type=\"text\"  maxlength=\"16\" value=\"" + String((int)cfgVbatEOS) + "\" name=\"vbatEoS\"/></label>";
  
   html = html + "</div>";
   // End
@@ -166,11 +167,12 @@ void _setTimeSETTINGS()
   String html = "";
   
   String rtimeRP = httpServer.arg("timeRP");
+  String rvbatEoS = httpServer.arg("vbatEoS");
 
   int error = 0;
 
-  if ((rtimeRP.length() == 0))// ||
-    /* (rtime9.length() == 0))*/
+  if ((rtimeRP.length() == 0) ||
+      (rvbatEoS.length() == 0))
   {
     error = 1;  // falta un campo...
     #if (_HTTP_SERIAL_DEBUG_ == 1)
@@ -181,18 +183,17 @@ void _setTimeSETTINGS()
   // Si no hay error...
   if (error == 0)
   {
-    RemotePulsTick = rtimeRP.toInt();
-    //TimeOutStart = rtimeStart.toInt();
+
+    cfgRemotePulsTick = rtimeRP.toInt();
+    cfgVbatEOS = rvbatEoS.toInt();
     
     #if (_HTTP_SERIAL_DEBUG_ == 1)  
-      
-    Serial.print("Remote Pulse: ");  Serial.print (RemotePulsTick);  Serial.println("*100 ms");
-    //Serial.print("Time Start: ");  Serial.print (TimeOutStart);  Serial.println(" secs");
-    
+    Serial.print("Remote Pulse: ");  Serial.print (cfgRemotePulsTick);  Serial.println(" *100 ms");
+    Serial.print("Vbat EoS: ");      Serial.print (cfgVbatEOS);         Serial.println(" Volts");    
     #endif   
         
-    EEPROM.write(EEPROM_ADD_RPUSL_MSEC, RemotePulsTick);
-    //EEPROM.write(EEPROM_ADD_TSTART,    TimeOutStart);
+    EEPROM.write(EEPROM_ADD_RPUSL_MSEC, cfgRemotePulsTick);
+    EEPROM.write(EEPROM_ADD_ANA_EOS,    (int)cfgVbatEOS);
     
     EEPROM.commit();    //Store data to EEPROM
   }
@@ -550,26 +551,25 @@ void _setSETTINGS()
    }
 
   html = "<!DOCTYPE HTML><html>";
-  html = html + "<title>Network Settings</title>";
+  html = html + "<title>REMOTE+ #Configuraci&oacuten</title>";
   html = html + "<head>";
+  html = html + "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"/>";
   html = html + "<link rel=\"icon\" href=\"data:,\">";
   html = html + "<link rel=\"stylesheet\" type=\"text/css\" href=\"style.css\" />";
-  //html = html + "<meta name='apple-mobile-web-app-capable' content='yes' />";
-  //html = html + "<meta name='apple-mobile-web-app-status-bar-style' content='black-translucent' />";
   html = html + "</head>";
 
   html = html + "<body>";
 
   html = html + "<div class=\"myform\">";
-  html = html + "<h1>MANUTOU+ #Network settings<span>ESP8266 tech</span></h1>";
+  html = html + "<h1>REMOTE+ #Configuraci&oacuten<span>ESP8266 tech</span></h1>";
   
-  if (i == 200)
-    html += "<p>Settings OK: Saved</p>";
+  if (error == 0)
+    html += "<p class=\"sansserif\">Configuraci&oacuten guardada correctamente.</p>";
   else
-    html += "<p>Settings Error: Not Saved</p>";
+    html += "<p class=\"sansserif\">Error el guardar la configuraci&oacuten. Revise los datos introducidos.</p>";
 
   html = html + "<div class=\"button-section\">";
-  html = html + "  <a href=\"index.htm\"><input type=\"button\" value=\"Back\"></a>";
+  html = html + "  <a href=\"index.htm\"><input type=\"button\" value=\"Volver\"></a>";
   html = html + "</div>";
 
   html = html + "</div>";
@@ -603,6 +603,14 @@ void _readINS()
   html = html + "<td>Indicador LCD</td>";
   html = html + "<td>" + String(DisplayIndicador) + " -> " + String(InD) + "-" + String(InC) + "-" + String(InB) + "-" + String(InA) + "</td>";
   html = html + "</tr>";
+
+  html = html + "<tr>";
+  html = html + "<td>Bomba</td>";
+  if (InBomba == IO_ON)
+   html = html + "<td><font style=\"color:green\">ON</font></td>";
+  else
+   html = html + "<td><font style=\"color:grey\">OFF</font></td>";
+  html = html + "</tr>";
   
   html = html + "</table>";
   
@@ -616,12 +624,18 @@ void _readOUTS()
   html = "<table style=\"width:100%\">";
 
   html = html + "<tr>";
-  html = html + "<td>Control Status " + String(ControlState) + "</td>";
-  if (ControlState == STATE_STANDBY)
-    html = html + "<td><font style=\"color:blue\">Stand By </font></td>";
-  else
-    html = html + "<td><font style=\"color:red\">Pulso Remoto </font></td>";
+  html = html + "<td>Control State </td>";
+  html = html + "<td>" + String(ControlState) + "</td>";
+  html = html + "</tr>";
 
+  html = html + "<tr>";
+  html = html + "<td>Wi-Fi State </td>";
+  html = html + "<td>" + String(wifiStatus) + "</td>";
+  html = html + "</tr>";
+
+  html = html + "<tr>";
+  html = html + "<td>MQTT State </td>";
+  html = html + "<td>" + String(mqttStatus) + "</td>";
   html = html + "</tr>";
 
   html = html + "<tr>";
@@ -635,6 +649,15 @@ void _readOUTS()
   else
    html = html + "<td><font style=\"color:grey\">Desactivado</font></td>";
   html = html + "</tr>";
+
+  html = html + "<tr>";
+  html = html + "<td>Bomba Pulsador</td>";
+  if (OutBomPuls == OUT_ON)
+   html = html + "<td><font style=\"color:green\">Activado</font></td>";
+  else
+   html = html + "<td><font style=\"color:grey\">Desactivado</font></td>";
+  html = html + "</tr>";
+
 
   html = html + "</table>";
   

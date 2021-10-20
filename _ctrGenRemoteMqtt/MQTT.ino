@@ -19,7 +19,7 @@ void mqttDataCallback(char* rtopic, byte* rpayload, unsigned int rlength)
     if(rpayloadStr.equals("1"))
     {
       if (ControlState == STATE_STANDBY)
-        ControlState = STATE_RPULS_ON;
+        ControlState = STATE_GEN_PULSE;
     
       #if (_MQTT_SERIAL_DEBUG_ == 1)
       Serial.println("TOPIC_GENCTR ->> 1");
@@ -36,8 +36,8 @@ void mqttDataCallback(char* rtopic, byte* rpayload, unsigned int rlength)
   {
     if(rpayloadStr.equals("1"))
     {
-      //if (ControlState == STATE_STANDBY)
-      //  ControlState = STATE_RPULS_ON;
+      if (ControlState == STATE_STANDBY)
+        ControlState = STATE_BOM_PULSE;
     
       #if (_MQTT_SERIAL_DEBUG_ == 1)
       Serial.println("TOPIC_BOMCTR ->> 1");
@@ -89,6 +89,7 @@ void _MQTTSend(void)
       Serial.println(spayload);
       #endif
     }
+
   } else if (mqttTopic2send == 2) {
     
     str = String(DisplayIndicador);
@@ -120,14 +121,29 @@ void _MQTTSend(void)
       Serial.println(spayload);
       #endif
     }
-    
-  } else {
-    
+
+  } else if (mqttTopic2send == 4) {
+
+    if (InBomba == IO_OFF)
+      str = String(0);
+    else
+      str = String(1);
+      
+    str_len = str.length() + 1;
+    str.toCharArray(spayload, str_len);
+
+    if(mqttPublish(TOPIC_BOMSTATE, (char*)spayload))
+    {
+      #if (_MQTT_SERIAL_DEBUG_ == 1)
+      Serial.println("TOPIC_BOMSTATE publish was succeeded");
+      Serial.println(spayload);
+      #endif
+    }
   }
 
   // Next topic
   mqttTopic2send ++;
-  if (mqttTopic2send > 3)
+  if (mqttTopic2send > 4)
     mqttTopic2send = 1;
 }
 
@@ -236,5 +252,33 @@ void _MQTTLoop(void)
         mqttTick = millis();
       }      
       break;  
+  }
+}
+
+//////////////
+// MQTT Led //
+//////////////
+void _MQTTLedLoop()
+{
+  switch (mqttStatus)
+  {
+    case MQTT_NOT_CONNECTED:
+    case MQTT_CONNECTING:
+      if (millis() - wifiLEDTick >= MQTT_BLINK_CONNECTING)
+      {
+        if (outLed == OUT_ON)
+          outLed = OUT_OFF;
+        else
+          outLed = OUT_ON;
+
+        wifiLEDTick = millis();
+      } 
+      break;
+
+    case MQTT_CONNECTED:
+    case MQTT_SUBSCRIBED:
+    
+      outLed = IO_ON;
+      break;
   }
 }

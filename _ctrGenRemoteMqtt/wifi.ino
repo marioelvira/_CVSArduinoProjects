@@ -154,9 +154,9 @@ void _WifiLoop()
   }
 }
 
-/////////////////////////
-// Wi-Fi state machine //
-/////////////////////////
+///////////////
+// Wi-Fi Led //
+///////////////
 void _WifiLedLoop()
 {
   switch (wifiStatus)
@@ -200,6 +200,7 @@ void _WifiLedLoop()
       break;
 
     case WIFI_STATION_CONNECTED:
+      /*
       if (millis() - wifiLEDTick >= WIFI_BLINK_STATION)
       {
         //#if (_WIFI_SERIAL_DEBUG_ == 1)
@@ -207,9 +208,10 @@ void _WifiLedLoop()
         //#endif
         
         wifiLEDTick = millis();
-      } 
-    
+      }      
       outLed = IO_ON;
+      */
+      _MQTTLedLoop();
       break;
   }
 }

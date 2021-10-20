@@ -81,7 +81,8 @@ void _readCONFIG (void)
     #endif
 
     // Data Data
-    EEPROM.write(EEPROM_ADD_RPUSL_MSEC,   EEPROM_VAL_RPUSL_MSEC);
+    EEPROM.write(EEPROM_ADD_RPUSL_MSEC, EEPROM_VAL_RPUSL_MSEC);
+    EEPROM.write(EEPROM_ADD_ANA_EOS,    EEPROM_VAL_ANA_EOS);
 
     EEPROM.commit();    //Store data to EEPROM
   }
@@ -164,10 +165,12 @@ void _readCONFIG (void)
     #endif
   }
   
-  RemotePulsTick = (int)EEPROM.read(EEPROM_ADD_RPUSL_MSEC);
-  
+  cfgRemotePulsTick = (int)EEPROM.read(EEPROM_ADD_RPUSL_MSEC);
+  cfgVbatEOS        = (float)EEPROM.read(EEPROM_ADD_ANA_EOS);
+
   #if (_EEPROM_SERIAL_DEBUG_ == 1)
-  Serial.print("Remote Pulse: ");  Serial.print (RemotePulsTick);  Serial.println(" *100 ms");
+  Serial.print("Remote Pulse: ");  Serial.print (cfgRemotePulsTick);  Serial.println(" *100 ms");
+  Serial.print("Vbat EoS: ");      Serial.print (cfgVbatEOS);         Serial.println(" Volts");
   #endif
 }
 

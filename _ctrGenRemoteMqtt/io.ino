@@ -12,8 +12,6 @@ void _IOSetup()
     VbattInArray[i] = 0;
 
   VbattInPointer = 0;
-  
-  VbatEOS = VBATT_ANA_EOS / VBATT_SCALE;
 }
 
 //////////////////////
@@ -33,7 +31,7 @@ void _IOLoop()
     vbattAcc = vbattAcc + VbattInArray[i];
   
   VbattInADC = vbattAcc/VBATT_ARRAY_SIZE;
-  VbattIn = (float)VbattInADC * (VbatEOS /(VBATT_DIG_EOS /*- VBATT_DIG_OFFSET*/));
+  VbattIn = (float)VbattInADC * (cfgVbatEOS /(VBATT_DIG_EOS /*- VBATT_DIG_OFFSET*/));
 }
 
 void _IOLcdLoop(void) {

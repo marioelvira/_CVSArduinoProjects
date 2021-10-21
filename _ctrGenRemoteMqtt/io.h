@@ -12,16 +12,16 @@ extern "C" {
 /*
  *                        --------
  *                    A0 -|      |- GPIO16 <-- BOMBA
- *                    G  -|      |- GPIO5  <-- A
- *                    VU -|      |- GPIO4  <-- B
- *                GPIO10 -|      |- GPIO0  --> GEN PULS
+ *                    G  -|      |- GPIO5  --> BOM PULS
+ *                    VU -|      |- GPIO4  --> GEN PULS
+ *                GPIO10 -|      |- GPIO0  
  *                 GPIO9 -|      |- GPIO2  --> LED*
  *          S1 <-   MOSI -|      |- 3V
  *                    CS -|      |- G
- *          S0 <-   MISO -|      |- GPIO14 <-- C
- *          SK <-   SCLK -|      |- GPIO12 <-- D
- *                     G -|      |- GPIO13 --> BOM PULS
- *                    3V -|      |- GPIO15
+ *          S0 <-   MISO -|      |- GPIO14 <-- A
+ *          SK <-   SCLK -|      |- GPIO12 <-- B
+ *                     G -|      |- GPIO13 <-- C
+ *                    3V -|      |- GPIO15 <-- D
  *                    EN -|      |- GPIO3  
  *                   RST -|      |- GPIO1  
  *                     G -|      |- G
@@ -33,16 +33,14 @@ extern "C" {
 #define PIN_VBATT_IN      A0  // Entrada
 
 #define PIN_BOMBA         16
-
-#define PIN_A             5   // A
-#define PIN_B             4   // B
-#define PIN_C             14  // C
-#define PIN_D             12  // D
-
-#define PIN_GEN_PULS      0
+#define PIN_GEN_PULS      4
+#define PIN_BOM_PULS      5
 #define PIN_LED           2
 
-#define PIN_BOM_PULS      13
+#define PIN_A             14   // A
+#define PIN_B             12  // B
+#define PIN_C             13  // C
+#define PIN_D             15  // D
 
 #define PIN_OUT_ON        1
 #define PIN_OUT_OFF       0
@@ -50,8 +48,8 @@ extern "C" {
 #define VBATT_ARRAY_SIZE  5
 
 // Pull-up INs
-#define PIN_IN_OFF        1   
-#define PIN_IN_ON         0
+#define PIN_IN_OFF        0   
+#define PIN_IN_ON         1
 
 // IO definition
 #define IO_ON             1

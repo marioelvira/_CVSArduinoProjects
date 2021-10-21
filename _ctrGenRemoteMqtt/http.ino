@@ -36,9 +36,9 @@ void _serveMAIN()
 
   html = html + "<div class=\"section\"><span>1</span>Temporizaciones</div>";
   html = html + "<p class=\"sansserif\" id=\"TEMPSid\">...</p>";
-  html = html + "<div class=\"section\"><span>2</span>Pulsador</div>";
+  html = html + "<div class=\"section\"><span>2</span>Entradas</div>";
   html = html + "<p class=\"sansserif\" id=\"INSid\">...</p>";
-  html = html + "<div class=\"section\"><span>3</span>Control</div>";
+  html = html + "<div class=\"section\"><span>3</span>Estados / Salidas</div>";
   html = html + "<p class=\"sansserif\" id=\"OUTSid\">...</p>";
   //html = html + "<div class=\"section\"><span>4</span>Control</div>";
   //html = html + "<p>";
@@ -136,15 +136,17 @@ void _serveTimeSETTINGS()
   html = html + "<h1>REMOTE+ #Configuraci&oacuten<span>ESP8266 tech</span></h1>";
   html = html + "<form method='get' action='setTimeSettings'>";
 
-  // Temporizaciones
-  html = html + "<div class=\"section\"><span>1</span>Temporizaciones</div>";
+  html = html + "<div class=\"section\"><span>1</span>Parametros</div>";
   html = html + "<div class=\"inner-wrap\">";
-  
   html = html + "<label>Pulso Remoto (*100ms)<input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgRemotePulsTick) + "\" name=\"timeRP\"/></label>";
   html = html + "<label>Vbat EoS (Volts)<input type=\"text\"  maxlength=\"16\" value=\"" + String((int)cfgVbatEOS) + "\" name=\"vbatEoS\"/></label>";
- 
   html = html + "</div>";
-  // End
+
+  html = html + "<div class=\"section\"><span>2</span>Logica</div>";
+  html = html + "<div class=\"inner-wrap\">";
+  html = html + "<label> Salidas <input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgLogicIns) + "\" name=\"cfgIns\"/></label>";
+  html = html + "<label> Entradas <input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgLogicOuts) + "\" name=\"cfgOuts\"/></label>";
+  html = html + "</div>";
   
   html = html + "<div class=\"button-section\">";
   html = html + "  <input type=\"submit\" value=\"Guardar\">";
@@ -168,11 +170,15 @@ void _setTimeSETTINGS()
   
   String rtimeRP = httpServer.arg("timeRP");
   String rvbatEoS = httpServer.arg("vbatEoS");
+  String cfgIns = httpServer.arg("cfgIns");
+  String cfgOuts = httpServer.arg("cfgOuts");
 
   int error = 0;
 
-  if ((rtimeRP.length() == 0) ||
-      (rvbatEoS.length() == 0))
+  if ((rtimeRP.length() == 0)  ||
+      (rvbatEoS.length() == 0) ||
+      (cfgIns.length() == 0)   ||
+      (cfgOuts.length() == 0))
   {
     error = 1;  // falta un campo...
     #if (_HTTP_SERIAL_DEBUG_ == 1)
@@ -183,17 +189,22 @@ void _setTimeSETTINGS()
   // Si no hay error...
   if (error == 0)
   {
-
     cfgRemotePulsTick = rtimeRP.toInt();
     cfgVbatEOS = rvbatEoS.toInt();
+    cfgLogicIns = cfgIns.toInt();
+    cfgLogicOuts = cfgOuts.toInt();
     
     #if (_HTTP_SERIAL_DEBUG_ == 1)  
     Serial.print("Remote Pulse: ");  Serial.print (cfgRemotePulsTick);  Serial.println(" *100 ms");
-    Serial.print("Vbat EoS: ");      Serial.print (cfgVbatEOS);         Serial.println(" Volts");    
+    Serial.print("Vbat EoS: ");      Serial.print (cfgVbatEOS);         Serial.println(" Volts");
+    Serial.print("cfgLogic Ins: ");  Serial.println(cfgLogicIns);
+    Serial.print("cfgLogic Outs: "); Serial.println(cfgLogicOuts);  
     #endif   
         
-    EEPROM.write(EEPROM_ADD_RPUSL_MSEC, cfgRemotePulsTick);
-    EEPROM.write(EEPROM_ADD_ANA_EOS,    (int)cfgVbatEOS);
+    EEPROM.write(EEPROM_ADD_RPUSL_MSEC, (byte)cfgRemotePulsTick);
+    EEPROM.write(EEPROM_ADD_ANA_EOS,    (byte)cfgVbatEOS);
+    EEPROM.write(EEPROM_ADD_LOGIC_INS,  (byte)cfgLogicIns);
+    EEPROM.write(EEPROM_ADD_LOGIC_OUTS, (byte)cfgLogicOuts);
     
     EEPROM.commit();    //Store data to EEPROM
   }
@@ -611,6 +622,15 @@ void _readINS()
   else
    html = html + "<td><font style=\"color:grey\">OFF</font></td>";
   html = html + "</tr>";
+
+  html = html + "<tr>";
+  html = html + "<td>Vbatt In (Dig)</td>";
+  html = html + "<td>" + String(VbattInADC) + "</td>";
+  html = html + "</tr>";
+  html = html + "<tr>";
+  html = html + "<td>Vbatt In (V)</td>";
+  html = html + "<td>" + String(VbattIn) + "</td>";
+  html = html + "</tr>";
   
   html = html + "</table>";
   
@@ -657,8 +677,7 @@ void _readOUTS()
   else
    html = html + "<td><font style=\"color:grey\">Desactivado</font></td>";
   html = html + "</tr>";
-
-
+ 
   html = html + "</table>";
   
   httpServer.send(200, "text/plane", html);

@@ -117,6 +117,8 @@ int   DisplayIndicador;
 ////////////
 int     cfgRemotePulsTick;
 float   cfgVbatEOS;
+int     cfgLogicIns;
+int     cfgLogicOuts;
 
 ///////////////
 // PIN steup //
@@ -202,12 +204,12 @@ void _PINLoop()
     digitalWrite(PIN_LED, PIN_OUT_OFF);
   #endif
 
-  if (OutGenPuls == OUT_ON)
+  if (OutGenPuls == cfgLogicOuts)
     digitalWrite(PIN_GEN_PULS, PIN_OUT_ON);
   else
     digitalWrite(PIN_GEN_PULS, PIN_OUT_OFF); 
 
-  if (OutBomPuls == OUT_ON)
+  if (OutBomPuls == cfgLogicOuts)
     digitalWrite(PIN_BOM_PULS, PIN_OUT_ON);
   else
     digitalWrite(PIN_BOM_PULS, PIN_OUT_OFF);
@@ -215,30 +217,30 @@ void _PINLoop()
   //-----//
   // INS //
   //-----//
-  if (digitalRead(PIN_A) == PIN_IN_OFF)
-    InA = IO_OFF;
-  else
+  if (digitalRead(PIN_A) == cfgLogicIns)
     InA = IO_ON;
-
-  if (digitalRead(PIN_B) == PIN_IN_OFF)
-    InB = IO_OFF;
   else
+    InA = IO_OFF;
+
+  if (digitalRead(PIN_B) == cfgLogicIns)
     InB = IO_ON;
-
-  if (digitalRead(PIN_C) == PIN_IN_OFF)
-    InC = IO_OFF;
   else
+    InB = IO_OFF;
+
+  if (digitalRead(PIN_C) == cfgLogicIns)
     InC = IO_ON;
-
-  if (digitalRead(PIN_D) == PIN_IN_OFF)
-    InD = IO_OFF;
   else
+    InC = IO_OFF;
+
+  if (digitalRead(PIN_D) == cfgLogicIns)
     InD = IO_ON;
-
-  if (digitalRead(PIN_BOMBA) == PIN_IN_OFF)
-    InBomba = IO_OFF;
   else
+    InD = IO_OFF;
+
+  if (digitalRead(PIN_BOMBA) == cfgLogicIns)
     InBomba = IO_ON;
+  else
+    InBomba = IO_OFF;
 }
 
 //===========//

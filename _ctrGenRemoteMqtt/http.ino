@@ -671,6 +671,14 @@ void _readOUTS()
   html = html + "</tr>";
 
   html = html + "<tr>";
+  html = html + "<td>Gen Stop</td>";
+  if (OutStopPuls == OUT_ON)
+   html = html + "<td><font style=\"color:green\">Activado</font></td>";
+  else
+   html = html + "<td><font style=\"color:grey\">Desactivado</font></td>";
+  html = html + "</tr>";
+  
+  html = html + "<tr>";
   html = html + "<td>Bomba Pulsador</td>";
   if (OutBomPuls == OUT_ON)
    html = html + "<td><font style=\"color:green\">Activado</font></td>";

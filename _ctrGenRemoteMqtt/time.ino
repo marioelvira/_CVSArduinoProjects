@@ -76,6 +76,16 @@ void _TimeLoop(void)
     else
      Serial.println("Gen Puls: OFF");
 
+    if (OutStopPuls == OUT_ON)
+     Serial.println("Gen Stop: ON");
+    else
+     Serial.println("Gen Stop: OFF");
+
+    if (OutBomPuls == OUT_ON)
+     Serial.println("Bom Puls: ON");
+    else
+     Serial.println("Bom Puls: OFF");
+
     _IOLoop();    
     Serial.print("Vbatt In Dig: ");
     Serial.println(VbattInADC);

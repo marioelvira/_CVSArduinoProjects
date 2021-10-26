@@ -17,12 +17,23 @@ void _CtrLoop(void)
   {
     case STATE_STANDBY:
       OutGenPuls = OUT_OFF;
-      OutBomPuls = OUT_OFF;
+      OutStopPuls = OUT_OFF;
+      OutBomPuls = OUT_OFF;      
       ControlTick = millis();
       break;
       
     case STATE_GEN_PULSE:
       OutGenPuls = OUT_ON;
+      OutStopPuls = OUT_OFF;
+      OutBomPuls = OUT_OFF;
+      if (millis() - ControlTick >= (cfgRemotePulsTick*100))
+        ControlState = STATE_STANDBY;      
+      
+      break;
+
+    case STATE_STOP_PULSE:
+      OutGenPuls = OUT_OFF;
+      OutStopPuls = OUT_ON;
       OutBomPuls = OUT_OFF;
       if (millis() - ControlTick >= (cfgRemotePulsTick*100))
         ControlState = STATE_STANDBY;      
@@ -31,8 +42,8 @@ void _CtrLoop(void)
 
     case STATE_BOM_PULSE:
       OutGenPuls = OUT_OFF;
+      OutStopPuls = OUT_OFF;
       OutBomPuls = OUT_ON;
-
       if (millis() - ControlTick >= (cfgRemotePulsTick*100))
         ControlState = STATE_STANDBY;      
       

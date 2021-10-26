@@ -11,7 +11,8 @@ extern "C" {
 // Estados principales...
 #define STATE_STANDBY         0
 #define STATE_GEN_PULSE       1
-#define STATE_BOM_PULSE       2
+#define STATE_STOP_PULSE      2
+#define STATE_BOM_PULSE       3
 
 #endif // _CTR_H_
 

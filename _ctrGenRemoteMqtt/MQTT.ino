@@ -32,6 +32,25 @@ void mqttDataCallback(char* rtopic, byte* rpayload, unsigned int rlength)
       #endif
     }
   }
+  else if(rtopicStr.equals(TOPIC_GENSTOP))
+  {
+    Serial.print(" ");
+    if(rpayloadStr.equals("1"))
+    {
+      if (ControlState == STATE_STANDBY)
+        ControlState = STATE_STOP_PULSE;
+
+      #if (_MQTT_SERIAL_DEBUG_ == 1)
+      Serial.println("TOPIC_GENSTOP ->> 1");
+      #endif
+    }
+    else
+    {
+      #if (_MQTT_SERIAL_DEBUG_ == 1)
+      Serial.println("TOPIC_GENSTOP ->> Error");
+      #endif
+    }
+  }
   else if (rtopicStr.equals(TOPIC_BOMCTR))
   {
     if(rpayloadStr.equals("1"))
@@ -213,7 +232,8 @@ void _MQTTLoop(void)
         
         mqttTick = millis();
         
-        if (mqttSubscribe(TOPIC_GENCTR) &&
+        if (mqttSubscribe(TOPIC_GENCTR)  &&
+            mqttSubscribe(TOPIC_GENSTOP) &&
             mqttSubscribe(TOPIC_BOMCTR))
         {
           mqttStatus = MQTT_SUBSCRIBED;

@@ -1,4 +1,4 @@
-#include <ESP8266WiFi.h>
+ #include <ESP8266WiFi.h>
 #include <ESP8266WebServer.h>
 #include <PubSubClient.h>
 #include <EEPROM.h>
@@ -22,6 +22,7 @@ int   InD;
 int   InBomba;
 
 int   OutGenPuls;
+int   OutStopPuls;
 int   OutBomPuls;
 int   outLed;
 
@@ -136,12 +137,16 @@ void _PINSetup(void)
   #endif
 
   pinMode(PIN_GEN_PULS, OUTPUT);
-  digitalWrite(PIN_GEN_PULS, PIN_OUT_ON);
-  OutGenPuls = OUT_ON;
+  digitalWrite(PIN_GEN_PULS, !cfgLogicOuts);
+  OutGenPuls = OUT_OFF;
+
+  pinMode(PIN_STOP_PULS, OUTPUT);
+  digitalWrite(PIN_STOP_PULS, !cfgLogicOuts);
+  OutStopPuls = OUT_OFF;
 
   pinMode(PIN_BOM_PULS, OUTPUT);
-  digitalWrite(PIN_BOM_PULS, PIN_OUT_ON);
-  OutBomPuls = OUT_ON; 
+  digitalWrite(PIN_BOM_PULS, !cfgLogicOuts);
+  OutBomPuls = OUT_OFF; 
   
   //-----//
   // INS //
@@ -159,18 +164,18 @@ void _PINSetup(void)
 //============//
 void setup(void)
 { 
-  _PINSetup();
-
-  _IOSetup();
-
   #if (_SERIAL_DEBUG_ == 1)
   delay(100);  // 100ms
   Serial.begin(115200);
   Serial.println("");
   #endif
-
+  
   // Config setup
   _ConfigSetup();
+
+  // IO setup
+  _PINSetup();
+  _IOSetup();
 
   // Wi-Fi setup
   _WifiSetup();
@@ -209,11 +214,16 @@ void _PINLoop()
   else
     digitalWrite(PIN_GEN_PULS, PIN_OUT_OFF); 
 
+  if (OutStopPuls == cfgLogicOuts)
+    digitalWrite(PIN_STOP_PULS, PIN_OUT_ON);
+  else
+    digitalWrite(PIN_STOP_PULS, PIN_OUT_OFF);
+
   if (OutBomPuls == cfgLogicOuts)
     digitalWrite(PIN_BOM_PULS, PIN_OUT_ON);
   else
     digitalWrite(PIN_BOM_PULS, PIN_OUT_OFF);
-    
+  
   //-----//
   // INS //
   //-----//

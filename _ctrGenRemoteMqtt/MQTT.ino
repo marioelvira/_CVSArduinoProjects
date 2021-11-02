@@ -51,24 +51,41 @@ void mqttDataCallback(char* rtopic, byte* rpayload, unsigned int rlength)
       #endif
     }
   }
-  else if (rtopicStr.equals(TOPIC_BOMCTR))
+  else if (rtopicStr.equals(TOPIC_LUZCTR))
   {
     if(rpayloadStr.equals("1"))
     {
-      if (ControlState == STATE_STANDBY)
-        ControlState = STATE_BOM_PULSE;
-    
+      if (LuzState == STATE_STANDBY)
+        LuzState = STATE_LUZ_OFF;
+
       #if (_MQTT_SERIAL_DEBUG_ == 1)
-      Serial.println("TOPIC_BOMCTR ->> 1");
+      Serial.println("TOPIC_LUZCTR ->> 1");
       #endif
     }
     else
     {
       #if (_MQTT_SERIAL_DEBUG_ == 1)
-      Serial.println("TOPIC_BOMCTR ->> Error");
+      Serial.println("TOPIC_LUZCTR ->> Error");
       #endif
     }
   }
+  else if (rtopicStr.equals(TOPIC_LUZSTANBY))
+  {
+    if(rpayloadStr.equals("1"))
+    {
+      LuzState = STATE_STANDBY;
+    
+      #if (_MQTT_SERIAL_DEBUG_ == 1)
+      Serial.println("TOPIC_LUZSTANBY ->> 1");
+      #endif
+    }
+    else
+    {
+      #if (_MQTT_SERIAL_DEBUG_ == 1)
+      Serial.println("TOPIC_LUZSTANBY ->> Error");
+      #endif
+    }
+  } 
 }
 
 boolean mqttPublish(const char* topic, char* payload)
@@ -143,18 +160,18 @@ void _MQTTSend(void)
 
   } else if (mqttTopic2send == 4) {
 
-    if (InBomba == IO_OFF)
+    if (LuzState == STATE_STANDBY)
       str = String(0);
     else
       str = String(1);
-      
+
     str_len = str.length() + 1;
     str.toCharArray(spayload, str_len);
 
-    if(mqttPublish(TOPIC_BOMSTATE, (char*)spayload))
+    if(mqttPublish(TOPIC_LUZSTATE, (char*)spayload))
     {
       #if (_MQTT_SERIAL_DEBUG_ == 1)
-      Serial.println("TOPIC_BOMSTATE publish was succeeded");
+      Serial.println("TOPIC_LUZSTATE publish was succeeded");
       Serial.println(spayload);
       #endif
     }
@@ -234,7 +251,8 @@ void _MQTTLoop(void)
         
         if (mqttSubscribe(TOPIC_GENCTR)  &&
             mqttSubscribe(TOPIC_GENSTOP) &&
-            mqttSubscribe(TOPIC_BOMCTR))
+            mqttSubscribe(TOPIC_LUZCTR)  &&
+            mqttSubscribe(TOPIC_LUZSTANBY))
         {
           mqttStatus = MQTT_SUBSCRIBED;
           mqttTopic2send = 1;

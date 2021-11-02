@@ -19,11 +19,10 @@ int   InA;
 int   InB;
 int   InC;
 int   InD;
-int   InBomba;
 
 int   OutGenPuls;
 int   OutStopPuls;
-int   OutBomPuls;
+int   OutLuzOff;
 int   outLed;
 
 ///////////
@@ -107,16 +106,20 @@ int timeHour = 0;
 /////////////
 // Control //
 /////////////
-//int   controlMode = MODE_AUTO;
+int   controlMode = MODE_AUTO;
 unsigned long ControlTick = 0;
 int   ControlState;
 int   TimeControlSec;
 int   DisplayIndicador;
 
+int   LuzState;
+unsigned long LuzTick = 0;
+
 ////////////
 // Config //
 ////////////
 int     cfgRemotePulsTick;
+int     cfgLuzOutTick;
 float   cfgVbatEOS;
 int     cfgLogicIns;
 int     cfgLogicOuts;
@@ -144,9 +147,9 @@ void _PINSetup(void)
   digitalWrite(PIN_STOP_PULS, !cfgLogicOuts);
   OutStopPuls = OUT_OFF;
 
-  pinMode(PIN_BOM_PULS, OUTPUT);
-  digitalWrite(PIN_BOM_PULS, !cfgLogicOuts);
-  OutBomPuls = OUT_OFF; 
+  pinMode(PIN_LUZ_OFF, OUTPUT);
+  digitalWrite(PIN_LUZ_OFF, !cfgLogicOuts);
+  OutLuzOff = OUT_OFF; 
   
   //-----//
   // INS //
@@ -155,8 +158,6 @@ void _PINSetup(void)
   pinMode(PIN_B, INPUT);
   pinMode(PIN_C, INPUT);
   pinMode(PIN_D, INPUT);
-
-  pinMode(PIN_BOMBA, INPUT);
 }
 
 //============//
@@ -219,10 +220,10 @@ void _PINLoop()
   else
     digitalWrite(PIN_STOP_PULS, PIN_OUT_OFF);
 
-  if (OutBomPuls == cfgLogicOuts)
-    digitalWrite(PIN_BOM_PULS, PIN_OUT_ON);
+  if (OutLuzOff == cfgLogicOuts)
+    digitalWrite(PIN_LUZ_OFF, PIN_OUT_ON);
   else
-    digitalWrite(PIN_BOM_PULS, PIN_OUT_OFF);
+    digitalWrite(PIN_LUZ_OFF, PIN_OUT_OFF);
   
   //-----//
   // INS //
@@ -246,11 +247,6 @@ void _PINLoop()
     InD = IO_ON;
   else
     InD = IO_OFF;
-
-  if (digitalRead(PIN_BOMBA) == cfgLogicIns)
-    InBomba = IO_ON;
-  else
-    InBomba = IO_OFF;
 }
 
 //===========//
@@ -263,9 +259,6 @@ void loop()
 
   _IOLcdLoop();
 
-  //if (controlMode == MODE_AUTO)
-  //  _OUTSLoop();
-
   _WifiLoop();
   _WifiLedLoop();
 
@@ -276,8 +269,9 @@ void loop()
     _MQTTLoop();
   else
     mqttStatus = MQTT_NOT_CONNECTED;
-  
-  _CtrLoop();
+
+  if (controlMode == MODE_AUTO)
+    _CtrLoop();
   
   _TimeLoop();
 }

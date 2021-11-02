@@ -28,8 +28,9 @@ extern "C" {
 #define TOPIC_GENCTR      "sdpelicanos@gmail.com/genCtr"
 #define TOPIC_GENSTOP     "sdpelicanos@gmail.com/genStop"
 
-#define TOPIC_BOMSTATE    "sdpelicanos@gmail.com/bomState"
-#define TOPIC_BOMCTR      "sdpelicanos@gmail.com/bomCtr"
+#define TOPIC_LUZSTATE    "sdpelicanos@gmail.com/luzState"
+#define TOPIC_LUZCTR      "sdpelicanos@gmail.com/luzCtr"
+#define TOPIC_LUZSTANBY   "sdpelicanos@gmail.com/luzStandby"
 
 #define TOPIC_OFFSET            21
 

@@ -12,7 +12,8 @@ extern "C" {
 #define STATE_STANDBY         0
 #define STATE_GEN_PULSE       1
 #define STATE_STOP_PULSE      2
-#define STATE_BOM_PULSE       3
+
+#define STATE_LUZ_OFF         1
 
 #endif // _CTR_H_
 

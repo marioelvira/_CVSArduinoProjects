@@ -40,14 +40,14 @@ void _serveMAIN()
   html = html + "<p class=\"sansserif\" id=\"INSid\">...</p>";
   html = html + "<div class=\"section\"><span>3</span>Estados / Salidas</div>";
   html = html + "<p class=\"sansserif\" id=\"OUTSid\">...</p>";
-  //html = html + "<div class=\"section\"><span>4</span>Control</div>";
-  //html = html + "<p>";
-  //html = html + "  <input type=\"button\" value=\"Cambiar Modo\" onclick=\"sendOUT(0)\">";
-  //html = html + "</p><p>";
-  //html = html + "  <input type=\"button\" value=\"Generador\" onclick=\"sendOUT(10)\">";
-  //html = html + "  <input type=\"button\" value=\"Buzzer\" onclick=\"sendOUT(11)\">";
-  //html = html + "  <input type=\"button\" value=\"Display\" onclick=\"sendOUT(12)\">";
-  //html = html + "</p>";
+  html = html + "<div class=\"section\"><span>4</span>Control</div>";
+  html = html + "<p>";
+  html = html + "  <input type=\"button\" value=\"Cambiar Modo\" onclick=\"sendOUT(0)\">";
+  html = html + "</p><p>";
+  html = html + "  <input type=\"button\" value=\"Gen Pulso\" onclick=\"sendOUT(10)\">";
+  html = html + "  <input type=\"button\" value=\"Gen Paro\" onclick=\"sendOUT(11)\">";
+  html = html + "  <input type=\"button\" value=\"Luz Control\" onclick=\"sendOUT(12)\">";
+  html = html + "</p>";
   html = html + "<div class=\"section\"><span>4</span>Configuraci&oacuten</div>";
   html = html + "<p>";
   html = html + "  <a href=\"settings.htm\"><input type=\"button\" value=\"Wi-Fi\"></a>";
@@ -139,6 +139,7 @@ void _serveTimeSETTINGS()
   html = html + "<div class=\"section\"><span>1</span>Parametros</div>";
   html = html + "<div class=\"inner-wrap\">";
   html = html + "<label>Pulso Remoto (*100ms)<input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgRemotePulsTick) + "\" name=\"timeRP\"/></label>";
+  html = html + "<label>Luz Ext Off (*15m)<input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgLuzOutTick) + "\" name=\"timeLOFF\"/></label>";
   html = html + "<label>Vbat EoS (Volts)<input type=\"text\"  maxlength=\"16\" value=\"" + String((int)cfgVbatEOS) + "\" name=\"vbatEoS\"/></label>";
   html = html + "</div>";
 
@@ -168,16 +169,18 @@ void _setTimeSETTINGS()
 {
   String html = "";
   
-  String rtimeRP = httpServer.arg("timeRP");
-  String rvbatEoS = httpServer.arg("vbatEoS");
-  String cfgIns = httpServer.arg("cfgIns");
-  String cfgOuts = httpServer.arg("cfgOuts");
+  String rtimeRP   = httpServer.arg("timeRP");
+  String rtimeLOFF = httpServer.arg("timeLOFF");
+  String rvbatEoS  = httpServer.arg("vbatEoS");
+  String cfgIns    = httpServer.arg("cfgIns");
+  String cfgOuts   = httpServer.arg("cfgOuts");
 
   int error = 0;
 
-  if ((rtimeRP.length() == 0)  ||
-      (rvbatEoS.length() == 0) ||
-      (cfgIns.length() == 0)   ||
+  if ((rtimeRP.length() == 0)   ||
+      (rtimeLOFF.length() == 0) ||
+      (rvbatEoS.length() == 0)  ||
+      (cfgIns.length() == 0)    ||
       (cfgOuts.length() == 0))
   {
     error = 1;  // falta un campo...
@@ -190,18 +193,21 @@ void _setTimeSETTINGS()
   if (error == 0)
   {
     cfgRemotePulsTick = rtimeRP.toInt();
+    cfgLuzOutTick = rtimeLOFF.toInt();
     cfgVbatEOS = rvbatEoS.toInt();
     cfgLogicIns = cfgIns.toInt();
     cfgLogicOuts = cfgOuts.toInt();
     
     #if (_HTTP_SERIAL_DEBUG_ == 1)  
     Serial.print("Remote Pulse: ");  Serial.print (cfgRemotePulsTick);  Serial.println(" *100 ms");
+    Serial.print("Luz Off: ");       Serial.print (cfgLuzOutTick);      Serial.println(" *15 min");
     Serial.print("Vbat EoS: ");      Serial.print (cfgVbatEOS);         Serial.println(" Volts");
     Serial.print("cfgLogic Ins: ");  Serial.println(cfgLogicIns);
     Serial.print("cfgLogic Outs: "); Serial.println(cfgLogicOuts);  
     #endif   
         
     EEPROM.write(EEPROM_ADD_RPUSL_MSEC, (byte)cfgRemotePulsTick);
+    EEPROM.write(EEPROM_ADD_LUZOFF_15M, (byte)cfgLuzOutTick);
     EEPROM.write(EEPROM_ADD_ANA_EOS,    (byte)cfgVbatEOS);
     EEPROM.write(EEPROM_ADD_LOGIC_INS,  (byte)cfgLogicIns);
     EEPROM.write(EEPROM_ADD_LOGIC_OUTS, (byte)cfgLogicOuts);
@@ -600,7 +606,6 @@ void _readINS()
 
   html = "<table style=\"width:100%\">";
 
-  /*
   html = html + "<tr>";
   html = html + "<td>Modo</td>";
   if (controlMode == MODE_AUTO)
@@ -608,19 +613,10 @@ void _readINS()
   else
    html = html + "<td><font style=\"color:red\">Control Manual</font></td>";
   html = html + "</tr>";
-  */
 
   html = html + "<tr>";
   html = html + "<td>Indicador LCD</td>";
   html = html + "<td>" + String(DisplayIndicador) + " -> " + String(InD) + "-" + String(InC) + "-" + String(InB) + "-" + String(InA) + "</td>";
-  html = html + "</tr>";
-
-  html = html + "<tr>";
-  html = html + "<td>Bomba</td>";
-  if (InBomba == IO_ON)
-   html = html + "<td><font style=\"color:green\">ON</font></td>";
-  else
-   html = html + "<td><font style=\"color:grey\">OFF</font></td>";
   html = html + "</tr>";
 
   html = html + "<tr>";
@@ -646,6 +642,11 @@ void _readOUTS()
   html = html + "<tr>";
   html = html + "<td>Control State </td>";
   html = html + "<td>" + String(ControlState) + "</td>";
+  html = html + "</tr>";
+
+  html = html + "<tr>";
+  html = html + "<td>Luz OFF State </td>";
+  html = html + "<td>" + String(LuzState) + "</td>";
   html = html + "</tr>";
 
   html = html + "<tr>";
@@ -679,8 +680,8 @@ void _readOUTS()
   html = html + "</tr>";
   
   html = html + "<tr>";
-  html = html + "<td>Bomba Pulsador</td>";
-  if (OutBomPuls == OUT_ON)
+  html = html + "<td>Luz OFF</td>";
+  if (OutLuzOff == OUT_ON)
    html = html + "<td><font style=\"color:green\">Activado</font></td>";
   else
    html = html + "<td><font style=\"color:grey\">Desactivado</font></td>";
@@ -701,7 +702,6 @@ void _setOUTS()
   Serial.println(out_number);
   #endif
 
-  /*
   // Cambiar Modo
   if(out_number == "0")
   {
@@ -723,70 +723,69 @@ void _setOUTS()
     }
   }
 
-  // Generador
+  // Gen Pulso
   if(out_number == "10")
   {
-    if (OutGen == OUT_ON)
+    if (OutGenPuls == OUT_ON)
     {
-      OutGen = OUT_OFF;
+      OutGenPuls = OUT_OFF;
       #if (_HTTP_SERIAL_DEBUG_ == 1)
-      Serial.println("Generador OFF");
+      Serial.println("Gen Pulso OFF");
       #endif
-      html = "Generador OFF";
+      html = "Gen Pulso OFF";
     }
     else
     {
-      OutGen = OUT_ON;
+      OutGenPuls = OUT_ON;
       #if (_HTTP_SERIAL_DEBUG_ == 1)
-      Serial.println("Generador ON");
+      Serial.println("Gen Pulso ON");
       #endif
-      html = "Generador ON";
+      html = "Gen Pulso ON";
     }
   }
  
-  // Zumbador
+  // OutStopPuls
   if(out_number == "11")
   {
-    if (OutZumb == OUT_ON)
+    if (OutStopPuls == OUT_ON)
     {
-      OutZumb = OUT_OFF;
+      OutStopPuls = OUT_OFF;
       #if (_HTTP_SERIAL_DEBUG_ == 1)
-      Serial.println("Zumbador OFF");
+      Serial.println("Stop Gen OFF");
       #endif
-      html = "Zumbador OFF";
+      html = "Stop Gen OFF";
     }
     else
     {
-      OutZumb = OUT_ON;
+      OutStopPuls = OUT_ON;
       #if (_HTTP_SERIAL_DEBUG_ == 1)
-      Serial.println("Zumbador ON");
+      Serial.println("Stop Gen ON");
       #endif
-      html = "Zumbador ON";
+      html = "Stop Gen ON";
     }
   }
 
-  // Disp
+  // OutLuzOff
   if(out_number == "12")
   {
-    if (OutDisp == OUT_ON)
+    if (OutLuzOff == OUT_ON)
     {
-      OutDisp = OUT_OFF;
+      OutLuzOff = OUT_OFF;
       #if (_HTTP_SERIAL_DEBUG_ == 1)
-      Serial.println("Disp OFF");
+      Serial.println("Luz Off OFF");
       #endif
-      html = "Disp OFF";
+      html = "Luz off OFF";
     }
     else
     {
-      OutDisp = OUT_ON;
+      OutLuzOff = OUT_ON;
       #if (_HTTP_SERIAL_DEBUG_ == 1)
-      Serial.println("Disp ON");
+      Serial.println("Luz off ON");
       #endif
-      html = "Disp ON";
+      html = "Luz off ON";
     }
   }
-  */
-
+  /*
   // Reset Timers
   if(out_number == "20")
   {
@@ -796,7 +795,7 @@ void _setOUTS()
     #endif
     html = "Reset Timers";
   }
-  
+  */
   httpServer.send(200, "text/plane", html);
 }
 

@@ -55,16 +55,13 @@ void _TimeLoop(void)
     Serial.print(InD); Serial.print("-"); Serial.print(InC); Serial.print("-"); Serial.print(InB); Serial.print("-"); Serial.print(InA);
     Serial.println(" ");
     Serial.println("---------------");
-
-    if (InBomba == IO_ON)
-     Serial.println("In bomba: ON");
-    else
-     Serial.println("In bomba: OFF");
-
-    Serial.println("---------------");
     
     Serial.print("Control Status: ");
     Serial.println(ControlState);  
+    Serial.println("---------------");
+
+    Serial.print("Luz Off Status: ");
+    Serial.println(LuzState);  
     Serial.println("---------------");
 
     Serial.print("Wi-Fi Status: ");
@@ -81,10 +78,10 @@ void _TimeLoop(void)
     else
      Serial.println("Gen Stop: OFF");
 
-    if (OutBomPuls == OUT_ON)
-     Serial.println("Bom Puls: ON");
+    if (OutLuzOff == OUT_ON)
+     Serial.println("Luz OFF: ON");
     else
-     Serial.println("Bom Puls: OFF");
+     Serial.println("Luz OFF: OFF");
 
     _IOLoop();    
     Serial.print("Vbatt In Dig: ");

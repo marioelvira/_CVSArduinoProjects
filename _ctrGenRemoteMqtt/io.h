@@ -11,10 +11,10 @@ extern "C" {
 
 /*
  *                        --------
- *                    A0 -|      |- GPIO16 <-- BOMBA
+ *                    A0 -|      |- GPIO16
  *                    G  -|      |- GPIO5  --> GEN STOP
  *                    VU -|      |- GPIO4  --> GEN PULS
- *                GPIO10 -|      |- GPIO0  --> BOM PULS
+ *                GPIO10 -|      |- GPIO0  --> LUZ OFF
  *                 GPIO9 -|      |- GPIO2  --> LED*
  *          S1 <-   MOSI -|      |- 3V
  *                    CS -|      |- G
@@ -32,10 +32,9 @@ extern "C" {
 // PIN definition
 #define PIN_VBATT_IN      A0  // Entrada
 
-#define PIN_BOMBA         16
 #define PIN_STOP_PULS     5
 #define PIN_GEN_PULS      4
-#define PIN_BOM_PULS      0
+#define PIN_LUZ_OFF       0
 #define PIN_LED           2
 
 #define PIN_A             14  // A

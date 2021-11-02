@@ -82,6 +82,7 @@ void _readCONFIG (void)
 
     // Data Data
     EEPROM.write(EEPROM_ADD_RPUSL_MSEC, EEPROM_VAL_RPUSL_MSEC);
+    EEPROM.write(EEPROM_ADD_LUZOFF_15M, EEPROM_VAL_LUZOFF_15M);  
     EEPROM.write(EEPROM_ADD_ANA_EOS,    EEPROM_VAL_ANA_EOS);
     EEPROM.write(EEPROM_ADD_LOGIC_INS,  EEPROM_VAL_LOGIC_INS);
     EEPROM.write(EEPROM_ADD_LOGIC_OUTS, EEPROM_VAL_LOGIC_OUTS);
@@ -168,12 +169,14 @@ void _readCONFIG (void)
   }
   
   cfgRemotePulsTick = (int)EEPROM.read(EEPROM_ADD_RPUSL_MSEC);
+  cfgLuzOutTick      = (int)EEPROM.read(EEPROM_ADD_LUZOFF_15M);
   cfgVbatEOS        = (float)EEPROM.read(EEPROM_ADD_ANA_EOS);
   cfgLogicIns       = (int)EEPROM.read(EEPROM_ADD_LOGIC_INS);
   cfgLogicOuts      = (int)EEPROM.read(EEPROM_ADD_LOGIC_OUTS);
 
   #if (_EEPROM_SERIAL_DEBUG_ == 1)
   Serial.print("Remote Pulse: ");  Serial.print (cfgRemotePulsTick);  Serial.println(" *100 ms");
+  Serial.print("Luz Off: ");       Serial.print (cfgLuzOutTick);      Serial.println(" *15 min");
   Serial.print("Vbat EoS: ");      Serial.print (cfgVbatEOS);         Serial.println(" Volts");
   Serial.print("Logic Ins: ");     Serial.println(cfgLogicIns);
   Serial.print("Logic Outs: ");    Serial.println(cfgLogicOuts);  

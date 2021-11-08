@@ -108,79 +108,52 @@ boolean mqttSubscribe(const char* topicToSubscribe)
 ///////////////
 void _MQTTSend(void)
 {
-  char    spayload[10];
+  char    spayload[200];
   String  str;
   int     str_len;
 
-  if (mqttTopic2send == 1)
-  {    
-    str = String(VbattIn);
-    str_len = str.length() + 1;
-    str.toCharArray(spayload, str_len);
-        
-    if(mqttPublish(TOPIC_VBATT, (char*)spayload))
-    {
-      #if (_MQTT_SERIAL_DEBUG_ == 1)
-      Serial.println("TOPIC_VBATT publish was succeeded");
-      Serial.println(spayload);
-      #endif
-    }
+  str = "{\n";
 
-  } else if (mqttTopic2send == 2) {
-    
-    str = String(DisplayIndicador);
-    str_len = str.length() + 1;
-    str.toCharArray(spayload, str_len);
+  str = str + "\"tOn\":\"";
+  str = str + String(timeHour) + " : " + String(timeMin) + " : " + String(timeSec);
+  str = str + "\",\n";
 
-    if(mqttPublish(TOPIC_GENDISP, (char*)spayload))
-    {
-      #if (_MQTT_SERIAL_DEBUG_ == 1)
-      Serial.println("TOPIC_GENDISP publish was succeeded");
-      Serial.println(spayload);
-      #endif
-    }
+  // vBatt
+  str = str + "\"vbatt\":";
+  str = str + String(VbattIn);
+  str = str + ",\n";
 
-  } else if (mqttTopic2send == 3) {
+  // vBatt
+  str = str + "\"genDisp\":";
+  str = str + String(DisplayIndicador);
+  str = str + ",\n";
 
-    if (DisplayIndicador == 0)
-      str = String(0);
-    else
-      str = String(1);
-      
-    str_len = str.length() + 1;
-    str.toCharArray(spayload, str_len);
+  // genState
+  if (DisplayIndicador == 0)
+    str = str + "\"genState\":0";
+  else
+    str = str + "\"genState\":1";
+  str = str + ",\n";
 
-    if(mqttPublish(TOPIC_GENSTATE, (char*)spayload))
-    {
-      #if (_MQTT_SERIAL_DEBUG_ == 1)
-      Serial.println("TOPIC_GENSTATE publish was succeeded");
-      Serial.println(spayload);
-      #endif
-    }
+  // luzState
+  if (LuzState == STATE_STANDBY)
+    str = str + "\"luzState\":0";
+  else
+    str = str + "\"luzState\":1";
+  str = str + "\n";
 
-  } else if (mqttTopic2send == 4) {
+  str = str + "}";
 
-    if (LuzState == STATE_STANDBY)
-      str = String(0);
-    else
-      str = String(1);
+  str_len = str.length() + 1;
+  str.toCharArray(spayload, str_len);
 
-    str_len = str.length() + 1;
-    str.toCharArray(spayload, str_len);
-
-    if(mqttPublish(TOPIC_LUZSTATE, (char*)spayload))
-    {
-      #if (_MQTT_SERIAL_DEBUG_ == 1)
-      Serial.println("TOPIC_LUZSTATE publish was succeeded");
-      Serial.println(spayload);
-      #endif
-    }
-  }
-
-  // Next topic
-  mqttTopic2send ++;
-  if (mqttTopic2send > 4)
-    mqttTopic2send = 1;
+  if(mqttPublish(TOPIC_STATE, (char*)spayload))
+  {
+    #if (_MQTT_SERIAL_DEBUG_ == 1)
+    Serial.println("TOPIC_STATE publish was succeeded");
+    Serial.println(spayload);
+    #endif
+  }  
 }
 
 /////////////////
@@ -255,7 +228,6 @@ void _MQTTLoop(void)
             mqttSubscribe(TOPIC_LUZSTANBY))
         {
           mqttStatus = MQTT_SUBSCRIBED;
-          mqttTopic2send = 1;
         }
       }
       else

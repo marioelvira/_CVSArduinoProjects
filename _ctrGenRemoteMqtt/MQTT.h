@@ -21,14 +21,11 @@ extern "C" {
 #define MQTT_KEY          "MQTTSup3rP@@sw0rd"
 
 // MQTT Topics
-#define TOPIC_VBATT       "sdpelicanos@gmail.com/vbatt"
+#define TOPIC_STATE       "sdpelicanos@gmail.com/state"
 
-#define TOPIC_GENDISP     "sdpelicanos@gmail.com/genDisp"
-#define TOPIC_GENSTATE    "sdpelicanos@gmail.com/genState"
 #define TOPIC_GENCTR      "sdpelicanos@gmail.com/genCtr"
 #define TOPIC_GENSTOP     "sdpelicanos@gmail.com/genStop"
 
-#define TOPIC_LUZSTATE    "sdpelicanos@gmail.com/luzState"
 #define TOPIC_LUZCTR      "sdpelicanos@gmail.com/luzCtr"
 #define TOPIC_LUZSTANBY   "sdpelicanos@gmail.com/luzStandby"
 

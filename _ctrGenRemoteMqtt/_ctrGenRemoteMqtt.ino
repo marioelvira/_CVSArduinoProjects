@@ -92,7 +92,6 @@ PubSubClient mqttClient(wifiClient);
 String mqttClientId = "remoteMQTT-" + String(ESP.getChipId());
 
 int mqttStatus;
-int mqttTopic2send;
 unsigned long mqttTick = 0;
 
 //////////

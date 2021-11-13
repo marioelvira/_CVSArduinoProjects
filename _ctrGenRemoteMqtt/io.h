@@ -11,10 +11,10 @@ extern "C" {
 
 /*
  *                        --------
- *                    A0 -|      |- GPIO16
+ *                    A0 -|      |- GPIO16 --> LUZ OFF
  *                    G  -|      |- GPIO5  --> GEN STOP
  *                    VU -|      |- GPIO4  --> GEN PULS
- *                GPIO10 -|      |- GPIO0  --> LUZ OFF
+ *                GPIO10 -|      |- GPIO0  -- 
  *                 GPIO9 -|      |- GPIO2  --> LED*
  *          S1 <-   MOSI -|      |- 3V
  *                    CS -|      |- G
@@ -34,7 +34,7 @@ extern "C" {
 
 #define PIN_STOP_PULS     5
 #define PIN_GEN_PULS      4
-#define PIN_LUZ_OFF       0
+#define PIN_LUZ_OFF       16 // 0
 #define PIN_LED           2
 
 #define PIN_A             14  // A

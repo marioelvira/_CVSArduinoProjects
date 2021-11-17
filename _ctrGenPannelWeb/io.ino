@@ -11,38 +11,34 @@ void _IOSetup()
   InEndCounter = 0;
 
   DisplayIndicador = 1;
+
+  if (DebugVal == 69)
+  {
+    
+  }
 }
 
 //////////////////////
 // IO state machine //
 //////////////////////
 void _IOLoop()
-{
-  int startInState;
-  int endInState;
-  
-  // Leemos las entradas digitales...
-  startInState = InStartVal;
-  endInState = InStartVal;
-
-  // In Start..
-  if (InStartVal_ant == startInState)
-    InStartCounter++; // Incrementamos el contador.
+{ 
+  // In Start...
+  if (InStartVal_ant == InStartVal)
+    InStartCounter++;
   else
   {
     // Si detectamos un flanco ...
     if (InStartVal_ant == FLANCO)
     {
       if (InStartCounter > PULSACION_OK)
-      {
         InStartState = PULSACION_OK;
-      }
 
       #if (_PULS_SERIAL_DEBUG_ == 1)
       if (InStartState == PULSACION_OK)
-        Serial.println(">> Start -> Pulsacion OK");
+        Serial.println(">>>>>>>>>>>>>>>>>>> Start -> Pulsacion OK");
       else
-        Serial.println(">> Start -> Error Pulsacion");
+        Serial.println(">>>>>>>>>>>>>>>>>>> Start -> Error Pulsacion");
       #endif
     }
 
@@ -50,7 +46,7 @@ void _IOLoop()
   }
 
   // In end...
-  if (InEndVal_ant == endInState)
+  if (InEndVal_ant == InEndVal)
     InEndCounter++; // Incrementamos el contador.
   else
   {
@@ -73,139 +69,138 @@ void _IOLoop()
     InEndCounter = 0;
   }
 
-  // Aplicamos el filto software en Modo ...
-  if (InStartCounter > AUTOMAN_FILTRO)
-    InStartVal = startInState;
-
-  if (InEndCounter > AUTOMAN_FILTRO)
-    InEndVal = endInState;
-
   // Almacenamos el valor anterior...
-  InStartVal_ant  = startInState;
-  InEndVal_ant  = endInState;
-  
+  InStartVal_ant  = InStartVal;
+  InEndVal_ant  = InEndVal;
 }
 
 void _IOPulsLoop(void) {
 
   // Si se pulsa el incrementador...
-  if (InStartState != NO_PULSACION)
+  if (InStartState == PULSACION_OK)
   {
     #if (_PULS_SERIAL_DEBUG_ == 1)
-    Serial.println(">> Pulsador -> Incrementa");
+    Serial.println(">>>>>>>>>>>>>>>>>>>>>>>>>>> Start -> Incrementa");
     #endif
 
-    ControlState = STATE_GEN_ON;
+    // Mantenemos el arranque
+    if (ControlState != STATE_START)
+      ControlState = STATE_GEN_ON;
 
     if (DisplayIndicador == 9)
-      TimeControlSec = TimeGenerador9P*X_3600; // TIMER_GEN_7H_00M_SEC;
+      TimeControlSec = TimeGenerador9P*X_3600;
       
     else if (DisplayIndicador == 8)
-      TimeControlSec = TimeGenerador9P*X_3600; //TIMER_GEN_7H_00M_SEC;
+      TimeControlSec = TimeGenerador9P*X_3600;
       
     else if (DisplayIndicador == 7)
-      TimeControlSec = TimeGenerador8P*X_3600; //TIMER_GEN_5H_00M_SEC;
+      TimeControlSec = TimeGenerador8P*X_3600;
       
     else if (DisplayIndicador == 6)
-      TimeControlSec = TimeGenerador7P*X_3600; //TIMER_GEN_4H_00M_SEC;
+      TimeControlSec = TimeGenerador7P*X_3600;
       
     else if (DisplayIndicador == 5)
-      TimeControlSec = TimeGenerador6P*X_3600; //TIMER_GEN_3H_00M_SEC;
+      TimeControlSec = TimeGenerador6P*X_3600;
       
     else if (DisplayIndicador == 4)
-      TimeControlSec = TimeGenerador5P*X_60; //TIMER_GEN_2H_00M_SEC;
+      TimeControlSec = TimeGenerador5P*X_60;
       
     else if (DisplayIndicador == 3)
-      TimeControlSec = TimeGenerador4P*X_60; //TIMER_GEN_1H_30M_SEC;
+      TimeControlSec = TimeGenerador4P*X_60;
       
     else if (DisplayIndicador == 2)
-      TimeControlSec = TimeGenerador3P*X_60; //TIMER_GEN_1H_00M_SEC;
+      TimeControlSec = TimeGenerador3P*X_60;
       
     else if (DisplayIndicador == 1)
-      TimeControlSec = TimeGenerador2P*X_60; //TIMER_GEN_0H_30M_SEC;
+      TimeControlSec = TimeGenerador2P*X_60;
       
     else
-      TimeControlSec = TimeGenerador1P*X_60; //TIMER_GEN_0H_15M_SEC;
+      TimeControlSec = TimeGenerador1P*X_60;
   }
 
-  // Si se pulsa el pulsador...
-  if (InEndState != NO_PULSACION)
+  // Si se pulsa la parada...
+  if (InEndState == PULSACION_OK)
+  {
     ControlState = STATE_GEN_OFF;
 
-  // Reset de Pulsaciones...
-  InStartState   = NO_PULSACION;
+    #if (_PULS_SERIAL_DEBUG_ == 1)
+    Serial.println(">>>>>>>>>>>>>>>>>>>>>>>>>>> End -> Paro Gen");
+    #endif
+  }
+
+  InStartState = NO_PULSACION;
   InEndState   = NO_PULSACION;
 }
 
 void _IOLcdLoop(void) {
 
-  if (TimeControlSec > TimeGenerador8P*X_3600) // TIMER_GEN_5H_00M_SEC)
+  if (TimeControlSec > TimeGenerador8P*X_3600)
   {
-    DisplayIndicador = 9;//TIMER_GEN_7H_00M_SEC; // 7h -> 9
+    DisplayIndicador = 9;
     OutA = OUT_ON;
     OutB = OUT_OFF;
     OutC = OUT_OFF;
     OutD = OUT_ON;  
   }
-  else if (TimeControlSec > TimeGenerador7P*X_3600) // TIMER_GEN_4H_00M_SEC)
+  else if (TimeControlSec > TimeGenerador7P*X_3600)
   {
-    DisplayIndicador = 8; //TIMER_GEN_5H_00M_SEC; // 5h -> 8
+    DisplayIndicador = 8;
     OutA = OUT_OFF;
     OutB = OUT_OFF;
     OutC = OUT_OFF;
     OutD = OUT_ON;  
   }
-  else if (TimeControlSec > TimeGenerador6P*X_3600) //TIMER_GEN_3H_00M_SEC)
+  else if (TimeControlSec > TimeGenerador6P*X_3600)
   {
-    DisplayIndicador = 7; //TIMER_GEN_4H_00M_SEC; // 4h -> 7
+    DisplayIndicador = 7;
     OutA = OUT_ON;
     OutB = OUT_ON;
     OutC = OUT_ON;
     OutD = OUT_OFF;   
   }
-  else if (TimeControlSec > TimeGenerador5P*X_60) //TIMER_GEN_2H_00M_SEC)
+  else if (TimeControlSec > TimeGenerador5P*X_60)
   {
-    DisplayIndicador = 6; //TIMER_GEN_3H_00M_SEC; // 3h -> 6
+    DisplayIndicador = 6;
     OutA = OUT_OFF;
     OutB = OUT_ON;
     OutC = OUT_ON;
     OutD = OUT_OFF;   
   }
-  else if (TimeControlSec > TimeGenerador4P*X_60) //TIMER_GEN_1H_30M_SEC)
+  else if (TimeControlSec > TimeGenerador4P*X_60)
   {
-    DisplayIndicador = 5; //TIMER_GEN_2H_00M_SEC; // 2h -> 5
+    DisplayIndicador = 5;
     OutA = OUT_ON;
     OutB = OUT_OFF;
     OutC = OUT_ON;
     OutD = OUT_OFF;     
   }
-  else if (TimeControlSec > TimeGenerador3P*X_60) //TIMER_GEN_1H_00M_SEC)
+  else if (TimeControlSec > TimeGenerador3P*X_60)
   {
-    DisplayIndicador = 4; //TIMER_GEN_1H_30M_SEC; // 1h30m -> 4
+    DisplayIndicador = 4;
     OutA = OUT_OFF;
     OutB = OUT_OFF;
     OutC = OUT_ON;
     OutD = OUT_OFF;   
   }
-  else if (TimeControlSec > TimeGenerador2P*X_60) //TIMER_GEN_0H_30M_SEC)
+  else if (TimeControlSec > TimeGenerador2P*X_60)
   {
-    DisplayIndicador = 3; //TIMER_GEN_1H_00M_SEC; // 1h -> 3
+    DisplayIndicador = 3;
     OutA = OUT_ON;
     OutB = OUT_ON;
     OutC = OUT_OFF;
     OutD = OUT_OFF;  
   }
-  else if (TimeControlSec > TimeGenerador1P*X_60) // TIMER_GEN_0H_15M_SEC)
+  else if (TimeControlSec > TimeGenerador1P*X_60)
   {
-    DisplayIndicador = 2; //TIMER_GEN_0H_30M_SEC; // 30m -> 2
+    DisplayIndicador = 2;
     OutA = OUT_OFF;
     OutB = OUT_ON;
     OutC = OUT_OFF;
     OutD = OUT_OFF;    
   }
-  else if (TimeControlSec > TimeBuzzerOn) //TIMER_GEN_END_SEC
+  else if (TimeControlSec > TimeBuzzerOn)
   {
-    DisplayIndicador = 1; //TIMER_GEN_0H_15M_SEC; // 15m -> 1
+    DisplayIndicador = 1;
     OutA = OUT_ON;
     OutB = OUT_OFF;
     OutC = OUT_OFF;
@@ -213,7 +208,7 @@ void _IOLcdLoop(void) {
   }
   else
   {
-    DisplayIndicador = 0; //TIMER_GEN_END_SEC; // 15s -> 0
+    DisplayIndicador = 0;
     OutA = OUT_OFF;
     OutB = OUT_OFF;
     OutC = OUT_OFF;

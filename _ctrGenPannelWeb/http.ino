@@ -143,6 +143,7 @@ void _serveTimeSETTINGS()
   html = html + "<label>Tiempo Buzzer (segundos)<input type=\"text\"  maxlength=\"16\" value=\"" + String(TimeBuzzerOn) + "\" name=\"timeBZ\"/></label>";
   html = html + "<label>Tiempo Start (segundos)<input type=\"text\"  maxlength=\"16\" value=\"" + String(TimeOutStart) + "\" name=\"timeStart\"/></label>";
   html = html + "<label>Tiempo Stop (segundos)<input type=\"text\"  maxlength=\"16\" value=\"" + String(TimeOutStop) + "\" name=\"timeStop\"/></label>";
+  html = html + "<label>Debug (0)<input type=\"text\"  maxlength=\"16\" value=\"" + String(DebugVal) + "\" name=\"tdebugVal\"/></label>";
 
   html = html + "</div>";
   html = html + "<div class=\"section\"><span>2</span>Temps Generador</div>";
@@ -184,6 +185,7 @@ void _setTimeSETTINGS()
   String rtimeBZ = httpServer.arg("timeBZ");
   String rtimeStart = httpServer.arg("timeStart");
   String rtimeStop = httpServer.arg("timeStop");
+  String rdebugVal = httpServer.arg("tdebugVal");
   
   String rtime1 = httpServer.arg("time1");
   String rtime2 = httpServer.arg("time2");
@@ -200,6 +202,7 @@ void _setTimeSETTINGS()
   if ((rtimeBZ.length() == 0)     ||
       (rtimeStart.length() == 0)  ||
       (rtimeStop.length() == 0)   ||
+      (rdebugVal.length() == 0)   ||
       (rtime1.length() == 0)  ||
       (rtime2.length() == 0)  ||
       (rtime3.length() == 0)  ||
@@ -222,6 +225,7 @@ void _setTimeSETTINGS()
     TimeBuzzerOn = rtimeBZ.toInt();
     TimeOutStart = rtimeStart.toInt();
     TimeOutStop = rtimeStop.toInt();
+    DebugVal = rdebugVal.toInt();
     
     TimeGenerador1P = rtime1.toInt();
     TimeGenerador2P = rtime2.toInt();
@@ -248,6 +252,7 @@ void _setTimeSETTINGS()
     Serial.print("Time Buzzer: "); Serial.print (TimeBuzzerOn);  Serial.println(" secs");
     Serial.print("Time Start: ");  Serial.print (TimeOutStart);  Serial.println(" secs");
     Serial.print("Time Stop: ");   Serial.print (TimeOutStop);  Serial.println(" secs");
+    Serial.print("Debug: ");       Serial.print (DebugVal);      Serial.println(" ---");
     
     #endif   
     
@@ -264,6 +269,7 @@ void _setTimeSETTINGS()
     EEPROM.write(EEPROM_ADD_BUZZER_ON, TimeBuzzerOn);
     EEPROM.write(EEPROM_ADD_TSTART,    TimeOutStart);
     EEPROM.write(EEPROM_ADD_TSTOP,     TimeOutStop);
+    EEPROM.write(EEPROM_ADD_DEBUG,     DebugVal);
     
     EEPROM.commit();    //Store data to EEPROM
   }
@@ -316,7 +322,7 @@ void _serveSETTINGS()
 
   html = html + "<body>";
   html = html + "<div class=\"myform\">";
-  html = html + "<h1>MANUTOU+ #Network settings<span>ESP8266 tech</span></h1>";
+  html = html + "<h1>PANNEL+ #Network settings<span>ESP8266 tech</span></h1>";
   //html = html + "<form method=\"post\">";
   html = html + "<form method='get' action='networSettings'>";
 
@@ -632,7 +638,7 @@ void _setSETTINGS()
   html = html + "<body>";
 
   html = html + "<div class=\"myform\">";
-  html = html + "<h1>MANUTOU+ #Network settings<span>ESP8266 tech</span></h1>";
+  html = html + "<h1>PANNEL+ #Network settings<span>ESP8266 tech</span></h1>";
   
   if (i == 200)
     html += "<p>Settings OK: Saved</p>";
@@ -673,7 +679,7 @@ void _readINS()
   html = html + "<tr>";
   html = html + "<td>Marcha</td>";
   
-  if (InStartState == IO_ON)
+  if (InStartVal == IO_ON)
    html = html + "<td><font style=\"color:green\">ON </font></td>";
   else
    html = html + "<td><font style=\"color:grey\">OFF</font></td>";
@@ -681,7 +687,7 @@ void _readINS()
   html = html + "</tr>";
 
   html = html + "<td>Paro</td>";
-  if (InEndState == IO_ON)
+  if (InEndVal == IO_ON)
    html = html + "<td><font style=\"color:red\">ON </font></td>";
   else
    html = html + "<td><font style=\"color:grey\">OFF</font></td>";

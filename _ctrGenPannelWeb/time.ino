@@ -69,7 +69,7 @@ void _TimeLoop(void)
       Serial.println("  Bomba: OFF - Gen: OFF");
 
     Serial.println("---------------");
-     
+
     if (InStartVal == IO_ON)
      Serial.println("Marcha: ON");
     else

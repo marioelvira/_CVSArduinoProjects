@@ -35,7 +35,7 @@ int   InEndVal_ant = 0;
 int   InEndCounter = 0;
 int   InEndState = 0;
 
-int   outLed;
+int   boardLed;
 
 ///////////
 // Wi-Fi //
@@ -117,6 +117,10 @@ int   TimeGenerador9P;
 int   TimeBuzzerOn;
 int   TimeOutStart;
 int   TimeOutStop;
+int   DebugVal = 0;
+
+int X_60 = 60;
+int X_3600 = 3600;
 
 ///////////////
 // PIN steup //
@@ -127,31 +131,38 @@ void _PINSetup(void)
   // OUTS //
   //------//
 
-  #if (_USE_LED_INDICATOR_ == 1)
-  pinMode(PIN_LED, OUTPUT);
-  digitalWrite(PIN_LED, PIN_OUT_OFF);
-  outLed = IO_OFF;
-  #endif
+  if (DebugVal == 69)
+  {
+    // Ledboard
+    pinMode(PIN_LED, OUTPUT);
+    digitalWrite(PIN_LED, PIN_OUT_OFF);
+    boardLed = OUT_OFF;  
+  } else {
+    // Zum OFF
+    pinMode(PIN_ZUMB, OUTPUT);
+    digitalWrite(PIN_ZUMB, PIN_OUT_OFF);
+    OutZumb  = OUT_OFF;
+  }
 
+  // Gen OFF
   pinMode(PIN_GEN, OUTPUT);
-  digitalWrite(PIN_GEN, PIN_OUT_ON);
-  OutGen   = OUT_ON;
+  digitalWrite(PIN_GEN, PIN_OUT_OFF);
+  OutGen   = OUT_OFF;
 
+  // Bomba ON
   pinMode(PIN_BOMBA, OUTPUT);
   digitalWrite(PIN_BOMBA, PIN_OUT_ON);
   OutBomba  = OUT_ON;
 
+  // Disp ON
   pinMode(PIN_DISP, OUTPUT);
   digitalWrite(PIN_DISP, PIN_OUT_ON);
   OutDisp  = OUT_ON;
 
-  pinMode(PIN_ZUMB, OUTPUT);
-  digitalWrite(PIN_ZUMB, PIN_OUT_OFF);
-  OutZumb  = OUT_OFF;
-  
+  // AutoOn ON
   pinMode(PIN_AUTOON, OUTPUT);
-  digitalWrite(PIN_AUTOON, PIN_OUT_OFF);
-  OutAutoOn  = OUT_OFF;
+  digitalWrite(PIN_AUTOON, PIN_OUT_ON);
+  OutAutoOn  = OUT_ON;
   
   pinMode(PIN_A, OUTPUT);
   digitalWrite(PIN_A, PIN_OUT_OFF);
@@ -179,18 +190,18 @@ void _PINSetup(void)
 //============//
 void setup(void)
 { 
-  _PINSetup();
-
-  _IOSetup();
-
   #if (_SERIAL_DEBUG_ == 1)
   delay(100);  // 100ms
   Serial.begin(115200);
   Serial.println("");
   #endif
-
+    
   // Config setup
   _ConfigSetup();
+
+  // PIN & IO Setup
+  _PINSetup();
+  _IOSetup();
 
   // Wi-Fi setup
   _WifiSetup();
@@ -214,12 +225,18 @@ void _PINLoop()
   // OUTS //
   //------//
 
-  #if (_USE_LED_INDICATOR_ == 1)
-  if (outLed == OUT_OFF)
-    digitalWrite(PIN_LED, PIN_OUT_ON);
-  else
-    digitalWrite(PIN_LED, PIN_OUT_OFF);
-  #endif
+  if (DebugVal == 69)
+  {
+    if (boardLed == OUT_OFF)
+      digitalWrite(PIN_LED, PIN_OUT_ON);
+    else
+      digitalWrite(PIN_LED, PIN_OUT_OFF);    
+  } else {
+    if (OutZumb == OUT_ON)
+      digitalWrite(PIN_ZUMB, PIN_OUT_ON);
+    else if (OutZumb == IO_OFF)
+      digitalWrite(PIN_ZUMB, PIN_OUT_OFF);
+  }
     
   if (OutGen == OUT_ON)
     digitalWrite(PIN_GEN, PIN_OUT_ON);
@@ -231,11 +248,6 @@ void _PINLoop()
   else
     digitalWrite(PIN_BOMBA, PIN_OUT_OFF);
   
-  if (OutZumb == OUT_ON)
-    digitalWrite(PIN_ZUMB, PIN_OUT_ON);
-  else if (OutZumb == IO_OFF)
-    digitalWrite(PIN_ZUMB, PIN_OUT_OFF);
-
   if (OutDisp == OUT_ON)
     digitalWrite(PIN_DISP, PIN_OUT_ON);
   else if (OutDisp == IO_OFF)
@@ -296,8 +308,9 @@ void loop()
   //  _OUTSLoop();
 
   _WifiLoop();
+  if (DebugVal == 69)
   _WifiLedLoop();
-
+  
   if ((wifiStatus == WIFI_ON_ACCESSPOINT) /*|| (wifiStatus == WIFI_STATION_CONNECTED)*/)
   {
     _HttpLoop();

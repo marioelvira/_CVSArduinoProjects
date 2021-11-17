@@ -10,23 +10,23 @@ extern "C" {
 ///////////////////
 
 /*
- *                        --------
- *                    A0 -|      |- GPIO16 -> A
- *                    G  -|      |- GPIO5  -> B
- *                    VU -|      |- GPIO4  -> C
- *       BOMBA <- GPIO10 -|      |- GPIO0  -> D
- *       RESET ->  GPIO9 -|      |- GPIO2  -> ZUMB*
- *          S1 <-   MOSI -|      |- 3V
- *                    CS -|      |- G
- *          S0 <-   MISO -|      |- GPIO14 -> GEN
- *          SK <-   SCLK -|      |- GPIO12 -> DISP
- *                     G -|      |- GPIO13 <- PULSADOR
- *                    3V -|      |- GPIO15 -> AUTOOFF
- *                    EN -|      |- GPIO3  
- *                   RST -|      |- GPIO1  
- *                     G -|      |- G
- *                   VIN -|      |- 3V
- *                        --------
+ *                        ----------
+ *                    A0 -| A0    D0 |- GPIO16 -> A
+ *                    G  -| G     D1 |- GPIO5  -> B
+ *                    VU -| VU    D2 |- GPIO4  -> C
+ *       BOMBA <- *GPIO9 -| S3    D3 |- GPIO0  -> D
+ *                 GPIO? -| S2    D4 |- GPIO2  -> ZUMB* // LED
+ *          S1 <-   MOSI -| S1    3V |- 3V
+ *                    CS -| SC     G |- G
+ *          S0 <-   MISO -| SD    D5 |- GPIO14 -> GEN
+ *       RESET ->*GPIO10 -| SK    D6 |- GPIO12 -> DISP
+ *                     G -| G     D7 |- GPIO13 <- PULSADOR
+ *                    3V -| 3V    D8 |- GPIO15 -> AUTOOFF
+ *                    EN -| EN    RX |- GPIO3  
+ *                   RST -| RST   TX |- GPIO1  
+ *                     G -| G      G |- G
+ *                   VIN -| VIN   3V |- 3V
+ *                        ------------
  */
 
 // PIN definition
@@ -36,17 +36,16 @@ extern "C" {
 #define PIN_D             0   // D
 
 #define PIN_ZUMB          2
+#define PIN_LED           2
 
 #define PIN_GEN           14
 #define PIN_DISP          12
 
 #define PIN_PULSADOR      13
-#define PIN_END           9
+#define PIN_END           10
 
 #define PIN_AUTOON        15
-#define PIN_BOMBA         10
-
-//#define PIN_LED         2
+#define PIN_BOMBA         9
 
 #define PIN_OUT_ON        1
 #define PIN_OUT_OFF       0
@@ -69,7 +68,6 @@ extern "C" {
 // Pulsación
 #define NO_PULSACION        0   // x10ms
 #define PULSACION_OK        75  // x10ms
-#define AUTOMAN_FILTRO      25  // x10ms
 
 #define FLANCO_UP     0
 #define FLANCO_DOWN   1

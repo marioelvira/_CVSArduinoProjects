@@ -96,6 +96,7 @@ void _readCONFIG (void)
     EEPROM.write(EEPROM_ADD_BUZZER_ON, EEPROM_VAL_BUZZER_ON);
     EEPROM.write(EEPROM_ADD_TSTART,    EEPROM_VAL_TSTART);
     EEPROM.write(EEPROM_ADD_TSTOP,     EEPROM_VAL_TSTOP);
+    EEPROM.write(EEPROM_ADD_DEBUG,     EEPROM_VAL_DEBUG);
     
     EEPROM.commit();    //Store data to EEPROM
   }
@@ -191,6 +192,7 @@ void _readCONFIG (void)
   TimeBuzzerOn = (int)EEPROM.read(EEPROM_ADD_BUZZER_ON);    // Secs
   TimeOutStart = (int)EEPROM.read(EEPROM_ADD_TSTART);       // Secs
   TimeOutStop  = (int)EEPROM.read(EEPROM_ADD_TSTOP);        // Secs
+  DebugVal     = (int)EEPROM.read(EEPROM_ADD_DEBUG);
   
   #if (_EEPROM_SERIAL_DEBUG_ == 1)
   
@@ -206,9 +208,22 @@ void _readCONFIG (void)
 
   Serial.print("Time Buzzer: "); Serial.print (TimeBuzzerOn);  Serial.println(" secs");
   Serial.print("Time Start: ");  Serial.print (TimeOutStart);  Serial.println(" secs");
-  Serial.print("Time Stop: ");   Serial.print (TimeOutStop);  Serial.println(" secs");
+  Serial.print("Time Stop: ");   Serial.print (TimeOutStop);   Serial.println(" secs");
+  Serial.print("Debug: ");       Serial.print (DebugVal);      Serial.println(" ---");
   
   #endif
+
+  // Debug options
+  if (DebugVal == 69)
+  {
+    X_60 = 3;
+    X_3600 = 180;
+  }
+  else
+  {
+    X_60 = 60;
+    X_3600 = 3600;
+  }  
 }
 
 void _ResetEEPROM() {

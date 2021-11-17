@@ -47,11 +47,12 @@ extern "C" {
 #define EEPROM_ADD_BUZZER_ON      0x59
 #define EEPROM_ADD_TSTART         0x5A
 #define EEPROM_ADD_TSTOP          0x5B
+#define EEPROM_ADD_DEBUG          0x5C
 
 //#define EEPROM_ADD_MAX              0xFA // 250
 
 // Values
-#define EEPROM_VAL_OK             0xA0
+#define EEPROM_VAL_OK             0xAA
 
 #define EEPROM_VAL_IP_MODE        DHCP_MODE
 #define EEPROM_VAL_IP1            192
@@ -86,16 +87,19 @@ extern "C" {
 #define EEPROM_VAL_BUZZER_ON      10  // Secs
 #define EEPROM_VAL_TSTART         10  // Secs
 #define EEPROM_VAL_TSTOP          20  // Secs
+#define EEPROM_VAL_DEBUG          0
 
-#define _DEBUG_TIME   0
+/*
+#define _DEBUG_TIME   1
 
 #if (_DEBUG_TIME == 1)
   #define X_60    3
-  #define X_3600  30
+  #define X_3600  180
 #else
   #define X_60    60
   #define X_3600  3600
 #endif
+*/
 
 #endif // _E2PROM_H_
 

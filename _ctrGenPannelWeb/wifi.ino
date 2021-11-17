@@ -163,16 +163,16 @@ void _WifiLedLoop()
   {
     case WIFI_START_ACCESSPOINT:
       wifiLEDTick = millis();
-      outLed = OUT_ON;
+      boardLed = OUT_ON;
       break;
 
     case WIFI_ON_ACCESSPOINT:
       if (millis() - wifiLEDTick >= WIFI_BLINK_ACCESSPOINT)
       {
-        if (outLed == OUT_ON)
-          outLed = OUT_OFF;
+        if (boardLed == OUT_ON)
+          boardLed = OUT_OFF;
         else
-          outLed = OUT_ON;
+          boardLed = OUT_ON;
 
         wifiLEDTick = millis();
 
@@ -190,10 +190,10 @@ void _WifiLedLoop()
     case WIFI_STATION_CONNECTING:
       if (millis() - wifiLEDTick >= WIFI_BLINK_CONNECTING)
       {
-        if (outLed == IO_OFF)
-          outLed = IO_ON;
+        if (boardLed == IO_OFF)
+          boardLed = IO_ON;
         else
-          outLed = IO_OFF;
+          boardLed = IO_OFF;
 
         wifiLEDTick = millis();
       } 
@@ -209,7 +209,7 @@ void _WifiLedLoop()
         wifiLEDTick = millis();
       } 
     
-      outLed = IO_ON;
+      boardLed = IO_ON;
       break;
   }
 }

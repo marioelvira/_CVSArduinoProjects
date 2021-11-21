@@ -128,12 +128,25 @@ void _MQTTSend(void)
   str = str + String(DisplayIndicador);
   str = str + ",\n";
 
-  // genState
-  if (DisplayIndicador == 0)
-    str = str + "\"genState\":0";
+  // Pin Use
+  if (cfgGenOnPin == 1)
+  {
+    // genState
+    if (InGenOn == IO_OFF)
+      str = str + "\"genState\":0";
+    else
+      str = str + "\"genState\":1";
+    str = str + ",\n";
+  }
   else
-    str = str + "\"genState\":1";
-  str = str + ",\n";
+  {
+    // genState
+    if (DisplayIndicador == 0)
+      str = str + "\"genState\":0";
+    else
+      str = str + "\"genState\":1";
+    str = str + ",\n";
+  }
 
   // luzState
   if (LuzState == STATE_STANDBY)

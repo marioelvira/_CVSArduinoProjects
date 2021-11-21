@@ -148,6 +148,11 @@ void _serveTimeSETTINGS()
   html = html + "<label> Salidas <input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgLogicIns) + "\" name=\"cfgIns\"/></label>";
   html = html + "<label> Entradas <input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgLogicOuts) + "\" name=\"cfgOuts\"/></label>";
   html = html + "</div>";
+
+  html = html + "<div class=\"section\"><span>3</span>Generador In</div>";
+  html = html + "<div class=\"inner-wrap\">";
+  html = html + "<label> Salidas <input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgGenOnPin) + "\" name=\"cfgGenon\"/></label>";
+  html = html + "</div>";
   
   html = html + "<div class=\"button-section\">";
   html = html + "  <input type=\"submit\" value=\"Guardar\">";
@@ -174,6 +179,7 @@ void _setTimeSETTINGS()
   String rvbatEoS  = httpServer.arg("vbatEoS");
   String cfgIns    = httpServer.arg("cfgIns");
   String cfgOuts   = httpServer.arg("cfgOuts");
+  String cfgGenon  = httpServer.arg("cfgGenon");
 
   int error = 0;
 
@@ -181,7 +187,8 @@ void _setTimeSETTINGS()
       (rtimeLOFF.length() == 0) ||
       (rvbatEoS.length() == 0)  ||
       (cfgIns.length() == 0)    ||
-      (cfgOuts.length() == 0))
+      (cfgOuts.length() == 0)   ||
+      (cfgGenon.length() == 0))
   {
     error = 1;  // falta un campo...
     #if (_HTTP_SERIAL_DEBUG_ == 1)
@@ -197,13 +204,15 @@ void _setTimeSETTINGS()
     cfgVbatEOS = rvbatEoS.toInt();
     cfgLogicIns = cfgIns.toInt();
     cfgLogicOuts = cfgOuts.toInt();
+    cfgGenOnPin = cfgGenon.toInt();
     
     #if (_HTTP_SERIAL_DEBUG_ == 1)  
     Serial.print("Remote Pulse: ");  Serial.print (cfgRemotePulsTick);  Serial.println(" *100 ms");
     Serial.print("Luz Off: ");       Serial.print (cfgLuzOutTick);      Serial.println(" *15 min");
     Serial.print("Vbat EoS: ");      Serial.print (cfgVbatEOS);         Serial.println(" Volts");
     Serial.print("cfgLogic Ins: ");  Serial.println(cfgLogicIns);
-    Serial.print("cfgLogic Outs: "); Serial.println(cfgLogicOuts);  
+    Serial.print("cfgLogic Outs: "); Serial.println(cfgLogicOuts);
+    Serial.print("Gen On Pin: ");    Serial.println(cfgGenOnPin);
     #endif   
         
     EEPROM.write(EEPROM_ADD_RPUSL_MSEC, (byte)cfgRemotePulsTick);

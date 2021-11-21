@@ -37,6 +37,7 @@ extern "C" {
 #define EEPROM_ADD_ANA_EOS        0x51
 #define EEPROM_ADD_LOGIC_INS      0x52
 #define EEPROM_ADD_LOGIC_OUTS     0x53
+#define EEPROM_ADD_GENON_PIN      0x54
 
 //#define EEPROM_ADD_MAX          0xFA // 250
 
@@ -66,6 +67,7 @@ extern "C" {
 #define EEPROM_VAL_ANA_EOS        24
 #define EEPROM_VAL_LOGIC_INS      1
 #define EEPROM_VAL_LOGIC_OUTS     1
+#define EEPROM_VAL_GENON_PIN      1
 
 #endif // _E2PROM_H_
 

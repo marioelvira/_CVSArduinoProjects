@@ -10,23 +10,23 @@ extern "C" {
 ///////////////////
 
 /*
- *                        --------
- *                    A0 -|      |- GPIO16 --> LUZ OFF
- *                    G  -|      |- GPIO5  --> GEN STOP
- *                    VU -|      |- GPIO4  --> GEN PULS
- *                GPIO10 -|      |- GPIO0  -- 
- *                 GPIO9 -|      |- GPIO2  --> LED*
- *          S1 <-   MOSI -|      |- 3V
- *                    CS -|      |- G
- *          S0 <-   MISO -|      |- GPIO14 <-- A
- *          SK <-   SCLK -|      |- GPIO12 <-- B
- *                     G -|      |- GPIO13 <-- C
- *                    3V -|      |- GPIO15 <-- D
- *                    EN -|      |- GPIO3  
- *                   RST -|      |- GPIO1
- *                     G -|      |- G
- *                   VIN -|      |- 3V
- *                        --------
+ *                         ----------
+ *                    A0 -| A0    D0 |- GPIO16 -> LUZ OFF
+ *                    G  -| G     D1 |- GPIO5  -> GEN STOP
+ *                    VU -| VU    D2 |- GPIO4  -> GEN PULS
+ *                 GPIO9 -| S3    D3 |- GPIO0  -> D
+ *                 GPIO? -| S2    D4 |- GPIO2  -> LED*
+ *          S1 <-   MOSI -| S1    3V |- 3V
+ *                    CS -| SC     G |- G
+ *          S0 <-   MISO -| SD    D5 |- GPIO14 <- A
+ *      GEN ON -> GPIO10 -| SK    D6 |- GPIO12 <- B
+ *                     G -| G     D7 |- GPIO13 <- C
+ *                    3V -| 3V    D8 |- GPIO15 <- D
+ *                    EN -| EN    RX |- GPIO3  
+ *                   RST -| RST   TX |- GPIO1  
+ *                     G -| G      G |- G
+ *                   VIN -| VIN   3V |- 3V
+ *                        ------------
  */
 
 // PIN definition
@@ -41,6 +41,8 @@ extern "C" {
 #define PIN_B             12  // B
 #define PIN_C             13  // C
 #define PIN_D             15  // D
+
+#define PIN_GENON         10
 
 #define PIN_OUT_ON        1
 #define PIN_OUT_OFF       0

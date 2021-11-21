@@ -20,6 +20,8 @@ int   InB;
 int   InC;
 int   InD;
 
+int   InGenOn;
+
 int   OutGenPuls;
 int   OutStopPuls;
 int   OutLuzOff;
@@ -122,6 +124,7 @@ int     cfgLuzOutTick;
 float   cfgVbatEOS;
 int     cfgLogicIns;
 int     cfgLogicOuts;
+int     cfgGenOnPin;
 
 ///////////////
 // PIN steup //
@@ -153,10 +156,11 @@ void _PINSetup(void)
   //-----//
   // INS //
   //-----//
-  pinMode(PIN_A, INPUT);
-  pinMode(PIN_B, INPUT);
-  pinMode(PIN_C, INPUT);
-  pinMode(PIN_D, INPUT);
+  pinMode(PIN_A, INPUT);      InA = IO_OFF;
+  pinMode(PIN_B, INPUT);      InB = IO_OFF;
+  pinMode(PIN_C, INPUT);      InC = IO_OFF;
+  pinMode(PIN_D, INPUT);      InD = IO_OFF;
+  pinMode(PIN_GENON, INPUT);  InGenOn = IO_OFF;
 }
 
 //============//
@@ -246,6 +250,11 @@ void _PINLoop()
     InD = IO_ON;
   else
     InD = IO_OFF;
+
+  if (digitalRead(PIN_GENON) == cfgLogicIns)
+    InGenOn = IO_ON;
+  else
+    InGenOn = IO_OFF;
 }
 
 //===========//

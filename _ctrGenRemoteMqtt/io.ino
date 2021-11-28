@@ -31,7 +31,7 @@ void _IOLoop()
     vbattAcc = vbattAcc + VbattInArray[i];
   
   VbattInADC = vbattAcc/VBATT_ARRAY_SIZE;
-  VbattIn = (float)VbattInADC * (cfgVbatEOS /(VBATT_DIG_EOS /*- VBATT_DIG_OFFSET*/));
+  VbattIn = (float)VbattInADC*((float)cfgADCm/10000) + (float)cfgADCb/100;
 }
 
 void _IOLcdLoop(void) {

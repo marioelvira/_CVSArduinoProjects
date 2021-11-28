@@ -69,20 +69,20 @@ void mqttDataCallback(char* rtopic, byte* rpayload, unsigned int rlength)
       #endif
     }
   }
-  else if (rtopicStr.equals(TOPIC_LUZSTANBY))
+  else if (rtopicStr.equals(TOPIC_LUZSTANDBY))
   {
     if(rpayloadStr.equals("1"))
     {
       LuzState = STATE_STANDBY;
     
       #if (_MQTT_SERIAL_DEBUG_ == 1)
-      Serial.println("TOPIC_LUZSTANBY ->> 1");
+      Serial.println("TOPIC_LUZSTANDBY ->> 1");
       #endif
     }
     else
     {
       #if (_MQTT_SERIAL_DEBUG_ == 1)
-      Serial.println("TOPIC_LUZSTANBY ->> Error");
+      Serial.println("TOPIC_LUZSTANDBY ->> Error");
       #endif
     }
   } 
@@ -123,7 +123,12 @@ void _MQTTSend(void)
   str = str + String(VbattIn);
   str = str + ",\n";
 
-  // vBatt
+  // vBattADC
+  str = str + "\"vbattADC\":";
+  str = str + String(VbattInADC);
+  str = str + ",\n";
+
+  // DispIndicator
   str = str + "\"genDisp\":";
   str = str + String(DisplayIndicador);
   str = str + ",\n";
@@ -173,11 +178,61 @@ void _MQTTSend(void)
 // MQTT set up //
 /////////////////
 void _MQTTSetup(void)
-{
+{ 
+  String  str = "";
+  int     str_len;
+   
   mqttClient.setServer(MQTT_BROKER, MQTT_BROKER_PORT);
   mqttClient.setCallback(mqttDataCallback);
   
   mqttStatus = MQTT_NOT_CONNECTED;
+
+  /*
+  if (DebugVal == 69)
+  {
+    str = _TOPIC_STATE;
+    str_len = str.length() + 1;
+    str.toCharArray(topic_state, str_len);
+
+    str = _TOPIC_GENCTR;
+    str_len = str.length() + 1;
+    str.toCharArray(topic_genctr, str_len);
+    
+    str = _TOPIC_GENSTOP;
+    str_len = str.length() + 1;
+    str.toCharArray(topic_genstop, str_len);
+    
+    str = _TOPIC_LUZCTR;
+    str_len = str.length() + 1;
+    str.toCharArray(topic_luzctr, str_len);
+         
+    str = _TOPIC_LUZSTANDBY;
+    str_len = str.length() + 1;
+    str.toCharArray(topic_luzstandby, str_len);
+  }
+  else
+  {
+    str = TOPIC_STATE;
+    str_len = str.length() + 1;
+    str.toCharArray(topic_state, str_len);
+
+    str = TOPIC_GENCTR;
+    str_len = str.length() + 1;
+    str.toCharArray(topic_genctr, str_len);
+    
+    str = TOPIC_GENSTOP;
+    str_len = str.length() + 1;
+    str.toCharArray(topic_genstop, str_len);
+    
+    str = TOPIC_LUZCTR;
+    str_len = str.length() + 1;
+    str.toCharArray(topic_luzctr, str_len);
+         
+    str = TOPIC_LUZSTANDBY;
+    str_len = str.length() + 1;
+    str.toCharArray(topic_luzstandby, str_len);
+  }
+  */
 }
 
 ////////////////////////
@@ -238,7 +293,7 @@ void _MQTTLoop(void)
         if (mqttSubscribe(TOPIC_GENCTR)  &&
             mqttSubscribe(TOPIC_GENSTOP) &&
             mqttSubscribe(TOPIC_LUZCTR)  &&
-            mqttSubscribe(TOPIC_LUZSTANBY))
+            mqttSubscribe(TOPIC_LUZSTANDBY))
         {
           mqttStatus = MQTT_SUBSCRIBED;
         }

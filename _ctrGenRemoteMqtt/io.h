@@ -61,8 +61,8 @@ extern "C" {
 #define OUT_ON            1
 
 //#define VBATT_DIG_OFFSET        0     // Digital Offset
-#define VBATT_DIG_EOS             1024  // Digital End Of Scale
-#define VBATT_ANA_EOS             24    // Analog Enf Of Scale
+//#define VBATT_DIG_EOS           1024  // Digital End Of Scale
+//#define VBATT_ANA_EOS           24    // Analog Enf Of Scale
 
 #endif // _IO_H_
 

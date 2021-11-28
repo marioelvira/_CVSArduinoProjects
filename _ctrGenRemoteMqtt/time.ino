@@ -54,6 +54,11 @@ void _TimeLoop(void)
     Serial.print(" -> ");
     Serial.print(InD); Serial.print("-"); Serial.print(InC); Serial.print("-"); Serial.print(InB); Serial.print("-"); Serial.print(InA);
     Serial.println(" ");
+    if (InGenOn == IO_OFF)
+      Serial.print("Gen In: OFF");
+    else
+      Serial.print("Gen In: ON");
+    Serial.println(" ");
     Serial.println("---------------");
     
     Serial.print("Control Status: ");

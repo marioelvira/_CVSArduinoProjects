@@ -136,24 +136,34 @@ void _serveTimeSETTINGS()
   html = html + "<h1>REMOTE+ #Configuraci&oacuten<span>ESP8266 tech</span></h1>";
   html = html + "<form method='get' action='setTimeSettings'>";
 
-  html = html + "<div class=\"section\"><span>1</span>Parametros</div>";
+  html = html + "<div class=\"section\"><span>1</span>Tiempos</div>";
   html = html + "<div class=\"inner-wrap\">";
   html = html + "<label>Pulso Remoto (*100ms)<input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgRemotePulsTick) + "\" name=\"timeRP\"/></label>";
   html = html + "<label>Luz Ext Off (*15m)<input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgLuzOutTick) + "\" name=\"timeLOFF\"/></label>";
-  html = html + "<label>Vbat EoS (Volts)<input type=\"text\"  maxlength=\"16\" value=\"" + String((int)cfgVbatEOS) + "\" name=\"vbatEoS\"/></label>";
   html = html + "</div>";
 
   html = html + "<div class=\"section\"><span>2</span>Logica</div>";
   html = html + "<div class=\"inner-wrap\">";
-  html = html + "<label> Salidas <input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgLogicIns) + "\" name=\"cfgIns\"/></label>";
-  html = html + "<label> Entradas <input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgLogicOuts) + "\" name=\"cfgOuts\"/></label>";
+  html = html + "<label> Salidas ON <input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgLogicIns) + "\" name=\"cfgIns\"/></label>";
+  html = html + "<label> Entradas ON <input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgLogicOuts) + "\" name=\"cfgOuts\"/></label>";
   html = html + "</div>";
 
-  html = html + "<div class=\"section\"><span>3</span>Generador In</div>";
+  html = html + "<div class=\"section\"><span>3</span>vBat ADC</div>";
+  html = html + "<div class=\"inner-wrap\">";
+  html = html + "<label>ADC recta:m (/10)<input type=\"text\"  maxlength=\"16\" value=\"" + String((int)cfgADCm) + "\" name=\"rADCm\"/></label>";
+  html = html + "<label>ADC recta:b (/100)<input type=\"text\"  maxlength=\"16\" value=\"" + String((int)cfgADCb) + "\" name=\"rADCb\"/></label>";
+  html = html + "</div>";
+  
+  html = html + "<div class=\"section\"><span>4</span>Generador In</div>";
   html = html + "<div class=\"inner-wrap\">";
   html = html + "<label> Salidas <input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgGenOnPin) + "\" name=\"cfgGenon\"/></label>";
   html = html + "</div>";
-  
+  /*
+  html = html + "<div class=\"section\"><span>5</span>Debug</div>";
+  html = html + "<div class=\"inner-wrap\">";
+  html = html + "<label>Debug (0)<input type=\"text\"  maxlength=\"16\" value=\"" + String(DebugVal) + "\" name=\"tdebugVal\"/></label>";
+  html = html + "</div>";
+  */
   html = html + "<div class=\"button-section\">";
   html = html + "  <input type=\"submit\" value=\"Guardar\">";
   html = html + "  <a href=\"index.htm\"><input type=\"button\" value=\"Volver\"></a>";
@@ -176,19 +186,23 @@ void _setTimeSETTINGS()
   
   String rtimeRP   = httpServer.arg("timeRP");
   String rtimeLOFF = httpServer.arg("timeLOFF");
-  String rvbatEoS  = httpServer.arg("vbatEoS");
   String cfgIns    = httpServer.arg("cfgIns");
   String cfgOuts   = httpServer.arg("cfgOuts");
   String cfgGenon  = httpServer.arg("cfgGenon");
-
+  String rADCm     = httpServer.arg("rADCm");
+  String rADCb     = httpServer.arg("rADCb");
+  //String rdebugVal = httpServer.arg("tdebugVal");
+  
   int error = 0;
 
   if ((rtimeRP.length() == 0)   ||
       (rtimeLOFF.length() == 0) ||
-      (rvbatEoS.length() == 0)  ||
       (cfgIns.length() == 0)    ||
       (cfgOuts.length() == 0)   ||
-      (cfgGenon.length() == 0))
+      (cfgGenon.length() == 0)  ||
+      (rADCm.length() == 0)     ||
+      (rADCb.length() == 0))
+      //(rdebugVal.length() == 0))
   {
     error = 1;  // falta un campo...
     #if (_HTTP_SERIAL_DEBUG_ == 1)
@@ -201,26 +215,33 @@ void _setTimeSETTINGS()
   {
     cfgRemotePulsTick = rtimeRP.toInt();
     cfgLuzOutTick = rtimeLOFF.toInt();
-    cfgVbatEOS = rvbatEoS.toInt();
     cfgLogicIns = cfgIns.toInt();
     cfgLogicOuts = cfgOuts.toInt();
     cfgGenOnPin = cfgGenon.toInt();
+    cfgADCm = rADCm.toInt();
+    cfgADCb = rADCb.toInt();
+    //DebugVal = rdebugVal.toInt();
     
     #if (_HTTP_SERIAL_DEBUG_ == 1)  
     Serial.print("Remote Pulse: ");  Serial.print (cfgRemotePulsTick);  Serial.println(" *100 ms");
     Serial.print("Luz Off: ");       Serial.print (cfgLuzOutTick);      Serial.println(" *15 min");
-    Serial.print("Vbat EoS: ");      Serial.print (cfgVbatEOS);         Serial.println(" Volts");
     Serial.print("cfgLogic Ins: ");  Serial.println(cfgLogicIns);
     Serial.print("cfgLogic Outs: "); Serial.println(cfgLogicOuts);
     Serial.print("Gen On Pin: ");    Serial.println(cfgGenOnPin);
+    Serial.print("ADC m: ");         Serial.print (cfgADCm);            Serial.println(" /10");
+    Serial.print("ADC b: ");         Serial.print (cfgADCb);            Serial.println(" /100");
+    //Serial.print("Debug: ");       Serial.print (DebugVal);           Serial.println(" ---");
     #endif   
-        
+
+    // Data
     EEPROM.write(EEPROM_ADD_RPUSL_MSEC, (byte)cfgRemotePulsTick);
     EEPROM.write(EEPROM_ADD_LUZOFF_15M, (byte)cfgLuzOutTick);
-    EEPROM.write(EEPROM_ADD_ANA_EOS,    (byte)cfgVbatEOS);
     EEPROM.write(EEPROM_ADD_LOGIC_INS,  (byte)cfgLogicIns);
     EEPROM.write(EEPROM_ADD_LOGIC_OUTS, (byte)cfgLogicOuts);
-    
+    EEPROM.write(EEPROM_ADD_ADC_M,      (byte)cfgADCm);
+    EEPROM.write(EEPROM_ADD_ADC_B,      (byte)cfgADCb);
+    //EEPROM.write(EEPROM_ADD_DEBUG,      (byte)DebugVal);
+
     EEPROM.commit();    //Store data to EEPROM
   }
 
@@ -626,6 +647,14 @@ void _readINS()
   html = html + "<tr>";
   html = html + "<td>Indicador LCD</td>";
   html = html + "<td>" + String(DisplayIndicador) + " -> " + String(InD) + "-" + String(InC) + "-" + String(InB) + "-" + String(InA) + "</td>";
+  html = html + "</tr>";
+
+  html = html + "<tr>";
+  html = html + "<td>Generador In</td>";
+  if (InGenOn == IO_OFF)
+    html = html + "<td><font style=\"color:grey\">OFF</font></td>";
+  else
+    html = html + "<td><font style=\"color:green\">ON</font></td>";
   html = html + "</tr>";
 
   html = html + "<tr>";

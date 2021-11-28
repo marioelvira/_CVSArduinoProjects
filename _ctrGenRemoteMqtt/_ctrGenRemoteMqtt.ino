@@ -95,7 +95,13 @@ String mqttClientId = "remoteMQTT-" + String(ESP.getChipId());
 
 int mqttStatus;
 unsigned long mqttTick = 0;
-
+/*
+char  topic_state[50];
+char  topic_genctr[50];
+char  topic_genstop[50];
+char  topic_luzctr[50];
+char  topic_luzstandby[50];
+*/
 //////////
 // Time //
 //////////
@@ -121,10 +127,13 @@ unsigned long LuzTick = 0;
 ////////////
 int     cfgRemotePulsTick;
 int     cfgLuzOutTick;
-float   cfgVbatEOS;
 int     cfgLogicIns;
 int     cfgLogicOuts;
 int     cfgGenOnPin;
+int     cfgADCm;
+int     cfgADCb;
+
+//int     DebugVal = 0;
 
 ///////////////
 // PIN steup //
@@ -231,22 +240,22 @@ void _PINLoop()
   //-----//
   // INS //
   //-----//
-  if (digitalRead(PIN_A) == cfgLogicIns)
+  if (digitalRead(PIN_A) == PIN_IN_ON /*cfgLogicIns*/)
     InA = IO_ON;
   else
     InA = IO_OFF;
 
-  if (digitalRead(PIN_B) == cfgLogicIns)
+  if (digitalRead(PIN_B) == PIN_IN_ON /*cfgLogicIns*/)
     InB = IO_ON;
   else
     InB = IO_OFF;
 
-  if (digitalRead(PIN_C) == cfgLogicIns)
+  if (digitalRead(PIN_C) == PIN_IN_ON /*cfgLogicIns*/)
     InC = IO_ON;
   else
     InC = IO_OFF;
 
-  if (digitalRead(PIN_D) == cfgLogicIns)
+  if (digitalRead(PIN_D) == PIN_IN_ON /*cfgLogicIns*/)
     InD = IO_ON;
   else
     InD = IO_OFF;

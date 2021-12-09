@@ -115,7 +115,7 @@ void _MQTTSend(void)
   str = "{\n";
 
   str = str + "\"tOn\":\"";
-  str = str + String(timeHour) + " : " + String(timeMin) + " : " + String(timeSec);
+  str = str + String(timeDay) + "d " + String(timeHour) + " : " + String(timeMin) + " : " + String(timeSec);
   str = str + "\",\n";
 
   // vBatt
@@ -133,25 +133,24 @@ void _MQTTSend(void)
   str = str + String(DisplayIndicador);
   str = str + ",\n";
 
-  // Pin Use
-  if (cfgGenOnPin == 1)
-  {
-    // genState
-    if (InGenOn == IO_OFF)
-      str = str + "\"genState\":0";
-    else
-      str = str + "\"genState\":1";
-    str = str + ",\n";
-  }
+  // genInState
+  if (genInStatus == 0)
+    str = str + "\"genState\":0";
   else
-  {
-    // genState
-    if (DisplayIndicador == 0)
-      str = str + "\"genState\":0";
-    else
-      str = str + "\"genState\":1";
-    str = str + ",\n";
-  }
+    str = str + "\"genState\":1";
+  str = str + ",\n";
+
+  // genMinOn
+  str = str + "\"genMinOn\":\"";
+  str = str + String(genMinOn);
+  str = str + "m\",\n";
+
+  // remote Activation
+  if (remAct == 1)
+    str = str + "\"rem\":1";
+  else
+    str = str + "\"rem\":0";
+  str = str + ",\n";
 
   // luzState
   if (LuzState == STATE_STANDBY)

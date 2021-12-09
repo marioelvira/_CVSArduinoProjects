@@ -60,11 +60,6 @@ void _serveMAIN()
   
   html = html + "function sendOUT(out) {";
   html = html + "  var xhttp = new XMLHttpRequest();";
-  //html = html + "  xhttp.onreadystatechange = function() {";
-  //html = html + "   if (this.readyState == 4 && this.status == 200) {";
-  //html = html + "     document.getElementById(\"OUTNumber\").innerHTML = this.responseText;";
-  //html = html + "   }";
-  //html = html + "  };";
   html = html + "  xhttp.open(\"GET\", \"setOUTS?OUTNumber=\"+out, true);";
   html = html + "  xhttp.send();";
   html = html + "}";
@@ -156,7 +151,7 @@ void _serveTimeSETTINGS()
   
   html = html + "<div class=\"section\"><span>4</span>Generador In</div>";
   html = html + "<div class=\"inner-wrap\">";
-  html = html + "<label> Salidas <input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgGenOnPin) + "\" name=\"cfgGenon\"/></label>";
+  html = html + "<label><input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgGenOnPin) + "\" name=\"cfgGenon\"/></label>";
   html = html + "</div>";
   /*
   html = html + "<div class=\"section\"><span>5</span>Debug</div>";
@@ -658,9 +653,15 @@ void _readINS()
   html = html + "</tr>";
 
   html = html + "<tr>";
+  html = html + "<td>Generador In (min)</td>";
+  html = html + "<td>" + String(genMinOn) + "</td>";
+  html = html + "</tr>";
+
+  html = html + "<tr>";
   html = html + "<td>Vbatt In (Dig)</td>";
   html = html + "<td>" + String(VbattInADC) + "</td>";
   html = html + "</tr>";
+  
   html = html + "<tr>";
   html = html + "<td>Vbatt In (V)</td>";
   html = html + "<td>" + String(VbattIn) + "</td>";
@@ -845,8 +846,9 @@ void _readTEMPS()
   
   html = html + "<tr>";
   html = html + "<td>Tiempo Encendio</td>";
-  html = html + "<td>" + String(timeHour) + " : " + String(timeMin) + " : " + String(timeSec) + "</td>";
+  html = html + "<td>" + String(timeDay) + "d " + String(timeHour) + " : " + String(timeMin) + " : " + String(timeSec) + "</td>";
   html = html + "</tr>";
+  
   /*
   html = html + "<tr>";
   html = html + "<td>Cuenta Atras (Segundos)</td>";

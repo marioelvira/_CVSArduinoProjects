@@ -7,8 +7,13 @@ void _CtrSetup(void)
   ControlState = STATE_STANDBY;
   ControlTick = millis();
 
-  LuzState = STATE_STANDBY;
+  genState = STATE_GEN_OFF;
+  genInStatus = 0;
+
+  remPulse = 0;
+  remAct = 0;
   
+  LuzState = STATE_STANDBY;
 }
 
 ///////////////////////
@@ -16,6 +21,57 @@ void _CtrSetup(void)
 ///////////////////////
 void _CtrLoop(void)
 {
+  // Gen State
+  if (cfgGenOnPin == 1)
+  {
+    if (InGenOn == IO_OFF)
+      genInStatus = 0;
+    else
+      genInStatus = 1;
+  }
+  else
+  {
+    if (DisplayIndicador == 0)
+      genInStatus = 0;
+    else
+      genInStatus = 1;
+  }
+
+  // Gen Status
+  switch (genState)
+  {
+    case STATE_GEN_OFF:
+      remAct = 0;
+      genMinOn = 0;
+      if (genInStatus == 1)
+      {
+        if (remPulse == 1)
+          genState = STATE_GEN_REM_ON;
+        else
+          genState = STATE_GEN_ON;
+
+        remPulse = 0; //BUG
+      }
+      break;
+
+    case STATE_GEN_REM_ON:
+      remAct = 1;
+      if (genInStatus == 0)
+      {
+        remPulse = 0; //BUG
+        genState = STATE_GEN_OFF;
+      }
+      break;
+
+    case STATE_GEN_ON:
+      remAct = 0;
+      if (genInStatus == 0)
+      {
+        remPulse = 0; //BUG
+        genState = STATE_GEN_OFF;
+      }
+      break;
+  }
 
   // Control de Generador
   switch (ControlState)
@@ -31,7 +87,8 @@ void _CtrLoop(void)
       OutStopPuls = OUT_OFF;
       if (millis() - ControlTick >= (cfgRemotePulsTick*100))
         ControlState = STATE_STANDBY;      
-      
+
+      remPulse = 1;
       break;
 
     case STATE_STOP_PULSE:
@@ -39,7 +96,8 @@ void _CtrLoop(void)
       OutStopPuls = OUT_ON;
       if (millis() - ControlTick >= (cfgRemotePulsTick*100))
         ControlState = STATE_STANDBY;      
-      
+
+      remPulse = 0;
       break;
   }
 

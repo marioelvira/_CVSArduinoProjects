@@ -8,6 +8,7 @@ void _TimeSetup(void)
   timeSec = 0;
   timeMin = 0;
   timeHour = 0;
+  timeDay = 0;
 }
 
 ////////////////////////
@@ -29,7 +30,14 @@ void _TimeLoop(void)
       {
         timeMin = 0;
         timeHour++;
+        if (timeHour >= 24)
+        {
+          timeHour = 0;
+          timeDay++;
+        }
       }
+
+      genMinOn++;
     }
     
     timeTick = millis();
@@ -38,7 +46,7 @@ void _TimeLoop(void)
     
     Serial.println("<><><><><><><>");
     Serial.print("Tiempo Encendio: ");
-    Serial.print(timeHour); Serial.print(" : "); Serial.print(timeMin); Serial.print(" : "); Serial.print(timeSec);
+    Serial.print(timeDay); Serial.print("d "); Serial.print(timeHour); Serial.print(" : "); Serial.print(timeMin); Serial.print(" : "); Serial.print(timeSec);
     Serial.println(" ");
     /*
     Serial.print("Cuenta Atras (Segundos): ");
@@ -65,6 +73,10 @@ void _TimeLoop(void)
     Serial.println(ControlState);  
     Serial.println("---------------");
 
+    Serial.print("Gen Status: ");
+    Serial.print(genState); Serial.print(" "); Serial.print(genMinOn); Serial.println("m ");
+    Serial.println("---------------");
+ 
     Serial.print("Luz Off Status: ");
     Serial.println(LuzState);  
     Serial.println("---------------");

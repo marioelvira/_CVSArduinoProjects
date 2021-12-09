@@ -95,6 +95,7 @@ String mqttClientId = "remoteMQTT-" + String(ESP.getChipId());
 
 int mqttStatus;
 unsigned long mqttTick = 0;
+
 /*
 char  topic_state[50];
 char  topic_genctr[50];
@@ -109,6 +110,7 @@ unsigned long timeTick = 0;
 int timeSec = 0;
 int timeMin = 0;
 int timeHour = 0;
+int timeDay = 0;
 
 /////////////
 // Control //
@@ -118,6 +120,13 @@ unsigned long ControlTick = 0;
 int   ControlState;
 int   TimeControlSec;
 int   DisplayIndicador;
+
+int   genInStatus;
+int   genState;
+int   genMinOn;
+
+int   remPulse;
+int   remAct;
 
 int   LuzState;
 unsigned long LuzTick = 0;

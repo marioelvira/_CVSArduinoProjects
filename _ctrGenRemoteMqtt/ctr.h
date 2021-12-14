@@ -5,6 +5,8 @@ extern "C" {
 #ifndef _CTR_H_
 #define _CTR_H_
 
+#include "main.h"
+
 #define MODE_TEST   1
 #define MODE_AUTO   0
 

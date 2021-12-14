@@ -78,7 +78,7 @@ void _CtrLoop(void)
 
       if (TimeControlSec <= 0)
         ControlState = STATE_GEN_OFF;
-    
+
       break;
    
     case STATE_GEN_OFF:
@@ -95,6 +95,27 @@ void _CtrLoop(void)
       TimeControlSec = 0;
 
       if (millis() - ControlTick >= (TimeOutStop*1000))
+      {
+        ControlTick = millis();
+        ControlState = STATE_BOM_OFF;
+      }
+
+      break;
+
+    case STATE_BOM_OFF:
+      // Control
+      OutAutoOn = OUT_ON;
+      
+      OutBomba = OUT_OFF;
+      OutGen = OUT_OFF;
+
+      // Indicadores
+      OutZumb = OUT_OFF;
+      OutDisp = OUT_OFF;
+
+      TimeControlSec = 0;
+
+      if (millis() - ControlTick >= (TIMEOUT_AUTOOFF_MS))
         ControlState = STATE_AUTO_OFF;
 
       break;

@@ -11,11 +11,6 @@ void _IOSetup()
   InEndCounter = 0;
 
   DisplayIndicador = 1;
-
-  if (DebugVal == 69)
-  {
-    
-  }
 }
 
 //////////////////////

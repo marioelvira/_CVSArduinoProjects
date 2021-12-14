@@ -157,7 +157,12 @@ void _MQTTSend(void)
     str = str + "\"luzState\":0";
   else
     str = str + "\"luzState\":1";
-  str = str + "\n";
+  str = str + ",\n";
+
+  // ipAdd
+  str = str + "\"ipAdd\":\"";
+  str = str + String(ipAddress.toString());
+  str = str + "\"\n";
 
   str = str + "}";
 

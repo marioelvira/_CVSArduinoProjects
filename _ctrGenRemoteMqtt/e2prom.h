@@ -5,6 +5,8 @@ extern "C" {
 #ifndef _E2PROM_H_
 #define _E2PROM_H_
 
+#include "main.h"
+
 #define _ERASE_EEPROM_        0
 #define _READ_EEPROM_         0
 #define _WRITE_SSID_EEPROM_   0
@@ -44,7 +46,7 @@ extern "C" {
 //#define EEPROM_ADD_MAX          0xFA // 250
 
 // Values
-#define EEPROM_VAL_OK             0xA8
+#define EEPROM_VAL_OK             0xAA
 
 #define EEPROM_VAL_IP_MODE        DHCP_MODE
 #define EEPROM_VAL_IP1            192

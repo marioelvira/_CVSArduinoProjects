@@ -42,10 +42,10 @@ extern "C" {
 #define PIN_DISP          12
 
 #define PIN_PULSADOR      13
-#define PIN_END           10
+#define PIN_END           10  // Cambiar a 9
 
 #define PIN_AUTOON        15
-#define PIN_BOMBA         9
+#define PIN_BOMBA         9   // Cambiar a 10
 
 #define PIN_OUT_ON        1
 #define PIN_OUT_OFF       0

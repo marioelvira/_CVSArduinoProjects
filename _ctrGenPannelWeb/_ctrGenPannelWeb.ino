@@ -247,7 +247,7 @@ void _PINLoop()
     digitalWrite(PIN_BOMBA, PIN_OUT_ON);
   else
     digitalWrite(PIN_BOMBA, PIN_OUT_OFF);
-  
+
   if (OutDisp == OUT_ON)
     digitalWrite(PIN_DISP, PIN_OUT_ON);
   else if (OutDisp == IO_OFF)

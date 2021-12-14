@@ -5,6 +5,8 @@ extern "C" {
 #ifndef _IP_H_
 #define _IP_H_
 
+#include "main.h"
+
 #define DHCP_MODE    0
 #define FIXIP_MODE   1
 

@@ -23,7 +23,7 @@ void _serveMAIN()
   String html = "";
   
   html = "<!DOCTYPE HTML><html>";
-  html = html + "<title>PANNEL+ Estado</title>";
+  html = html + "<title>GEN CONTROL+ Estado</title>";
   html = html + "<head>";
   html = html + "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"/>";
   html = html + "<link rel=\"icon\" href=\"data:,\">";
@@ -32,7 +32,7 @@ void _serveMAIN()
 
   html = html + "<body>";
   html = html + "<div class=\"myform\">";
-  html = html + "<h1>PANNEL+ #Estado<span>ESP8266 tech</span></h1>";
+  html = html + "<h1>GEN CONTROL+ #Estado<span>ESP8266 tech</span></h1>";
 
   html = html + "<div class=\"section\"><span>1</span>Temporizaciones</div>";
   html = html + "<p class=\"sansserif\" id=\"TEMPSid\">...</p>";
@@ -124,7 +124,7 @@ void _serveTimeSETTINGS()
   String html = "";
   
   html = "<!DOCTYPE HTML><html>";
-  html = html + "<title>PANNEL+ #Configuraci&oacuten</title>";
+  html = html + "<title>GEN CONTROL+ #Configuraci&oacuten</title>";
   html = html + "<head>";
   html = html + "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"/>";
   html = html + "<link rel=\"icon\" href=\"data:,\">";
@@ -133,7 +133,7 @@ void _serveTimeSETTINGS()
 
   html = html + "<body>";
   html = html + "<div class=\"myform\">";
-  html = html + "<h1>PANNEL+ #Configuraci&oacuten<span>ESP8266 tech</span></h1>";
+  html = html + "<h1>GEN CONTROL+ #Configuraci&oacuten<span>ESP8266 tech</span></h1>";
   html = html + "<form method='get' action='setTimeSettings'>";
 
   // Temporizaciones
@@ -275,7 +275,7 @@ void _setTimeSETTINGS()
   }
 
   html = "<!DOCTYPE HTML><html>";
-  html = html + "<title>PANNEL+ #Configuraci&oacuten</title>";
+  html = html + "<title>GEN CONTROL+ #Configuraci&oacuten</title>";
   html = html + "<head>";
   html = html + "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"/>";
   html = html + "<link rel=\"icon\" href=\"data:,\">";
@@ -285,7 +285,7 @@ void _setTimeSETTINGS()
   html = html + "<body>";
 
   html = html + "<div class=\"myform\">";
-  html = html + "<h1>PANNEL+ #Configuraci&oacuten<span>ESP8266 tech</span></h1>";
+  html = html + "<h1>GEN CONTROL+ #Configuraci&oacuten<span>ESP8266 tech</span></h1>";
   
   if (error == 0)
     html += "<p class=\"sansserif\">Configuraci&oacuten guardada correctamente.</p>";
@@ -322,7 +322,7 @@ void _serveSETTINGS()
 
   html = html + "<body>";
   html = html + "<div class=\"myform\">";
-  html = html + "<h1>PANNEL+ #Network settings<span>ESP8266 tech</span></h1>";
+  html = html + "<h1>GEN CONTROL+ #Network settings<span>ESP8266 tech</span></h1>";
   //html = html + "<form method=\"post\">";
   html = html + "<form method='get' action='networSettings'>";
 
@@ -638,7 +638,7 @@ void _setSETTINGS()
   html = html + "<body>";
 
   html = html + "<div class=\"myform\">";
-  html = html + "<h1>PANNEL+ #Network settings<span>ESP8266 tech</span></h1>";
+  html = html + "<h1>GEN PANNEL+ #Network settings<span>ESP8266 tech</span></h1>";
   
   if (i == 200)
     html += "<p>Settings OK: Saved</p>";

@@ -130,29 +130,6 @@ void _serveTimeSETTINGS()
   html = html + "<div class=\"myform\">";
   html = html + "<h1>DYN MQTT+ #Configuraci&oacuten<span>ESP8266 tech</span></h1>";
   html = html + "<form method='get' action='setTimeSettings'>";
-
-  html = html + "<div class=\"section\"><span>1</span>Tiempos</div>";
-  html = html + "<div class=\"inner-wrap\">";
-  html = html + "<label>Pulso Remoto (*100ms)<input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgRemotePulsTick) + "\" name=\"timeRP\"/></label>";
-  html = html + "<label>Luz Ext Off (*15m)<input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgLuzOutTick) + "\" name=\"timeLOFF\"/></label>";
-  html = html + "</div>";
-
-  html = html + "<div class=\"section\"><span>2</span>Logica</div>";
-  html = html + "<div class=\"inner-wrap\">";
-  html = html + "<label> Salidas ON <input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgLogicIns) + "\" name=\"cfgIns\"/></label>";
-  html = html + "<label> Entradas ON <input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgLogicOuts) + "\" name=\"cfgOuts\"/></label>";
-  html = html + "</div>";
-
-  html = html + "<div class=\"section\"><span>3</span>vBat ADC</div>";
-  html = html + "<div class=\"inner-wrap\">";
-  html = html + "<label>ADC recta:m (/10)<input type=\"text\"  maxlength=\"16\" value=\"" + String((int)cfgADCm) + "\" name=\"rADCm\"/></label>";
-  html = html + "<label>ADC recta:b (/100)<input type=\"text\"  maxlength=\"16\" value=\"" + String((int)cfgADCb) + "\" name=\"rADCb\"/></label>";
-  html = html + "</div>";
-  
-  html = html + "<div class=\"section\"><span>4</span>Generador In</div>";
-  html = html + "<div class=\"inner-wrap\">";
-  html = html + "<label><input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgGenOnPin) + "\" name=\"cfgGenon\"/></label>";
-  html = html + "</div>";
   /*
   html = html + "<div class=\"section\"><span>5</span>Debug</div>";
   html = html + "<div class=\"inner-wrap\">";
@@ -179,25 +156,12 @@ void _setTimeSETTINGS()
 {
   String html = "";
   
-  String rtimeRP   = httpServer.arg("timeRP");
-  String rtimeLOFF = httpServer.arg("timeLOFF");
-  String cfgIns    = httpServer.arg("cfgIns");
-  String cfgOuts   = httpServer.arg("cfgOuts");
-  String cfgGenon  = httpServer.arg("cfgGenon");
-  String rADCm     = httpServer.arg("rADCm");
-  String rADCb     = httpServer.arg("rADCb");
   //String rdebugVal = httpServer.arg("tdebugVal");
   
   int error = 0;
 
-  if ((rtimeRP.length() == 0)   ||
-      (rtimeLOFF.length() == 0) ||
-      (cfgIns.length() == 0)    ||
-      (cfgOuts.length() == 0)   ||
-      (cfgGenon.length() == 0)  ||
-      (rADCm.length() == 0)     ||
-      (rADCb.length() == 0))
-      //(rdebugVal.length() == 0))
+  /*
+  if ((rdebugVal.length() == 0))
   {
     error = 1;  // falta un campo...
     #if (_HTTP_SERIAL_DEBUG_ == 1)
@@ -208,37 +172,18 @@ void _setTimeSETTINGS()
   // Si no hay error...
   if (error == 0)
   {
-    cfgRemotePulsTick = rtimeRP.toInt();
-    cfgLuzOutTick = rtimeLOFF.toInt();
-    cfgLogicIns = cfgIns.toInt();
-    cfgLogicOuts = cfgOuts.toInt();
-    cfgGenOnPin = cfgGenon.toInt();
-    cfgADCm = rADCm.toInt();
-    cfgADCb = rADCb.toInt();
     //DebugVal = rdebugVal.toInt();
     
     #if (_HTTP_SERIAL_DEBUG_ == 1)  
-    Serial.print("Remote Pulse: ");  Serial.print (cfgRemotePulsTick);  Serial.println(" *100 ms");
-    Serial.print("Luz Off: ");       Serial.print (cfgLuzOutTick);      Serial.println(" *15 min");
-    Serial.print("cfgLogic Ins: ");  Serial.println(cfgLogicIns);
-    Serial.print("cfgLogic Outs: "); Serial.println(cfgLogicOuts);
-    Serial.print("Gen On Pin: ");    Serial.println(cfgGenOnPin);
-    Serial.print("ADC m: ");         Serial.print (cfgADCm);            Serial.println(" /10");
-    Serial.print("ADC b: ");         Serial.print (cfgADCb);            Serial.println(" /100");
     //Serial.print("Debug: ");       Serial.print (DebugVal);           Serial.println(" ---");
     #endif   
 
     // Data
-    EEPROM.write(EEPROM_ADD_RPUSL_MSEC, (byte)cfgRemotePulsTick);
-    EEPROM.write(EEPROM_ADD_LUZOFF_15M, (byte)cfgLuzOutTick);
-    EEPROM.write(EEPROM_ADD_LOGIC_INS,  (byte)cfgLogicIns);
-    EEPROM.write(EEPROM_ADD_LOGIC_OUTS, (byte)cfgLogicOuts);
-    EEPROM.write(EEPROM_ADD_ADC_M,      (byte)cfgADCm);
-    EEPROM.write(EEPROM_ADD_ADC_B,      (byte)cfgADCb);
     //EEPROM.write(EEPROM_ADD_DEBUG,      (byte)DebugVal);
 
     EEPROM.commit();    //Store data to EEPROM
   }
+  */
 
   html = "<!DOCTYPE HTML><html>";
   html = html + "<title>DYN MQTT+ #Configuraci&oacuten</title>";
@@ -272,7 +217,6 @@ void _setTimeSETTINGS()
 
 void _serveSETTINGS()
 {
-  //int mobile = 0;
   String html = "";
 
   int n = WiFi.scanNetworks();
@@ -282,8 +226,6 @@ void _serveSETTINGS()
   html = html + "<head>";
   html = html + "<link rel=\"icon\" href=\"data:,\">";
   html = html + "<link rel=\"stylesheet\" type=\"text/css\" href=\"style.css\" />";
-  //html = html + "<meta name='apple-mobile-web-app-capable' content='yes' />";
-  //html = html + "<meta name='apple-mobile-web-app-status-bar-style' content='black-translucent' />";
   html = html + "</head>";
 
   html = html + "<body>";
@@ -631,6 +573,7 @@ void _readINS()
 
   html = "<table style=\"width:100%\">";
 
+  /*
   html = html + "<tr>";
   html = html + "<td>Modo</td>";
   if (controlMode == MODE_AUTO)
@@ -638,35 +581,7 @@ void _readINS()
   else
    html = html + "<td><font style=\"color:red\">Control Manual</font></td>";
   html = html + "</tr>";
-
-  html = html + "<tr>";
-  html = html + "<td>Indicador LCD</td>";
-  html = html + "<td>" + String(DisplayIndicador) + " -> " + String(InD) + "-" + String(InC) + "-" + String(InB) + "-" + String(InA) + "</td>";
-  html = html + "</tr>";
-
-  html = html + "<tr>";
-  html = html + "<td>Generador In</td>";
-  if (InGenOn == IO_OFF)
-    html = html + "<td><font style=\"color:grey\">OFF</font></td>";
-  else
-    html = html + "<td><font style=\"color:green\">ON</font></td>";
-  html = html + "</tr>";
-
-  html = html + "<tr>";
-  html = html + "<td>Generador In (min)</td>";
-  html = html + "<td>" + String(genMinOn) + "</td>";
-  html = html + "</tr>";
-
-  html = html + "<tr>";
-  html = html + "<td>Vbatt In (Dig)</td>";
-  html = html + "<td>" + String(VbattInADC) + "</td>";
-  html = html + "</tr>";
-  
-  html = html + "<tr>";
-  html = html + "<td>Vbatt In (V)</td>";
-  html = html + "<td>" + String(VbattIn) + "</td>";
-  html = html + "</tr>";
-  
+  */
   html = html + "</table>";
   
   httpServer.send(200, "text/plane", html);
@@ -679,51 +594,8 @@ void _readOUTS()
   html = "<table style=\"width:100%\">";
 
   html = html + "<tr>";
-  html = html + "<td>Control State </td>";
-  html = html + "<td>" + String(ControlState) + "</td>";
-  html = html + "</tr>";
-
-  html = html + "<tr>";
-  html = html + "<td>Luz OFF State </td>";
-  html = html + "<td>" + String(LuzState) + "</td>";
-  html = html + "</tr>";
-
-  html = html + "<tr>";
   html = html + "<td>Wi-Fi State </td>";
   html = html + "<td>" + String(wifiStatus) + "</td>";
-  html = html + "</tr>";
-  /*
-  html = html + "<tr>";
-  html = html + "<td>MQTT State </td>";
-  html = html + "<td>" + String(mqttStatus) + "</td>";
-  html = html + "</tr>";
-  */
-  html = html + "<tr>";
-  html = html + "<td>-----------------</td>";
-  html = html + "</tr>";
-  
-  html = html + "<tr>";
-  html = html + "<td>Gen Pulsador</td>";
-  if (OutGenPuls == OUT_ON)
-   html = html + "<td><font style=\"color:green\">Activado</font></td>";
-  else
-   html = html + "<td><font style=\"color:grey\">Desactivado</font></td>";
-  html = html + "</tr>";
-
-  html = html + "<tr>";
-  html = html + "<td>Gen Stop</td>";
-  if (OutStopPuls == OUT_ON)
-   html = html + "<td><font style=\"color:green\">Activado</font></td>";
-  else
-   html = html + "<td><font style=\"color:grey\">Desactivado</font></td>";
-  html = html + "</tr>";
-  
-  html = html + "<tr>";
-  html = html + "<td>Luz OFF</td>";
-  if (OutLuzOff == OUT_ON)
-   html = html + "<td><font style=\"color:green\">Activado</font></td>";
-  else
-   html = html + "<td><font style=\"color:grey\">Desactivado</font></td>";
   html = html + "</tr>";
  
   html = html + "</table>";
@@ -741,6 +613,7 @@ void _setOUTS()
   Serial.println(out_number);
   #endif
 
+  /*
   // Cambiar Modo
   if(out_number == "0")
   {
@@ -762,69 +635,6 @@ void _setOUTS()
     }
   }
 
-  // Gen Pulso
-  if(out_number == "10")
-  {
-    if (OutGenPuls == OUT_ON)
-    {
-      OutGenPuls = OUT_OFF;
-      #if (_HTTP_SERIAL_DEBUG_ == 1)
-      Serial.println("Gen Pulso OFF");
-      #endif
-      html = "Gen Pulso OFF";
-    }
-    else
-    {
-      OutGenPuls = OUT_ON;
-      #if (_HTTP_SERIAL_DEBUG_ == 1)
-      Serial.println("Gen Pulso ON");
-      #endif
-      html = "Gen Pulso ON";
-    }
-  }
- 
-  // OutStopPuls
-  if(out_number == "11")
-  {
-    if (OutStopPuls == OUT_ON)
-    {
-      OutStopPuls = OUT_OFF;
-      #if (_HTTP_SERIAL_DEBUG_ == 1)
-      Serial.println("Stop Gen OFF");
-      #endif
-      html = "Stop Gen OFF";
-    }
-    else
-    {
-      OutStopPuls = OUT_ON;
-      #if (_HTTP_SERIAL_DEBUG_ == 1)
-      Serial.println("Stop Gen ON");
-      #endif
-      html = "Stop Gen ON";
-    }
-  }
-
-  // OutLuzOff
-  if(out_number == "12")
-  {
-    if (OutLuzOff == OUT_ON)
-    {
-      OutLuzOff = OUT_OFF;
-      #if (_HTTP_SERIAL_DEBUG_ == 1)
-      Serial.println("Luz Off OFF");
-      #endif
-      html = "Luz off OFF";
-    }
-    else
-    {
-      OutLuzOff = OUT_ON;
-      #if (_HTTP_SERIAL_DEBUG_ == 1)
-      Serial.println("Luz off ON");
-      #endif
-      html = "Luz off ON";
-    }
-  }
-  /*
   // Reset Timers
   if(out_number == "20")
   {
@@ -849,17 +659,6 @@ void _readTEMPS()
   html = html + "<td>" + String(timeDay) + "d " + String(timeHour) + " : " + String(timeMin) + " : " + String(timeSec) + "</td>";
   html = html + "</tr>";
   
-  /*
-  html = html + "<tr>";
-  html = html + "<td>Cuenta Atras (Segundos)</td>";
-  html = html + "<td>" + String(TimeControlSec) + "</td>";
-  html = html + "</tr>";
-
-  html = html + "<tr>";
-  html = html + "<td>Cuenta Ticks (ms)</td>";
-  html = html + "<td>" + String(millis() - ControlTick) + "</td>";
-  html = html + "</tr>";
-  */
   html = html + "</table>";
   
   httpServer.send(200, "text/plane", html);

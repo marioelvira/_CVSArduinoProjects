@@ -3,6 +3,8 @@
 #include <PubSubClient.h>
 #include <EEPROM.h>
 
+#include<sMQTTBroker.h>
+
 #include "ESP8266HTTPClient.h"
 #include "base64.h"
 
@@ -11,32 +13,14 @@
 #include "io.h"
 #include "ip.h"
 #include "main.h"
-#include "ctr.h"
+#include "MQTTBroker.h"
 #include "wifi.h"
 #include "dyndns.h"
 
 ////////////////////
 // DIO definition //
 ////////////////////
-int   InA;
-int   InB;
-int   InC;
-int   InD;
-
-int   InGenOn;
-
-int   OutGenPuls;
-int   OutStopPuls;
-int   OutLuzOff;
 int   outLed;
-
-///////////
-// Vbatt //
-///////////
-int    VbattInADC;
-int    VbattInArray[VBATT_ARRAY_SIZE];
-int    VbattInPointer;
-float  VbattIn;
 
 ///////////
 // Wi-Fi //
@@ -78,7 +62,7 @@ byte mac[6];
 /////////////////
 // Device Name //
 /////////////////
-#define DEVICENAME      "rem8266"
+#define DEVICENAME      "dynbroker8266"
 char* deviceName = DEVICENAME;
 
 /////////////////
@@ -104,25 +88,6 @@ int timeHour = 0;
 int timeDay = 0;
 
 /////////////
-// Control //
-/////////////
-int   controlMode = MODE_AUTO;
-unsigned long ControlTick = 0;
-int   ControlState;
-int   TimeControlSec;
-int   DisplayIndicador;
-
-int   genInStatus;
-int   genState;
-int   genMinOn;
-
-int   remPulse;
-int   remAct;
-
-int   LuzState;
-unsigned long LuzTick = 0;
-
-/////////////
 // Dyn Dns //
 /////////////
 unsigned long dyndnsTick = 0;
@@ -135,24 +100,54 @@ String ddns_u;
 String ddns_p;
 String ddns_d;
 
+/////////////////
+// Broker MQTT //
+/////////////////
+class MyBroker:public sMQTTBroker
+{
+  public:
+    bool onConnect(sMQTTClient *client, const std::string &username, const std::string &password)
+    {
+      #if (_BROKER_SERIAL_DEBUG_ == 1)
+      Serial.println("Connect Client");
+      //Serial.println("Username/Password/ClientId: " + String(username) + "/" + String(password) + "/" + String(sMQTTClient));
+      #endif
+      
+      // check username and password, if ok return true
+      return true;
+    };
+    
+    void onRemove(sMQTTClient*)
+    {
+      #if (_BROKER_SERIAL_DEBUG_ == 1)
+      Serial.println("Remove Client");
+      #endif
+    };
+    
+    void onPublish(sMQTTClient *client,const std::string &topic, const std::string &payload)
+    {
+      #if (_BROKER_SERIAL_DEBUG_ == 1)
+      Serial.println("Client Publish");
+      #endif
+    }
+};
+
+int brokerStatus;
+MyBroker broker;
+
+const unsigned short mqttPort = 1883;
+unsigned long freeRam;
+
 ////////////
 // Config //
 ////////////
-int     cfgRemotePulsTick;
-int     cfgLuzOutTick;
-int     cfgLogicIns;
-int     cfgLogicOuts;
-int     cfgGenOnPin;
-int     cfgADCm;
-int     cfgADCb;
-
 //int     DebugVal = 0;
 
 ///////////////
 // PIN steup //
 ///////////////
 void _PINSetup(void)
-{ 
+{
   //------//
   // OUTS //
   //------//
@@ -163,26 +158,10 @@ void _PINSetup(void)
   outLed = IO_OFF;
   #endif
 
-  pinMode(PIN_GEN_PULS, OUTPUT);
-  digitalWrite(PIN_GEN_PULS, !cfgLogicOuts);
-  OutGenPuls = OUT_OFF;
-
-  pinMode(PIN_STOP_PULS, OUTPUT);
-  digitalWrite(PIN_STOP_PULS, !cfgLogicOuts);
-  OutStopPuls = OUT_OFF;
-
-  pinMode(PIN_LUZ_OFF, OUTPUT);
-  digitalWrite(PIN_LUZ_OFF, !cfgLogicOuts);
-  OutLuzOff = OUT_OFF; 
-  
   //-----//
   // INS //
   //-----//
-  pinMode(PIN_A, INPUT);      InA = IO_OFF;
-  pinMode(PIN_B, INPUT);      InB = IO_OFF;
-  pinMode(PIN_C, INPUT);      InC = IO_OFF;
-  pinMode(PIN_D, INPUT);      InD = IO_OFF;
-  pinMode(PIN_GENON, INPUT);  InGenOn = IO_OFF;
+  //pinMode(PIN_A, INPUT);      InA = IO_OFF;
 }
 
 //============//
@@ -212,8 +191,8 @@ void setup(void)
   // Time Setup
   _TimeSetup();
  
-  // Ctr setup
-  _CtrSetup();
+  // Mqtt broker setup
+  _BrokerSetup();
 
   // Dyndns setup
   _DyndnsSetup();
@@ -235,48 +214,15 @@ void _PINLoop()
     digitalWrite(PIN_LED, PIN_OUT_OFF);
   #endif
 
-  if (OutGenPuls == cfgLogicOuts)
-    digitalWrite(PIN_GEN_PULS, PIN_OUT_ON);
-  else
-    digitalWrite(PIN_GEN_PULS, PIN_OUT_OFF); 
-
-  if (OutStopPuls == cfgLogicOuts)
-    digitalWrite(PIN_STOP_PULS, PIN_OUT_ON);
-  else
-    digitalWrite(PIN_STOP_PULS, PIN_OUT_OFF);
-
-  if (OutLuzOff == cfgLogicOuts)
-    digitalWrite(PIN_LUZ_OFF, PIN_OUT_ON);
-  else
-    digitalWrite(PIN_LUZ_OFF, PIN_OUT_OFF);
-  
   //-----//
   // INS //
   //-----//
-  if (digitalRead(PIN_A) == PIN_IN_ON /*cfgLogicIns*/)
+  /*
+  if (digitalRead(PIN_A) == PIN_IN_ON)
     InA = IO_ON;
   else
     InA = IO_OFF;
-
-  if (digitalRead(PIN_B) == PIN_IN_ON /*cfgLogicIns*/)
-    InB = IO_ON;
-  else
-    InB = IO_OFF;
-
-  if (digitalRead(PIN_C) == PIN_IN_ON /*cfgLogicIns*/)
-    InC = IO_ON;
-  else
-    InC = IO_OFF;
-
-  if (digitalRead(PIN_D) == PIN_IN_ON /*cfgLogicIns*/)
-    InD = IO_ON;
-  else
-    InD = IO_OFF;
-
-  if (digitalRead(PIN_GENON) == cfgLogicIns)
-    InGenOn = IO_ON;
-  else
-    InGenOn = IO_OFF;
+  */
 }
 
 //===========//
@@ -285,10 +231,8 @@ void _PINLoop()
 void loop()
 {
   _PINLoop();
-  //_IOLoop();
-
-  _IOLcdLoop();
-
+  _IOLoop();
+ 
   _WifiLoop();
   _WifiLedLoop();
 
@@ -296,10 +240,12 @@ void loop()
     _HttpLoop();
 
   if (wifiStatus == WIFI_STATION_CONNECTED)
+  {
     _DyndnsLoop();
+    _BrokerLoop();
+  }
+  else
+    brokerStatus = BROKER_INIT;
 
-  if (controlMode == MODE_AUTO)
-    _CtrLoop();
-  
   _TimeLoop();
 }

@@ -9,6 +9,9 @@ void _TimeSetup(void)
   timeMin = 0;
   timeHour = 0;
   timeDay = 0;
+
+  // RAM setup
+  _RAMSetup();
 }
 
 ////////////////////////
@@ -42,21 +45,15 @@ void _TimeLoop(void)
     
     timeTick = millis();
 
+    _FreeRAM();
+
     #if (_STATUS_SERIAL_DEBUG_ == 1)
     
     Serial.println("<><><><><><><>");
     Serial.print("Tiempo Encendio: ");
     Serial.print(timeDay); Serial.print("d "); Serial.print(timeHour); Serial.print(" : "); Serial.print(timeMin); Serial.print(" : "); Serial.print(timeSec);
     Serial.println(" ");
-    /*
-    Serial.print("Cuenta Atras (Segundos): ");
-    Serial.print(TimeControlSec);
-    Serial.println(" ");
 
-    Serial.print("Cuenta Ticks (ms): ");
-    Serial.print(millis() - ControlTick);
-    Serial.println(" ");
-    */
     Serial.print("Indicador LCD: ");
     Serial.print(DisplayIndicador);
     Serial.print(" -> ");

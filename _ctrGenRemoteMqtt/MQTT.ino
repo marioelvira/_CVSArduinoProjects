@@ -118,6 +118,11 @@ void _MQTTSend(void)
   str = str + String(timeDay) + "d " + String(timeHour) + " : " + String(timeMin) + " : " + String(timeSec);
   str = str + "\",\n";
 
+  // mRAM
+  str = str + "\"mRAM\":";
+  str = str + String(freeRam);
+  str = str + ",\n";
+
   // vBatt
   str = str + "\"vbatt\":";
   str = str + String(VbattIn);
@@ -186,7 +191,8 @@ void _MQTTSetup(void)
   String  str = "";
   int     str_len;
    
-  mqttClient.setServer(MQTT_BROKER, MQTT_BROKER_PORT);
+  //mqttClient.setServer(MQTT_BROKER, MQTT_BROKER_PORT);
+  mqttClient.setServer(brokerUrl, brokerPort);
   mqttClient.setCallback(mqttDataCallback);
   
   mqttStatus = MQTT_NOT_CONNECTED;

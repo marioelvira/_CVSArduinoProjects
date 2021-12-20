@@ -11,6 +11,7 @@
 #include "ctr.h"
 #include "wifi.h"
 #include "MQTT.h"
+#include "mRAM.h"
 
 ////////////////////
 // DIO definition //
@@ -88,6 +89,10 @@ int httpStatus;
 //////////
 // MQTT //
 //////////
+const char* brokerSt = MQTT_BROKER;
+char brokerUrl[BROKER_MAX];
+int brokerPort;
+
 WiFiClient wifiClient;
 PubSubClient mqttClient(wifiClient);
 
@@ -130,6 +135,11 @@ int   remAct;
 
 int   LuzState;
 unsigned long LuzTick = 0;
+
+//////////
+// mRAM //
+//////////
+unsigned long freeRam;
 
 ////////////
 // Config //
@@ -205,7 +215,7 @@ void setup(void)
   // Http setup
   _HttpSetup();
 
-  // Time Setup
+  // Time setup
   _TimeSetup();
 
   // MQTT setup

@@ -48,9 +48,9 @@ void _serveMAIN()
   html = html + "  <input type=\"button\" value=\"Gen Paro\" onclick=\"sendOUT(11)\">";
   html = html + "  <input type=\"button\" value=\"Luz Control\" onclick=\"sendOUT(12)\">";
   html = html + "</p>";
-  html = html + "<div class=\"section\"><span>4</span>Configuraci&oacuten</div>";
+  html = html + "<div class=\"section\"><span>5</span>Configuraci&oacuten</div>";
   html = html + "<p>";
-  html = html + "  <a href=\"settings.htm\"><input type=\"button\" value=\"Wi-Fi\"></a>";
+  html = html + "  <a href=\"settings.htm\"><input type=\"button\" value=\"Red\"></a>";
   html = html + "  <a href=\"timeSettings.htm\"><input type=\"button\" value=\"Config\"></a>";
   //html = html + "  <input type=\"button\" value=\"Reset Timers\" onclick=\"sendOUT(20)\">";
   html = html + "</p>";
@@ -341,6 +341,16 @@ void _serveSETTINGS()
 
   html = html + "</div>";
   // End
+
+  // Broker
+  html = html + "<div class=\"section\"><span>3</span>Broker </div>";
+  html = html + "<div class=\"inner-wrap\">";
+
+  html = html + "<label>URL <input type=\"text\" maxlength=\"30\" value=\"" + String(brokerUrl) + "\" name=\"brokerurl\"/></label>";
+  html = html + "<label>Port <input type=\"text\" maxlength=\"16\" value=\"" + String(brokerPort) + "\" name=\"brokerport\"/></label>";
+
+  html = html + "</div>";
+  // End
                         
   html = html + "<div class=\"button-section\">";
   html = html + "  <input type=\"submit\" value=\"Guardar\">";
@@ -368,6 +378,9 @@ void _setSETTINGS()
   String ripaddress = httpServer.arg("ipaddress");
   String rmask = httpServer.arg("mask");
   String rgate = httpServer.arg("gateway");
+  
+  String rbrokerurl = httpServer.arg("brokerurl");
+  String rbrokerport = httpServer.arg("brokerport");
     
   String html = "";
   int i, j, k, m;
@@ -375,6 +388,8 @@ void _setSETTINGS()
   char schar;
   char sbuf[4];
   byte val[4];
+
+  int eeprom_value_hi, eeprom_value_lo;
 
   IPAddress localip;
   IPAddress localmask;
@@ -413,9 +428,29 @@ void _setSETTINGS()
   else
     error = 1;
 
+  // Check broker error
+  if ((rbrokerurl.length() == 0) ||
+      (rbrokerport.length() == 0))
+    error |= 1;
+
   // If no error on data...
   if (error == 0)
   {
+     ////////////
+     // Broker //
+     ////////////
+     for (i = 0; i < BROKER_MAX; i++)
+       EEPROM.write(EEPROM_ADD_BROKER + i, 0);
+     j = rbrokerurl.length();
+     for (i = 0; i < j; i++)
+       EEPROM.write(EEPROM_ADD_BROKER + i, rbrokerurl[i]);
+      
+     brokerPort = rbrokerport.toInt();
+     eeprom_value_lo = brokerPort & 0x00FF;
+     EEPROM.write(EEPROM_ADD_BROKER_PORT, eeprom_value_lo);
+     eeprom_value_hi = (brokerPort & 0xFF00)>>8;
+     EEPROM.write(EEPROM_ADD_BROKER_PORT + 1, eeprom_value_hi);
+          
      /////////////////////////
      // Wi-Fi configuration //
      /////////////////////////
@@ -547,7 +582,6 @@ void _setSETTINGS()
          EEPROM.write(EEPROM_ADD_GATE3, val[2]);
          EEPROM.write(EEPROM_ADD_GATE4, val[3]);
        }
-
      }
      
      #if (_HTTP_SERIAL_DEBUG_ == 1)
@@ -567,6 +601,12 @@ void _setSETTINGS()
      Serial.println(localmask);
      Serial.print("---->Local gateway: ");
      Serial.println(localgate);
+
+     // Broker configuration
+     Serial.print("---->Broker Url: ");
+     Serial.println(rbrokerurl);
+     Serial.print("---->Broker Port: ");
+     Serial.println(rbrokerport);     
      #endif
      
      EEPROM.commit();
@@ -590,7 +630,7 @@ void _setSETTINGS()
 
      // Error
      i = 404;
-   }
+  }
 
   html = "<!DOCTYPE HTML><html>";
   html = html + "<title>REM MQTT+ #Configuraci&oacuten</title>";
@@ -849,17 +889,11 @@ void _readTEMPS()
   html = html + "<td>" + String(timeDay) + "d " + String(timeHour) + " : " + String(timeMin) + " : " + String(timeSec) + "</td>";
   html = html + "</tr>";
   
-  /*
   html = html + "<tr>";
-  html = html + "<td>Cuenta Atras (Segundos)</td>";
-  html = html + "<td>" + String(TimeControlSec) + "</td>";
+  html = html + "<td>Free RAM</td>";
+  html = html + "<td>" + String(freeRam) + "</td>";
   html = html + "</tr>";
 
-  html = html + "<tr>";
-  html = html + "<td>Cuenta Ticks (ms)</td>";
-  html = html + "<td>" + String(millis() - ControlTick) + "</td>";
-  html = html + "</tr>";
-  */
   html = html + "</table>";
   
   httpServer.send(200, "text/plane", html);

@@ -16,6 +16,7 @@
 #include "MQTTBroker.h"
 #include "wifi.h"
 #include "dyndns.h"
+#include "mRAM.h"
 
 ////////////////////
 // DIO definition //
@@ -29,10 +30,10 @@ unsigned long wifiAPTick = 0;
 unsigned long wifiLEDTick = 0;
 
 /*
-#if (_WRITE_SSID_EEPROM_ == 1)
-const char* ssidSt = SSIDST;
-const char* passwordSt = PSKST;
-#endif
+  #if (_WRITE_SSID_EEPROM_ == 1)
+  const char* ssidSt = SSIDST;
+  const char* passwordSt = PSKST;
+  #endif
 */
 
 // Station Mode
@@ -103,39 +104,84 @@ String ddns_d;
 /////////////////
 // Broker MQTT //
 /////////////////
-class MyBroker:public sMQTTBroker
+int brokerStatus;
+unsigned int brokerClients;
+
+const unsigned short mqttPort = 7000; //1883;
+
+class MyBroker: public sMQTTBroker
 {
   public:
     bool onConnect(sMQTTClient *client, const std::string &username, const std::string &password)
-    {
+    {     
       #if (_BROKER_SERIAL_DEBUG_ == 1)
       Serial.println("Connect Client");
-      //Serial.println("Username/Password/ClientId: " + String(username) + "/" + String(password) + "/" + String(sMQTTClient));
+      Serial.print((String)&username[0]); Serial.print(":"); Serial.println((String)&password[0]);
       #endif
-      
-      // check username and password, if ok return true
-      return true;
+
+      if (((char)username[0]  == 's') &&
+          ((char)username[1]  == 'd') &&
+          ((char)username[2]  == 'p') &&
+          ((char)username[3]  == 'e') &&
+          ((char)username[4]  == 'l') &&
+          ((char)username[5]  == 'i') &&
+          ((char)username[6]  == 'c') &&
+          ((char)username[7]  == 'a') &&
+          ((char)username[8]  == 'n') &&
+          ((char)username[9]  == 'o') &&
+          ((char)username[10] == 's') &&
+          ((char)username[11] == '@') &&
+          ((char)username[12] == 'g') &&
+          ((char)username[13] == 'm') &&
+          ((char)username[14] == 'a') &&
+          ((char)username[15] == 'i') &&
+          ((char)username[16] == 'l') &&
+          ((char)username[17] == '.') &&
+          ((char)username[18] == 'c') &&
+          ((char)username[19] == 'o') &&
+          ((char)username[20] == 'm'))
+      {
+        brokerClients++;
+        #if (_BROKER_SERIAL_DEBUG_ == 1)
+        Serial.println("Connected OK");
+        Serial.println(brokerClients);
+        #endif
+        return true;
+      }
+      else
+      {
+        #if (_BROKER_SERIAL_DEBUG_ == 1)
+        Serial.println("Connected NOK");
+        Serial.println(brokerClients);
+        #endif
+        return false;
+      }
     };
-    
+
     void onRemove(sMQTTClient*)
     {
+      brokerClients--;
       #if (_BROKER_SERIAL_DEBUG_ == 1)
-      Serial.println("Remove Client");
+      Serial.println("Remove Client");  
+      Serial.print("Connected ");
+      Serial.println(brokerClients);
       #endif
     };
-    
-    void onPublish(sMQTTClient *client,const std::string &topic, const std::string &payload)
-    {
+
+    void onPublish(sMQTTClient *client, const std::string &topic, const std::string &payload)
+    {     
       #if (_BROKER_SERIAL_DEBUG_ == 1)
-      Serial.println("Client Publish");
+      Serial.println("Client Publish Topic: ");
+      Serial.print((String)&topic[0]); Serial.print(" payload: "); Serial.println((String)&payload[0]);
       #endif
     }
 };
 
-int brokerStatus;
 MyBroker broker;
 
-const unsigned short mqttPort = 1883;
+//////////
+// mRAM //
+//////////
 unsigned long freeRam;
 
 ////////////
@@ -168,13 +214,13 @@ void _PINSetup(void)
 // MAIN SETUP //
 //============//
 void setup(void)
-{ 
+{
   #if (_SERIAL_DEBUG_ == 1)
   delay(100);  // 100ms
   Serial.begin(115200);
   Serial.println("");
   #endif
-  
+
   // Config setup
   _ConfigSetup();
 
@@ -188,9 +234,9 @@ void setup(void)
   // Http setup
   _HttpSetup();
 
-  // Time Setup
+  // Time setup
   _TimeSetup();
- 
+
   // Mqtt broker setup
   _BrokerSetup();
 
@@ -218,9 +264,9 @@ void _PINLoop()
   // INS //
   //-----//
   /*
-  if (digitalRead(PIN_A) == PIN_IN_ON)
+    if (digitalRead(PIN_A) == PIN_IN_ON)
     InA = IO_ON;
-  else
+    else
     InA = IO_OFF;
   */
 }
@@ -232,7 +278,7 @@ void loop()
 {
   _PINLoop();
   _IOLoop();
- 
+
   _WifiLoop();
   _WifiLedLoop();
 

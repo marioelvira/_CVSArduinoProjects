@@ -1,11 +1,9 @@
-
 ///////////////////
 // Broker set up //
 ///////////////////
 void _BrokerSetup(void)
 {
   brokerStatus = BROKER_INIT;
-  freeRam = ESP.getFreeHeap();
 }
 
 ///////////////////////////
@@ -20,6 +18,7 @@ void _BrokerLoop(void)
       if (broker.init(mqttPort))
       {
         #if (_BROKER_SERIAL_DEBUG_ == 1)
+        Serial.println(" ");
         Serial.println("++++++++++++++++ Broker Init OK +++++++++++++++");
         #endif
         brokerStatus = BROKER_LOOP;
@@ -32,18 +31,27 @@ void _BrokerLoop(void)
   }
 }
 
-//////////////
-// Free RAM //
-//////////////
-void _FreeRAM(void)
+////////////////
+// Broker Led //
+////////////////
+void _BrokerLedLoop()
 {
-  if(ESP.getFreeHeap() != freeRam)
+  switch (brokerStatus)
   {
-    freeRam = ESP.getFreeHeap();
-    
-    #if (_FREERAM_SERIAL_DEBUG_ == 1)
-    Serial.print("RAM:");
-    Serial.println(freeRam);
-    #endif
+    case BROKER_INIT:
+      if (millis() - wifiLEDTick >= BROKER_BLINK_STARTING)
+      {
+        if (outLed == OUT_ON)
+          outLed = OUT_OFF;
+        else
+          outLed = OUT_ON;
+
+        wifiLEDTick = millis();
+      } 
+      break;
+
+    case BROKER_LOOP: 
+      outLed = IO_ON;
+      break;
   }
 }

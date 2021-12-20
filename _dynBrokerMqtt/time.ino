@@ -9,6 +9,9 @@ void _TimeSetup(void)
   timeMin = 0;
   timeHour = 0;
   timeDay = 0;
+  
+  // RAM Setup
+  _RAMSetup();
 }
 
 ////////////////////////

@@ -34,23 +34,23 @@ void _serveMAIN()
   html = html + "<div class=\"myform\">";
   html = html + "<h1>DYN MQTT+ #Estado<span>ESP8266 tech</span></h1>";
 
-  html = html + "<div class=\"section\"><span>1</span>Temporizaciones</div>";
+  html = html + "<div class=\"section\"><span>*</span>Temporizaciones</div>";
   html = html + "<p class=\"sansserif\" id=\"TEMPSid\">...</p>";
-  html = html + "<div class=\"section\"><span>2</span>Entradas</div>";
-  html = html + "<p class=\"sansserif\" id=\"INSid\">...</p>";
-  html = html + "<div class=\"section\"><span>3</span>Estados / Salidas</div>";
+  //html = html + "<div class=\"section\"><span>*</span>Entradas</div>";
+  //html = html + "<p class=\"sansserif\" id=\"INSid\">...</p>";
+  html = html + "<div class=\"section\"><span>*</span>Estados / Salidas</div>";
   html = html + "<p class=\"sansserif\" id=\"OUTSid\">...</p>";
-  html = html + "<div class=\"section\"><span>4</span>Control</div>";
+  //html = html + "<div class=\"section\"><span>*</span>Control</div>";
+  //html = html + "<p>";
+  //html = html + "  <input type=\"button\" value=\"Cambiar Modo\" onclick=\"sendOUT(0)\">";
+  //html = html + "</p><p>";
+  //html = html + "  <input type=\"button\" value=\"Gen Pulso\" onclick=\"sendOUT(10)\">";
+  //html = html + "  <input type=\"button\" value=\"Gen Paro\" onclick=\"sendOUT(11)\">";
+  //html = html + "  <input type=\"button\" value=\"Luz Control\" onclick=\"sendOUT(12)\">";
+  //html = html + "</p>";
+  html = html + "<div class=\"section\"><span>*</span>Configuraci&oacuten</div>";
   html = html + "<p>";
-  html = html + "  <input type=\"button\" value=\"Cambiar Modo\" onclick=\"sendOUT(0)\">";
-  html = html + "</p><p>";
-  html = html + "  <input type=\"button\" value=\"Gen Pulso\" onclick=\"sendOUT(10)\">";
-  html = html + "  <input type=\"button\" value=\"Gen Paro\" onclick=\"sendOUT(11)\">";
-  html = html + "  <input type=\"button\" value=\"Luz Control\" onclick=\"sendOUT(12)\">";
-  html = html + "</p>";
-  html = html + "<div class=\"section\"><span>4</span>Configuraci&oacuten</div>";
-  html = html + "<p>";
-  html = html + "  <a href=\"settings.htm\"><input type=\"button\" value=\"Wi-Fi\"></a>";
+  html = html + "  <a href=\"settings.htm\"><input type=\"button\" value=\"Red\"></a>";
   html = html + "  <a href=\"timeSettings.htm\"><input type=\"button\" value=\"Config\"></a>";
   //html = html + "  <input type=\"button\" value=\"Reset Timers\" onclick=\"sendOUT(20)\">";
   html = html + "</p>";
@@ -597,7 +597,12 @@ void _readOUTS()
   html = html + "<td>Wi-Fi State </td>";
   html = html + "<td>" + String(wifiStatus) + "</td>";
   html = html + "</tr>";
- 
+
+  html = html + "<tr>";
+  html = html + "<td>Broker State </td>";
+  html = html + "<td>" + String(brokerStatus) + "</td>";
+  html = html + "</tr>";
+  
   html = html + "</table>";
   
   httpServer.send(200, "text/plane", html);
@@ -657,6 +662,11 @@ void _readTEMPS()
   html = html + "<tr>";
   html = html + "<td>Tiempo Encendio</td>";
   html = html + "<td>" + String(timeDay) + "d " + String(timeHour) + " : " + String(timeMin) + " : " + String(timeSec) + "</td>";
+  html = html + "</tr>";
+
+  html = html + "<tr>";
+  html = html + "<td>Free RAM</td>";
+  html = html + "<td>" + String(freeRam) + "</td>";
   html = html + "</tr>";
   
   html = html + "</table>";

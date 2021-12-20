@@ -10,6 +10,8 @@ extern "C" {
 #define BROKER_INIT   0
 #define BROKER_LOOP   1
 
+#define BROKER_BLINK_STARTING   3000
+
 #endif // _MQTTBROKER_H_
 
 #ifdef __cplusplus

@@ -8,8 +8,8 @@ void _ConfigSetup(void)
 
   // Config setup
   #if (_ERASE_EEPROM_ == 1)
-    _ResetEEPROM();
-    delay(1000);
+  _ResetEEPROM();
+  delay(1000);
   #endif
 
   // Read config from EEPROM

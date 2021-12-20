@@ -21,6 +21,7 @@ extern "C" {
 #define _WIFI_SERIAL_DEBUG_        1
 #define _STATUS_SERIAL_DEBUG_      1
 #define _MQTT_SERIAL_DEBUG_        1
+#define _FREERAM_SERIAL_DEBUG_     1
 
 #else
 

@@ -199,19 +199,9 @@ void _WifiLedLoop()
       } 
       break;
 
-    case WIFI_STATION_CONNECTED:
-      
-      if (millis() - wifiLEDTick >= WIFI_BLINK_STATION)
-      {
-        //#if (_WIFI_SERIAL_DEBUG_ == 1)
-        //Serial.print("-");
-        //#endif
-        
-        wifiLEDTick = millis();
-      }      
-      outLed = IO_ON;
-      
-      //_MQTTLedLoop();
+    case WIFI_STATION_CONNECTED:  
+      //outLed = IO_ON;
+      _BrokerLedLoop();
       break;
   }
 }

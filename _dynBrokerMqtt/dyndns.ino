@@ -24,8 +24,8 @@ void _DyndnsLoop(void)
   {
     dyndnsTick = millis();
 
-    dyndnsHttp.begin(dyndnsClient, "http://ifconfig.me/ip");
-    httpCode = dyndnsHttp.GET();
+    ifconfigHttp.begin(ifconfigClient, "http://ifconfig.me/ip");
+    httpCode = ifconfigHttp.GET();
 
     #if (_DYNDNS_SERIAL_DEBUG_ == 1)
     Serial.print(">>>> DYN DNS Public IP httpCode: ");
@@ -33,9 +33,9 @@ void _DyndnsLoop(void)
     #endif
     
     if (httpCode == HTTP_CODE_OK)
-      new_ip = dyndnsHttp.getString();
+      new_ip = ifconfigHttp.getString();
 
-    dyndnsHttp.end();
+    ifconfigHttp.end();
     
     if (httpCode = HTTP_CODE_OK)
     {
@@ -43,7 +43,7 @@ void _DyndnsLoop(void)
       Serial.print(">>>> DYN DNS Public IP address: ");
       Serial.println(new_ip);
       #endif
-
+      
       httpCode = 0;
       update_url = "http://" + ddns_u + ":" + ddns_p + "@dynupdate.no-ip.com/nic/update?hostname=" + ddns_d + "&myip=" + new_ip + "";
       
@@ -54,10 +54,16 @@ void _DyndnsLoop(void)
         Serial.println(update_url);
         #endif
 
+        ip_sent = 0;
+
         dyndnsHttp.begin(dyndnsClient, update_url);
         dyndnsHttp.setUserAgent("CVSesma ESP8266-LolinV3/ESP8266HTTPClient sdpelicanos@example.com");
         auth = base64::encode(ddns_u + ":" + ddns_p);
         dyndnsHttp.addHeader("Authorization", "Basic " + auth);
+        //dyndnsHttp.addHeader("Pragma", "no-cache");
+        //dyndnsHttp.addHeader("Cache-Control", "no-cache");
+        //dyndnsHttp.addHeader("Acept", "text/html");
+        
         httpCode = dyndnsHttp.GET();
         
         #if (_DYNDNS_SERIAL_DEBUG_ == 1)
@@ -73,12 +79,14 @@ void _DyndnsLoop(void)
           Serial.print(">>>> DYN DNS New IP reported OK ");
           #endif
           old_ip = new_ip;
+          ip_sent = 1;
         }
         else
         {
           #if (_DYNDNS_SERIAL_DEBUG_ == 1)
           Serial.print(">>>> DYN DNS New IP reported ERROR ");
           #endif
+          ip_sent = 0;
         }
         
         dyndnsHttp.end();

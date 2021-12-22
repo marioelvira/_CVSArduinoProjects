@@ -200,8 +200,8 @@ void _WifiLedLoop()
       break;
 
     case WIFI_STATION_CONNECTED:  
-      //outLed = IO_ON;
-      _BrokerLedLoop();
+      outLed = IO_ON;
+      //_BrokerLedLoop();
       break;
   }
 }

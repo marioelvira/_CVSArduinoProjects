@@ -34,25 +34,14 @@ void _serveMAIN()
   html = html + "<div class=\"myform\">";
   html = html + "<h1>DYN MQTT+ #Estado<span>ESP8266 tech</span></h1>";
 
-  html = html + "<div class=\"section\"><span>*</span>Temporizaciones</div>";
+  html = html + "<div class=\"section\">Temporizaciones</div>";
   html = html + "<p class=\"sansserif\" id=\"TEMPSid\">...</p>";
-  //html = html + "<div class=\"section\"><span>*</span>Entradas</div>";
-  //html = html + "<p class=\"sansserif\" id=\"INSid\">...</p>";
-  html = html + "<div class=\"section\"><span>*</span>Estados / Salidas</div>";
+  html = html + "<div class=\"section\">Estados</div>";
   html = html + "<p class=\"sansserif\" id=\"OUTSid\">...</p>";
-  //html = html + "<div class=\"section\"><span>*</span>Control</div>";
-  //html = html + "<p>";
-  //html = html + "  <input type=\"button\" value=\"Cambiar Modo\" onclick=\"sendOUT(0)\">";
-  //html = html + "</p><p>";
-  //html = html + "  <input type=\"button\" value=\"Gen Pulso\" onclick=\"sendOUT(10)\">";
-  //html = html + "  <input type=\"button\" value=\"Gen Paro\" onclick=\"sendOUT(11)\">";
-  //html = html + "  <input type=\"button\" value=\"Luz Control\" onclick=\"sendOUT(12)\">";
-  //html = html + "</p>";
-  html = html + "<div class=\"section\"><span>*</span>Configuraci&oacuten</div>";
+  html = html + "<div class=\"section\">Configuraci&oacuten</div>";
   html = html + "<p>";
   html = html + "  <a href=\"settings.htm\"><input type=\"button\" value=\"Red\"></a>";
   html = html + "  <a href=\"timeSettings.htm\"><input type=\"button\" value=\"Config\"></a>";
-  //html = html + "  <input type=\"button\" value=\"Reset Timers\" onclick=\"sendOUT(20)\">";
   html = html + "</p>";
   html = html + "</div>";
 
@@ -130,8 +119,16 @@ void _serveTimeSETTINGS()
   html = html + "<div class=\"myform\">";
   html = html + "<h1>DYN MQTT+ #Configuraci&oacuten<span>ESP8266 tech</span></h1>";
   html = html + "<form method='get' action='setTimeSettings'>";
+  
+  // Broker
+  html = html + "<div class=\"section\">Broker </div>";
+  html = html + "<div class=\"inner-wrap\">";
+  html = html + "<label>URL <input type=\"text\" maxlength=\"30\" value=\"" + String(brokerUrl) + "\" name=\"brokerurl\"/></label>";
+  html = html + "<label>Port <input type=\"text\" maxlength=\"16\" value=\"" + String(mqttPort) + "\" name=\"brokerport\"/></label>";
+  html = html + "</div>";
+  // End
   /*
-  html = html + "<div class=\"section\"><span>5</span>Debug</div>";
+  html = html + "<div class=\"section\">Debug</div>";
   html = html + "<div class=\"inner-wrap\">";
   html = html + "<label>Debug (0)<input type=\"text\"  maxlength=\"16\" value=\"" + String(DebugVal) + "\" name=\"tdebugVal\"/></label>";
   html = html + "</div>";
@@ -155,13 +152,20 @@ void _serveTimeSETTINGS()
 void _setTimeSETTINGS()
 {
   String html = "";
-  
+
+  String rbrokerurl = httpServer.arg("brokerurl");
+  String rbrokerport = httpServer.arg("brokerport");
   //String rdebugVal = httpServer.arg("tdebugVal");
-  
+
+  int i, j;
   int error = 0;
 
-  /*
-  if ((rdebugVal.length() == 0))
+  int eeprom_value_hi, eeprom_value_lo;
+
+  // Check broker error
+  if ((rbrokerurl.length() == 0) ||
+      (rbrokerport.length() == 0))
+   // ((rdebugVal.length() == 0))
   {
     error = 1;  // falta un campo...
     #if (_HTTP_SERIAL_DEBUG_ == 1)
@@ -172,18 +176,38 @@ void _setTimeSETTINGS()
   // Si no hay error...
   if (error == 0)
   {
-    //DebugVal = rdebugVal.toInt();
+     ////////////
+     // Broker //
+     ////////////
+     for (i = 0; i < BROKER_MAX; i++)
+       EEPROM.write(EEPROM_ADD_BROKER + i, 0);
+     j = rbrokerurl.length();
+     for (i = 0; i < j; i++)
+       EEPROM.write(EEPROM_ADD_BROKER + i, rbrokerurl[i]);
+      
+     mqttPort = rbrokerport.toInt();
+     eeprom_value_lo = mqttPort & 0x00FF;
+     EEPROM.write(EEPROM_ADD_BROKER_PORT, eeprom_value_lo);
+     eeprom_value_hi = (mqttPort & 0xFF00)>>8;
+     EEPROM.write(EEPROM_ADD_BROKER_PORT + 1, eeprom_value_hi);
+     
+     //DebugVal = rdebugVal.toInt();
     
-    #if (_HTTP_SERIAL_DEBUG_ == 1)  
-    //Serial.print("Debug: ");       Serial.print (DebugVal);           Serial.println(" ---");
-    #endif   
+     #if (_HTTP_SERIAL_DEBUG_ == 1)
+     // Broker configuration
+     Serial.print("---->Broker Url: ");
+     Serial.println(rbrokerurl);
+     Serial.print("---->Broker Port: ");
+     Serial.println(rbrokerport);
+     
+     //Serial.print("Debug: ");       Serial.print (DebugVal);           Serial.println(" ---");
+     #endif   
 
-    // Data
-    //EEPROM.write(EEPROM_ADD_DEBUG,      (byte)DebugVal);
+     // Data
+     //EEPROM.write(EEPROM_ADD_DEBUG,      (byte)DebugVal);
 
-    EEPROM.commit();    //Store data to EEPROM
+     EEPROM.commit();    //Store data to EEPROM
   }
-  */
 
   html = "<!DOCTYPE HTML><html>";
   html = html + "<title>DYN MQTT+ #Configuraci&oacuten</title>";
@@ -602,6 +626,25 @@ void _readOUTS()
   html = html + "<td>Broker State </td>";
   html = html + "<td>" + String(brokerStatus) + "</td>";
   html = html + "</tr>";
+
+  html = html + "<tr>";
+  html = html + "<td>Num Clientes </td>";
+  html = html + "<td>" + String(brokerClients) + "</td>";
+  html = html + "</tr>";
+
+  html = html + "<tr>";
+  html = html + "<td>Public IP </td>";
+  html = html + "<td>" + String(new_ip) + "</td>";
+  html = html + "</tr>";
+
+  html = html + "<tr>";
+  html = html + "<td>Dns IP </td>";
+  if (ip_sent == 1)
+    html = html + "<td> pubicada</td>";
+  else
+    html = html + "<td> no pubicada</td>";  
+  html = html + "</tr>";
+
   
   html = html + "</table>";
   

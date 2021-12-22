@@ -34,10 +34,15 @@ extern "C" {
 #define EEPROM_ADD_WIFI_PSWD      0x2F
 #define WIFI_PSWD_MAX             32 // Password max 32 char -> Next 0x4F
 
+#define EEPROM_ADD_BROKER         0x4F
+#define BROKER_MAX                32 // Broker max 32 char -> Next 0x6F
+#define EEPROM_ADD_BROKER_PORT    0x6F
+#define BROKER_PORT_MAX           2
+
 //#define EEPROM_ADD_MAX          0xFA // 250
 
 // Values
-#define EEPROM_VAL_OK             0xAB
+#define EEPROM_VAL_OK             0xA5
 
 #define EEPROM_VAL_IP_MODE        DHCP_MODE
 #define EEPROM_VAL_IP1            192
@@ -56,6 +61,9 @@ extern "C" {
 #define ACCESSPOINT_MODE          0
 #define STATION_MODE              1
 #define EEPROM_VAL_WIFI_MODE      ACCESSPOINT_MODE // STATION_MODE
+
+//#define EEPROM_VAL_BROKER       
+#define EEPROM_VAL_BROKER_PORT    7000
 
 #endif // _E2PROM_H_
 

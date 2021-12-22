@@ -92,6 +92,9 @@ int timeDay = 0;
 // Dyn Dns //
 /////////////
 unsigned long dyndnsTick = 0;
+WiFiClient ifconfigClient;
+HTTPClient ifconfigHttp;
+
 WiFiClient dyndnsClient;
 HTTPClient dyndnsHttp;
 String new_ip = "";
@@ -100,6 +103,7 @@ String update_url;
 String ddns_u;
 String ddns_p;
 String ddns_d;
+int ip_sent = 0;
 
 /////////////////
 // Broker MQTT //
@@ -107,7 +111,9 @@ String ddns_d;
 int brokerStatus;
 unsigned int brokerClients;
 
-const unsigned short mqttPort = 7000; //1883;
+const char* brokerSt = DYNDS_URL;
+char brokerUrl[BROKER_MAX];
+int mqttPort;
 
 class MyBroker: public sMQTTBroker
 {
@@ -238,7 +244,7 @@ void setup(void)
   _TimeSetup();
 
   // Mqtt broker setup
-  _BrokerSetup();
+  //_BrokerSetup();
 
   // Dyndns setup
   _DyndnsSetup();

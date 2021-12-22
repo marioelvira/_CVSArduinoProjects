@@ -14,7 +14,7 @@ extern "C" {
 #define DYNDNS_STANDBY        0
 #define DYNDNS_CHECK          1
 
-#define DYNDNS_TIMEOUT        30000 // 30seg
+#define DYNDNS_TIMEOUT        60000 // 60seg
 
 #define DYNDS_USER        "sdpelicanos"
 #define DYNDS_PASSWORD    "DDNSSup3rP66sw0rd"

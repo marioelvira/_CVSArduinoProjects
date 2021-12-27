@@ -46,6 +46,10 @@ void _TimeLoop(void)
     _WDELoop();
     #endif
 
+    // Descontar http locked
+    if (httpLockedSec != 0)
+      httpLockedSec--;
+
     #if (_STATUS_SERIAL_DEBUG_ == 1)
         
     Serial.println("<><><><><><><>");
@@ -70,6 +74,9 @@ void _TimeLoop(void)
 
     Serial.print("Dns IP: ");
     Serial.println(ip_sent);
+
+    Serial.print("HTTP Countdown: ");
+    Serial.println(httpLockedSec);
   
     //_IOLoop();
     

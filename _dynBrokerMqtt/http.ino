@@ -18,10 +18,164 @@ void _serveCSS()
   httpServer.send (200, "text/css", cssSTYLE);
 }
 
-void _serveMAIN()
+void _serveREDIRECT()
 {
   String html = "";
   
+  html = "<html>";
+  html = html + "<head>";
+  html = html + "<meta http-equiv=\"refresh\" content=\"1; url=\"/index.htm\" />";
+  html = html + "</head>";
+  html = html + "<body>";
+  html = html + "</body>";
+  html = html + "</html>";
+
+  httpServer.send (200, "text/html", html);
+}
+
+void _serveACCESS()
+{
+  String html = "";
+  
+  html = "<!DOCTYPE HTML><html>";
+  html = html + "<title>DYN MQTT+ #Acceso</title>";
+  html = html + "<head>";
+  html = html + "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"/>";
+  html = html + "<link rel=\"icon\" href=\"data:,\">";
+  html = html + "<link rel=\"stylesheet\" type=\"text/css\" href=\"style.css\" />";
+  html = html + "</head>";
+
+  html = html + "<body>";
+  html = html + "<div class=\"myform\">";
+  html = html + "<h1>DYN MQTT+ #Acceso<span>ESP8266 tech</span></h1>";
+  html = html + "<form method='get' action='setACCESS'>";
+  
+  // Acceso
+  html = html + "<div class=\"inner-wrap\">";
+  html = html + "<label>User <input type=\"text\" maxlength=\"30\" value=\"\" name=\"accessuser\"/></label>";
+  html = html + "<label>Pasword <input type=\"text\" maxlength=\"16\" value=\"\" name=\"accesspsd\"/></label>";
+  html = html + "</div>";
+  // End
+
+  html = html + "<div class=\"button-section\">";
+  html = html + "  <input type=\"submit\" value=\"Enviar\">";
+  html = html + "</div>";
+  
+  html = html + "</div>";
+  html = html + "</div>";
+  html = html + "</form>";
+  html = html + "</div>";
+
+  html = html + "</body> ";
+  html = html + "</html>";
+
+  httpServer.send (200, "text/html", html);
+}
+
+void _setACCESS()
+{
+  String html = "";
+
+  String raccessuser = httpServer.arg("accessuser");
+  String raccesspsd = httpServer.arg("accesspsd");
+
+  int i, j;
+  int error = 0;
+  
+  // Check broker error
+  if ((raccessuser.length() == 0) ||
+      (raccesspsd.length() == 0))
+  {
+    error = 1;  // falta un campo...
+    #if (_HTTP_SERIAL_DEBUG_ == 1)
+    Serial.println("Error... parametro vacío.");
+    #endif
+  }
+
+  // Si no hay error...
+  if (error == 0)
+  {
+     #if (_HTTP_SERIAL_DEBUG_ == 1)
+     Serial.print("----> User: ");
+     Serial.println(raccessuser);
+     Serial.print("----> Pswd: ");
+     Serial.println(raccesspsd);
+     #endif 
+
+      if (((char)raccessuser[0]  == 's') &&
+          ((char)raccessuser[1]  == 'd') &&
+          ((char)raccessuser[2]  == 'p') &&
+          ((char)raccessuser[3]  == 'e') &&
+          ((char)raccessuser[4]  == 'l') &&
+          ((char)raccessuser[5]  == 'i') &&
+          ((char)raccessuser[6]  == 'c') &&
+          ((char)raccessuser[7]  == 'a') &&
+          ((char)raccessuser[8]  == 'n') &&
+          ((char)raccessuser[9]  == 'o') &&
+          ((char)raccessuser[10] == 's') &&
+          ((char)raccessuser[11] == '@') &&
+          ((char)raccessuser[12] == 'g') &&
+          ((char)raccessuser[13] == 'm') &&
+          ((char)raccessuser[14] == 'a') &&
+          ((char)raccessuser[15] == 'i') &&
+          ((char)raccessuser[16] == 'l') &&
+          ((char)raccessuser[17] == '.') &&
+          ((char)raccessuser[18] == 'c') &&
+          ((char)raccessuser[19] == 'o') &&
+          ((char)raccessuser[20] == 'm'))
+      {
+        httpLockedSec = HTTP_LOCKED_TIMEOUT;    
+      }
+      else
+        error = 1;
+  }
+
+  html = "<!DOCTYPE HTML><html>";
+  html = html + "<title>DYN MQTT+ #Acceso</title>";
+  html = html + "<head>";
+  html = html + "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"/>";
+  html = html + "<link rel=\"icon\" href=\"data:,\">";
+  html = html + "<link rel=\"stylesheet\" type=\"text/css\" href=\"style.css\" />";
+  html = html + "</head>";
+
+  html = html + "<body>";
+
+  html = html + "<div class=\"myform\">";
+  html = html + "<h1>DYN MQTT+ #Acceso<span>ESP8266 tech</span></h1>";
+  
+  if (error == 0)
+  {
+    html += "<p class=\"sansserif\">Acceso permitido.</p>";
+    html = html + "<div class=\"button-section\">";
+    html = html + "  <a href=\"main.htm\"><input type=\"button\" value=\"Acceder\"></a>";
+    html = html + "</div>";
+  }
+  else
+  {
+    html += "<p class=\"sansserif\">Acceso denegado.</p>";
+    html = html + "<div class=\"button-section\">";
+    html = html + "  <a href=\"index.htm\"><input type=\"button\" value=\"Volver\"></a>";
+    html = html + "</div>";
+  }
+
+  html = html + "</div>";
+
+  html = html + "</body> ";
+  html = html + "</html>";
+
+  httpServer.send (200, "text/html", html);
+}
+
+void _serveMAIN()
+{
+  if (httpLockedSec == 0)
+  {
+    _serveREDIRECT();
+    return;
+  }
+
+  String html = "";
+    
   html = "<!DOCTYPE HTML><html>";
   html = html + "<title>DYN MQTT+ Estado</title>";
   html = html + "<head>";
@@ -109,6 +263,12 @@ void _serveMAIN()
 
 void _serveTimeSETTINGS()
 {
+  if (httpLockedSec == 0)
+  {
+    _serveREDIRECT();
+    return;
+  }
+
   String html = "";
   
   html = "<!DOCTYPE HTML><html>";
@@ -139,7 +299,7 @@ void _serveTimeSETTINGS()
   */
   html = html + "<div class=\"button-section\">";
   html = html + "  <input type=\"submit\" value=\"Guardar\">";
-  html = html + "  <a href=\"index.htm\"><input type=\"button\" value=\"Volver\"></a>";
+  html = html + "  <a href=\"main.htm\"><input type=\"button\" value=\"Volver\"></a>";
   html = html + "</div>";
   
   html = html + "</div>";
@@ -155,8 +315,13 @@ void _serveTimeSETTINGS()
 
 void _setTimeSETTINGS()
 {
+  if (httpLockedSec == 0)
+  {
+    httpServer.send(200, "text/plane", "locked");
+    return; 
+  }
+  
   String html = "";
-
   String rbrokerurl = httpServer.arg("brokerurl");
   String rbrokerport = httpServer.arg("brokerport");
   //String rdebugVal = httpServer.arg("tdebugVal");
@@ -232,7 +397,7 @@ void _setTimeSETTINGS()
     html += "<p class=\"sansserif\">Error el guardar la configuraci&oacuten. Revise los datos introducidos.</p>";
 
   html = html + "<div class=\"button-section\">";
-  html = html + "  <a href=\"index.htm\"><input type=\"button\" value=\"Volver\"></a>";
+  html = html + "  <a href=\"main.htm\"><input type=\"button\" value=\"Volver\"></a>";
   html = html + "</div>";
 
   html = html + "</div>";
@@ -245,6 +410,12 @@ void _setTimeSETTINGS()
 
 void _serveSETTINGS()
 {
+  if (httpLockedSec == 0)
+  {
+    _serveREDIRECT();
+    return;
+  }
+
   String html = "";
 
   int n = WiFi.scanNetworks();
@@ -314,7 +485,7 @@ void _serveSETTINGS()
                         
   html = html + "<div class=\"button-section\">";
   html = html + "  <input type=\"submit\" value=\"Guardar\">";
-  html = html + "  <a href=\"index.htm\"><input type=\"button\" value=\"Volver\"></a>";
+  html = html + "  <a href=\"main.htm\"><input type=\"button\" value=\"Volver\"></a>";
   html = html + "</div>";
   
   html = html + "</div>";
@@ -330,6 +501,12 @@ void _serveSETTINGS()
 
 void _setSETTINGS()
 {
+  if (httpLockedSec == 0)
+  {
+    httpServer.send(200, "text/plane", "locked");
+    return; 
+  }
+  
   String rwmode = httpServer.arg("wifimode");
   String rssid = httpServer.arg("ssid");
   String rpass = httpServer.arg("pass");
@@ -581,7 +758,7 @@ void _setSETTINGS()
     html += "<p class=\"sansserif\">Error el guardar la configuraci&oacuten. Revise los datos introducidos.</p>";
 
   html = html + "<div class=\"button-section\">";
-  html = html + "  <a href=\"index.htm\"><input type=\"button\" value=\"Volver\"></a>";
+  html = html + "  <a href=\"main.htm\"><input type=\"button\" value=\"Volver\"></a>";
   html = html + "</div>";
 
   html = html + "</div>";
@@ -596,11 +773,16 @@ void _setSETTINGS()
 // Actions //
 /////////////
 void _readINS()
-{ 
+{
+  if (httpLockedSec == 0)
+  {
+    httpServer.send(200, "text/plane", "locked");
+    return; 
+  }
+ 
   String html = "";
 
-  html = "<table style=\"width:100%\">";
-
+  html = "<table style=\"width:100%\">"; 
   /*
   html = html + "<tr>";
   html = html + "<td>Modo</td>";
@@ -611,34 +793,45 @@ void _readINS()
   html = html + "</tr>";
   */
   html = html + "</table>";
-  
+    
   httpServer.send(200, "text/plane", html);
 }
 
 void _readOUTS()
 {
+  if (httpLockedSec == 0)
+  {
+    httpServer.send(200, "text/plane", "locked");
+    return; 
+  }
+
   String html = "";
 
   html = "<table style=\"width:100%\">";
-
+  
   html = html + "<tr>";
   html = html + "<td>Wi-Fi State </td>";
   html = html + "<td>" + String(wifiStatus) + "</td>";
   html = html + "</tr>";
-
+  
   html = html + "<tr>";
   html = html + "<td>Broker State </td>";
   html = html + "<td>" + String(brokerStatus) + "</td>";
   html = html + "</tr>";
-
+  
   html = html + "<tr>";
   html = html + "<td>Num Clientes </td>";
   html = html + "<td>" + String(brokerClients) + "</td>";
   html = html + "</tr>";
-
+  
   html = html + "<tr>";
   html = html + "<td>Public IP </td>";
   html = html + "<td>" + String(new_ip) + "</td>";
+  html = html + "</tr>";
+
+  html = html + "<tr>";
+  html = html + "<td>HTTP Countdown </td>";
+  html = html + "<td>" + String(httpLockedSec) + "</td>";
   html = html + "</tr>";
 
   html = html + "<tr>";
@@ -648,18 +841,23 @@ void _readOUTS()
   else
     html = html + "<td> no pubicada</td>";  
   html = html + "</tr>";
-
-  
+    
   html = html + "</table>";
-  
+   
   httpServer.send(200, "text/plane", html);
 }
 
 void _setOUTS()
 {
-  String out_number = httpServer.arg("OUTNumber");
+  if (httpLockedSec == 0)
+  {
+    httpServer.send(200, "text/plane", "locked");
+    return; 
+  }
+
   String html = "";
- 
+  String out_number = httpServer.arg("OUTNumber");
+
   #if (_HTTP_SERIAL_DEBUG_ == 1)
   Serial.print("Change stats out: ");
   Serial.println(out_number);
@@ -687,19 +885,19 @@ void _setOUTS()
     }
   }
   */
-  
+    
   // Reset
   if(out_number == "1")
   {
     #if (_USE_WDE_ == 1)
     wdeForceReset = 1;
     #endif
-    
+      
     #if (_HTTP_SERIAL_DEBUG_ == 1)
     Serial.println("Watchdog reset");
     #endif
   }
-  
+    
   /*
   // Reset Timers
   if(out_number == "20")
@@ -711,25 +909,32 @@ void _setOUTS()
     html = "Reset Timers";
   }
   */
+    
   httpServer.send(200, "text/plane", html);
 }
 
 void _readTEMPS()
 { 
+  if (httpLockedSec == 0)
+  {
+    httpServer.send(200, "text/plane", "locked");
+    return; 
+  }
+
   String html = "";
 
   html = "<table style=\"width:100%\">";
-  
+    
   html = html + "<tr>";
   html = html + "<td>Tiempo Encendido</td>";
   html = html + "<td>" + String(timeDay) + "d " + String(timeHour) + " : " + String(timeMin) + " : " + String(timeSec) + "</td>";
   html = html + "</tr>";
-
+  
   html = html + "<tr>";
   html = html + "<td>Free RAM</td>";
   html = html + "<td>" + String(freeRam) + "</td>";
   html = html + "</tr>";
-  
+    
   html = html + "</table>";
   
   httpServer.send(200, "text/plane", html);
@@ -748,12 +953,14 @@ void _HttpLoop()
       httpServer.on("/style.css",        _serveCSS);
 
       // html pages
-      httpServer.on("/",                  _serveMAIN);
-      httpServer.on("/index.htm",         _serveMAIN);
+      httpServer.on("/",                  _serveACCESS);
+      httpServer.on("/index.htm",         _serveACCESS);
+      httpServer.on("/main.htm",          _serveMAIN);
       httpServer.on("/settings.htm",      _serveSETTINGS);
       httpServer.on("/timeSettings.htm",  _serveTimeSETTINGS);
 
       // acctions
+      httpServer.on("/setACCESS",        _setACCESS);
       httpServer.on("/setOUTS",          _setOUTS);
       httpServer.on("/readOUTS",         _readOUTS);
       httpServer.on("/readINS",          _readINS);
@@ -773,6 +980,10 @@ void _HttpLoop()
     
     case HTTP_ONSERVE:
       httpServer.handleClient();
+
+      if (httpLockedSec < HTTP_LOCKED_TIMEOUT)
+        
+      
       break;
   }
 }

@@ -12,7 +12,7 @@ extern "C" {
 #define HTTP_INIT      0
 #define HTTP_ONSERVE   1
 
-#define JSON_TICK      100
+#define HTTP_LOCKED_TIMEOUT   180 // 3 min
 
 const char cssSTYLE[] =
   ".myform { width:450px;padding:30px;margin:40px auto;background: #FFF; border-radius: 10px; -webkit-border-radius:10px; -moz-border-radius: 10px; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.13); -moz-box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.13); -webkit-box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.13); }"               

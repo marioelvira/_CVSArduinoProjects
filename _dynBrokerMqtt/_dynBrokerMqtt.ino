@@ -72,8 +72,8 @@ char* deviceName = DEVICENAME;
 // Http server //
 /////////////////
 ESP8266WebServer httpServer(HTTP_PORT);
-
 int httpStatus;
+int httpLockedSec;
 
 //////////
 // MQTT //

@@ -9,6 +9,7 @@ extern "C" {
 
 #define WTE_TIMEOUT   3000
 
+
 #endif // _WDE_H_
 
 #ifdef __cplusplus

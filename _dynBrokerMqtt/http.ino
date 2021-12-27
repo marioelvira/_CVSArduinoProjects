@@ -38,6 +38,10 @@ void _serveMAIN()
   html = html + "<p class=\"sansserif\" id=\"TEMPSid\">...</p>";
   html = html + "<div class=\"section\">Estados</div>";
   html = html + "<p class=\"sansserif\" id=\"OUTSid\">...</p>";
+  html = html + "<div class=\"section\">Watchcog</div>";
+  html = html + "<p>";
+  html = html + "  <input type=\"button\" value=\"Reset\" onclick=\"sendOUT(1)\">";
+  html = html + "</p>";
   html = html + "<div class=\"section\">Configuraci&oacuten</div>";
   html = html + "<p>";
   html = html + "  <a href=\"settings.htm\"><input type=\"button\" value=\"Red\"></a>";
@@ -682,7 +686,21 @@ void _setOUTS()
       html = "Mode Test";
     }
   }
-
+  */
+  
+  // Reset
+  if(out_number == "1")
+  {
+    #if (_USE_WDE_ == 1)
+    wdeForceReset = 1;
+    #endif
+    
+    #if (_HTTP_SERIAL_DEBUG_ == 1)
+    Serial.println("Watchdog reset");
+    #endif
+  }
+  
+  /*
   // Reset Timers
   if(out_number == "20")
   {
@@ -703,7 +721,7 @@ void _readTEMPS()
   html = "<table style=\"width:100%\">";
   
   html = html + "<tr>";
-  html = html + "<td>Tiempo Encendio</td>";
+  html = html + "<td>Tiempo Encendido</td>";
   html = html + "<td>" + String(timeDay) + "d " + String(timeHour) + " : " + String(timeMin) + " : " + String(timeSec) + "</td>";
   html = html + "</tr>";
 

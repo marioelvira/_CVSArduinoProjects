@@ -8,15 +8,17 @@
 #include "ESP8266HTTPClient.h"
 #include "base64.h"
 
+#include "dyndns.h"
 #include "e2prom.h"
 #include "http.h"
 #include "io.h"
 #include "ip.h"
 #include "main.h"
 #include "MQTTBroker.h"
-#include "wifi.h"
-#include "dyndns.h"
 #include "mRAM.h"
+#include "time.h"
+#include "wde.h"
+#include "wifi.h"
 
 ////////////////////
 // DIO definition //
@@ -119,12 +121,21 @@ class MyBroker: public sMQTTBroker
 {
   public:
     bool onConnect(sMQTTClient *client, const std::string &username, const std::string &password)
-    {     
+    {
       #if (_BROKER_SERIAL_DEBUG_ == 1)
       Serial.println("Connect Client");
       Serial.print((String)&username[0]); Serial.print(":"); Serial.println((String)&password[0]);
       #endif
-
+      /*
+      if (brokerClients >= BROKER_NUM_CLIENTS)
+      {
+        #if (_BROKER_SERIAL_DEBUG_ == 1)
+        Serial.println("Num MAX connected ");
+        Serial.println(brokerClients);
+        #endif
+        return false;
+      }
+      */
       if (((char)username[0]  == 's') &&
           ((char)username[1]  == 'd') &&
           ((char)username[2]  == 'p') &&
@@ -149,7 +160,7 @@ class MyBroker: public sMQTTBroker
       {
         brokerClients++;
         #if (_BROKER_SERIAL_DEBUG_ == 1)
-        Serial.println("Connected OK");
+        Serial.print("Connected OK ");
         Serial.println(brokerClients);
         #endif
         return true;
@@ -157,7 +168,7 @@ class MyBroker: public sMQTTBroker
       else
       {
         #if (_BROKER_SERIAL_DEBUG_ == 1)
-        Serial.println("Connected NOK");
+        Serial.print("Connected ERROR ");
         Serial.println(brokerClients);
         #endif
         return false;
@@ -166,7 +177,9 @@ class MyBroker: public sMQTTBroker
 
     void onRemove(sMQTTClient*)
     {
-      brokerClients--;
+      if (brokerClients != 0)
+        brokerClients--;
+      
       #if (_BROKER_SERIAL_DEBUG_ == 1)
       Serial.println("Remove Client");  
       Serial.print("Connected ");
@@ -189,6 +202,13 @@ MyBroker broker;
 // mRAM //
 //////////
 unsigned long freeRam;
+
+////////
+// WD //
+////////
+#if (_USE_WDE_ == 1)
+int wdeForceReset;
+#endif
 
 ////////////
 // Config //
@@ -248,6 +268,10 @@ void setup(void)
 
   // Dyndns setup
   _DyndnsSetup();
+
+  #if (_USE_WDE_ == 1)
+  _WDESetup();
+  #endif
 }
 
 ///////////////////////

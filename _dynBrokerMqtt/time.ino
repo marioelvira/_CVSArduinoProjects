@@ -41,6 +41,10 @@ void _TimeLoop(void)
     timeTick = millis();
 
     _FreeRAM();
+  
+    #if (_USE_WDE_ == 1)
+    _WDELoop();
+    #endif
 
     #if (_STATUS_SERIAL_DEBUG_ == 1)
         
@@ -49,14 +53,26 @@ void _TimeLoop(void)
     Serial.print(timeDay); Serial.print("d "); Serial.print(timeHour); Serial.print(" : "); Serial.print(timeMin); Serial.print(" : "); Serial.print(timeSec);
     Serial.println(" ");
     
-    _IOLoop();
+    Serial.print("Free RAM: ");
+    Serial.println(freeRam);
+
+    Serial.print("WiFi Status: ");
+    Serial.println(wifiStatus);
+
+    Serial.print("Broker State: ");
+    Serial.println(brokerStatus);
+
+    Serial.print("Num Clientes: ");
+    Serial.println(brokerClients);
+
+    Serial.print("Public IP: ");
+    Serial.println(new_ip);
+
+    Serial.print("Dns IP: ");
+    Serial.println(ip_sent);
+  
+    //_IOLoop();
     
-    /*
-    Serial.print("Vbatt In Dig: ");
-    Serial.println(VbattInADC);
-    Serial.print("Vbatt In: ");
-    Serial.println(VbattIn);    
-    */
     Serial.println("<><><><><><><>");
     Serial.println(" ");
 

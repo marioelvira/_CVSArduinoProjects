@@ -12,6 +12,8 @@ extern "C" {
 
 #define BROKER_BLINK_STARTING   3000
 
+#define BROKER_NUM_CLIENTS  4
+
 #endif // _MQTTBROKER_H_
 
 #ifdef __cplusplus

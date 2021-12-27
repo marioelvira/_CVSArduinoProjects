@@ -15,6 +15,9 @@ extern "C" {
 #define _MQTT_DEBUG_               1
 
 #define _USE_LED_INDICATOR_        1
+#define _USE_WDE_                  1
+
+#define SMQTT_LOGD                 1 // Log MQTT
 
 #if (_SERIAL_DEBUG_ == 1)
 

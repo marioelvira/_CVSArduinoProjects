@@ -47,7 +47,7 @@ void _serveACCESS()
 
   html = html + "<body>";
   html = html + "<div class=\"myform\">";
-  html = html + "<h1>DYN MQTT+ #Acceso<span>ESP8266 tech</span></h1>";
+  html = html + "<h1>DYN MQTT+ #Acceso<span>ESP8266 tech</span><span align=\"right\"> Ver: " + FW_Version + "</span></h1>";
   html = html + "<form method='get' action='setACCESS'>";
   
   // Acceso
@@ -141,7 +141,7 @@ void _setACCESS()
   html = html + "<body>";
 
   html = html + "<div class=\"myform\">";
-  html = html + "<h1>DYN MQTT+ #Acceso<span>ESP8266 tech</span></h1>";
+  html = html + "<h1>DYN MQTT+ #Acceso<span>ESP8266 tech</span><span align=\"right\"> Ver: " + FW_Version + "</span></h1>";
   
   if (error == 0)
   {
@@ -186,7 +186,7 @@ void _serveMAIN()
 
   html = html + "<body>";
   html = html + "<div class=\"myform\">";
-  html = html + "<h1>DYN MQTT+ #Estado<span>ESP8266 tech</span></h1>";
+  html = html + "<h1>DYN MQTT+ #Estado<span>ESP8266 tech</span><span align=\"right\"> Ver: " + FW_Version + "</span></h1>";
 
   html = html + "<div class=\"section\">Temporizaciones</div>";
   html = html + "<p class=\"sansserif\" id=\"TEMPSid\">...</p>";
@@ -281,7 +281,7 @@ void _serveTimeSETTINGS()
 
   html = html + "<body>";
   html = html + "<div class=\"myform\">";
-  html = html + "<h1>DYN MQTT+ #Configuraci&oacuten<span>ESP8266 tech</span></h1>";
+  html = html + "<h1>DYN MQTT+ #Configuraci&oacuten<span>ESP8266 tech</span><span align=\"right\"> Ver: " + FW_Version + "</span></h1>";
   html = html + "<form method='get' action='setTimeSettings'>";
   
   // Broker
@@ -389,7 +389,7 @@ void _setTimeSETTINGS()
   html = html + "<body>";
 
   html = html + "<div class=\"myform\">";
-  html = html + "<h1>DYN MQTT+ #Configuraci&oacuten<span>ESP8266 tech</span></h1>";
+  html = html + "<h1>DYN MQTT+ #Configuraci&oacuten<span>ESP8266 tech</span><span align=\"right\"> Ver: " + FW_Version + "</span></h1>";
   
   if (error == 0)
     html += "<p class=\"sansserif\">Configuraci&oacuten guardada correctamente.</p>";
@@ -429,7 +429,7 @@ void _serveSETTINGS()
 
   html = html + "<body>";
   html = html + "<div class=\"myform\">";
-  html = html + "<h1>DYN MQTT+ #Network settings<span>ESP8266 tech</span></h1>";
+  html = html + "<h1>DYN MQTT+ #Network settings<span>ESP8266 tech</span><span align=\"right\"> Ver: " + FW_Version + "</span></h1>";
   //html = html + "<form method=\"post\">";
   html = html + "<form method='get' action='networSettings'>";
 
@@ -750,7 +750,7 @@ void _setSETTINGS()
   html = html + "<body>";
 
   html = html + "<div class=\"myform\">";
-  html = html + "<h1>DYN MQTT+ #Configuraci&oacuten<span>ESP8266 tech</span></h1>";
+  html = html + "<h1>DYN MQTT+ #Configuraci&oacuten<span>ESP8266 tech</span><span align=\"right\"> Ver: " + FW_Version + "</span></h1>";
   
   if (error == 0)
     html += "<p class=\"sansserif\">Configuraci&oacuten guardada correctamente.</p>";

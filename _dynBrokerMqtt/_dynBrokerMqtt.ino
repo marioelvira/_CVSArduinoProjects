@@ -5,6 +5,8 @@
 
 #include<sMQTTBroker.h>
 
+#include "__ver.h"
+
 #include "ESP8266HTTPClient.h"
 #include "base64.h"
 
@@ -19,6 +21,11 @@
 #include "time.h"
 #include "wde.h"
 #include "wifi.h"
+
+/////////////
+// Version //
+/////////////
+const char* FW_Version = FW_VERSION;
 
 ////////////////////
 // DIO definition //
@@ -244,7 +251,10 @@ void setup(void)
   #if (_SERIAL_DEBUG_ == 1)
   delay(100);  // 100ms
   Serial.begin(115200);
-  Serial.println("");
+  Serial.print("Project: ");
+  Serial.println(PROJECT);
+  Serial.print("Version: ");
+  Serial.println(FW_VERSION);
   #endif
 
   // Config setup

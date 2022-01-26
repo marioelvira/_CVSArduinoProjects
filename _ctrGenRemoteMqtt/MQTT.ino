@@ -85,7 +85,26 @@ void mqttDataCallback(char* rtopic, byte* rpayload, unsigned int rlength)
       Serial.println("TOPIC_LUZSTANDBY ->> Error");
       #endif
     }
-  } 
+  }
+  else if (rtopicStr.equals(TOPIC_WATCHDOG))
+  {
+    if(rpayloadStr.equals("1"))
+    {
+      #if (_USE_WDE_ == 1)
+      wdeForceReset = 1;
+      #endif
+      
+      #if (_MQTT_SERIAL_DEBUG_ == 1)
+      Serial.println("TOPIC_WATCHDOG ->> 1");
+      #endif
+    }
+    else
+    {
+      #if (_MQTT_SERIAL_DEBUG_ == 1)
+      Serial.println("TOPIC_LUZSTANDBY ->> Error");
+      #endif
+    }
+  }  
 }
 
 boolean mqttPublish(const char* topic, char* payload)
@@ -300,10 +319,11 @@ void _MQTTLoop(void)
         
         mqttTick = millis();
         
-        if (mqttSubscribe(TOPIC_GENCTR)  &&
-            mqttSubscribe(TOPIC_GENSTOP) &&
-            mqttSubscribe(TOPIC_LUZCTR)  &&
-            mqttSubscribe(TOPIC_LUZSTANDBY))
+        if (mqttSubscribe(TOPIC_GENCTR)     &&
+            mqttSubscribe(TOPIC_GENSTOP)    &&
+            mqttSubscribe(TOPIC_LUZCTR)     &&
+            mqttSubscribe(TOPIC_LUZSTANDBY) &&
+            mqttSubscribe(TOPIC_WATCHDOG))
         {
           mqttStatus = MQTT_SUBSCRIBED;
         }

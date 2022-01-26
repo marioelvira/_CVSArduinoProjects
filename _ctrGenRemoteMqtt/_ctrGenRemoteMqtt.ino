@@ -3,6 +3,8 @@
 #include <PubSubClient.h>
 #include <EEPROM.h>
 
+#include "__ver.h"
+
 #include "e2prom.h"
 #include "http.h"
 #include "io.h"
@@ -12,6 +14,12 @@
 #include "wifi.h"
 #include "MQTT.h"
 #include "mRAM.h"
+#include "wde.h"
+
+/////////////
+// Version //
+/////////////
+const char* FW_Version = FW_VERSION;
 
 ////////////////////
 // DIO definition //
@@ -141,6 +149,13 @@ unsigned long LuzTick = 0;
 //////////
 unsigned long freeRam;
 
+////////
+// WD //
+////////
+#if (_USE_WDE_ == 1)
+int wdeForceReset;
+#endif
+
 ////////////
 // Config //
 ////////////
@@ -199,7 +214,10 @@ void setup(void)
   #if (_SERIAL_DEBUG_ == 1)
   delay(100);  // 100ms
   Serial.begin(115200);
-  Serial.println("");
+  Serial.print("Project: ");
+  Serial.println(PROJECT);
+  Serial.print("Version: ");
+  Serial.println(FW_VERSION);
   #endif
   
   // Config setup
@@ -223,6 +241,10 @@ void setup(void)
   
   // Ctr setup
   _CtrSetup();
+
+  #if (_USE_WDE_ == 1)
+  _WDESetup();
+  #endif
 }
 
 ///////////////////////

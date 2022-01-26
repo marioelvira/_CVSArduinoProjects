@@ -5,6 +5,9 @@ extern "C" {
 #ifndef _MAIN_H_
 #define _MAIN_H_
 
+// Libs
+// C:\Users\mario.elvira\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4
+
 ///////////
 // Debug //
 ///////////
@@ -12,6 +15,7 @@ extern "C" {
 #define _MQTT_DEBUG_               0
 
 #define _USE_LED_INDICATOR_        1
+#define _USE_WDE_                  1
 
 #if (_SERIAL_DEBUG_ == 1)
 

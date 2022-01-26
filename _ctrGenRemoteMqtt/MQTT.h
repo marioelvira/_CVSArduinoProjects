@@ -32,12 +32,14 @@ extern "C" {
 #define TOPIC_GENSTOP     "sdpelicanos@gmail.com/_genStop"
 #define TOPIC_LUZCTR      "sdpelicanos@gmail.com/_luzCtr"
 #define TOPIC_LUZSTANDBY  "sdpelicanos@gmail.com/_luzStandby"
+#define TOPIC_WATCHDOG    "sdpelicanos@gmail.com/_watchdog"
 #else
 #define TOPIC_STATE       "sdpelicanos@gmail.com/state"
 #define TOPIC_GENCTR      "sdpelicanos@gmail.com/genCtr"
 #define TOPIC_GENSTOP     "sdpelicanos@gmail.com/genStop"
 #define TOPIC_LUZCTR      "sdpelicanos@gmail.com/luzCtr"
 #define TOPIC_LUZSTANDBY  "sdpelicanos@gmail.com/luzStandby"
+#define TOPIC_WATCHDOG    "sdpelicanos@gmail.com/watchdog"
 #endif
 
 #define TOPIC_OFFSET            21

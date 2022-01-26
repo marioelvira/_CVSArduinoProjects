@@ -32,15 +32,15 @@ void _serveMAIN()
 
   html = html + "<body>";
   html = html + "<div class=\"myform\">";
-  html = html + "<h1>REM MQTT+ #Estado<span>ESP8266 tech</span></h1>";
+  html = html + "<h1>REM MQTT+ #Estado<span>ESP8266 tech</span><span align=\"right\"> Ver: " + FW_Version + "</span></h1>";
 
-  html = html + "<div class=\"section\"><span>1</span>Temporizaciones</div>";
+  html = html + "<div class=\"section\">Temporizaciones</div>";
   html = html + "<p class=\"sansserif\" id=\"TEMPSid\">...</p>";
-  html = html + "<div class=\"section\"><span>2</span>Entradas</div>";
+  html = html + "<div class=\"section\">Entradas</div>";
   html = html + "<p class=\"sansserif\" id=\"INSid\">...</p>";
-  html = html + "<div class=\"section\"><span>3</span>Estados / Salidas</div>";
+  html = html + "<div class=\"section\">Estados / Salidas</div>";
   html = html + "<p class=\"sansserif\" id=\"OUTSid\">...</p>";
-  html = html + "<div class=\"section\"><span>4</span>Control</div>";
+  html = html + "<div class=\"section\">Control</div>";
   html = html + "<p>";
   html = html + "  <input type=\"button\" value=\"Cambiar Modo\" onclick=\"sendOUT(0)\">";
   html = html + "</p><p>";
@@ -48,7 +48,11 @@ void _serveMAIN()
   html = html + "  <input type=\"button\" value=\"Gen Paro\" onclick=\"sendOUT(11)\">";
   html = html + "  <input type=\"button\" value=\"Luz Control\" onclick=\"sendOUT(12)\">";
   html = html + "</p>";
-  html = html + "<div class=\"section\"><span>5</span>Configuraci&oacuten</div>";
+  html = html + "<div class=\"section\">Watchcog</div>";
+  html = html + "<p>";
+  html = html + "  <input type=\"button\" value=\"Reset\" onclick=\"sendOUT(1)\">";
+  html = html + "</p>";
+  html = html + "<div class=\"section\">Configuraci&oacuten</div>";
   html = html + "<p>";
   html = html + "  <a href=\"settings.htm\"><input type=\"button\" value=\"Red\"></a>";
   html = html + "  <a href=\"timeSettings.htm\"><input type=\"button\" value=\"Config\"></a>";
@@ -128,7 +132,7 @@ void _serveTimeSETTINGS()
 
   html = html + "<body>";
   html = html + "<div class=\"myform\">";
-  html = html + "<h1>REM MQTT+ #Configuraci&oacuten<span>ESP8266 tech</span></h1>";
+  html = html + "<h1>REM MQTT+ #Configuraci&oacuten<span>ESP8266 tech</span><span align=\"right\"> Ver: " + FW_Version + "</span></h1>";
   html = html + "<form method='get' action='setTimeSettings'>";
 
   html = html + "<div class=\"section\"><span>1</span>Tiempos</div>";
@@ -251,7 +255,7 @@ void _setTimeSETTINGS()
   html = html + "<body>";
 
   html = html + "<div class=\"myform\">";
-  html = html + "<h1>REM MQTT+ #Configuraci&oacuten<span>ESP8266 tech</span></h1>";
+  html = html + "<h1>REM MQTT+ #Configuraci&oacuten<span>ESP8266 tech</span><span align=\"right\"> Ver: " + FW_Version + "</span></h1>";
   
   if (error == 0)
     html += "<p class=\"sansserif\">Configuraci&oacuten guardada correctamente.</p>";
@@ -288,7 +292,7 @@ void _serveSETTINGS()
 
   html = html + "<body>";
   html = html + "<div class=\"myform\">";
-  html = html + "<h1>REM MQTT+ #Network settings<span>ESP8266 tech</span></h1>";
+  html = html + "<h1>REM MQTT+ #Network settings<span>ESP8266 tech</span><span align=\"right\"> Ver: " + FW_Version + "</span></h1>";
   //html = html + "<form method=\"post\">";
   html = html + "<form method='get' action='networSettings'>";
 
@@ -643,7 +647,7 @@ void _setSETTINGS()
   html = html + "<body>";
 
   html = html + "<div class=\"myform\">";
-  html = html + "<h1>REM MQTT+ #Configuraci&oacuten<span>ESP8266 tech</span></h1>";
+  html = html + "<h1>REM MQTT+ #Configuraci&oacuten<span>ESP8266 tech</span><span align=\"right\"> Ver: " + FW_Version + "</span></h1>";
   
   if (error == 0)
     html += "<p class=\"sansserif\">Configuraci&oacuten guardada correctamente.</p>";
@@ -800,6 +804,18 @@ void _setOUTS()
       #endif
       html = "Mode Test";
     }
+  }
+
+  // Reset
+  if(out_number == "1")
+  {
+    #if (_USE_WDE_ == 1)
+    wdeForceReset = 1;
+    #endif
+      
+    #if (_HTTP_SERIAL_DEBUG_ == 1)
+    Serial.println("Watchdog reset");
+    #endif
   }
 
   // Gen Pulso

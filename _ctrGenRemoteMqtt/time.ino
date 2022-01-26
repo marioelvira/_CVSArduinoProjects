@@ -47,6 +47,10 @@ void _TimeLoop(void)
 
     _FreeRAM();
 
+    #if (_USE_WDE_ == 1)
+    _WDELoop();
+    #endif
+    
     #if (_STATUS_SERIAL_DEBUG_ == 1)
     
     Serial.println("<><><><><><><>");

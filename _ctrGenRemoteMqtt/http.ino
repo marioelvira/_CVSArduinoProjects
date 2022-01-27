@@ -147,10 +147,10 @@ void _serveTimeSETTINGS()
   html = html + "<label> Entradas ON <input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgLogicOuts) + "\" name=\"cfgOuts\"/></label>";
   html = html + "</div>";
 
-  html = html + "<div class=\"section\"><span>3</span>vBat ADC</div>";
+  html = html + "<div class=\"section\"><span>3</span>vBat ADC: y = mx - b</div>";
   html = html + "<div class=\"inner-wrap\">";
   html = html + "<label>ADC recta:m (/10)<input type=\"text\"  maxlength=\"16\" value=\"" + String((int)cfgADCm) + "\" name=\"rADCm\"/></label>";
-  html = html + "<label>ADC recta:b (/100)<input type=\"text\"  maxlength=\"16\" value=\"" + String((int)cfgADCb) + "\" name=\"rADCb\"/></label>";
+  html = html + "<label>ADC recta:b (/10)<input type=\"text\"  maxlength=\"16\" value=\"" + String((int)cfgADCb) + "\" name=\"rADCb\"/></label>";
   html = html + "</div>";
   
   html = html + "<div class=\"section\"><span>4</span>Generador In</div>";
@@ -228,7 +228,7 @@ void _setTimeSETTINGS()
     Serial.print("cfgLogic Outs: "); Serial.println(cfgLogicOuts);
     Serial.print("Gen On Pin: ");    Serial.println(cfgGenOnPin);
     Serial.print("ADC m: ");         Serial.print (cfgADCm);            Serial.println(" /10");
-    Serial.print("ADC b: ");         Serial.print (cfgADCb);            Serial.println(" /100");
+    Serial.print("ADC b: ");         Serial.print (cfgADCb);            Serial.println(" /10");
     //Serial.print("Debug: ");       Serial.print (DebugVal);           Serial.println(" ---");
     #endif   
 

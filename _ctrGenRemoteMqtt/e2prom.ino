@@ -212,7 +212,7 @@ void _readCONFIG (void)
   Serial.print("Logic Outs: ");    Serial.println(cfgLogicOuts);
   Serial.print("Gen On Pin: ");    Serial.println(cfgGenOnPin);
   Serial.print("ADC m: ");         Serial.print (cfgADCm);            Serial.println(" /10");
-  Serial.print("ADC b: ");         Serial.print (cfgADCb);            Serial.println(" /100");
+  Serial.print("ADC b: ");         Serial.print (cfgADCb);            Serial.println(" /10");
   //Serial.print("Debug: ");       Serial.print (DebugVal);           Serial.println(" ---");
   #endif
 }

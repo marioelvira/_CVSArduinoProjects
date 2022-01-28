@@ -5,12 +5,16 @@ extern "C" {
 #ifndef _MAIN_H_
 #define _MAIN_H_
 
+// Libs
+// C:\Users\mario.elvira\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4
+
 ///////////
 // Debug //
 ///////////
 #define _SERIAL_DEBUG_             1
 
 #define _USE_BOARDLED_             0
+#define _USE_WDE_                  1
 
 #define _PULS_SERIAL_DEBUG_        1
 #define _EEPROM_SERIAL_DEBUG_      1

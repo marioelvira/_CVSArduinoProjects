@@ -48,7 +48,7 @@ void _serveMAIN()
   html = html + "  <input type=\"button\" value=\"Gen Paro\" onclick=\"sendOUT(11)\">";
   html = html + "  <input type=\"button\" value=\"Luz Control\" onclick=\"sendOUT(12)\">";
   html = html + "</p>";
-  html = html + "<div class=\"section\">Watchcog</div>";
+  html = html + "<div class=\"section\">Watchdog</div>";
   html = html + "<p>";
   html = html + "  <input type=\"button\" value=\"Reset\" onclick=\"sendOUT(1)\">";
   html = html + "</p>";

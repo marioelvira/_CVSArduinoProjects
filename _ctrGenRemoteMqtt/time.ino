@@ -58,6 +58,9 @@ void _TimeLoop(void)
     Serial.print(timeDay); Serial.print("d "); Serial.print(timeHour); Serial.print(" : "); Serial.print(timeMin); Serial.print(" : "); Serial.print(timeSec);
     Serial.println(" ");
 
+    Serial.print("Free RAM: ");
+    Serial.println(freeRam);
+    
     Serial.print("Indicador LCD: ");
     Serial.print(DisplayIndicador);
     Serial.print(" -> ");

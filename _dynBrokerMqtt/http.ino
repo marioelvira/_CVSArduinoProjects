@@ -192,7 +192,7 @@ void _serveMAIN()
   html = html + "<p class=\"sansserif\" id=\"TEMPSid\">...</p>";
   html = html + "<div class=\"section\">Estados</div>";
   html = html + "<p class=\"sansserif\" id=\"OUTSid\">...</p>";
-  html = html + "<div class=\"section\">Watchcog</div>";
+  html = html + "<div class=\"section\">Watchdog</div>";
   html = html + "<p>";
   html = html + "  <input type=\"button\" value=\"Reset\" onclick=\"sendOUT(1)\">";
   html = html + "</p>";

@@ -3,6 +3,8 @@
 #include <ESP8266WebServer.h>
 #include <EEPROM.h>
 
+#include "__ver.h"
+
 #include "e2prom.h"
 #include "http.h"
 #include "io.h"
@@ -10,6 +12,13 @@
 #include "main.h"
 #include "ctr.h"
 #include "wifi.h"
+#include "mRAM.h"
+#include "wde.h"
+
+/////////////
+// Version //
+/////////////
+const char* FW_Version = FW_VERSION;
 
 ////////////////////
 // DIO definition //
@@ -122,6 +131,18 @@ int   DebugVal = 0;
 int X_60 = 60;
 int X_3600 = 3600;
 
+//////////
+// mRAM //
+//////////
+unsigned long freeRam;
+
+////////
+// WD //
+////////
+#if (_USE_WDE_ == 1)
+int wdeForceReset;
+#endif
+
 ///////////////
 // PIN steup //
 ///////////////
@@ -193,7 +214,10 @@ void setup(void)
   #if (_SERIAL_DEBUG_ == 1)
   delay(100);  // 100ms
   Serial.begin(115200);
-  Serial.println("");
+  Serial.print("Project: ");
+  Serial.println(PROJECT);
+  Serial.print("Version: ");
+  Serial.println(FW_VERSION);
   #endif
     
   // Config setup
@@ -214,6 +238,10 @@ void setup(void)
 
   // Ctr setup
   _CtrSetup();
+
+  #if (_USE_WDE_ == 1)
+  _WDESetup();
+  #endif
 }
 
 ///////////////////////

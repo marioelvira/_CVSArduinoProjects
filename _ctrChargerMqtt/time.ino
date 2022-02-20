@@ -39,8 +39,6 @@ void _TimeLoop(void)
           timeDay++;
         }
       }
-
-      genMinOn++;
     }
     
     timeTick = millis();
@@ -61,48 +59,35 @@ void _TimeLoop(void)
     Serial.print("Free RAM: ");
     Serial.println(freeRam);
     
-    Serial.print("Indicador LCD: ");
-    Serial.print(DisplayIndicador);
-    Serial.print(" -> ");
+    Serial.print("Ins: ");
     Serial.print(InD); Serial.print("-"); Serial.print(InC); Serial.print("-"); Serial.print(InB); Serial.print("-"); Serial.print(InA);
-    Serial.println(" ");
-    if (InGenOn == IO_OFF)
-      Serial.print("Gen In: OFF");
-    else
-      Serial.print("Gen In: ON");
     Serial.println(" ");
     Serial.println("---------------");
     
     Serial.print("Control Status: ");
-    Serial.println(ControlState);  
-    Serial.println("---------------");
-
-    Serial.print("Gen Status: ");
-    Serial.print(genState); Serial.print(" "); Serial.print(genMinOn); Serial.println("m ");
+    Serial.println(ControlState);
+    Serial.print("Control Tick: ");
+    Serial.println(millis() - ControlTick);
     Serial.println("---------------");
  
-    Serial.print("Luz Off Status: ");
-    Serial.println(LuzState);  
-    Serial.println("---------------");
-
     Serial.print("Wi-Fi Status: ");
-    Serial.println(wifiStatus);  
+    Serial.println(wifiStatus);
     Serial.println("---------------");
-        
-    if (OutGenPuls == OUT_ON)
-     Serial.println("Gen Puls: ON");
-    else
-     Serial.println("Gen Puls: OFF");
 
-    if (OutStopPuls == OUT_ON)
-     Serial.println("Gen Stop: ON");
+    if (OutBattA == OUT_ON)
+     Serial.println("OutBattA: ON");
     else
-     Serial.println("Gen Stop: OFF");
+     Serial.println("OutBattA: OFF");
 
-    if (OutLuzOff == OUT_ON)
-     Serial.println("Luz OFF: ON");
+    if (OutBattB == OUT_ON)
+     Serial.println("OutBattB: ON");
     else
-     Serial.println("Luz OFF: OFF");
+     Serial.println("OutBattB: OFF");
+     
+    if (OutBattC == OUT_ON)
+     Serial.println("OutBattC: ON");
+    else
+     Serial.println("OutBattC: OFF");
 
     _ADCLoop();
     Serial.print("Vbatt In Dig: ");

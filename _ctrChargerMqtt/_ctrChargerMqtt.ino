@@ -1,4 +1,4 @@
- #include <ESP8266WiFi.h>
+#include <ESP8266WiFi.h>
 #include <ESP8266WebServer.h>
 #include <PubSubClient.h>
 #include <EEPROM.h>
@@ -29,11 +29,9 @@ int   InB;
 int   InC;
 int   InD;
 
-int   InGenOn;
-
-int   OutGenPuls;
-int   OutStopPuls;
-int   OutLuzOff;
+int   OutBattA;
+int   OutBattB;
+int   OutBattC;
 int   outLed;
 
 ///////////
@@ -84,7 +82,7 @@ byte mac[6];
 /////////////////
 // Device Name //
 /////////////////
-#define DEVICENAME      "rem8266"
+#define DEVICENAME      "chargerCtr8266"
 char* deviceName = DEVICENAME;
 
 /////////////////
@@ -109,13 +107,6 @@ String mqttClientId = "remoteMQTT-" + String(ESP.getChipId());
 int mqttStatus;
 unsigned long mqttTick = 0;
 
-/*
-char  topic_state[50];
-char  topic_genctr[50];
-char  topic_genstop[50];
-char  topic_luzctr[50];
-char  topic_luzstandby[50];
-*/
 //////////
 // Time //
 //////////
@@ -132,17 +123,6 @@ int   controlMode = MODE_AUTO;
 unsigned long ControlTick = 0;
 int   ControlState;
 int   TimeControlSec;
-int   DisplayIndicador;
-
-int   genInStatus;
-int   genState;
-int   genMinOn;
-
-int   remPulse;
-int   remAct;
-
-int   LuzState;
-unsigned long LuzTick = 0;
 
 //////////
 // mRAM //
@@ -159,11 +139,18 @@ int wdeForceReset;
 ////////////
 // Config //
 ////////////
-int     cfgRemotePulsTick;
-int     cfgLuzOutTick;
+int     cfgBattTsecs;
+
+int     cfgBattAvolts;
+int     cfgBattAmins;
+int     cfgBattBvolts;
+int     cfgBattBmins;
+int     cfgBattCvolts;
+int     cfgBattCmins;
+
 int     cfgLogicIns;
 int     cfgLogicOuts;
-int     cfgGenOnPin;
+
 int     cfgADCm;
 int     cfgADCb;
 int     cfgADCs;
@@ -186,18 +173,18 @@ void _PINSetup(void)
   outLed = IO_OFF;
   #endif
 
-  pinMode(PIN_GEN_PULS, OUTPUT);
-  digitalWrite(PIN_GEN_PULS, !cfgLogicOuts);
-  OutGenPuls = OUT_OFF;
-
-  pinMode(PIN_STOP_PULS, OUTPUT);
-  digitalWrite(PIN_STOP_PULS, !cfgLogicOuts);
-  OutStopPuls = OUT_OFF;
-
-  pinMode(PIN_LUZ_OFF, OUTPUT);
-  digitalWrite(PIN_LUZ_OFF, !cfgLogicOuts);
-  OutLuzOff = OUT_OFF; 
+  pinMode(PIN_BATT_A, OUTPUT);
+  digitalWrite(PIN_BATT_A, !cfgLogicOuts);
+  OutBattA = OUT_OFF;
   
+  pinMode(PIN_BATT_B, OUTPUT);
+  digitalWrite(PIN_BATT_B, !cfgLogicOuts);
+  OutBattB = OUT_OFF;
+    
+  pinMode(PIN_BATT_C, OUTPUT);
+  digitalWrite(PIN_BATT_C, !cfgLogicOuts);
+  OutBattC = OUT_OFF;
+ 
   //-----//
   // INS //
   //-----//
@@ -205,7 +192,6 @@ void _PINSetup(void)
   pinMode(PIN_B, INPUT);      InB = IO_OFF;
   pinMode(PIN_C, INPUT);      InC = IO_OFF;
   pinMode(PIN_D, INPUT);      InD = IO_OFF;
-  pinMode(PIN_GENON, INPUT);  InGenOn = IO_OFF;
 }
 
 //============//
@@ -227,7 +213,7 @@ void setup(void)
 
   // IO setup
   _PINSetup();
-  _IOSetup();
+  //_IOSetup();
   _ADCSetup();
 
   // Wi-Fi setup
@@ -266,20 +252,20 @@ void _PINLoop()
     digitalWrite(PIN_LED, PIN_OUT_OFF);
   #endif
 
-  if (OutGenPuls == cfgLogicOuts)
-    digitalWrite(PIN_GEN_PULS, PIN_OUT_ON);
+  if (OutBattA == cfgLogicOuts)
+    digitalWrite(PIN_BATT_A, PIN_OUT_ON);
   else
-    digitalWrite(PIN_GEN_PULS, PIN_OUT_OFF); 
+    digitalWrite(PIN_BATT_A, PIN_OUT_OFF);
 
-  if (OutStopPuls == cfgLogicOuts)
-    digitalWrite(PIN_STOP_PULS, PIN_OUT_ON);
+  if (OutBattB == cfgLogicOuts)
+    digitalWrite(PIN_BATT_B, PIN_OUT_ON);
   else
-    digitalWrite(PIN_STOP_PULS, PIN_OUT_OFF);
-
-  if (OutLuzOff == cfgLogicOuts)
-    digitalWrite(PIN_LUZ_OFF, PIN_OUT_ON);
+    digitalWrite(PIN_BATT_B, PIN_OUT_OFF);
+    
+  if (OutBattC == cfgLogicOuts)
+    digitalWrite(PIN_BATT_C, PIN_OUT_ON);
   else
-    digitalWrite(PIN_LUZ_OFF, PIN_OUT_OFF);
+    digitalWrite(PIN_BATT_C, PIN_OUT_OFF); 
   
   //-----//
   // INS //
@@ -303,11 +289,6 @@ void _PINLoop()
     InD = IO_ON;
   else
     InD = IO_OFF;
-
-  if (digitalRead(PIN_GENON) == cfgLogicIns)
-    InGenOn = IO_ON;
-  else
-    InGenOn = IO_OFF;
 }
 
 //===========//
@@ -317,8 +298,6 @@ void loop()
 {
   _PINLoop();
   //_IOLoop();
-
-  _IOLcdLoop();
 
   _WifiLoop();
   _WifiLedLoop();
@@ -330,7 +309,7 @@ void loop()
     _MQTTLoop();
   else
     mqttStatus = MQTT_NOT_CONNECTED;
-
+  
   if (controlMode == MODE_AUTO)
     _CtrLoop();
   

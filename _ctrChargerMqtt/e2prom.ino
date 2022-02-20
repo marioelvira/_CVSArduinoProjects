@@ -77,24 +77,18 @@ void _readCONFIG (void)
       EEPROM.write(EEPROM_ADD_WIFI_PSWD + i, passwordSt[i]);
     #endif
 
-    // Broker
-    for (i = 0; i < BROKER_MAX; i++)
-      EEPROM.write(EEPROM_ADD_BROKER + i, 0);
-    j = strlen(brokerSt);
-    for (i = 0; i < j; i++)
-      EEPROM.write(EEPROM_ADD_BROKER + i, brokerSt[i]);
-
-    eeprom_value_lo = EEPROM_VAL_BROKER_PORT & 0x00FF;
-    EEPROM.write(EEPROM_ADD_BROKER_PORT, eeprom_value_lo);
-    eeprom_value_hi = (EEPROM_VAL_BROKER_PORT & 0xFF00)>>8;
-    EEPROM.write(EEPROM_ADD_BROKER_PORT + 1, eeprom_value_hi);
-
     // Other Data
-    EEPROM.write(EEPROM_ADD_RPUSL_MSEC, EEPROM_VAL_RPUSL_MSEC);
-    EEPROM.write(EEPROM_ADD_LUZOFF_15M, EEPROM_VAL_LUZOFF_15M);  
+    EEPROM.write(EEPROM_ADD_BATT_TSECS,  EEPROM_VAL_BATT_TSECS);
+    EEPROM.write(EEPROM_ADD_BATTA_VOLTS, EEPROM_VAL_BATTA_VOLTS);
+    EEPROM.write(EEPROM_ADD_BATTA_MIN,   EEPROM_VAL_BATTA_MIN);
+    EEPROM.write(EEPROM_ADD_BATTB_VOLTS, EEPROM_VAL_BATTB_VOLTS);
+    EEPROM.write(EEPROM_ADD_BATTB_MIN,   EEPROM_VAL_BATTB_MIN);
+    EEPROM.write(EEPROM_ADD_BATTC_VOLTS, EEPROM_VAL_BATTC_VOLTS);
+    EEPROM.write(EEPROM_ADD_BATTC_MIN,   EEPROM_VAL_BATTC_MIN);
+
     EEPROM.write(EEPROM_ADD_LOGIC_INS,  EEPROM_VAL_LOGIC_INS);
     EEPROM.write(EEPROM_ADD_LOGIC_OUTS, EEPROM_VAL_LOGIC_OUTS);
-    EEPROM.write(EEPROM_ADD_GENON_PIN,  EEPROM_VAL_GENON_PIN);
+
     EEPROM.write(EEPROM_ADD_ADC_M,      EEPROM_VAL_ADC_M);
     EEPROM.write(EEPROM_ADD_ADC_B,      EEPROM_VAL_ADC_B);
     EEPROM.write(EEPROM_ADD_ADC_S,      EEPROM_VAL_ADC_S);
@@ -183,27 +177,19 @@ void _readCONFIG (void)
     #endif
   }
 
-  // Broker
-  for (i = 0; i < BROKER_MAX; i++)
-    brokerUrl[i] = char(EEPROM.read(EEPROM_ADD_BROKER + i));
-  
-  eeprom_value_hi = EEPROM.read(EEPROM_ADD_BROKER_PORT + 1);
-  eeprom_value_lo = EEPROM.read(EEPROM_ADD_BROKER_PORT);   
-  brokerPort = ((eeprom_value_hi & 0x00FF)<<8)|(eeprom_value_lo & 0x00FF);
- 
-  #if (_EEPROM_SERIAL_DEBUG_ == 1)
-  Serial.print("Broker URL: ");
-  Serial.println(brokerUrl);
-  Serial.print("Broker Port: ");
-  Serial.println(brokerPort);
-  #endif 
-
   // Other Data
-  cfgRemotePulsTick = (int)EEPROM.read(EEPROM_ADD_RPUSL_MSEC);
-  cfgLuzOutTick     = (int)EEPROM.read(EEPROM_ADD_LUZOFF_15M);
+  cfgBattTsecs      = (int)EEPROM.read(EEPROM_ADD_BATT_TSECS);
+
+  cfgBattAvolts     = (int)EEPROM.read(EEPROM_ADD_BATTA_VOLTS);
+  cfgBattAmins      = (int)EEPROM.read(EEPROM_ADD_BATTA_MIN);
+  cfgBattBvolts     = (int)EEPROM.read(EEPROM_ADD_BATTB_VOLTS);
+  cfgBattBmins      = (int)EEPROM.read(EEPROM_ADD_BATTB_MIN);
+  cfgBattCvolts     = (int)EEPROM.read(EEPROM_ADD_BATTC_VOLTS);
+  cfgBattCmins      = (int)EEPROM.read(EEPROM_ADD_BATTC_MIN);
+
   cfgLogicIns       = (int)EEPROM.read(EEPROM_ADD_LOGIC_INS);
   cfgLogicOuts      = (int)EEPROM.read(EEPROM_ADD_LOGIC_OUTS);
-  cfgGenOnPin       = (int)EEPROM.read(EEPROM_ADD_GENON_PIN);
+
   cfgADCm           = (int)EEPROM.read(EEPROM_ADD_ADC_M);
   cfgADCb           = (int)EEPROM.read(EEPROM_ADD_ADC_B);
   cfgADCs           = (int)EEPROM.read(EEPROM_ADD_ADC_S);
@@ -212,15 +198,21 @@ void _readCONFIG (void)
   //DebugVal        = (int)EEPROM.read(EEPROM_ADD_DEBUG);
   
   #if (_EEPROM_SERIAL_DEBUG_ == 1)
-  Serial.print("Remote Pulse: ");  Serial.print (cfgRemotePulsTick);  Serial.println(" *100 ms");
-  Serial.print("Luz Off: ");       Serial.print (cfgLuzOutTick);      Serial.println(" *15 min");
+  Serial.print("Batt salto: ");     Serial.print (cfgBattTsecs);       Serial.println(" secs");
+  Serial.print("Batt A charge: ");  Serial.print (cfgBattAvolts);      Serial.println(" Volts");
+  Serial.print("Batt A charge: ");  Serial.print (cfgBattAmins);       Serial.println(" *15 min");
+  Serial.print("Batt B charge: ");  Serial.print (cfgBattBvolts);      Serial.println(" Volts");
+  Serial.print("Batt B charge: ");  Serial.print (cfgBattBmins);       Serial.println(" *15 min");
+  Serial.print("Batt C charge: ");  Serial.print (cfgBattCvolts);      Serial.println(" Volts");
+  Serial.print("Batt C charge: ");  Serial.print (cfgBattCmins);       Serial.println(" *15 min");
+
   Serial.print("Logic Ins: ");     Serial.println(cfgLogicIns);
   Serial.print("Logic Outs: ");    Serial.println(cfgLogicOuts);
-  Serial.print("Gen On Pin: ");    Serial.println(cfgGenOnPin);
+
   Serial.print("ADC m: ");         Serial.print (cfgADCm);            Serial.println(" /10");
   Serial.print("ADC b: ");         Serial.print (cfgADCb);            Serial.println(" /10");
-  Serial.print("ADC s: ");         Serial.print (cfgADCs);            Serial.println(" +/-  1/0");
-  Serial.print("ADC f: ");         Serial.print (cfgADCf);            Serial.println(" si/no 1/0");
+  Serial.print("ADC s: ");         Serial.print (cfgADCs);            Serial.println(" +/-");
+  Serial.print("ADC f: ");         Serial.print (cfgADCf);            Serial.println(" no/yes");
   
   //Serial.print("Debug: ");       Serial.print (DebugVal);           Serial.println(" ---");
   #endif

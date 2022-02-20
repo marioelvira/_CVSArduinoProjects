@@ -147,10 +147,12 @@ void _serveTimeSETTINGS()
   html = html + "<label> Entradas ON <input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgLogicOuts) + "\" name=\"cfgOuts\"/></label>";
   html = html + "</div>";
 
-  html = html + "<div class=\"section\"><span>3</span>vBat ADC: y = mx - b</div>";
+  html = html + "<div class=\"section\"><span>3</span>vBat ADC: y = mx +/- b</div>";
   html = html + "<div class=\"inner-wrap\">";
   html = html + "<label>ADC recta:m (/10)<input type=\"text\"  maxlength=\"16\" value=\"" + String((int)cfgADCm) + "\" name=\"rADCm\"/></label>";
   html = html + "<label>ADC recta:b (/10)<input type=\"text\"  maxlength=\"16\" value=\"" + String((int)cfgADCb) + "\" name=\"rADCb\"/></label>";
+  html = html + "<label>ADC signo (+/-  1/0)<input type=\"text\"  maxlength=\"16\" value=\"" + String((int)cfgADCs) + "\" name=\"rADCs\"/></label>";
+  html = html + "<label>ADC filtro (si/no 1/0)<input type=\"text\"  maxlength=\"16\" value=\"" + String((int)cfgADCf) + "\" name=\"rADCf\"/></label>";
   html = html + "</div>";
   
   html = html + "<div class=\"section\"><span>4</span>Generador In</div>";
@@ -190,6 +192,9 @@ void _setTimeSETTINGS()
   String cfgGenon  = httpServer.arg("cfgGenon");
   String rADCm     = httpServer.arg("rADCm");
   String rADCb     = httpServer.arg("rADCb");
+  String rADCs     = httpServer.arg("rADCs");
+  String rADCf     = httpServer.arg("rADCf");
+  
   //String rdebugVal = httpServer.arg("tdebugVal");
   
   int error = 0;
@@ -200,7 +205,9 @@ void _setTimeSETTINGS()
       (cfgOuts.length() == 0)   ||
       (cfgGenon.length() == 0)  ||
       (rADCm.length() == 0)     ||
-      (rADCb.length() == 0))
+      (rADCb.length() == 0)     ||
+      (rADCs.length() == 0)     ||
+      (rADCf.length() == 0))
       //(rdebugVal.length() == 0))
   {
     error = 1;  // falta un campo...
@@ -219,6 +226,9 @@ void _setTimeSETTINGS()
     cfgGenOnPin = cfgGenon.toInt();
     cfgADCm = rADCm.toInt();
     cfgADCb = rADCb.toInt();
+    cfgADCs = rADCs.toInt();
+    cfgADCf = rADCf.toInt();
+    
     //DebugVal = rdebugVal.toInt();
     
     #if (_HTTP_SERIAL_DEBUG_ == 1)  
@@ -229,6 +239,8 @@ void _setTimeSETTINGS()
     Serial.print("Gen On Pin: ");    Serial.println(cfgGenOnPin);
     Serial.print("ADC m: ");         Serial.print (cfgADCm);            Serial.println(" /10");
     Serial.print("ADC b: ");         Serial.print (cfgADCb);            Serial.println(" /10");
+    Serial.print("ADC s: ");         Serial.print (cfgADCs);            Serial.println(" +/-  1/0");
+    Serial.print("ADC f: ");         Serial.print (cfgADCf);            Serial.println(" si/no 1/0");
     //Serial.print("Debug: ");       Serial.print (DebugVal);           Serial.println(" ---");
     #endif   
 
@@ -239,6 +251,8 @@ void _setTimeSETTINGS()
     EEPROM.write(EEPROM_ADD_LOGIC_OUTS, (byte)cfgLogicOuts);
     EEPROM.write(EEPROM_ADD_ADC_M,      (byte)cfgADCm);
     EEPROM.write(EEPROM_ADD_ADC_B,      (byte)cfgADCb);
+    EEPROM.write(EEPROM_ADD_ADC_S,      (byte)cfgADCs);
+    EEPROM.write(EEPROM_ADD_ADC_F,      (byte)cfgADCf);
     //EEPROM.write(EEPROM_ADD_DEBUG,      (byte)DebugVal);
 
     EEPROM.commit();    //Store data to EEPROM

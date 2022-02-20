@@ -39,22 +39,29 @@ extern "C" {
 #define EEPROM_ADD_BROKER_PORT    0x6F
 #define BROKER_PORT_MAX           2
 
-#define EEPROM_ADD_RPUSL_MSEC     0x71
-#define EEPROM_ADD_LUZOFF_15M     0x72
-#define EEPROM_ADD_LOGIC_INS      0x73
-#define EEPROM_ADD_LOGIC_OUTS     0x74
-#define EEPROM_ADD_GENON_PIN      0x75
-#define EEPROM_ADD_ADC_M          0x76
-#define EEPROM_ADD_ADC_B          0x77
-#define EEPROM_ADD_ADC_S          0x78
-#define EEPROM_ADD_ADC_F          0x79
+#define EEPROM_ADD_BATT_TSECS     0x71
+#define EEPROM_ADD_BATTA_VOLTS    0x72
+#define EEPROM_ADD_BATTA_MIN      0x73
+#define EEPROM_ADD_BATTB_VOLTS    0x74
+#define EEPROM_ADD_BATTB_MIN      0x75
+#define EEPROM_ADD_BATTC_VOLTS    0x76
+#define EEPROM_ADD_BATTC_MIN      0x77
 
-#define EEPROM_ADD_DEBUG          0x7A
+#define EEPROM_ADD_LOGIC_INS      0x78
+#define EEPROM_ADD_LOGIC_OUTS     0x79
+
+#define EEPROM_ADD_ADC_M          0x7A
+#define EEPROM_ADD_ADC_B          0x7B
+#define EEPROM_ADD_ADC_S          0x7C
+#define EEPROM_ADD_ADC_F          0x7D
+
+//#define EEPROM_ADD_DEBUG        0x7E
 
 //#define EEPROM_ADD_MAX          0xFA // 250
 
 // Values
-#define EEPROM_VAL_OK             0xA45
+#define EEPROM_VAL_OK             0xA7
+
 #define EEPROM_VAL_IP_MODE        DHCP_MODE
 #define EEPROM_VAL_IP1            192
 #define EEPROM_VAL_IP2            168
@@ -76,17 +83,22 @@ extern "C" {
 //#define EEPROM_VAL_BROKER       
 #define EEPROM_VAL_BROKER_PORT    7000
 
-#define EEPROM_VAL_RPUSL_MSEC     10  // 1 Sec
-#define EEPROM_VAL_LUZOFF_15M     16  // 4 h
+#define EEPROM_VAL_BATT_TSECS     10  // 10sec
+#define EEPROM_VAL_BATTA_VOLTS    135 // 13,5
+#define EEPROM_VAL_BATTA_MIN      30  // 30 Min
+#define EEPROM_VAL_BATTB_VOLTS    135 // 13,5
+#define EEPROM_VAL_BATTB_MIN      30  // 30 Min
+#define EEPROM_VAL_BATTC_VOLTS    135 // 13,5
+#define EEPROM_VAL_BATTC_MIN      30  // 30 Min
+
 #define EEPROM_VAL_LOGIC_INS      0
 #define EEPROM_VAL_LOGIC_OUTS     1
-#define EEPROM_VAL_GENON_PIN      1
+
 #define EEPROM_VAL_ADC_M          155
 #define EEPROM_VAL_ADC_B          0
 #define EEPROM_VAL_ADC_S          0   // +/-  1/0
 #define EEPROM_VAL_ADC_F          1   // si/no 1/0
-
-//#define EEPROM_VAL_DEBUG          0
+//#define EEPROM_VAL_DEBUG        0
 
 #endif // _E2PROM_H_
 

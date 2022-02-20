@@ -5,7 +5,10 @@
 void _IOSetup()
 {  
   DisplayIndicador = 1;
+}
 
+void _ADCSetup()
+{
   VbattInADC = 0;
 
   for (int i = 0; i < VBATT_ARRAY_SIZE; i++)
@@ -17,21 +20,32 @@ void _IOSetup()
 //////////////////////
 // IO state machine //
 //////////////////////
-void _IOLoop()
+//void _IOLoop(){}
+
+void _ADCLoop()
 {
-  int   vbattAcc = 0;
-
-  VbattInArray[VbattInPointer] = analogRead(PIN_VBATT_IN);
-  VbattInPointer++;
-  if (VbattInPointer >= VBATT_ARRAY_SIZE)
-    VbattInPointer = 0;
-
-  // Calculamos la media del Array...
-  for (int i = 0; i < VBATT_ARRAY_SIZE; i++)
-    vbattAcc = vbattAcc + VbattInArray[i];
+  if (cfgADCf == 1)
+  {
+    int   vbattAcc = 0;
+    
+    VbattInArray[VbattInPointer] = analogRead(PIN_VBATT_IN);
+    VbattInPointer++;
+    if (VbattInPointer >= VBATT_ARRAY_SIZE)
+      VbattInPointer = 0;
   
-  VbattInADC = vbattAcc/VBATT_ARRAY_SIZE;
-  VbattIn = (float)VbattInADC*((float)cfgADCm/10000) - (float)cfgADCb/10;
+    // Calculamos la media del Array...
+    for (int i = 0; i < VBATT_ARRAY_SIZE; i++)
+      vbattAcc = vbattAcc + VbattInArray[i];
+    
+    VbattInADC = vbattAcc/VBATT_ARRAY_SIZE;
+  }
+  else
+    VbattInADC = analogRead(PIN_VBATT_IN);
+
+  if (cfgADCs == 1)
+    VbattIn = (float)VbattInADC*((float)cfgADCm/10000) - (float)cfgADCb/10;
+  else
+    VbattIn = (float)VbattInADC*((float)cfgADCm/10000) + (float)cfgADCb/10;
 }
 
 void _IOLcdLoop(void) {

@@ -67,7 +67,7 @@ void _TimeLoop(void)
     Serial.print("Control Status: ");
     Serial.println(ControlState);
     Serial.print("Control Tick: ");
-    Serial.println(millis() - ControlTick);
+    Serial.println((millis() - ControlTick)/1000);
     Serial.println("---------------");
  
     Serial.print("Wi-Fi Status: ");

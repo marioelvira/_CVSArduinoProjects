@@ -149,8 +149,9 @@ void _serveTimeSETTINGS()
 
   html = html + "<div class=\"section\"><span>3</span>vBat ADC: y = mx +/- b</div>";
   html = html + "<div class=\"inner-wrap\">";
-  html = html + "<label>ADC recta:m (/10)<input type=\"text\"  maxlength=\"16\" value=\"" + String((int)cfgADCm) + "\" name=\"rADCm\"/></label>";
-  html = html + "<label>ADC recta:b (/10)<input type=\"text\"  maxlength=\"16\" value=\"" + String((int)cfgADCb) + "\" name=\"rADCb\"/></label>";
+  html = html + "<label>ADC recta:m <input type=\"text\"  maxlength=\"16\" value=\"" + String((int)cfgADCm) + "\" name=\"rADCm\"/></label>";
+  html = html + "<label>ADC recta:b <input type=\"text\"  maxlength=\"16\" value=\"" + String((int)cfgADCb) + "\" name=\"rADCb\"/></label>";
+  html = html + "<label>ADC recta:prscal <input type=\"text\"  maxlength=\"16\" value=\"" + String((int)cfgADCp) + "\" name=\"rADCp\"/></label>";
   html = html + "<label>ADC signo (+/-  1/0)<input type=\"text\"  maxlength=\"16\" value=\"" + String((int)cfgADCs) + "\" name=\"rADCs\"/></label>";
   html = html + "<label>ADC filtro (si/no 1/0)<input type=\"text\"  maxlength=\"16\" value=\"" + String((int)cfgADCf) + "\" name=\"rADCf\"/></label>";
   html = html + "</div>";
@@ -183,6 +184,8 @@ void _serveTimeSETTINGS()
 
 void _setTimeSETTINGS()
 {
+  int eeprom_value_hi, eeprom_value_lo;
+    
   String html = "";
   
   String rtimeRP   = httpServer.arg("timeRP");
@@ -192,6 +195,7 @@ void _setTimeSETTINGS()
   String cfgGenon  = httpServer.arg("cfgGenon");
   String rADCm     = httpServer.arg("rADCm");
   String rADCb     = httpServer.arg("rADCb");
+  String rADCp     = httpServer.arg("rADCp");
   String rADCs     = httpServer.arg("rADCs");
   String rADCf     = httpServer.arg("rADCf");
   
@@ -206,6 +210,7 @@ void _setTimeSETTINGS()
       (cfgGenon.length() == 0)  ||
       (rADCm.length() == 0)     ||
       (rADCb.length() == 0)     ||
+      (rADCp.length() == 0)     ||
       (rADCs.length() == 0)     ||
       (rADCf.length() == 0))
       //(rdebugVal.length() == 0))
@@ -226,6 +231,7 @@ void _setTimeSETTINGS()
     cfgGenOnPin = cfgGenon.toInt();
     cfgADCm = rADCm.toInt();
     cfgADCb = rADCb.toInt();
+    cfgADCp = rADCp.toInt();
     cfgADCs = rADCs.toInt();
     cfgADCf = rADCf.toInt();
     
@@ -237,22 +243,38 @@ void _setTimeSETTINGS()
     Serial.print("cfgLogic Ins: ");  Serial.println(cfgLogicIns);
     Serial.print("cfgLogic Outs: "); Serial.println(cfgLogicOuts);
     Serial.print("Gen On Pin: ");    Serial.println(cfgGenOnPin);
-    Serial.print("ADC m: ");         Serial.print (cfgADCm);            Serial.println(" /10");
-    Serial.print("ADC b: ");         Serial.print (cfgADCb);            Serial.println(" /10");
+
+    Serial.print("ADC m: ");         Serial.print (cfgADCm);            Serial.println(" ");
+    Serial.print("ADC b: ");         Serial.print (cfgADCb);            Serial.println(" ");
+    Serial.print("ADC p: ");         Serial.print (cfgADCp);            Serial.println(" ");
     Serial.print("ADC s: ");         Serial.print (cfgADCs);            Serial.println(" +/-  1/0");
     Serial.print("ADC f: ");         Serial.print (cfgADCf);            Serial.println(" si/no 1/0");
+  
     //Serial.print("Debug: ");       Serial.print (DebugVal);           Serial.println(" ---");
     #endif   
 
     // Data
     EEPROM.write(EEPROM_ADD_RPUSL_MSEC, (byte)cfgRemotePulsTick);
     EEPROM.write(EEPROM_ADD_LUZOFF_15M, (byte)cfgLuzOutTick);
+    
     EEPROM.write(EEPROM_ADD_LOGIC_INS,  (byte)cfgLogicIns);
     EEPROM.write(EEPROM_ADD_LOGIC_OUTS, (byte)cfgLogicOuts);
-    EEPROM.write(EEPROM_ADD_ADC_M,      (byte)cfgADCm);
-    EEPROM.write(EEPROM_ADD_ADC_B,      (byte)cfgADCb);
-    EEPROM.write(EEPROM_ADD_ADC_S,      (byte)cfgADCs);
-    EEPROM.write(EEPROM_ADD_ADC_F,      (byte)cfgADCf);
+    
+    eeprom_value_lo = cfgADCm & 0x00FF;
+    EEPROM.write(EEPROM_ADD_ADC_M_LO, eeprom_value_lo);
+    eeprom_value_hi = (cfgADCm & 0xFF00)>>8;
+    EEPROM.write(EEPROM_ADD_ADC_M_HI, eeprom_value_hi);
+    eeprom_value_lo = cfgADCb & 0x00FF;
+    EEPROM.write(EEPROM_ADD_ADC_B_LO, eeprom_value_lo);
+    eeprom_value_hi = (cfgADCb & 0xFF00)>>8;
+    EEPROM.write(EEPROM_ADD_ADC_B_HI, eeprom_value_hi);
+    eeprom_value_lo = cfgADCp & 0x00FF;
+    EEPROM.write(EEPROM_ADD_ADC_P_LO, eeprom_value_lo);
+    eeprom_value_hi = (cfgADCp & 0xFF00)>>8;
+    EEPROM.write(EEPROM_ADD_ADC_P_HI, eeprom_value_hi);
+    EEPROM.write(EEPROM_ADD_ADC_S,        (byte)cfgADCs);
+    EEPROM.write(EEPROM_ADD_ADC_F,        (byte)cfgADCf);
+    
     //EEPROM.write(EEPROM_ADD_DEBUG,      (byte)DebugVal);
 
     EEPROM.commit();    //Store data to EEPROM

@@ -95,8 +95,19 @@ void _readCONFIG (void)
     EEPROM.write(EEPROM_ADD_LOGIC_INS,  EEPROM_VAL_LOGIC_INS);
     EEPROM.write(EEPROM_ADD_LOGIC_OUTS, EEPROM_VAL_LOGIC_OUTS);
     EEPROM.write(EEPROM_ADD_GENON_PIN,  EEPROM_VAL_GENON_PIN);
-    EEPROM.write(EEPROM_ADD_ADC_M,      EEPROM_VAL_ADC_M);
-    EEPROM.write(EEPROM_ADD_ADC_B,      EEPROM_VAL_ADC_B);
+    
+    eeprom_value_lo = EEPROM_VAL_ADC_M & 0x00FF;
+    EEPROM.write(EEPROM_ADD_ADC_M_LO, eeprom_value_lo);
+    eeprom_value_hi = (EEPROM_VAL_ADC_M & 0xFF00)>>8;
+    EEPROM.write(EEPROM_ADD_ADC_M_HI, eeprom_value_hi);
+    eeprom_value_lo = EEPROM_VAL_ADC_B & 0x00FF;
+    EEPROM.write(EEPROM_ADD_ADC_B_LO, eeprom_value_lo);
+    eeprom_value_hi = (EEPROM_VAL_ADC_B & 0xFF00)>>8;
+    EEPROM.write(EEPROM_ADD_ADC_B_HI, eeprom_value_hi);
+    eeprom_value_lo = EEPROM_VAL_ADC_P & 0x00FF;
+    EEPROM.write(EEPROM_ADD_ADC_P_LO, eeprom_value_lo);
+    eeprom_value_hi = (EEPROM_VAL_ADC_P & 0xFF00)>>8;
+    EEPROM.write(EEPROM_ADD_ADC_P_HI, eeprom_value_hi);   
     EEPROM.write(EEPROM_ADD_ADC_S,      EEPROM_VAL_ADC_S);
     EEPROM.write(EEPROM_ADD_ADC_F,      EEPROM_VAL_ADC_F);
     
@@ -204,8 +215,16 @@ void _readCONFIG (void)
   cfgLogicIns       = (int)EEPROM.read(EEPROM_ADD_LOGIC_INS);
   cfgLogicOuts      = (int)EEPROM.read(EEPROM_ADD_LOGIC_OUTS);
   cfgGenOnPin       = (int)EEPROM.read(EEPROM_ADD_GENON_PIN);
-  cfgADCm           = (int)EEPROM.read(EEPROM_ADD_ADC_M);
-  cfgADCb           = (int)EEPROM.read(EEPROM_ADD_ADC_B);
+
+  eeprom_value_hi   = (int)EEPROM.read(EEPROM_ADD_ADC_M_HI);
+  eeprom_value_lo   = (int)EEPROM.read(EEPROM_ADD_ADC_M_LO);   
+  cfgADCm           = (int)((eeprom_value_hi & 0x00FF)<<8)|(eeprom_value_lo & 0x00FF);
+  eeprom_value_hi   = (int)EEPROM.read(EEPROM_ADD_ADC_B_HI);
+  eeprom_value_lo   = (int)EEPROM.read(EEPROM_ADD_ADC_B_LO);   
+  cfgADCb           = (int)((eeprom_value_hi & 0x00FF)<<8)|(eeprom_value_lo & 0x00FF);
+  eeprom_value_hi   = (int)EEPROM.read(EEPROM_ADD_ADC_P_HI);
+  eeprom_value_lo   = (int)EEPROM.read(EEPROM_ADD_ADC_P_LO);   
+  cfgADCp           = (int)((eeprom_value_hi & 0x00FF)<<8)|(eeprom_value_lo & 0x00FF); 
   cfgADCs           = (int)EEPROM.read(EEPROM_ADD_ADC_S);
   cfgADCf           = (int)EEPROM.read(EEPROM_ADD_ADC_F);
   
@@ -217,8 +236,10 @@ void _readCONFIG (void)
   Serial.print("Logic Ins: ");     Serial.println(cfgLogicIns);
   Serial.print("Logic Outs: ");    Serial.println(cfgLogicOuts);
   Serial.print("Gen On Pin: ");    Serial.println(cfgGenOnPin);
-  Serial.print("ADC m: ");         Serial.print (cfgADCm);            Serial.println(" /10");
-  Serial.print("ADC b: ");         Serial.print (cfgADCb);            Serial.println(" /10");
+
+  Serial.print("ADC m: ");         Serial.print (cfgADCm);            Serial.println(" ");
+  Serial.print("ADC b: ");         Serial.print (cfgADCb);            Serial.println(" ");
+  Serial.print("ADC p: ");         Serial.print (cfgADCp);            Serial.println(" ");
   Serial.print("ADC s: ");         Serial.print (cfgADCs);            Serial.println(" +/-  1/0");
   Serial.print("ADC f: ");         Serial.print (cfgADCf);            Serial.println(" si/no 1/0");
   

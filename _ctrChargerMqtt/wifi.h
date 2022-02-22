@@ -19,7 +19,7 @@ extern "C" {
 #define SSIDST   "SSID"
 #define PSKST    "password"
 */
-#define SSIDAP    "CHARGERCTR8266"
+#define SSIDAP    "CCHARGER8266"
 #define PSKAP     "topsecret"
 
 #define WIFI_START_ACCESSPOINT     0

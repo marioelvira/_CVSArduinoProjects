@@ -137,7 +137,7 @@ void _serveTimeSETTINGS()
 
   html = html + "<div class=\"section\">Batt Charge</div>";
   html = html + "<div class=\"inner-wrap\">";
-  html = html + "<label>Batt Transicion (sec)<input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgBattTsecs) + "\" name=\"battTsecs\"/></label>";
+  html = html + "<label>Batt Transicion (ds)<input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgBattTds) + "\" name=\"battTsecs\"/></label>";
   html = html + "<label>Batt A (V)<input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgBattAvolts) + "\" name=\"battAvolts\"/></label>";
   html = html + "<label>Batt A (*15m)<input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgBattAmins) + "\" name=\"battAmins\"/></label>";
   html = html + "<label>Batt B (V)<input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgBattBvolts) + "\" name=\"battBvolts\"/></label>";
@@ -152,10 +152,11 @@ void _serveTimeSETTINGS()
   html = html + "<label> Entradas ON <input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgLogicOuts) + "\" name=\"cfgOuts\"/></label>";
   html = html + "</div>";
 
-  html = html + "<div class=\"section\">vBat ADC: y = mx +/- b</div>";
+  html = html + "<div class=\"section\"><span>3</span>vBat ADC: y = mx +/- b</div>";
   html = html + "<div class=\"inner-wrap\">";
-  html = html + "<label>ADC recta:m (/10)<input type=\"text\"  maxlength=\"16\" value=\"" + String((int)cfgADCm) + "\" name=\"rADCm\"/></label>";
-  html = html + "<label>ADC recta:b (/10)<input type=\"text\"  maxlength=\"16\" value=\"" + String((int)cfgADCb) + "\" name=\"rADCb\"/></label>";
+  html = html + "<label>ADC recta:m <input type=\"text\"  maxlength=\"16\" value=\"" + String((int)cfgADCm) + "\" name=\"rADCm\"/></label>";
+  html = html + "<label>ADC recta:b <input type=\"text\"  maxlength=\"16\" value=\"" + String((int)cfgADCb) + "\" name=\"rADCb\"/></label>";
+  html = html + "<label>ADC recta:prscal <input type=\"text\"  maxlength=\"16\" value=\"" + String((int)cfgADCp) + "\" name=\"rADCp\"/></label>";
   html = html + "<label>ADC signo (+/-  1/0)<input type=\"text\"  maxlength=\"16\" value=\"" + String((int)cfgADCs) + "\" name=\"rADCs\"/></label>";
   html = html + "<label>ADC filtro (si/no 1/0)<input type=\"text\"  maxlength=\"16\" value=\"" + String((int)cfgADCf) + "\" name=\"rADCf\"/></label>";
   html = html + "</div>";
@@ -183,6 +184,8 @@ void _serveTimeSETTINGS()
 
 void _setTimeSETTINGS()
 {
+  int eeprom_value_hi, eeprom_value_lo;
+  
   String html = "";
 
   String rbattTsecs  = httpServer.arg("battTsecs");
@@ -198,6 +201,7 @@ void _setTimeSETTINGS()
   
   String rADCm     = httpServer.arg("rADCm");
   String rADCb     = httpServer.arg("rADCb");
+  String rADCp     = httpServer.arg("rADCp");
   String rADCs     = httpServer.arg("rADCs");
   String rADCf     = httpServer.arg("rADCf");
   
@@ -216,6 +220,7 @@ void _setTimeSETTINGS()
       (cfgOuts.length() == 0)     ||
       (rADCm.length() == 0)       ||
       (rADCb.length() == 0)       ||
+      (rADCp.length() == 0)       ||
       (rADCs.length() == 0)       ||
       (rADCf.length() == 0))
       //(rdebugVal.length() == 0))
@@ -229,7 +234,7 @@ void _setTimeSETTINGS()
   // Si no hay error...
   if (error == 0)
   {
-    cfgBattTsecs = rbattTsecs.toInt();
+    cfgBattTds = rbattTsecs.toInt();
     cfgBattAvolts = rbattAvolts.toInt();
     cfgBattAmins = rbattAmins.toInt();
     cfgBattBvolts = rbattBvolts.toInt();
@@ -242,13 +247,14 @@ void _setTimeSETTINGS()
 
     cfgADCm = rADCm.toInt();
     cfgADCb = rADCb.toInt();
+    cfgADCp = rADCp.toInt();
     cfgADCs = rADCs.toInt();
     cfgADCf = rADCf.toInt();
     
     //DebugVal = rdebugVal.toInt();
     
     #if (_HTTP_SERIAL_DEBUG_ == 1)  
-    Serial.print("Batt salto: ");     Serial.print (cfgBattTsecs);       Serial.println(" secs");
+    Serial.print("Batt salto: ");     Serial.print (cfgBattTds);         Serial.println(" ds");
     Serial.print("Batt A charge: ");  Serial.print (cfgBattAvolts);      Serial.println(" Volts");
     Serial.print("Batt A charge: ");  Serial.print (cfgBattAmins);       Serial.println(" *15 min");
     Serial.print("Batt B charge: ");  Serial.print (cfgBattBvolts);      Serial.println(" Volts");
@@ -259,8 +265,9 @@ void _setTimeSETTINGS()
     Serial.print("Logic Ins: ");     Serial.println(cfgLogicIns);
     Serial.print("Logic Outs: ");    Serial.println(cfgLogicOuts);
   
-    Serial.print("ADC m: ");         Serial.print (cfgADCm);            Serial.println(" /10");
-    Serial.print("ADC b: ");         Serial.print (cfgADCb);            Serial.println(" /10");
+    Serial.print("ADC m: ");         Serial.print (cfgADCm);            Serial.println(" ");
+    Serial.print("ADC b: ");         Serial.print (cfgADCb);            Serial.println(" ");
+    Serial.print("ADC p: ");         Serial.print (cfgADCp);            Serial.println(" ");
     Serial.print("ADC s: ");         Serial.print (cfgADCs);            Serial.println(" +/-  1/0");
     Serial.print("ADC f: ");         Serial.print (cfgADCf);            Serial.println(" si/no 1/0");
     #endif   
@@ -275,11 +282,22 @@ void _setTimeSETTINGS()
     
     EEPROM.write(EEPROM_ADD_LOGIC_INS,    (byte)cfgLogicIns);
     EEPROM.write(EEPROM_ADD_LOGIC_OUTS,   (byte)cfgLogicOuts);
-    
-    EEPROM.write(EEPROM_ADD_ADC_M,        (byte)cfgADCm);
-    EEPROM.write(EEPROM_ADD_ADC_B,        (byte)cfgADCb);
+
+    eeprom_value_lo = cfgADCm & 0x00FF;
+    EEPROM.write(EEPROM_ADD_ADC_M_LO, eeprom_value_lo);
+    eeprom_value_hi = (cfgADCm & 0xFF00)>>8;
+    EEPROM.write(EEPROM_ADD_ADC_M_HI, eeprom_value_hi);
+    eeprom_value_lo = cfgADCb & 0x00FF;
+    EEPROM.write(EEPROM_ADD_ADC_B_LO, eeprom_value_lo);
+    eeprom_value_hi = (cfgADCb & 0xFF00)>>8;
+    EEPROM.write(EEPROM_ADD_ADC_B_HI, eeprom_value_hi);
+    eeprom_value_lo = cfgADCp & 0x00FF;
+    EEPROM.write(EEPROM_ADD_ADC_P_LO, eeprom_value_lo);
+    eeprom_value_hi = (cfgADCp & 0xFF00)>>8;
+    EEPROM.write(EEPROM_ADD_ADC_P_HI, eeprom_value_hi);
     EEPROM.write(EEPROM_ADD_ADC_S,        (byte)cfgADCs);
     EEPROM.write(EEPROM_ADD_ADC_F,        (byte)cfgADCf);
+ 
     //EEPROM.write(EEPROM_ADD_DEBUG,      (byte)DebugVal);
 
     EEPROM.commit();    //Store data to EEPROM
@@ -715,8 +733,8 @@ void _readOUTS()
   html = html + "</tr>";
 
   html = html + "<tr>";
-  html = html + "<td>Control Timeout (ms) </td>";
-  html = html + "<td>" + String(millis() - ControlTick) + "</td>";
+  html = html + "<td>Control Timeout (s) </td>";
+  html = html + "<td>" + String((millis() - ControlTick)/1000) + "</td>";
   html = html + "</tr>";
 
   html = html + "<tr>";

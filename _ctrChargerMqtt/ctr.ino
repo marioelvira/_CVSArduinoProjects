@@ -28,7 +28,7 @@ void _CtrLoop(void)
         ControlState = STATE_CHARGE_BATTAB;      
       }
       // Salto por tensión
-      if (VbattIn > (float)cfgBattAvolts/10)
+      if (VbattIn > (float)cfgBattAvolts*10)
       {
         ControlTick = millis();
         ControlState = STATE_CHARGE_BATTAB;       
@@ -39,7 +39,7 @@ void _CtrLoop(void)
       OutBattA = OUT_ON;
       OutBattB = OUT_ON;
       OutBattC = OUT_OFF;
-      if (millis() - ControlTick >= cfgBattTsecs*1000)
+      if (millis() - ControlTick >= cfgBattTds*100)
       {
         ControlTick = millis();
         ControlState = STATE_CHARGE_BATTB;      
@@ -58,7 +58,7 @@ void _CtrLoop(void)
         ControlState = STATE_CHARGE_BATTBC;     
       }
       // Salto por tensión
-      if (VbattIn > (float)cfgBattBvolts/10)
+      if (VbattIn > (float)cfgBattBvolts*10)
       {
         ControlTick = millis();
         ControlState = STATE_CHARGE_BATTBC;
@@ -69,7 +69,7 @@ void _CtrLoop(void)
       OutBattA = OUT_OFF;
       OutBattB = OUT_ON;
       OutBattC = OUT_ON;
-      if (millis() - ControlTick >= cfgBattTsecs*1000)
+      if (millis() - ControlTick >= cfgBattTds*100)
       {
         ControlTick = millis();
         ControlState = STATE_CHARGE_BATTC;
@@ -88,7 +88,7 @@ void _CtrLoop(void)
         ControlState = STATE_CHARGE_BATTCA;   
       }
       // Salto por tensión
-      if (VbattIn > (float)cfgBattCvolts/10)
+      if (VbattIn > (float)cfgBattCvolts*10)
       {
         ControlTick = millis();
         ControlState = STATE_CHARGE_BATTCA;
@@ -99,7 +99,7 @@ void _CtrLoop(void)
       OutBattA = OUT_ON;
       OutBattB = OUT_OFF;
       OutBattC = OUT_ON;
-      if (millis() - ControlTick >= cfgBattTsecs*1000)
+      if (millis() - ControlTick >= cfgBattTds*100)
       {
         ControlTick = millis();
         ControlState = STATE_CHARGE_BATTA;

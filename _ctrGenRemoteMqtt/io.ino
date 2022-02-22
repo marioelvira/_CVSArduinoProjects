@@ -42,10 +42,10 @@ void _ADCLoop()
   else
     VbattInADC = analogRead(PIN_VBATT_IN);
 
-  if (cfgADCs == 1)
-    VbattIn = (float)VbattInADC*((float)cfgADCm/10000) - (float)cfgADCb/10;
+  if (cfgADCs == 0)
+    VbattIn = (float)VbattInADC*((float)cfgADCm)/(float)cfgADCp - (float)cfgADCb;
   else
-    VbattIn = (float)VbattInADC*((float)cfgADCm/10000) + (float)cfgADCb/10;
+    VbattIn = (float)VbattInADC*((float)cfgADCm)/(float)cfgADCp + (float)cfgADCb;
 }
 
 void _IOLcdLoop(void) {

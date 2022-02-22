@@ -166,6 +166,7 @@ int     cfgLogicOuts;
 int     cfgGenOnPin;
 int     cfgADCm;
 int     cfgADCb;
+int     cfgADCp;
 int     cfgADCs;
 int     cfgADCf;
 

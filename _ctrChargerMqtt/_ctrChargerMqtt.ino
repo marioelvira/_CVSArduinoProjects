@@ -82,7 +82,7 @@ byte mac[6];
 /////////////////
 // Device Name //
 /////////////////
-#define DEVICENAME      "chargerCtr8266"
+#define DEVICENAME      "Ccharger8266"
 char* deviceName = DEVICENAME;
 
 /////////////////
@@ -139,7 +139,7 @@ int wdeForceReset;
 ////////////
 // Config //
 ////////////
-int     cfgBattTsecs;
+int     cfgBattTds;
 
 int     cfgBattAvolts;
 int     cfgBattAmins;
@@ -153,6 +153,7 @@ int     cfgLogicOuts;
 
 int     cfgADCm;
 int     cfgADCb;
+int     cfgADCp;
 int     cfgADCs;
 int     cfgADCf;
 

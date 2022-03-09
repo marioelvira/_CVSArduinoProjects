@@ -93,6 +93,11 @@ void _MQTTSend(void)
   str = str + "\"outbattC\":";
   str = str + String(OutBattC);
   str = str + ",\n";
+
+  // outbattC
+  str = str + "\"cdown\":";
+  str = str + String((millis() - ControlTick)/1000);
+  str = str + ",\n";
   
   // ipAdd
   str = str + "\"ipAdd\":\"";

@@ -238,7 +238,7 @@ void _readCONFIG (void)
   Serial.print("Gen On Pin: ");    Serial.println(cfgGenOnPin);
 
   Serial.print("ADC m: ");         Serial.print (cfgADCm);            Serial.println(" ");
-  Serial.print("ADC b: ");         Serial.print (cfgADCb);            Serial.println(" ");
+  Serial.print("ADC b: ");         Serial.print (cfgADCb);            Serial.println(" (/1000)");
   Serial.print("ADC p: ");         Serial.print (cfgADCp);            Serial.println(" ");
   Serial.print("ADC s: ");         Serial.print (cfgADCs);            Serial.println(" +/-  1/0");
   Serial.print("ADC f: ");         Serial.print (cfgADCf);            Serial.println(" si/no 1/0");

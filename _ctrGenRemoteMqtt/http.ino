@@ -150,7 +150,7 @@ void _serveTimeSETTINGS()
   html = html + "<div class=\"section\"><span>3</span>vBat ADC: y = mx +/- b</div>";
   html = html + "<div class=\"inner-wrap\">";
   html = html + "<label>ADC recta:m <input type=\"text\"  maxlength=\"16\" value=\"" + String((int)cfgADCm) + "\" name=\"rADCm\"/></label>";
-  html = html + "<label>ADC recta:b <input type=\"text\"  maxlength=\"16\" value=\"" + String((int)cfgADCb) + "\" name=\"rADCb\"/></label>";
+  html = html + "<label>ADC recta:b (/1000)<input type=\"text\"  maxlength=\"16\" value=\"" + String((int)cfgADCb) + "\" name=\"rADCb\"/></label>";
   html = html + "<label>ADC recta:prscal <input type=\"text\"  maxlength=\"16\" value=\"" + String((int)cfgADCp) + "\" name=\"rADCp\"/></label>";
   html = html + "<label>ADC signo (+/-  1/0)<input type=\"text\"  maxlength=\"16\" value=\"" + String((int)cfgADCs) + "\" name=\"rADCs\"/></label>";
   html = html + "<label>ADC filtro (si/no 1/0)<input type=\"text\"  maxlength=\"16\" value=\"" + String((int)cfgADCf) + "\" name=\"rADCf\"/></label>";
@@ -245,7 +245,7 @@ void _setTimeSETTINGS()
     Serial.print("Gen On Pin: ");    Serial.println(cfgGenOnPin);
 
     Serial.print("ADC m: ");         Serial.print (cfgADCm);            Serial.println(" ");
-    Serial.print("ADC b: ");         Serial.print (cfgADCb);            Serial.println(" ");
+    Serial.print("ADC b: ");         Serial.print (cfgADCb);            Serial.println(" (/1000)");
     Serial.print("ADC p: ");         Serial.print (cfgADCp);            Serial.println(" ");
     Serial.print("ADC s: ");         Serial.print (cfgADCs);            Serial.println(" +/-  1/0");
     Serial.print("ADC f: ");         Serial.print (cfgADCf);            Serial.println(" si/no 1/0");

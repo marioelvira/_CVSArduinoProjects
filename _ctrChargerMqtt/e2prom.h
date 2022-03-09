@@ -64,7 +64,7 @@ extern "C" {
 //#define EEPROM_ADD_MAX          0xFA // 250
 
 // Values
-#define EEPROM_VAL_OK             0xAC
+#define EEPROM_VAL_OK             0xA1
 
 #define EEPROM_VAL_IP_MODE        DHCP_MODE
 #define EEPROM_VAL_IP1            192
@@ -88,17 +88,17 @@ extern "C" {
 #define EEPROM_VAL_BROKER_PORT    7000
 
 #define EEPROM_VAL_BATT_TSECS     10  // 1 sec
-#define EEPROM_VAL_BATTA_VOLTS    135 // 13,5
+#define EEPROM_VAL_BATTA_VOLTS    140 // 14,0
 #define EEPROM_VAL_BATTA_MIN      30  // 30 Min
-#define EEPROM_VAL_BATTB_VOLTS    135 // 13,5
+#define EEPROM_VAL_BATTB_VOLTS    140 // 14,0
 #define EEPROM_VAL_BATTB_MIN      30  // 30 Min
-#define EEPROM_VAL_BATTC_VOLTS    135 // 13,5
+#define EEPROM_VAL_BATTC_VOLTS    140 // 14,0
 #define EEPROM_VAL_BATTC_MIN      30  // 30 Min
 
 #define EEPROM_VAL_LOGIC_INS      0
 #define EEPROM_VAL_LOGIC_OUTS     1
 
-#define EEPROM_VAL_ADC_M          15500 //3222  // 3300V / 1024
+#define EEPROM_VAL_ADC_M          153 //15 V a 1024
 #define EEPROM_VAL_ADC_B          0
 #define EEPROM_VAL_ADC_P          10000
 #define EEPROM_VAL_ADC_S          0   // +/-  1/0

@@ -2,6 +2,7 @@
   Control de Luz Interior para Campo de Vuelo Sesma.
   Creado  08/01/2019
   Modif   11/02/2019
+  Modif   15/03/2022
 
   Salidas
   -------
@@ -67,15 +68,14 @@
 #define PULSO_LED_CORTO     50  // x10ms
 #define PULSO_LED_LARGO     200 // x10ms
 
-//#define TIMER_LUZ_ON_SEC  900  // 15x60 15 minutos 
-#define TIMER_LUZ_ON_SEC    15   // (Variable a cambiar)
-#define TIMER_INIT_SEC      10   // (Variable a cambiar)
+#define TIMER_LUZ_ON_SEC      900  // 15x60 15 minutos 
+//#define TIMER_LUZ_ON_SEC    15   // (Variable a cambiar)
+#define TIMER_INIT_SEC        10   // (Variable a cambiar)
 
 // Estados principales...
-#define STATE_INIT          0
-#define STATE_STANDBY       1
-#define STATE_LUZ_ON        2
-#define STATE_LUZ_OFF       3
+#define STATE_INIT          1
+#define STATE_STANDBY       2
+#define STATE_LUZ_ON        3
 
 #define GENERATOR_DETEC     HIGH
 
@@ -87,10 +87,12 @@ int   PulsadorDigInStatus = 0;
 int   PulsadorDigInStatus_ant = 0;
 int   PulsadorDigInCounter = 0;
 int   PulsadorPulsacion = 0;
+int   pulsadorInState;
 
 int   GeneradorDigInStatus = 0;
 int   GeneradorDigInStatus_ant = 0;
 int   GeneradorDigInCounter = 0;
+int   generadorInState;
 
 // Control del Led...
 bool  LedSNextState = false;
@@ -161,13 +163,14 @@ void setup() {
 
   #if (SERIAL_DEBUG == 1)
   Serial.begin(9600);
+  Serial.println(">> Starting !!!");
   #endif
 
   _InitDigitalOutputs();
   _InitDigitalInputs();
   _InitLeds();
 
-  ControlState = STATE_INIT; //STATE_STANDBY;
+  ControlState = STATE_INIT;
 }
 
 ////////////////////////////////////////
@@ -175,9 +178,6 @@ void setup() {
 // con filtro software antirebotes    //
 ////////////////////////////////////////
 void _ReadDigitalInputs() {
-
-  int pulsadorInState;
-  int generadorInState;
   
   // Leemos las entradas digitales...
   pulsadorInState   = digitalRead(IN_PULSADOR);
@@ -232,16 +232,6 @@ void _ReadDigitalInputs() {
   if (GeneradorDigInCounter > AUTOMAN_FILTRO)
     GeneradorDigInStatus = generadorInState;   // Actualizamos la lectura de la entrada...
 
-  #if (SERIAL_DEBUG == 1)
-  if (DebugCounter == SERIAL_DEBUG_TIMER)
-  {
-    if (GeneradorDigInStatus == GENERATOR_DETEC)
-      Serial.println("*** Generador On ***");
-    else
-      Serial.println("*** Generador Off ***");
-  }
-  #endif
-
   // Almacenamos el valor anterior...
   PulsadorDigInStatus_ant  = pulsadorInState;
   GeneradorDigInStatus_ant = generadorInState;
@@ -270,7 +260,7 @@ void _LedSPulso (int led_out, int pulsos, int pulso_corto, int pulso_largo) {
   {
     LedSCounter = 0;
     
-    if (LedSPulsos < 2*pulsos)
+    if (LedSPulsos < pulsos)
     {
       LedSDuration = pulso_corto;
       LedSPulsos++;
@@ -305,10 +295,11 @@ void _StatusControl(void) {
   switch (ControlState) {
 
     case STATE_INIT:
+      OutLuz   = OUT_ON;
 
       if (TimeControlSec > TIMER_INIT_SEC)
       {
-        ControlState = STATE_LUZ_ON; // STATE_STANDBY;
+        ControlState = STATE_LUZ_ON;
         TimeControlSec = 0;
       }
       
@@ -320,12 +311,10 @@ void _StatusControl(void) {
       LedStatePulse = 1;
 
       // Si se pulsa el pulsador...
-      if (PulsadorPulsacion != NO_PULSACION)
+      if ((PulsadorPulsacion == PULSACION_LARGA) || (PulsadorPulsacion == PULSACION_CORTA))
       {
         TimeControlSec = 0;
         ControlState = STATE_LUZ_ON;
-
-        //LedStatePulse = 4;
       }
     
       break;
@@ -346,7 +335,7 @@ void _StatusControl(void) {
         LedStatePulse = 8;
 
       // Si se pulsa el pulsador...
-      if (PulsadorPulsacion != NO_PULSACION)
+      if ((PulsadorPulsacion == PULSACION_LARGA) || (PulsadorPulsacion == PULSACION_CORTA))
       {
         TimeControlSec = 0;
         ControlState = STATE_STANDBY;
@@ -374,11 +363,32 @@ void loop() {
   _LedSPulso(LED, LedStatePulse, PULSO_LED_CORTO, PULSO_LED_LARGO);
 
   #if (SERIAL_DEBUG == 1)
+  if (DebugCounter == SERIAL_DEBUG_TIMER)
+  {
+    Serial.print("Control State: "); Serial.println(ControlState);
+
+    if (OutLuz == OUT_ON)
+      Serial.println("  -> Out Luz: ON");
+    else
+      Serial.println("  -> Out Luz: OFF");
+
+    if (pulsadorInState == 0)
+      Serial.println("  <- In Puls: 0");
+    else
+      Serial.println("  <- In Puls: 1");
+
+    if (GeneradorDigInStatus == GENERATOR_DETEC)
+      Serial.println("  <- In Gen: ON");
+    else
+      Serial.println("  <- In Gen: OFF");
+
+    Serial.println("------------------");
+  }
+
   DebugCounter++;
   if (DebugCounter > SERIAL_DEBUG_TIMER)
-  {
     DebugCounter = 0;
-  }
+
   #endif
 
   // Reset de Pulsaciones...
@@ -397,4 +407,3 @@ void loop() {
   // Ponemos un retado de 10 milisegundos en cada iteración.
   delay(10);
 }
-

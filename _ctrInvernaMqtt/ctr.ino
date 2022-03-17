@@ -25,21 +25,17 @@ void _CtrLoop(void)
   {
     case STATE_STANDBY:
       ControlTick = millis();
+      
+      // Control de Temperatura
+      
       break;
 
-    case STATE_GEN_PULSE:
-      if (millis() - ControlTick >= (cfgRemotePulsTick*100))
-        ControlState = STATE_STANDBY;      
-      break;
-
-    case STATE_STOP_PULSE:
-      if (millis() - ControlTick >= (cfgRemotePulsTick*100))
-        ControlState = STATE_STANDBY;      
-
+    case STATE_TEMPHI:
+      //if (millis() - ControlTick >= (cfgRemotePulsTick*100))
+      //  ControlState = STATE_STANDBY;      
       break;
   }
   */
-
   // Fan
   switch (FanState)
   {

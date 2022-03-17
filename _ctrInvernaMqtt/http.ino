@@ -156,15 +156,19 @@ void _serveTimeSETTINGS()
   html = html + "<label> Entradas ON <input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgLogicOuts) + "\" name=\"cfgOuts\"/></label>";
   html = html + "</div>";
 
-  html = html + "<div class=\"section\"><span>3</span>vBat ADC: y = mx +/- b</div>";
+  html = html + "<div class=\"section\"><span>3</span>NTC:</div>";
   html = html + "<div class=\"inner-wrap\">";
-  html = html + "<label>ADC recta:m <input type=\"text\"  maxlength=\"16\" value=\"" + String((int)cfgADCm) + "\" name=\"rADCm\"/></label>";
-  html = html + "<label>ADC recta:b (/1000)<input type=\"text\"  maxlength=\"16\" value=\"" + String((int)cfgADCb) + "\" name=\"rADCb\"/></label>";
-  html = html + "<label>ADC recta:prscal <input type=\"text\"  maxlength=\"16\" value=\"" + String((int)cfgADCp) + "\" name=\"rADCp\"/></label>";
-  html = html + "<label>ADC signo (+/-  1/0)<input type=\"text\"  maxlength=\"16\" value=\"" + String((int)cfgADCs) + "\" name=\"rADCs\"/></label>";
-  html = html + "<label>ADC filtro (si/no 1/0)<input type=\"text\"  maxlength=\"16\" value=\"" + String((int)cfgADCf) + "\" name=\"rADCf\"/></label>";
+  html = html + "<label>NTC filtro (si/no 1/0)<input type=\"text\"  maxlength=\"16\" value=\"" + String((int)cfgADCf) + "\" name=\"rADCf\"/></label>";
   html = html + "</div>";
 
+  html = html + "<div class=\"section\"><span>4</span>Control</div>";
+  html = html + "<div class=\"inner-wrap\">";
+  html = html + "<label>Temp Alta (ºC)<input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgTempHi) + "\" name=\"tempHi\"/></label>";
+  html = html + "<label>Temp Baja (ºC)<input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgTempLo) + "\" name=\"tempLo\"/></label>";
+  html = html + "<label>Apertura (m)<input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgTimeOpenMin) + "\" name=\"timeOpenMin\"/></label>";
+  html = html + "<label>Cierre (m)<input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgTimeCloseMin) + "\" name=\"timeCloseMin\"/></label>";
+  html = html + "<label>Ciclo (m)<input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgTimeCicloMin) + "\" name=\"timeCicloMin\"/></label>";
+  html = html + "</div>";
   /*
   html = html + "<div class=\"section\"><span>5</span>Debug</div>";
   html = html + "<div class=\"inner-wrap\">";
@@ -203,11 +207,13 @@ void _setTimeSETTINGS()
   String cfgIns    = httpServer.arg("cfgIns");
   String cfgOuts   = httpServer.arg("cfgOuts");
   
-  String rADCm     = httpServer.arg("rADCm");
-  String rADCb     = httpServer.arg("rADCb");
-  String rADCp     = httpServer.arg("rADCp");
-  String rADCs     = httpServer.arg("rADCs");
   String rADCf     = httpServer.arg("rADCf");
+
+  String rTempHi       = httpServer.arg("tempHi");
+  String rTempLo       = httpServer.arg("tempLo");
+  String rTimeOpenMin  = httpServer.arg("timeOpenMin");
+  String rTimeCloseMin = httpServer.arg("timeCloseMin");
+  String rTimeCicloMin = httpServer.arg("timeCicloMin");
   
   //String rdebugVal = httpServer.arg("tdebugVal");
   
@@ -223,12 +229,13 @@ void _setTimeSETTINGS()
       (cfgIns.length() == 0)    ||
       (cfgOuts.length() == 0)   ||
       
-      (rADCm.length() == 0)     ||
-      (rADCb.length() == 0)     ||
-      (rADCp.length() == 0)     ||
-      (rADCs.length() == 0)     ||
-      (rADCf.length() == 0))
-      //(rdebugVal.length() == 0))
+      (rADCf.length() == 0)     ||
+
+      (rTempHi.length() == 0)       ||
+      (rTempLo.length() == 0)       ||
+      (rTimeOpenMin.length() == 0)  ||
+      (rTimeCloseMin.length() == 0) ||
+      (rTimeCicloMin.length() == 0))
   {
     error = 1;  // falta un campo...
     #if (_HTTP_SERIAL_DEBUG_ == 1)
@@ -249,12 +256,14 @@ void _setTimeSETTINGS()
     cfgLogicIns = cfgIns.toInt();
     cfgLogicOuts = cfgOuts.toInt();
     
-    cfgADCm = rADCm.toInt();
-    cfgADCb = rADCb.toInt();
-    cfgADCp = rADCp.toInt();
-    cfgADCs = rADCs.toInt();
     cfgADCf = rADCf.toInt();
     
+    cfgTempHi = rTempHi.toInt();
+    cfgTempLo = rTempLo.toInt();
+    cfgTimeOpenMin = rTimeOpenMin.toInt();
+    cfgTimeCloseMin = rTimeCloseMin.toInt();
+    cfgTimeCicloMin = rTimeCicloMin.toInt();
+
     //DebugVal = rdebugVal.toInt();
     
     #if (_HTTP_SERIAL_DEBUG_ == 1)
@@ -268,11 +277,15 @@ void _setTimeSETTINGS()
     Serial.print("cfgLogic Ins: ");  Serial.println(cfgLogicIns);
     Serial.print("cfgLogic Outs: "); Serial.println(cfgLogicOuts);
 
-    Serial.print("ADC m: ");         Serial.print (cfgADCm);            Serial.println(" ");
-    Serial.print("ADC b: ");         Serial.print (cfgADCb);            Serial.println(" (/1000)");
-    Serial.print("ADC p: ");         Serial.print (cfgADCp);            Serial.println(" ");
-    Serial.print("ADC s: ");         Serial.print (cfgADCs);            Serial.println(" +/-  1/0");
+    // NTC Adc
     Serial.print("ADC f: ");         Serial.print (cfgADCf);            Serial.println(" si/no 1/0");
+
+    // Control
+    Serial.print("cfgTempHi: ");       Serial.print (cfgTempHi);        Serial.println(" ºC");
+    Serial.print("cfgTempLo: ");       Serial.print (cfgTempLo);        Serial.println(" ºC");
+    Serial.print("cfgTimeOpenMin: ");  Serial.print (cfgTimeOpenMin);   Serial.println(" min");
+    Serial.print("cfgTimeCloseMin: "); Serial.print (cfgTimeCloseMin);  Serial.println(" min");
+    Serial.print("cfgTimeCicloMin: "); Serial.print (cfgTimeCicloMin);  Serial.println(" min");
   
     //Serial.print("Debug: ");       Serial.print (DebugVal);           Serial.println(" ---");
     #endif   
@@ -288,21 +301,14 @@ void _setTimeSETTINGS()
     EEPROM.write(EEPROM_ADD_LOGIC_INS,  (byte)cfgLogicIns);
     EEPROM.write(EEPROM_ADD_LOGIC_OUTS, (byte)cfgLogicOuts);
     
-    eeprom_value_lo = cfgADCm & 0x00FF;
-    EEPROM.write(EEPROM_ADD_ADC_M_LO, eeprom_value_lo);
-    eeprom_value_hi = (cfgADCm & 0xFF00)>>8;
-    EEPROM.write(EEPROM_ADD_ADC_M_HI, eeprom_value_hi);
-    eeprom_value_lo = cfgADCb & 0x00FF;
-    EEPROM.write(EEPROM_ADD_ADC_B_LO, eeprom_value_lo);
-    eeprom_value_hi = (cfgADCb & 0xFF00)>>8;
-    EEPROM.write(EEPROM_ADD_ADC_B_HI, eeprom_value_hi);
-    eeprom_value_lo = cfgADCp & 0x00FF;
-    EEPROM.write(EEPROM_ADD_ADC_P_LO, eeprom_value_lo);
-    eeprom_value_hi = (cfgADCp & 0xFF00)>>8;
-    EEPROM.write(EEPROM_ADD_ADC_P_HI, eeprom_value_hi);
-    EEPROM.write(EEPROM_ADD_ADC_S,        (byte)cfgADCs);
-    EEPROM.write(EEPROM_ADD_ADC_F,        (byte)cfgADCf);
-    
+    EEPROM.write(EEPROM_ADD_ADC_F,      (byte)cfgADCf);
+
+    EEPROM.write(EEPROM_ADD_TEMP_HI,    (byte)cfgTempHi);
+    EEPROM.write(EEPROM_ADD_TEMP_LO,    (byte)cfgTempLo);
+    EEPROM.write(EEPROM_ADD_OPEN_MIN,   (byte)cfgTimeOpenMin);
+    EEPROM.write(EEPROM_ADD_CLOSE_MIN,  (byte)cfgTimeCloseMin);
+    EEPROM.write(EEPROM_ADD_CICLO_MIN,  (byte)cfgTimeCicloMin);
+   
     //EEPROM.write(EEPROM_ADD_DEBUG,      (byte)DebugVal);
 
     EEPROM.commit();    //Store data to EEPROM
@@ -766,13 +772,13 @@ void _readINS()
   
   // ADC
   html = html + "<tr>";
-  html = html + "<td>Analog In (Dig)</td>";
-  html = html + "<td>" + String(VbattInADC) + "</td>";
+  html = html + "<td>Ntc In (Dig)</td>";
+  html = html + "<td>" + String(NtcInADC) + "</td>";
   html = html + "</tr>";
   
   html = html + "<tr>";
-  html = html + "<td>Analog In (ºC)</td>";
-  html = html + "<td>" + String(VbattIn) + "</td>";
+  html = html + "<td>Ntc In (ºC)</td>";
+  html = html + "<td>" + String(NtcIn) + "</td>";
   html = html + "</tr>";
   
   html = html + "</table>";

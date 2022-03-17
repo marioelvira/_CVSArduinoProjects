@@ -1,2 +1,2 @@
 #define PROJECT     "INV MQTT+"
-#define FW_VERSION  "0.1.2"
+#define FW_VERSION  "1.0.0"

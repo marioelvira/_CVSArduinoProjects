@@ -103,11 +103,11 @@ void _TimeLoop(void)
     else
      Serial.println("AUX2: OFF");
      
-    _ADCLoop();
-    Serial.print("Analog In Dig: ");
-    Serial.println(VbattInADC);
-    Serial.print("Analog In: ");
-    Serial.println(VbattIn);    
+    _NTCLoop();
+    Serial.print("NTC In Dig: ");
+    Serial.println(NtcInADC);
+    Serial.print("NTC In: ");
+    Serial.println(NtcIn);    
 
     Serial.println("<><><><><><><>");
     Serial.println(" ");

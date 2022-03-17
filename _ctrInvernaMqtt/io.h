@@ -13,7 +13,7 @@ extern "C" {
 
 /*
  *                         ----------
- *                    A0 -| A0    D0 |- GPIO16 -> FAN
+ *              NTC - A0 -| A0    D0 |- GPIO16 -> FAN
  *                    G  -| G     D1 |- GPIO5  -> CLOSE
  *                    VU -| VU    D2 |- GPIO4  -> OPEN
  *                 GPIO9 -| S3    D3 |- GPIO0  -> PUMP
@@ -32,7 +32,7 @@ extern "C" {
  */
 
 // PIN definition
-#define PIN_VBATT_IN      A0  // Entrada
+#define PIN_NTC_IN      A0  // Entrada
 
 #define PIN_FAN           16
 #define PIN_CLOSE         5
@@ -51,8 +51,6 @@ extern "C" {
 #define PIN_OUT_ON        1
 #define PIN_OUT_OFF       0
 
-#define VBATT_ARRAY_SIZE  5
-
 // Pull-up INs
 #define PIN_IN_OFF        0   
 #define PIN_IN_ON         1
@@ -64,9 +62,13 @@ extern "C" {
 #define OUT_OFF           0
 #define OUT_ON            1
 
-//#define VBATT_DIG_OFFSET        0     // Digital Offset
-//#define VBATT_DIG_EOS           1024  // Digital End Of Scale
-//#define VBATT_ANA_EOS           24    // Analog Enf Of Scale
+// Pulsación
+#define NO_PULSACION        0   // x10ms
+#define PULSACION_OK        75  // x10ms
+
+#define FLANCO_UP     0
+#define FLANCO_DOWN   1
+#define FLANCO        FLANCO_UP  // FLANCO_DOWN
 
 #endif // _IO_H_
 

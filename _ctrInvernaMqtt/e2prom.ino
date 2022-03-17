@@ -100,21 +100,14 @@ void _readCONFIG (void)
     EEPROM.write(EEPROM_ADD_LOGIC_INS,  EEPROM_VAL_LOGIC_INS);
     EEPROM.write(EEPROM_ADD_LOGIC_OUTS, EEPROM_VAL_LOGIC_OUTS);
     
-    eeprom_value_lo = EEPROM_VAL_ADC_M & 0x00FF;
-    EEPROM.write(EEPROM_ADD_ADC_M_LO, eeprom_value_lo);
-    eeprom_value_hi = (EEPROM_VAL_ADC_M & 0xFF00)>>8;
-    EEPROM.write(EEPROM_ADD_ADC_M_HI, eeprom_value_hi);
-    eeprom_value_lo = EEPROM_VAL_ADC_B & 0x00FF;
-    EEPROM.write(EEPROM_ADD_ADC_B_LO, eeprom_value_lo);
-    eeprom_value_hi = (EEPROM_VAL_ADC_B & 0xFF00)>>8;
-    EEPROM.write(EEPROM_ADD_ADC_B_HI, eeprom_value_hi);
-    eeprom_value_lo = EEPROM_VAL_ADC_P & 0x00FF;
-    EEPROM.write(EEPROM_ADD_ADC_P_LO, eeprom_value_lo);
-    eeprom_value_hi = (EEPROM_VAL_ADC_P & 0xFF00)>>8;
-    EEPROM.write(EEPROM_ADD_ADC_P_HI, eeprom_value_hi);   
-    EEPROM.write(EEPROM_ADD_ADC_S,      EEPROM_VAL_ADC_S);
     EEPROM.write(EEPROM_ADD_ADC_F,      EEPROM_VAL_ADC_F);
-    
+
+    EEPROM.write(EEPROM_ADD_TEMP_HI,    EEPROM_VAL_TEMP_HI);
+    EEPROM.write(EEPROM_ADD_TEMP_LO,    EEPROM_VAL_TEMP_LO);
+    EEPROM.write(EEPROM_ADD_OPEN_MIN,   EEPROM_VAL_OPEN_MIN);
+    EEPROM.write(EEPROM_ADD_CLOSE_MIN,  EEPROM_VAL_CLOSE_MIN);
+    EEPROM.write(EEPROM_ADD_CICLO_MIN,  EEPROM_VAL_CICLO_MIN);
+
     //EEPROM.write(EEPROM_ADD_DEBUG,    EEPROM_VAL_DEBUG);
     
     EEPROM.commit();    //Store data to EEPROM
@@ -224,18 +217,14 @@ void _readCONFIG (void)
   cfgLogicIns       = (int)EEPROM.read(EEPROM_ADD_LOGIC_INS);
   cfgLogicOuts      = (int)EEPROM.read(EEPROM_ADD_LOGIC_OUTS);
 
-  eeprom_value_hi   = (int)EEPROM.read(EEPROM_ADD_ADC_M_HI);
-  eeprom_value_lo   = (int)EEPROM.read(EEPROM_ADD_ADC_M_LO);   
-  cfgADCm           = (int)((eeprom_value_hi & 0x00FF)<<8)|(eeprom_value_lo & 0x00FF);
-  eeprom_value_hi   = (int)EEPROM.read(EEPROM_ADD_ADC_B_HI);
-  eeprom_value_lo   = (int)EEPROM.read(EEPROM_ADD_ADC_B_LO);   
-  cfgADCb           = (int)((eeprom_value_hi & 0x00FF)<<8)|(eeprom_value_lo & 0x00FF);
-  eeprom_value_hi   = (int)EEPROM.read(EEPROM_ADD_ADC_P_HI);
-  eeprom_value_lo   = (int)EEPROM.read(EEPROM_ADD_ADC_P_LO);   
-  cfgADCp           = (int)((eeprom_value_hi & 0x00FF)<<8)|(eeprom_value_lo & 0x00FF); 
-  cfgADCs           = (int)EEPROM.read(EEPROM_ADD_ADC_S);
   cfgADCf           = (int)EEPROM.read(EEPROM_ADD_ADC_F);
-  
+
+  cfgTempHi         = (int)EEPROM.read(EEPROM_ADD_TEMP_HI);
+  cfgTempLo         = (int)EEPROM.read(EEPROM_ADD_TEMP_LO);
+  cfgTimeOpenMin    = (int)EEPROM.read(EEPROM_ADD_OPEN_MIN);
+  cfgTimeCloseMin   = (int)EEPROM.read(EEPROM_ADD_CLOSE_MIN);
+  cfgTimeCicloMin   = (int)EEPROM.read(EEPROM_ADD_CICLO_MIN);
+
   //DebugVal        = (int)EEPROM.read(EEPROM_ADD_DEBUG);
   
   #if (_EEPROM_SERIAL_DEBUG_ == 1)
@@ -249,11 +238,15 @@ void _readCONFIG (void)
   Serial.print("Logic Ins: ");     Serial.println(cfgLogicIns);
   Serial.print("Logic Outs: ");    Serial.println(cfgLogicOuts);
 
-  Serial.print("ADC m: ");         Serial.print (cfgADCm);            Serial.println(" ");
-  Serial.print("ADC b: ");         Serial.print (cfgADCb);            Serial.println(" (/1000)");
-  Serial.print("ADC p: ");         Serial.print (cfgADCp);            Serial.println(" ");
-  Serial.print("ADC s: ");         Serial.print (cfgADCs);            Serial.println(" +/-  1/0");
+  // NTC Adc
   Serial.print("ADC f: ");         Serial.print (cfgADCf);            Serial.println(" si/no 1/0");
+
+  // Control
+  Serial.print("cfgTempHi: ");       Serial.print (cfgTempHi);        Serial.println(" ºC");
+  Serial.print("cfgTempLo: ");       Serial.print (cfgTempLo);        Serial.println(" ºC");
+  Serial.print("cfgTimeOpenMin: ");  Serial.print (cfgTimeOpenMin);   Serial.println(" min");
+  Serial.print("cfgTimeCloseMin: "); Serial.print (cfgTimeCloseMin);  Serial.println(" min");
+  Serial.print("cfgTimeCicloMin: "); Serial.print (cfgTimeCicloMin);  Serial.println(" min");
   
   //Serial.print("Debug: ");       Serial.print (DebugVal);           Serial.println(" ---");
   #endif

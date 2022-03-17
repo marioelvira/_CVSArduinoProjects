@@ -1,4 +1,4 @@
-  #include <ESP8266WiFi.h>
+#include <ESP8266WiFi.h>
 #include <ESP8266WebServer.h>
 #include <PubSubClient.h>
 #include <EEPROM.h>
@@ -10,6 +10,7 @@
 #include "io.h"
 #include "ip.h"
 #include "main.h"
+#include "ntc.h"
 #include "ctr.h"
 #include "wifi.h"
 #include "MQTT.h"
@@ -24,9 +25,6 @@ const char* FW_Version = FW_VERSION;
 ////////////////////
 // DIO definition //
 ////////////////////
-int   InClose;
-int   InOpen;
-
 int   OutFan;
 int   OutClose;
 int   OutOpen;
@@ -37,13 +35,32 @@ int   OutIrri;
 int   OutAux1;
 int   OutAux2;
 
-////////////
-// Analog //
-////////////
-int    VbattInADC;
-int    VbattInArray[VBATT_ARRAY_SIZE];
-int    VbattInPointer;
-float  VbattIn;
+int   InOpen = 0;
+int   InOpen_ant = 0;
+int   InOpenCounter = 0;
+int   InOpenState = 0;
+
+int   InClose = 0;
+int   InClose_ant = 0;
+int   InCloseCounter = 0;
+int   InCloseState = 0;
+
+////////////////
+// NTC Analog //
+////////////////
+int    NtcInADC;
+int    NtcInArray[NTC_ARRAY_SIZE];
+int    NtcInPointer;
+float  NtcIn;
+
+// NTC constantes
+float Rc = 10000; // 10k
+float Vcc = 3.3;  // Vcc
+
+float A = 1.11492089e-3;
+float B = 2.372075385e-4;
+float C = 6.954079529e-8;
+float K = 2.5;    // factor de disipacion en mW/C
 
 ///////////
 // Wi-Fi //
@@ -163,13 +180,13 @@ int     cfgAux2Tick;
 int     cfgLogicIns;
 int     cfgLogicOuts;
 
-int     cfgADCm;
-int     cfgADCb;
-int     cfgADCp;
-int     cfgADCs;
 int     cfgADCf;
 
-//int     DebugVal = 0;
+int     cfgTempHi;
+int     cfgTempLo;
+int     cfgTimeOpenMin;
+int     cfgTimeCloseMin;
+int     cfgTimeCicloMin;
 
 ///////////////
 // PIN steup //
@@ -217,8 +234,8 @@ void _PINSetup(void)
   //-----//
   // INS //
   //-----//
-  pinMode(PIN_INCLOSE, INPUT);     InClose = IO_OFF;
-  pinMode(PIN_INOPEN, INPUT);      InOpen = IO_OFF;
+  pinMode(PIN_INOPEN, INPUT);
+  pinMode(PIN_INCLOSE, INPUT);
 }
 
 //============//
@@ -241,7 +258,7 @@ void setup(void)
   // IO setup
   _PINSetup();
   _IOSetup();
-  _ADCSetup();
+  _NTCSetup();
 
   // Wi-Fi setup
   _WifiSetup();
@@ -317,16 +334,15 @@ void _PINLoop()
   //-----//
   // INS //
   //-----//
-  if (digitalRead(PIN_INCLOSE) == PIN_IN_ON /*cfgLogicIns*/)
-    InClose = IO_ON;
-  else
-    InClose = IO_OFF;
-
-  if (digitalRead(PIN_INOPEN) == PIN_IN_ON /*cfgLogicIns*/)
-    InOpen = IO_ON;
-  else
+  if (digitalRead(PIN_INOPEN) == PIN_IN_OFF /*cfgLogicIns*/)
     InOpen = IO_OFF;
+  else
+    InOpen = IO_ON;
 
+  if (digitalRead(PIN_INCLOSE) == PIN_IN_OFF /*cfgLogicIns*/)
+    InClose = IO_OFF;
+  else
+    InClose = IO_ON;
 }
 
 //===========//
@@ -335,7 +351,7 @@ void _PINLoop()
 void loop()
 {
   _PINLoop();
-  //_IOLoop();
+  _IOLoop();
 
   _WifiLoop();
   _WifiLedLoop();

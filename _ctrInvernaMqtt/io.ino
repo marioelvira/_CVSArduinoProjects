@@ -1,48 +1,68 @@
 
-//////////////////////
-// IO state machine //
-//////////////////////
+//////////////
+// IO setup //
+//////////////
 void _IOSetup()
 {  
-}
+  InOpen_ant = InOpen;
+  InOpenCounter = 0;
 
-void _ADCSetup()
-{
-  VbattInADC = 0;
-
-  for (int i = 0; i < VBATT_ARRAY_SIZE; i++)
-    VbattInArray[i] = 0;
-
-  VbattInPointer = 0;
+  InClose_ant = InClose;
+  InCloseCounter = 0;
 }
 
 //////////////////////
 // IO state machine //
 //////////////////////
-//void _IOLoop(){}
-
-void _ADCLoop()
-{
-  if (cfgADCf == 1)
+void _IOLoop()
+{ 
+  // In Start...
+  if (InOpen_ant == InOpen)
+    InOpenCounter++;
+  else
   {
-    int   vbattAcc = 0;
-    
-    VbattInArray[VbattInPointer] = analogRead(PIN_VBATT_IN);
-    VbattInPointer++;
-    if (VbattInPointer >= VBATT_ARRAY_SIZE)
-      VbattInPointer = 0;
-  
-    // Calculamos la media del Array...
-    for (int i = 0; i < VBATT_ARRAY_SIZE; i++)
-      vbattAcc = vbattAcc + VbattInArray[i];
-    
-    VbattInADC = vbattAcc/VBATT_ARRAY_SIZE;
-  }
-  else
-    VbattInADC = analogRead(PIN_VBATT_IN);
+    // Si detectamos un flanco ...
+    if (InOpen_ant == FLANCO)
+    {
+      if (InOpenCounter > PULSACION_OK)
+        InOpenState = PULSACION_OK;
 
-  if (cfgADCs == 0)
-    VbattIn = (float)VbattInADC*((float)cfgADCm)/(float)cfgADCp - (float)cfgADCb/1000;
+      #if (_PULS_SERIAL_DEBUG_ == 1)
+      if (InOpenState == PULSACION_OK)
+        Serial.println("Open -> Pulsacion OK");
+      else
+        Serial.println("Open -> Error Pulsacion");
+      #endif
+    }
+
+    InOpenCounter = 0;
+  }
+
+  // In end...
+  if (InClose_ant == InClose)
+    InCloseCounter++; // Incrementamos el contador.
   else
-    VbattIn = (float)VbattInADC*((float)cfgADCm)/(float)cfgADCp + (float)cfgADCb/1000;
+  {
+    // Si detectamos un flanco ...
+    if (InClose_ant == FLANCO)
+    {
+      if (InCloseCounter > PULSACION_OK)
+      {
+        InCloseState = PULSACION_OK;
+      }
+
+      #if (_PULS_SERIAL_DEBUG_ == 1)
+      if (InCloseState == PULSACION_OK)
+        Serial.println("Close -> Pulsacion OK");
+      else
+        Serial.println("Close -> Error Pulsacion");
+      #endif
+    }
+
+    InCloseCounter = 0;
+  }
+
+  // Almacenamos el valor anterior...
+  InOpen_ant  = InOpen;
+  InClose_ant = InClose;
 }

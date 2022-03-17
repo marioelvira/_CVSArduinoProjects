@@ -49,21 +49,18 @@ extern "C" {
 #define EEPROM_ADD_LOGIC_INS      0x77
 #define EEPROM_ADD_LOGIC_OUTS     0x78
 
-#define EEPROM_ADD_ADC_M_LO       0x79
-#define EEPROM_ADD_ADC_M_HI       0x7A
-#define EEPROM_ADD_ADC_B_LO       0x7B
-#define EEPROM_ADD_ADC_B_HI       0x7C
-#define EEPROM_ADD_ADC_P_LO       0x7D
-#define EEPROM_ADD_ADC_P_HI       0x7E
-#define EEPROM_ADD_ADC_S          0x7F
-#define EEPROM_ADD_ADC_F          0x80
+#define EEPROM_ADD_ADC_F          0x79
 
-#define EEPROM_ADD_DEBUG          0x81
+#define EEPROM_ADD_TEMP_HI        0x80
+#define EEPROM_ADD_TEMP_LO        0x81
+#define EEPROM_ADD_OPEN_MIN       0x82
+#define EEPROM_ADD_CLOSE_MIN      0x83
+#define EEPROM_ADD_CICLO_MIN      0x84
 
 //#define EEPROM_ADD_MAX          0xFA // 250
 
 // Values
-#define EEPROM_VAL_OK             0xA3
+#define EEPROM_VAL_OK             0xA4
 
 #define EEPROM_VAL_IP_MODE        DHCP_MODE
 #define EEPROM_VAL_IP1            192
@@ -96,13 +93,15 @@ extern "C" {
 #define EEPROM_VAL_LOGIC_INS      0
 #define EEPROM_VAL_LOGIC_OUTS     1
 
-#define EEPROM_VAL_ADC_M          153
-#define EEPROM_VAL_ADC_B          0
-#define EEPROM_VAL_ADC_P          10000
-#define EEPROM_VAL_ADC_S          0   // +/-  1/0
 #define EEPROM_VAL_ADC_F          0   // si/no 1/0
 
-//#define EEPROM_VAL_DEBUG          0
+#define EEPROM_VAL_TEMP_HI        30
+#define EEPROM_VAL_TEMP_LO        20
+#define EEPROM_VAL_OPEN_MIN       1
+#define EEPROM_VAL_CLOSE_MIN      1
+#define EEPROM_VAL_CICLO_MIN      8
+
+//#define EEPROM_VAL_DEBUG        0
 
 #endif // _E2PROM_H_
 

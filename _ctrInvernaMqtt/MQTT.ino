@@ -251,14 +251,14 @@ void _MQTTSend(void)
   str = str + String(freeRam);
   str = str + ",\n";
 
-  // Analog
+  // NTC Analog
   str = str + "\"analog\":";
-  str = str + String(VbattIn);
+  str = str + String(NtcIn);
   str = str + ",\n";
 
-  // Analog
+  // NTC Analog ADC
   str = str + "\"analogADC\":";
-  str = str + String(VbattInADC);
+  str = str + String(NtcInADC);
   str = str + ",\n";
 
   // fanState

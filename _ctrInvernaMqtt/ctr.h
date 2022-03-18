@@ -14,6 +14,11 @@ extern "C" {
 #define STATE_STANDBY         0
 #define STATE_TEMPHI          1
 
+// Estado de Ventana
+#define STATE_WSTANDBY        0
+#define STATE_WCLOSING        1
+#define STATE_WOPENING        2
+
 #define STATE_OUT_ON          1
 
 #endif // _CTR_H_

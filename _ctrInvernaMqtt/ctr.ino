@@ -20,22 +20,37 @@ void _CtrSetup(void)
 ///////////////////////
 void _CtrLoop(void)
 {
-  /*
   switch (ControlState)
   {
     case STATE_STANDBY:
-      ControlTick = millis();
+      //ControlTick = millis();
       
       // Control de Temperatura
+      if (NtcIn >= cfgTempHi)
+        ControlState = STATE_TEMPHI;
+
+      // Control entradas 
+      _IOPulsLoop();
       
       break;
 
     case STATE_TEMPHI:
       //if (millis() - ControlTick >= (cfgRemotePulsTick*100))
-      //  ControlState = STATE_STANDBY;      
+      //  ControlState = STATE_STANDBY;
+
+      // Control de Temperatura
+      if (NtcIn <= cfgTempLo)
+        ControlState = STATE_STANDBY;
+        
       break;
   }
-  */
+
+  _CtrOutsLoop();
+  _CtrWindowLoop();
+}
+
+void _CtrOutsLoop(void)
+{
   // Fan
   switch (FanState)
   {
@@ -113,6 +128,32 @@ void _CtrLoop(void)
       if (millis() - Aux2Tick >= (cfgAux2Tick*cfgScaleMin*60000))
         Aux2State = STATE_STANDBY;
       
+      break;
+  }
+}
+
+void _CtrWindowLoop(void)
+{
+  switch (windowState)
+  {
+    case STATE_WSTANDBY:
+      OutClose = OUT_OFF;
+      OutOpen = OUT_OFF;
+      windowControlTick = millis();
+      break;
+
+    case STATE_WCLOSING:
+      OutClose = OUT_ON;
+      OutOpen = OUT_OFF;
+      if (millis() - windowControlTick >= (cfgTimeCloseMin*60000))
+        windowState = STATE_WSTANDBY;
+      break;
+      
+    case STATE_WOPENING:
+      OutClose = OUT_OFF;
+      OutOpen = OUT_ON;
+      if (millis() - windowControlTick >= (cfgTimeOpenMin*60000))
+        windowState = STATE_WSTANDBY;
       break;
   }
 }

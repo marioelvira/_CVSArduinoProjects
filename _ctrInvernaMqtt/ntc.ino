@@ -17,7 +17,7 @@ void _NTCSetup()
 //////////////////////
 void _NTCLoop()
 {
-  float V, R, logR, R_th, kelvin, celsius;
+  float V, R, logR, R_th, kelvin;
 
   if (cfgADCf == 1)
   {
@@ -47,5 +47,5 @@ void _NTCLoop()
   // Aprox Steinhart-Hart
   R_th = 1.0 / (A + B*logR + C*logR*logR*logR);
   kelvin = R_th - V*V/(K * R)*1000;
-  celsius = kelvin - 273.15;
+  NtcIn = kelvin - 273.15;
 }

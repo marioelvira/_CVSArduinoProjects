@@ -261,6 +261,15 @@ void _MQTTSend(void)
   str = str + String(NtcInADC);
   str = str + ",\n";
 
+  // winState
+  if (windowState == STATE_WCLOSING)
+    str = str + "\"winState\":1";
+  else if (windowState == STATE_WOPENING)
+    str = str + "\"winState\":2";
+  else
+    str = str + "\"winState\":0";
+  str = str + ",\n";
+  
   // fanState
   if (FanState == STATE_STANDBY)
     str = str + "\"fanState\":0";

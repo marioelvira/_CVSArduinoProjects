@@ -21,9 +21,9 @@ void _TimeLoop(void)
 {
   if (millis() - timeTick >= 1000)
   {
-    if (TimeControlSec != 0)
-      TimeControlSec--;
-    
+    //if (TimeControlSec != 0)
+    //  TimeControlSec--;
+
     timeSec++;
     if (timeSec >= 60)
     {
@@ -62,12 +62,14 @@ void _TimeLoop(void)
     
     Serial.print("Control Status: ");
     Serial.println(ControlState);  
-    Serial.println("---------------");
+
+    Serial.print("Window Status: ");
+    Serial.println(windowState);
 
     Serial.print("Wi-Fi Status: ");
     Serial.println(wifiStatus);  
     Serial.println("---------------");
-        
+
     if (OutOpen == OUT_ON)
      Serial.println("OutOpen: ON");
     else

@@ -755,7 +755,7 @@ void _readINS()
 
   // INs
   html = html + "<tr>";
-  html = html + "<td>Open In</td>";
+  html = html + "<td>In Open</td>";
   if (InOpen == IO_OFF)
     html = html + "<td><font style=\"color:grey\">OFF</font></td>";
   else
@@ -763,7 +763,7 @@ void _readINS()
   html = html + "</tr>";
 
   html = html + "<tr>";
-  html = html + "<td>Close In</td>";
+  html = html + "<td>In Close</td>";
   if (InClose == IO_OFF)
     html = html + "<td><font style=\"color:grey\">OFF</font></td>";
   else
@@ -795,6 +795,16 @@ void _readOUTS()
   html = html + "<tr>";
   html = html + "<td>Control State </td>";
   html = html + "<td>" + String(ControlState) + "</td>";
+  html = html + "</tr>";
+
+  html = html + "<tr>";
+  html = html + "<td>Ventana State </td>";
+  if (windowState == STATE_WCLOSING)
+    html = html + "<td><font style=\"color:green\">Cerrando</font></td>";
+  else if (windowState == STATE_WOPENING)
+    html = html + "<td><font style=\"color:blue\">Abriendo</font></td>";
+  else
+    html = html + "<td><font style=\"color:grey\">OFF</font></td>";
   html = html + "</tr>";
 
   html = html + "<tr>";

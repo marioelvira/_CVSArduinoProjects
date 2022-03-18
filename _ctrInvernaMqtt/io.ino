@@ -66,3 +66,43 @@ void _IOLoop()
   InOpen_ant  = InOpen;
   InClose_ant = InClose;
 }
+
+void _IOPulsLoop(void) {
+
+  // Si se pulsa Open...
+  if (InOpenState == PULSACION_OK)
+  {
+    #if (_PULS_SERIAL_DEBUG_ == 1)
+    Serial.println(">>>>>>>>>>>>>>>>>>>>>>>>>>> Puls Open");
+    #endif
+    
+    // Solo si NO estamos abriendo...
+    if (windowState != STATE_WOPENING)
+    {
+      #if (_PULS_SERIAL_DEBUG_ == 1)
+      Serial.println(">>>>>>>>>>>>>>>>>>>>>>>>>>> Opening");
+      #endif
+      windowState = STATE_WOPENING;
+    }
+  }
+
+  // Si se pulsa Close...
+  if (InCloseState == PULSACION_OK)
+  {
+    #if (_PULS_SERIAL_DEBUG_ == 1)
+    Serial.println(">>>>>>>>>>>>>>>>>>>>>>>>>>> Puls Close");
+    #endif
+    
+    // Solo si NO estamos cerrando...
+    if (windowState != STATE_WCLOSING)
+    {
+      #if (_PULS_SERIAL_DEBUG_ == 1)
+      Serial.println(">>>>>>>>>>>>>>>>>>>>>>>>>>> Closing");
+      #endif
+      windowState = STATE_WCLOSING;
+    }
+  }
+
+  InOpenState  = NO_PULSACION;
+  InCloseState = NO_PULSACION;
+}

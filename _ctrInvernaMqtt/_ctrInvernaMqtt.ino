@@ -102,7 +102,7 @@ byte mac[6];
 /////////////////
 // Device Name //
 /////////////////
-#define DEVICENAME      "rem8266"
+#define DEVICENAME      "inv8266"
 char* deviceName = DEVICENAME;
 
 /////////////////
@@ -142,7 +142,10 @@ int timeDay = 0;
 int   controlMode = MODE_AUTO;
 unsigned long ControlTick = 0;
 int   ControlState;
-int   TimeControlSec;
+//int TimeControlSec;
+
+int   windowState;
+unsigned long windowControlTick = 0;
 
 int   FanState;
 unsigned long FanTick = 0;

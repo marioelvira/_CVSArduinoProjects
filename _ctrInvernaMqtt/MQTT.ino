@@ -247,62 +247,123 @@ void _MQTTSend(void)
   str = str + "\",\n";
 
   // mRAM
-  str = str + "\"mRAM\":";
+  str = str + "\"mR\":";
   str = str + String(freeRam);
   str = str + ",\n";
 
   // NTC Analog
-  str = str + "\"analog\":";
+  str = str + "\"ntc\":";
   str = str + String(NtcIn);
   str = str + ",\n";
-
-  // NTC Analog ADC
-  str = str + "\"analogADC\":";
+  /*
+  // NTC ADC
+  str = str + "\"adc\":";
   str = str + String(NtcInADC);
   str = str + ",\n";
-
-  // winState
-  if (windowState == STATE_WCLOSING)
-    str = str + "\"winState\":1";
-  else if (windowState == STATE_WOPENING)
-    str = str + "\"winState\":2";
+  */
+  // Control
+  if (ControlState == STATE_TEMPHI)
+  {
+    if (openLoopState == OPEN_WINDOW)
+      str = str + "\"ctr\":\"Apertura\"";
+    else
+      str = str + "\"ctr\":\"Espera A\"";
+  }
+  else if (ControlState == STATE_TEMPLO)
+  {
+    if (closeLoopState == CLOSE_WINDOW)
+      str = str + "\"ctr\":\"Cierre\"";
+    else
+      str = str + "\"ctr\":\"Espera C\"";
+  }
   else
-    str = str + "\"winState\":0";
+    str = str + "\"ctr\":\"Standby\"";
+  str = str + ",\n";
+
+  // Control timer
+  if (ControlState == STATE_TEMPHI)
+    str = str + "\"tm\":" + String((millis() - openLoopTick)/1000);
+  else if (ControlState == STATE_TEMPLO)
+    str = str + "\"tm\":" + String((millis() - closeLoopTick)/1000);
+  else
+    str = str + "\"tm\":0";
+  str = str + ",\n";
+
+  // FC WClose
+  if (InWClose == IO_OFF)
+    str = str + "\"fcC\":0";
+  else
+    str = str + "\"fcC\":1";
   str = str + ",\n";
   
+  // FC WOpen
+  if (InWOpen == IO_OFF)
+    str = str + "\"fcO\":0";
+  else
+    str = str + "\"fcO\":1";
+  str = str + ",\n";
+
+  // In puslador Open
+  if (InOpen == IO_OFF)
+    str = str + "\"iO\":0";
+  else
+    str = str + "\"iO\":1";
+  str = str + ",\n";
+
+  // In puslador Close
+  if (InClose == IO_OFF)
+    str = str + "\"iC\":0";
+  else
+    str = str + "\"iC\":1";
+  str = str + ",\n";
+
+  // Out Close
+  if (OutClose == OUT_OFF)
+    str = str + "\"oC\":0";
+  else
+    str = str + "\"oC\":1";
+  str = str + ",\n";
+
+  // Out Open
+  if (OutOpen == OUT_OFF)
+    str = str + "\"oO\":0";
+  else
+    str = str + "\"oO\":1";
+  str = str + ",\n";
+
   // fanState
   if (FanState == STATE_STANDBY)
-    str = str + "\"fanState\":0";
+    str = str + "\"fa\":0";
   else
-    str = str + "\"fanState\":1";
+    str = str + "\"fa\":1";
   str = str + ",\n";
 
   // pumpState
   if (PumpState == STATE_STANDBY)
-    str = str + "\"pumpState\":0";
+    str = str + "\"bo\":0";
   else
-    str = str + "\"pumpState\":1";
+    str = str + "\"bo\":1";
   str = str + ",\n";
 
   // irriState
   if (IrriState == STATE_STANDBY)
-    str = str + "\"irriState\":0";
+    str = str + "\"ir\":0";
   else
-    str = str + "\"irriState\":1";
+    str = str + "\"ir\":1";
   str = str + ",\n";
 
   // aux1State
   if (Aux1State == STATE_STANDBY)
-    str = str + "\"aux1State\":0";
+    str = str + "\"a1\":0";
   else
-    str = str + "\"aux1State\":1";
+    str = str + "\"a1\":1";
   str = str + ",\n";
 
   // aux2State
   if (Aux2State == STATE_STANDBY)
-    str = str + "\"aux2State\":0";
+    str = str + "\"a2\":0";
   else
-    str = str + "\"aux2State\":1";
+    str = str + "\"a2\":1";
   str = str + ",\n";
 
   // ipAdd
@@ -321,7 +382,14 @@ void _MQTTSend(void)
     Serial.println("TOPIC_STATE publish was succeeded");
     Serial.println(spayload);
     #endif
-  }  
+  }
+  else
+  {
+    #if (_MQTT_SERIAL_DEBUG_ == 1)
+    Serial.println("TOPIC_STATE publish was error");
+    Serial.println(spayload);
+    #endif  
+  }
 }
 
 /////////////////

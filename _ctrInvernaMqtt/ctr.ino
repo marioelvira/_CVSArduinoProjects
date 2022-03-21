@@ -5,10 +5,16 @@
 void _CtrSetup(void)
 {
   ControlState = STATE_STANDBY;
-  ControlTick = millis();
+  //ControlTick = millis();
+  
+  // Reset states
+  closeLoopState = CLOSE_WINDOW;
+  closeLoopTick = millis();
+  openLoopState = OPEN_WINDOW;
+  openLoopTick = millis();
 
   // Outs  
-  FanState = STATE_STANDBY;
+  FanState  = STATE_STANDBY;
   PumpState = STATE_STANDBY;
   IrriState = STATE_STANDBY;
   Aux1State = STATE_STANDBY;
@@ -20,36 +26,122 @@ void _CtrSetup(void)
 ///////////////////////
 void _CtrLoop(void)
 {
-  switch (ControlState)
+  // Control de Temperatura
+  if (NtcIn >= cfgTempHi)
   {
-    case STATE_STANDBY:
-      //ControlTick = millis();
-      
-      // Control de Temperatura
-      if (NtcIn >= cfgTempHi)
-        ControlState = STATE_TEMPHI;
-
-      // Control entradas 
-      _IOPulsLoop();
-      
-      break;
-
-    case STATE_TEMPHI:
-      //if (millis() - ControlTick >= (cfgRemotePulsTick*100))
-      //  ControlState = STATE_STANDBY;
-
-      // Control de Temperatura
-      if (NtcIn <= cfgTempLo)
-        ControlState = STATE_STANDBY;
-        
-      break;
+    ControlState = STATE_TEMPHI;
+    _CtrOpenLoop();
+  }
+  else if (NtcIn <= cfgTempLo)
+  {
+    ControlState = STATE_TEMPLO;
+    _CtrCloseLoop();
+  }
+  else
+  {
+    ControlState = STATE_STANDBY;
+    
+    // Reset states
+    closeLoopState = CLOSE_WINDOW;
+    closeLoopTick = millis();
+    openLoopState = OPEN_WINDOW;
+    openLoopTick = millis();
+  
+    _IOPulsLoop();  
+    _CtrWindowLoop();
   }
 
-  _CtrOutsLoop();
-  _CtrWindowLoop();
+  // Control Remoto por MQTT
+  _CtRemOutsLoop();
 }
 
-void _CtrOutsLoop(void)
+void _CtrOpenLoop(void)
+{
+  switch (openLoopState)
+  {
+    case OPEN_WINDOW:
+      OutClose = OUT_OFF;
+      OutOpen = OUT_ON;
+      
+      if (millis() - openLoopTick >= (cfgTimeOpenMin*60000))
+      {
+        openLoopTick = millis();
+        openLoopState = WAIT_TO_NOPEN;
+      }
+        
+      break;
+
+    case WAIT_TO_NOPEN:
+      OutClose = OUT_OFF;
+      OutOpen = OUT_OFF;
+      
+      if (millis() - openLoopTick >= (cfgTimeCicloMin*60000))
+      {
+        openLoopTick = millis();
+        openLoopState = OPEN_WINDOW;
+      }
+      break; 
+  }
+}
+
+void _CtrCloseLoop(void)
+{
+  switch (closeLoopState)
+  {
+    case CLOSE_WINDOW:
+      OutClose = OUT_ON;
+      OutOpen = OUT_OFF;
+      
+      if (millis() - closeLoopTick >= (cfgTimeCloseMin*60000))
+      {
+        closeLoopTick = millis();
+        closeLoopState = WAIT_TO_NCLOSE;
+      }
+        
+      break;
+
+    case WAIT_TO_NCLOSE:
+      OutClose = OUT_OFF;
+      OutOpen = OUT_OFF;
+      
+      if (millis() - closeLoopTick >= (cfgTimeCicloMin*60000))
+      {
+        closeLoopTick = millis();
+        closeLoopState = CLOSE_WINDOW;
+      }
+      break; 
+  }
+}
+
+void _CtrWindowLoop(void)
+{
+  switch (windowState)
+  {
+    case STATE_WSTANDBY:
+      OutClose = OUT_OFF;
+      OutOpen = OUT_OFF;
+      windowControlTick = millis();
+      break;
+
+    case STATE_WCLOSING:
+      OutClose = OUT_ON;
+      OutOpen = OUT_OFF;
+      
+      if (millis() - windowControlTick >= (cfgTimeCloseMin*60000))
+        windowState = STATE_WSTANDBY;
+      break;
+      
+    case STATE_WOPENING:
+      OutClose = OUT_OFF;
+      OutOpen = OUT_ON;
+      
+      if (millis() - windowControlTick >= (cfgTimeOpenMin*60000))
+        windowState = STATE_WSTANDBY;
+      break;
+  }
+}
+
+void _CtRemOutsLoop(void)
 {
   // Fan
   switch (FanState)
@@ -128,32 +220,6 @@ void _CtrOutsLoop(void)
       if (millis() - Aux2Tick >= (cfgAux2Tick*cfgScaleMin*60000))
         Aux2State = STATE_STANDBY;
       
-      break;
-  }
-}
-
-void _CtrWindowLoop(void)
-{
-  switch (windowState)
-  {
-    case STATE_WSTANDBY:
-      OutClose = OUT_OFF;
-      OutOpen = OUT_OFF;
-      windowControlTick = millis();
-      break;
-
-    case STATE_WCLOSING:
-      OutClose = OUT_ON;
-      OutOpen = OUT_OFF;
-      if (millis() - windowControlTick >= (cfgTimeCloseMin*60000))
-        windowState = STATE_WSTANDBY;
-      break;
-      
-    case STATE_WOPENING:
-      OutClose = OUT_OFF;
-      OutOpen = OUT_ON;
-      if (millis() - windowControlTick >= (cfgTimeOpenMin*60000))
-        windowState = STATE_WSTANDBY;
       break;
   }
 }

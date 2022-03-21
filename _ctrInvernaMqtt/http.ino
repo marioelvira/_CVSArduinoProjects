@@ -156,7 +156,7 @@ void _serveTimeSETTINGS()
   html = html + "<label> Entradas ON <input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgLogicOuts) + "\" name=\"cfgOuts\"/></label>";
   html = html + "</div>";
 
-  html = html + "<div class=\"section\"><span>3</span>NTC:</div>";
+  html = html + "<div class=\"section\"><span>3</span>NTC</div>";
   html = html + "<div class=\"inner-wrap\">";
   html = html + "<label>NTC filtro (si/no 1/0)<input type=\"text\"  maxlength=\"16\" value=\"" + String((int)cfgADCf) + "\" name=\"rADCf\"/></label>";
   html = html + "</div>";
@@ -755,7 +755,7 @@ void _readINS()
 
   // INs
   html = html + "<tr>";
-  html = html + "<td>In Open</td>";
+  html = html + "<td>Puls Abrir</td>";
   if (InOpen == IO_OFF)
     html = html + "<td><font style=\"color:grey\">OFF</font></td>";
   else
@@ -763,14 +763,30 @@ void _readINS()
   html = html + "</tr>";
 
   html = html + "<tr>";
-  html = html + "<td>In Close</td>";
+  html = html + "<td>Puls Cerrar</td>";
   if (InClose == IO_OFF)
     html = html + "<td><font style=\"color:grey\">OFF</font></td>";
   else
     html = html + "<td><font style=\"color:green\">ON</font></td>";
   html = html + "</tr>";
-  
-  // ADC
+
+  html = html + "<tr>";
+  html = html + "<td>Ventana Cerrada</td>";
+  if (InWClose == IO_OFF)
+    html = html + "<td><font style=\"color:grey\">OFF</font></td>";
+  else
+    html = html + "<td><font style=\"color:green\">ON</font></td>";
+  html = html + "</tr>";
+
+  html = html + "<tr>";
+  html = html + "<td>Ventana Abierta</td>";
+  if (InWOpen == IO_OFF)
+    html = html + "<td><font style=\"color:grey\">OFF</font></td>";
+  else
+    html = html + "<td><font style=\"color:green\">ON</font></td>";
+  html = html + "</tr>";
+
+  // NTC ADC
   html = html + "<tr>";
   html = html + "<td>Ntc In (Dig)</td>";
   html = html + "<td>" + String(NtcInADC) + "</td>";
@@ -793,12 +809,44 @@ void _readOUTS()
   html = "<table style=\"width:100%\">";
 
   html = html + "<tr>";
-  html = html + "<td>Control State </td>";
-  html = html + "<td>" + String(ControlState) + "</td>";
+  html = html + "<td>Control Auto</td>";
+  if (ControlState == STATE_TEMPHI)
+  {
+    if (openLoopState == OPEN_WINDOW)
+      html = html + "<td><font style=\"color:green\">Abriendo</font> " + String((millis() - openLoopTick)/1000) + "</td>";
+    else if (openLoopState == WAIT_TO_NOPEN)
+      html = html + "<td><font style=\"color:blue\">Espera</font> " + String((millis() - openLoopTick)/1000) + "</td>";
+  }
+  else if (ControlState == STATE_TEMPLO)
+  {
+    if (closeLoopState == CLOSE_WINDOW)
+      html = html + "<td><font style=\"color:green\">Cerrando</font> " + String((millis() - closeLoopTick)/1000) + "</td>";
+    else if (closeLoopState == WAIT_TO_NOPEN)
+      html = html + "<td><font style=\"color:blue\">Espera</font> " + String((millis() - closeLoopTick)/1000) + "</td>";
+  }
+  else 
+    html = html + "<td><font style=\"color:grey\">Stand by</font></td>";
   html = html + "</tr>";
 
+  /*
   html = html + "<tr>";
-  html = html + "<td>Ventana State </td>";
+  html = html + "<td>Ciclo Apertura </td>";
+  if (openLoopState == OPEN_WINDOW)
+    html = html + "<td><font style=\"color:green\">Abriendo</font> " + String((millis() - openLoopTick)/1000) + "</td>";
+  else if (openLoopState == WAIT_TO_NOPEN)
+    html = html + "<td><font style=\"color:grey\">Espera</font> " + String((millis() - openLoopTick)/1000) + "</td>";
+  html = html + "</tr>";
+  
+  html = html + "<tr>";
+  html = html + "<td>Ciclo Cierre </td>";
+  if (closeLoopState == CLOSE_WINDOW)
+    html = html + "<td><font style=\"color:green\">Cerrando</font> " + String((millis() - closeLoopTick)/1000) + "</td>";
+  else if (closeLoopState == WAIT_TO_NOPEN)
+    html = html + "<td><font style=\"color:grey\">Espera</font> " + String((millis() - closeLoopTick)/1000) + "</td>";
+  html = html + "</tr>";
+  */
+  html = html + "<tr>";
+  html = html + "<td>Ventana Pulsador </td>";
   if (windowState == STATE_WCLOSING)
     html = html + "<td><font style=\"color:green\">Cerrando</font></td>";
   else if (windowState == STATE_WOPENING)
@@ -808,12 +856,12 @@ void _readOUTS()
   html = html + "</tr>";
 
   html = html + "<tr>";
-  html = html + "<td>Wi-Fi State </td>";
+  html = html + "<td>Wi-Fi Estado </td>";
   html = html + "<td>" + String(wifiStatus) + "</td>";
   html = html + "</tr>";
 
   html = html + "<tr>";
-  html = html + "<td>MQTT State </td>";
+  html = html + "<td>MQTT Estado </td>";
   html = html + "<td>" + String(mqttStatus) + "</td>";
   html = html + "</tr>";
 
@@ -837,7 +885,7 @@ void _readOUTS()
   html = html + "</tr>";
   */
   html = html + "<tr>";
-  html = html + "<td>Open</td>";
+  html = html + "<td>Apertura</td>";
   if (OutOpen == OUT_ON)
    html = html + "<td><font style=\"color:green\">ON</font></td>";
   else
@@ -845,7 +893,7 @@ void _readOUTS()
   html = html + "</tr>";
 
   html = html + "<tr>";
-  html = html + "<td>Close</td>";
+  html = html + "<td>Cierre</td>";
   if (OutClose == OUT_ON)
    html = html + "<td><font style=\"color:green\">ON</font></td>";
   else
@@ -853,7 +901,7 @@ void _readOUTS()
   html = html + "</tr>";
   
   html = html + "<tr>";
-  html = html + "<td>Fan</td>";
+  html = html + "<td>Ventilador</td>";
   if (OutFan == OUT_ON)
    html = html + "<td><font style=\"color:green\">ON</font> " + String((millis() - FanTick)/1000) + "</td>";
   else
@@ -861,7 +909,7 @@ void _readOUTS()
   html = html + "</tr>";
 
   html = html + "<tr>";
-  html = html + "<td>Pump</td>";
+  html = html + "<td>Bomba</td>";
   if (OutPump == OUT_ON)
    html = html + "<td><font style=\"color:green\">ON</font> " + String((millis() - PumpTick)/1000) + "</td>";
   else

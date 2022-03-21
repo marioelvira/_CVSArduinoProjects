@@ -45,6 +45,9 @@ int   InClose_ant = 0;
 int   InCloseCounter = 0;
 int   InCloseState = 0;
 
+int   InWOpen;
+int   InWClose;
+
 ////////////////
 // NTC Analog //
 ////////////////
@@ -140,12 +143,18 @@ int timeDay = 0;
 // Control //
 /////////////
 int   controlMode = MODE_AUTO;
-unsigned long ControlTick = 0;
+//unsigned long ControlTick = 0;
 int   ControlState;
 //int TimeControlSec;
 
 int   windowState;
 unsigned long windowControlTick = 0;
+
+int   openLoopState;
+unsigned long openLoopTick = 0;
+
+int   closeLoopState;
+unsigned long closeLoopTick = 0;
 
 int   FanState;
 unsigned long FanTick = 0;
@@ -239,6 +248,13 @@ void _PINSetup(void)
   //-----//
   pinMode(PIN_INOPEN, INPUT);
   pinMode(PIN_INCLOSE, INPUT);
+
+  #if (_SERIAL_DEBUG_ == 0)
+  pinMode(PIN_WCLOSE, INPUT);
+  pinMode(PIN_WOPEN, INPUT);
+  #endif
+  InWOpen = 0;
+  InWClose = 0;
 }
 
 //============//
@@ -346,6 +362,21 @@ void _PINLoop()
     InClose = IO_OFF;
   else
     InClose = IO_ON;
+
+  #if (_SERIAL_DEBUG_ == 0)
+  if (digitalRead(PIN_WOPEN) == PIN_IN_OFF /*cfgLogicIns*/)
+    InWOpen = IO_OFF;
+  else
+    InWOpen = IO_ON;
+
+  if (digitalRead(PIN_WCLOSE) == PIN_IN_OFF /*cfgLogicIns*/)
+    InWClose = IO_OFF;
+  else
+    InWClose = IO_ON;
+  #else
+  InWOpen = 0;
+  InWClose = 0;
+  #endif
 }
 
 //===========//

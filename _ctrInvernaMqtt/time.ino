@@ -44,8 +44,8 @@ void _TimeLoop(void)
     
     timeTick = millis();
 
+    _NTCLoop();
     _FreeRAM();
-
     #if (_USE_WDE_ == 1)
     _WDELoop();
     #endif
@@ -76,9 +76,9 @@ void _TimeLoop(void)
      Serial.println("OutOpen: OFF");
 
     if (OutClose == OUT_ON)
-     Serial.println("Close: ON");
+     Serial.println("OutClose: ON");
     else
-     Serial.println("Close: OFF");
+     Serial.println("OutClose: OFF");
 
     if (OutFan == OUT_ON)
      Serial.println("FAN: ON");
@@ -105,7 +105,6 @@ void _TimeLoop(void)
     else
      Serial.println("AUX2: OFF");
      
-    _NTCLoop();
     Serial.print("NTC In Dig: ");
     Serial.println(NtcInADC);
     Serial.print("NTC In: ");

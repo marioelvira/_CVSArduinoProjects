@@ -24,15 +24,15 @@ extern "C" {
  *         IRR <- GPIO10 -| SK    D6 |- GPIO12 -> AUX2
  *                     G -| G     D7 |- GPIO13 <- INCLOSE
  *                    3V -| 3V    D8 |- GPIO15 <- INOPEN
- *                    EN -| EN    RX |- GPIO3  
- *                   RST -| RST   TX |- GPIO1  
+ *                    EN -| EN    RX |- GPIO3  <- IN WCLOSE
+ *                   RST -| RST   TX |- GPIO1  <- IN WOPEN
  *                     G -| G      G |- G
  *                   VIN -| VIN   3V |- 3V
  *                        ------------
  */
 
 // PIN definition
-#define PIN_NTC_IN      A0  // Entrada
+#define PIN_NTC_IN        A0  // Entrada
 
 #define PIN_FAN           16
 #define PIN_CLOSE         5
@@ -47,6 +47,9 @@ extern "C" {
 #define PIN_INOPEN        15
 
 #define PIN_IRRI          10
+
+#define PIN_WCLOSE        3
+#define PIN_WOPEN         1
 
 #define PIN_OUT_ON        1
 #define PIN_OUT_OFF       0

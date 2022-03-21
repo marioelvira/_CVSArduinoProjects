@@ -11,7 +11,7 @@ extern "C" {
 ///////////
 // Debug //
 ///////////
-#define _SERIAL_DEBUG_             1
+#define _SERIAL_DEBUG_             0
 
 #define _USE_LED_INDICATOR_        1
 #define _USE_WDE_                  1
@@ -23,7 +23,7 @@ extern "C" {
 #define _HTTP_SERIAL_DEBUG_        1
 #define _WIFI_SERIAL_DEBUG_        1
 #define _STATUS_SERIAL_DEBUG_      1
-#define _MQTT_SERIAL_DEBUG_        0
+#define _MQTT_SERIAL_DEBUG_        1
 #define _FREERAM_SERIAL_DEBUG_     1
 
 #else
@@ -34,6 +34,7 @@ extern "C" {
 #define _WIFI_SERIAL_DEBUG_        0
 #define _STATUS_SERIAL_DEBUG_      0
 #define _MQTT_SERIAL_DEBUG_        0
+#define _FREERAM_SERIAL_DEBUG_     0
 
 #endif
 

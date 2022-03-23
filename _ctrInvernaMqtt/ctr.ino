@@ -26,29 +26,48 @@ void _CtrSetup(void)
 ///////////////////////
 void _CtrLoop(void)
 {
-  // Control de Temperatura
-  if (NtcIn >= cfgTempHi)
+  switch (ControlState)
   {
-    ControlState = STATE_TEMPHI;
-    _CtrOpenLoop();
-  }
-  else if (NtcIn <= cfgTempLo)
-  {
-    ControlState = STATE_TEMPLO;
-    _CtrCloseLoop();
-  }
-  else
-  {
-    ControlState = STATE_STANDBY;
+    case STATE_STANDBY:
+
+      // Control de Temperatura
+      if (NtcIn >= cfgTempHi)
+      {
+        openLoopState = OPEN_WINDOW;
+        openLoopTick = millis();
+        ControlState = STATE_TEMPHI;
+      }
+      else if (NtcIn <= cfgTempLo)
+      {
+        closeLoopState = CLOSE_WINDOW;
+        closeLoopTick = millis();
+        ControlState = STATE_TEMPLO;
+      }
+      
+      _IOPulsLoop();  
+      _CtrWindowLoop();
+      break;
+      
+    case STATE_TEMPLO:
+      // Ciclos cierre
+      _CtrCloseLoop();
+
+      if (NtcIn > (cfgTempLo + 2))  // Histéres
+        ControlState = STATE_STANDBY;
+        
+      break;
+      
+    case STATE_TEMPHI:
+      // Ciclos apertura
+      _CtrOpenLoop();
     
-    // Reset states
-    closeLoopState = CLOSE_WINDOW;
-    closeLoopTick = millis();
-    openLoopState = OPEN_WINDOW;
-    openLoopTick = millis();
-  
-    _IOPulsLoop();  
-    _CtrWindowLoop();
+      if (NtcIn <= cfgTempLo)
+      {
+        closeLoopState = CLOSE_WINDOW;
+        closeLoopTick = millis();
+        ControlState = STATE_TEMPLO;
+      }    
+      break;    
   }
 
   // Control Remoto por MQTT

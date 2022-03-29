@@ -738,6 +738,11 @@ void _readINS()
   html = html + "</tr>";
 
   html = html + "<tr>";
+  html = html + "<td>Generador Off</td>";
+  html = html + "<td>" + String(genTimeDay) + "d " + String(genTimeHour) + " : " + String(genTimeMin) + " : " + String(genTimeSec) + "</td>";
+  html = html + "</tr>";
+  
+  html = html + "<tr>";
   html = html + "<td>Vbatt In (Dig)</td>";
   html = html + "<td>" + String(VbattInADC) + "</td>";
   html = html + "</tr>";

@@ -11,6 +11,7 @@
 #include "ip.h"
 #include "main.h"
 #include "ctr.h"
+#include "gen.h"
 #include "wifi.h"
 #include "MQTT.h"
 #include "mRAM.h"
@@ -124,6 +125,14 @@ int timeSec = 0;
 int timeMin = 0;
 int timeHour = 0;
 int timeDay = 0;
+
+//////////////
+// Gen Time //
+//////////////
+int genTimeSec = 0;
+int genTimeMin = 0;
+int genTimeHour = 0;
+int genTimeDay = 0;
 
 /////////////
 // Control //

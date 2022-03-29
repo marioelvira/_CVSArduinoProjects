@@ -169,6 +169,11 @@ void _MQTTSend(void)
   str = str + String(genMinOn);
   str = str + "m\",\n";
 
+  // genOff
+  str = str + "\"genOff\":\"";
+  str = str + String(genTimeDay) + "d " + String(genTimeHour) + " : " + String(genTimeMin) + " : " + String(genTimeSec);
+  str = str + "\",\n";
+  
   // remote Activation
   if (remAct == 1)
     str = str + "\"rem\":1";

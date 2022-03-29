@@ -56,6 +56,7 @@ void _CtrLoop(void)
 
     case STATE_GEN_REM_ON:
       remAct = 1;
+      _GenTimeReset();
       if (genInStatus == 0)
       {
         remPulse = 0; //BUG
@@ -65,6 +66,7 @@ void _CtrLoop(void)
 
     case STATE_GEN_ON:
       remAct = 0;
+      _GenTimeReset();
       if (genInStatus == 0)
       {
         remPulse = 0; //BUG

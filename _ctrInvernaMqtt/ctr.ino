@@ -13,6 +13,10 @@ void _CtrSetup(void)
   openLoopState = OPEN_WINDOW;
   openLoopTick = millis();
 
+  // Reset outs
+  OutClose = OUT_OFF;
+  OutOpen = OUT_OFF;
+
   // Outs  
   FanState  = STATE_STANDBY;
   PumpState = STATE_STANDBY;
@@ -43,7 +47,8 @@ void _CtrLoop(void)
         closeLoopTick = millis();
         ControlState = STATE_TEMPLO;
       }
-      
+
+      // Permitimos control
       _IOPulsLoop();  
       _CtrWindowLoop();
       break;
@@ -54,7 +59,10 @@ void _CtrLoop(void)
 
       if (NtcIn > (cfgTempLo + 2))  // Histéres
         ControlState = STATE_STANDBY;
-        
+
+      // Permitimos control
+      _IOPulsLoop();  
+      _CtrWindowLoop();
       break;
       
     case STATE_TEMPHI:
@@ -65,7 +73,13 @@ void _CtrLoop(void)
       {
         closeLoopState = CLOSE_WINDOW;
         closeLoopTick = millis();
-        ControlState = STATE_TEMPLO;
+        ControlState = STATE_TEMPLO; 
+      }
+      else if (NtcIn <= cfgTempHi - 2)
+      {
+        // Permitimos control
+        _IOPulsLoop();  
+        _CtrWindowLoop();
       }    
       break;    
   }
@@ -84,6 +98,7 @@ void _CtrOpenLoop(void)
       
       if (millis() - openLoopTick >= (cfgTimeOpenMin*60000))
       {
+        OutOpen = OUT_OFF;      
         openLoopTick = millis();
         openLoopState = WAIT_TO_NOPEN;
       }
@@ -91,9 +106,6 @@ void _CtrOpenLoop(void)
       break;
 
     case WAIT_TO_NOPEN:
-      OutClose = OUT_OFF;
-      OutOpen = OUT_OFF;
-      
       if (millis() - openLoopTick >= (cfgTimeCicloMin*60000))
       {
         openLoopTick = millis();
@@ -113,6 +125,7 @@ void _CtrCloseLoop(void)
       
       if (millis() - closeLoopTick >= (cfgTimeCloseMin*60000))
       {
+        OutClose = OUT_OFF;       
         closeLoopTick = millis();
         closeLoopState = WAIT_TO_NCLOSE;
       }
@@ -120,9 +133,6 @@ void _CtrCloseLoop(void)
       break;
 
     case WAIT_TO_NCLOSE:
-      OutClose = OUT_OFF;
-      OutOpen = OUT_OFF;
-      
       if (millis() - closeLoopTick >= (cfgTimeCicloMin*60000))
       {
         closeLoopTick = millis();
@@ -137,8 +147,6 @@ void _CtrWindowLoop(void)
   switch (windowState)
   {
     case STATE_WSTANDBY:
-      OutClose = OUT_OFF;
-      OutOpen = OUT_OFF;
       windowControlTick = millis();
       break;
 
@@ -147,7 +155,10 @@ void _CtrWindowLoop(void)
       OutOpen = OUT_OFF;
       
       if (millis() - windowControlTick >= (cfgTimeCloseMin*60000))
+      {
+        OutClose = OUT_OFF;
         windowState = STATE_WSTANDBY;
+      }
       break;
       
     case STATE_WOPENING:
@@ -155,10 +166,14 @@ void _CtrWindowLoop(void)
       OutOpen = OUT_ON;
       
       if (millis() - windowControlTick >= (cfgTimeOpenMin*60000))
+      {
+        OutOpen = OUT_OFF;
         windowState = STATE_WSTANDBY;
+      }
       break;
   }
 }
+
 
 void _CtRemOutsLoop(void)
 {

@@ -255,6 +255,9 @@ void setup(void)
   // Ctr setup
   _CtrSetup();
 
+  // Reset Gen Time
+  _GenTimeReset();
+
   #if (_USE_WDE_ == 1)
   _WDESetup();
   #endif

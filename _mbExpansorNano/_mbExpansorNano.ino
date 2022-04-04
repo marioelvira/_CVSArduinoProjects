@@ -2,6 +2,7 @@
 
 #include "__ver.h"
 
+#include "adcs.h"
 #include "e2prom.h"
 #include "io.h"
 #include "main.h"
@@ -38,13 +39,13 @@ int   InEndState = 0;
 
 int   boardLed;
 
-///////////
-// Vbatt //
-///////////
-int    VbattInADC;
-//int    VbattInArray[VBATT_ARRAY_SIZE];
-//int    VbattInPointer;
-//float  VbattIn;
+//////////
+// ADCs //
+//////////
+int   Adc0InDig;
+int   Adc0InArray[ADC0_ARRAY_SIZE];
+int   Adc0InPointer;
+float Adc0InVal;
 
 //////////
 // Time //
@@ -61,7 +62,6 @@ int timeHour = 0;
 unsigned long ControlTick = 0;
 int   ControlState;
 int   TimeControlSec;
-int   DisplayIndicador;
 
 int   TimeGenerador1P;
 int   TimeGenerador2P;
@@ -80,6 +80,7 @@ int   TimeOutStop;
 ////////////
 // Config //
 ////////////
+int cfgADC0 = 0;
 /*
 int     cfgADCm;
 int     cfgADCb;
@@ -217,13 +218,13 @@ void setup(void)
   // PIN & IO Setup
   _PINSetup();
   _IOSetup();
-  _ADCSetup();
+  _ADCsSetup();
 
   // Time Setup
   _TimeSetup();
 
   // Ctr setup
-  _CtrSetup();
+  //_CtrSetup();
 
   //attachInterrupt(digitalPinToInterrupt(2), interruptD2, RISING);
 
@@ -310,12 +311,11 @@ void loop()
   _IOLoop();
   
   _IOPulsLoop();
-  _IOLcdLoop();
 
   //if (controlMode == MODE_AUTO)
-  //  _OUTSLoop();
+  // _OUTSLoop();
 
-  _CtrLoop();
+  //_CtrLoop();
   
   _TimeLoop();
 }

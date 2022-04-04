@@ -39,6 +39,7 @@ void _TimeLoop(void)
     
     timeTick = millis();
 
+    _ADCsLoop();
     _RMPLoop();
 
     #if (_USE_FREERAM_ == 1)
@@ -73,25 +74,14 @@ void _TimeLoop(void)
     Serial.print("Cuenta Ticks (ms): ");
     Serial.print(millis() - ControlTick);
     Serial.println(" ");
-
-    Serial.print("Indicador LCD: ");
-    Serial.print(DisplayIndicador);
-    Serial.print(" -> ");
-    Serial.print(OutD); Serial.print("-"); Serial.print(OutC); Serial.print("-"); Serial.print(OutB); Serial.print("-"); Serial.print(OutA);
-    Serial.println(" ");
-    Serial.println("---------------");
     
     Serial.print("Control Status "); Serial.println(ControlState);
-    if (ControlState == STATE_START)
-      Serial.println("  Arrancando...");
-    else if (ControlState == STATE_GEN_ON)
-      Serial.println("  Bomba: ON - Gen: ON");
-    else if (ControlState == STATE_GEN_ZUMB)
-      Serial.println("  Buzzer aviso...");
-    else if (ControlState == STATE_GEN_OFF)
-      Serial.println("  Bomba: ON - Gen: OFF");
-    else
-      Serial.println("  Bomba: OFF - Gen: OFF");
+    //if (ControlState == STATE_START)
+    //  Serial.println("  Arrancando...");
+    //else if (ControlState == STATE_XXXX)
+    //  Serial.println("  State XXXXX");
+    //else
+    //  Serial.println("  Rest");
 
     Serial.println("---------------");
 
@@ -128,11 +118,10 @@ void _TimeLoop(void)
     else
      Serial.println("Display: OFF");
 
-    _ADCLoop();
-    Serial.print("Vbatt In Dig: ");
-    Serial.println(VbattInADC);
-    //Serial.print("Vbatt In: ");
-    //Serial.println(VbattIn); 
+    Serial.print("ADC0 In Dig: ");
+    Serial.println(Adc0InDig);
+    Serial.print("ADC0 Val: ");
+    Serial.println(Adc0InVal);
 
     Serial.println("<><><><><><><>");
     Serial.println(" ");

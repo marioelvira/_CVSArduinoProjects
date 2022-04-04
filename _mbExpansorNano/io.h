@@ -32,7 +32,7 @@ extern "C" {
  */
 
 // PIN definition
-#define PIN_VBATT_IN      A0  // Entrada
+#define PIN_ADC0_IN       A0  // Entrada
 
 #define PIN_A             4  // A
 #define PIN_B             5  // B
@@ -61,8 +61,6 @@ extern "C" {
 
 #define OUT_OFF           0
 #define OUT_ON            1
-
-//#define VBATT_ARRAY_SIZE  5
 
 #define IN_STATUS_INIT    0
 #define IN_STATUS_ON      1

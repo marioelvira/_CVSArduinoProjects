@@ -3,10 +3,11 @@
 #include "__ver.h"
 
 #include "adcs.h"
+#include "ctr.h"
 #include "e2prom.h"
 #include "io.h"
+#include "intisr.h"
 #include "main.h"
-#include "ctr.h"
 #include "mRAM.h"
 #include "wde.h"
 
@@ -89,9 +90,9 @@ int     cfgADCs;
 int     cfgADCf;
 */
 
-/////////////
-// RPM Isr //
-/////////////
+/////////
+// ISR //
+/////////
 //int inPulseD2 = 0;
 #define _SEC_TO_RPM_  60000
 
@@ -168,36 +169,6 @@ void _PINSetup(void)
   pinMode(PIN_END, INPUT);
 }
 
-////////////////
-// Interrupts //
-////////////////
-/*
-void interruptD2()
-{
-   inPulseD2++;
-}
-*/
-void interruptD3()
-{
-   inPulseD3++;
-}
-
-void _RMPLoop ()
-{
-  unsigned long rmpPeriod;
-  int pulses;
-  
-  //detachInterrupt(digitalPinToInterrupt(3));
-  pulses =  inPulseD3 - inPulseAntD3;
-  rmpPeriod = millis() - RmpTick;
-  RpmCounter = (pulses/rmpPeriod)*_SEC_TO_RPM_;
-  inPulseAntD3 = inPulseD3;
-  RmpTick = millis();
-  //inPulseD3 = 0;
-  
-  //attachInterrupt(digitalPinToInterrupt(3), interruptD3, RISING);
-}
-
 //============//
 // MAIN SETUP //
 //============//
@@ -219,6 +190,7 @@ void setup(void)
   _PINSetup();
   _IOSetup();
   _ADCsSetup();
+  _INTISRsSetup();
 
   // Time Setup
   _TimeSetup();
@@ -226,13 +198,6 @@ void setup(void)
   // Ctr setup
   //_CtrSetup();
 
-  //attachInterrupt(digitalPinToInterrupt(2), interruptD2, RISING);
-
-  // RPM test
-  RmpTick = millis();
-  RpmCounter = 0;
-  attachInterrupt(digitalPinToInterrupt(3), interruptD3, RISING);
-  
   #if (_USE_WDE_ == 1)
   _WDESetup();
   #endif

@@ -51,18 +51,6 @@ extern "C" {
 #define EEPROM_VAL_TSTOP          20  // Secs
 #define EEPROM_VAL_DEBUG          0
 
-/*
-#define _DEBUG_TIME   1
-
-#if (_DEBUG_TIME == 1)
-  #define X_60    3
-  #define X_3600  180
-#else
-  #define X_60    60
-  #define X_3600  3600
-#endif
-*/
-
 #endif // _E2PROM_H_
 
 #ifdef __cplusplus

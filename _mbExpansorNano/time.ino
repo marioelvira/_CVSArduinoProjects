@@ -22,8 +22,8 @@ void _TimeLoop(void)
 {
   if (millis() - timeTick >= 1000)
   {
-    if (TimeControlSec != 0)
-      TimeControlSec--;
+    //if (TimeControlSec != 0)
+    //   TimeControlSec--;
     
     timeSec++;
     if (timeSec >= 60)
@@ -57,6 +57,8 @@ void _TimeLoop(void)
 
     #if (_STATUS_SERIAL_DEBUG_ == 1)
     
+    int i;
+    
     Serial.println("<><><><><><><>");
     Serial.print("Tiempo Encendio: ");
     Serial.print(timeHour); Serial.print(" : "); Serial.print(timeMin); Serial.print(" : "); Serial.print(timeSec);
@@ -66,7 +68,7 @@ void _TimeLoop(void)
     Serial.print("Free RAM: ");
     Serial.println(freeRam);
     #endif
- 
+    /*
     Serial.print("Cuenta Atras (Segundos): ");
     Serial.print(TimeControlSec);
     Serial.println(" ");
@@ -82,19 +84,7 @@ void _TimeLoop(void)
     //  Serial.println("  State XXXXX");
     //else
     //  Serial.println("  Rest");
-
-    Serial.println("---------------");
-
-    if (InStartVal == IO_ON)
-     Serial.println("Marcha: ON");
-    else
-     Serial.println("Marcha: OFF");
-
-    if (InEndVal == IO_ON)
-     Serial.println("Paro: ON");
-    else
-     Serial.println("Paro: OFF");
-
+    */
     Serial.println("---------------");
 
     //Serial.print("intNumberD2: ");  Serial.println(inPulseD2);
@@ -103,26 +93,33 @@ void _TimeLoop(void)
         
     Serial.println("---------------");
 
-    if (OutGen == OUT_ON)
-     Serial.println("Generador: ON");
-    else
-     Serial.println("Generador: OFF");
+    // ADC
+    for (i = 0; i< ADC_NUMBER; i++)
+    {
+      Serial.print("ADC ");
+      Serial.println(i);
+      Serial.print("Dig: ");
+      Serial.println(AdcDig[i]);
+    }
+
+    // OUTs
+    for (i = 0; i< OUT_NUMBER; i++)
+    {
+      Serial.print("OUT ");
+      Serial.println(i);
+      Serial.print("Dig: ");
+      Serial.println(OutDig[i]);
+    }
+
+    // INs
+    for (i = 0; i< IN_NUMBER; i++)
+    {
+      Serial.print("IN ");
+      Serial.println(i);
+      Serial.print("Dig: ");
+      Serial.println(InDig[i]);
+    }
     
-    if (OutZumb == OUT_ON)
-     Serial.println("Zumbador: ON");
-    else
-     Serial.println("Zumbador: OFF");
-
-    if (OutDisp == OUT_ON)
-     Serial.println("Display: ON");
-    else
-     Serial.println("Display: OFF");
-
-    Serial.print("ADC0 In Dig: ");
-    Serial.println(Adc0InDig);
-    Serial.print("ADC0 Val: ");
-    Serial.println(Adc0InVal);
-
     Serial.println("<><><><><><><>");
     Serial.println(" ");
 

@@ -23,20 +23,15 @@ void _ConfigSetup(void)
 
 void _readCONFIG (void)
 {
-  int i;
-  #if (_WRITE_SSID_EEPROM_ == 1)
-  int j;
-  #endif
-  byte val[4];
-
-  int eeprom_value_hi, eeprom_value_lo;
+  int ok, i;
+  //int eeprom_value_hi, eeprom_value_lo;
   
-  //EEPROM.begin(512);
+  //EEPROM.begin(512);  // ESPXX
     
-  i = EEPROM.read(EEPROM_ADD_OK);
+  ok = EEPROM.read(EEPROM_ADD_OK);
   
   // Si NO esta grabada la configuracion...
-  if (i != EEPROM_VAL_OK)
+  if (ok != EEPROM_VAL_OK)
   {
     #if (_EEPROM_SERIAL_DEBUG_ == 1)
     Serial.println("Config NOK");
@@ -45,24 +40,11 @@ void _readCONFIG (void)
     EEPROM.write(EEPROM_ADD_OK,      EEPROM_VAL_OK);
 
     // Data Data
-    //EEPROM.write(EEPROM_ADD_RESERVA,   EEPROM_VAL_RESERVA);
-       
-    EEPROM.write(EEPROM_ADD_1P_TIMER_GEN,   EEPROM_VAL_1P_TIMER_GEN);
-    EEPROM.write(EEPROM_ADD_2P_TIMER_GEN,   EEPROM_VAL_2P_TIMER_GEN);
-    EEPROM.write(EEPROM_ADD_3P_TIMER_GEN,   EEPROM_VAL_3P_TIMER_GEN);
-    EEPROM.write(EEPROM_ADD_4P_TIMER_GEN,   EEPROM_VAL_4P_TIMER_GEN);
-    EEPROM.write(EEPROM_ADD_5P_TIMER_GEN,   EEPROM_VAL_5P_TIMER_GEN);
-    EEPROM.write(EEPROM_ADD_6P_TIMER_GEN,   EEPROM_VAL_6P_TIMER_GEN);
-    EEPROM.write(EEPROM_ADD_7P_TIMER_GEN,   EEPROM_VAL_7P_TIMER_GEN);
-    EEPROM.write(EEPROM_ADD_8P_TIMER_GEN,   EEPROM_VAL_8P_TIMER_GEN);
-    EEPROM.write(EEPROM_ADD_9P_TIMER_GEN,   EEPROM_VAL_9P_TIMER_GEN);
-
-    EEPROM.write(EEPROM_ADD_BUZZER_ON, EEPROM_VAL_BUZZER_ON);
-    EEPROM.write(EEPROM_ADD_TSTART,    EEPROM_VAL_TSTART);
-    EEPROM.write(EEPROM_ADD_TSTOP,     EEPROM_VAL_TSTOP);
-    EEPROM.write(EEPROM_ADD_DEBUG,     EEPROM_VAL_DEBUG);
-    
-    //EEPROM.commit();    //Store data to EEPROM
+    EEPROM.write(EEPROM_ADD_MODBUS_ID,   EEPROM_VAL_MODBUS_ID);
+    for (i = 0; i < ADC_NUMBER; i++)
+      EEPROM.write(EEPROM_ADD_ADCF + i,  EEPROM_VAL_ADCF);
+      
+    //EEPROM.commit();    // ESPXX Store data to EEPROM
   }
   else
   {
@@ -70,42 +52,18 @@ void _readCONFIG (void)
     Serial.println("Config OK");
     #endif
   }
-   
-  TimeGenerador1P = (int)EEPROM.read(EEPROM_ADD_1P_TIMER_GEN);//*60; // Min
-  TimeGenerador2P = (int)EEPROM.read(EEPROM_ADD_2P_TIMER_GEN);//*60; // Min
-  TimeGenerador3P = (int)EEPROM.read(EEPROM_ADD_3P_TIMER_GEN);//*60; // Min
-  TimeGenerador4P = (int)EEPROM.read(EEPROM_ADD_4P_TIMER_GEN);//*60; // Min
-  TimeGenerador5P = (int)EEPROM.read(EEPROM_ADD_5P_TIMER_GEN);//*60; // Min
-  TimeGenerador6P = (int)EEPROM.read(EEPROM_ADD_6P_TIMER_GEN);//*3600; // Hour
-  TimeGenerador7P = (int)EEPROM.read(EEPROM_ADD_7P_TIMER_GEN);//*3600; // Hour
-  TimeGenerador8P = (int)EEPROM.read(EEPROM_ADD_8P_TIMER_GEN);//*3600; // Hour
-  TimeGenerador9P = (int)EEPROM.read(EEPROM_ADD_9P_TIMER_GEN);//*3600; // Hour
 
-  TimeBuzzerOn = (int)EEPROM.read(EEPROM_ADD_BUZZER_ON);    // Secs
-  TimeOutStart = (int)EEPROM.read(EEPROM_ADD_TSTART);       // Secs
-  TimeOutStop  = (int)EEPROM.read(EEPROM_ADD_TSTOP);        // Secs
-    
+  cfgMbId = (int)EEPROM.read(EEPROM_ADD_MODBUS_ID);
+  for (i = 0; i < ADC_NUMBER; i++)
+    cfgADCf[i] = (int)EEPROM.read(EEPROM_ADD_ADCF + i);
+
   #if (_EEPROM_SERIAL_DEBUG_ == 1)
-  
-  Serial.print("Time 1P: ");  Serial.print (TimeGenerador1P);  Serial.println(" min");
-  Serial.print("Time 2P: ");  Serial.print (TimeGenerador2P);  Serial.println(" min");
-  Serial.print("Time 3P: ");  Serial.print (TimeGenerador3P);  Serial.println(" min");
-  Serial.print("Time 4P: ");  Serial.print (TimeGenerador4P);  Serial.println(" min");
-  Serial.print("Time 5P: ");  Serial.print (TimeGenerador5P);  Serial.println(" min");
-  Serial.print("Time 6P: ");  Serial.print (TimeGenerador6P);  Serial.println(" hour");
-  Serial.print("Time 7P: ");  Serial.print (TimeGenerador7P);  Serial.println(" hour");
-  Serial.print("Time 8P: ");  Serial.print (TimeGenerador8P);  Serial.println(" hour");
-  Serial.print("Time 9P: ");  Serial.print (TimeGenerador9P);  Serial.println(" hour");
-
-  Serial.print("Time Buzzer: "); Serial.print (TimeBuzzerOn);  Serial.println(" secs");
-  Serial.print("Time Start: ");  Serial.print (TimeOutStart);  Serial.println(" secs");
-  Serial.print("Time Stop: ");   Serial.print (TimeOutStop);   Serial.println(" secs");
-  
+  Serial.print("Modbus ID: ");  Serial.print (cfgMbId);  Serial.println(" ");
+  for (i = 0; i < ADC_NUMBER; i++)
+  {
+    Serial.print("Filter ADC"); Serial.print (cfgADCf[i]); Serial.print(" "); Serial.println (cfgADCf[i]); 
+  }
   #endif
-
-  // Debug options
-  X_60 = 3;
-  X_3600 = 180;
 }
 
 void _ResetEEPROM() {
@@ -119,7 +77,7 @@ void _ResetEEPROM() {
     EEPROM.write(i, 0xFF);
   }
   
-  //EEPROM.commit();    //Store data to EEPROM
+  //EEPROM.commit();    // ESPXX Store data to EEPROM
 }
 
 void _ReadEEPROM() {

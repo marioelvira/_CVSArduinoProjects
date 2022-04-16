@@ -5,7 +5,7 @@ extern "C" {
 #ifndef _ADCS_H_
 #define _ADCS_H_
 
-#define ADC0_ARRAY_SIZE  5
+#define ADC_ARRAY_SIZE   5
 
 #endif // _ADCS_H_
 

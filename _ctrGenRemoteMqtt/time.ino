@@ -39,10 +39,10 @@ void _TimeLoop(void)
           timeDay++;
         }
       }
-
-      _GenTimeLoop();
-      //genMinOn++;
+      genMinOn++;
     }
+
+    _GenTimeLoop();
     
     timeTick = millis();
 

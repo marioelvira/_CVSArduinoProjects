@@ -13,17 +13,17 @@ extern "C" {
  *                        ---|   USB  |--- 
  *                        |  |--------|  |
  *                        |              |
- *        (LED*) SPI-SCK -| D13      D12 |- SPI-MISO        <- END
- *                       -| 3V3      D11 |- SPI-MOSI (PWM)  <- PULS
- *                       -| AREF     D10 |- SPI-SS   (PWM)  -> DISP
- *                   D14 -| A0        D9 |- PWM      (PWM)  -> GEN
- *                   D15 -| A1        D8 |-                 -> ZUMB
- *                   D16 -| A2        D7 |-                 -> A
- *                   D17 -| A3        D6 |- (PWM)           -> B
- *               SDA/D18 -| A4        D5 |- (PWM)           -> C
- *               SCL/D19 -| A5        D4 |-                 -> D
- *                   D20 -| A6  [  ]  D3 |- INT1 (PWM)      <- 
- *                   D21 -| A7  ****  D2 |- INT0            <-
+ *        (LED*) SPI-SCK -| D13      D12 |- SPI-MISO        <- IN1
+ *                       -| 3V3      D11 |- SPI-MOSI (PWM)  <- IN0
+ *                       -| AREF     D10 |- SPI-SS   (PWM)  -> 
+ *                   D14 -| A0        D9 |- PWM      (PWM)  -> 
+ *                   D15 -| A1        D8 |-                 -> 
+ *                   D16 -| A2        D7 |-                 -> OUT0
+ *                   D17 -| A3        D6 |- (PWM)           -> OUT1
+ *               SDA/D18 -| A4        D5 |- (PWM)           -> OUT2
+ *               SCL/D19 -| A5        D4 |-                 -> OUT3
+ *                   D20 -| A6  [  ]  D3 |- INT1 (PWM)      <- INT1 
+ *                   D21 -| A7  ****  D2 |- INT0            <- INT0
  *                    5V -| 5V       GND |- GND  
  *                 RESET -| RST      RST |-   
  *                   GND -| GND      RX0 |- UART IN
@@ -31,48 +31,53 @@ extern "C" {
  *                        ---------------
  */
 
-// PIN definition
-#define PIN_ADC0_IN       A0  // Entrada
+////////////////////
+// PIN definition //
+////////////////////
 
-#define PIN_A             4  // A
-#define PIN_B             5  // B
-#define PIN_C             6  // C
-#define PIN_D             7  // D
+// LED
+#define PIN_LED        13
 
-#define PIN_ZUMB          8
-#define PIN_GEN           9
-#define PIN_DISP          10
+// ADCs
+#define ADC_NUMBER     4 // MAX 8
 
-#define PIN_PULSADOR      11
-#define PIN_END           12
+#define PIN_ADC0       A0
+#define PIN_ADC1       A1
+#define PIN_ADC2       A2
+#define PIN_ADC3       A3
+//#define PIN_ADC4     A4
+//#define PIN_ADC5     A5
+//#define PIN_ADC6     A6
+//#define PIN_ADC7     A7
 
-#define PIN_LED           13  // PIN LED NANO
+// OUTs
+#define OUT_NUMBER      4
 
+#define PIN_OUT0        4
+#define PIN_OUT1        5
+#define PIN_OUT2        6
+#define PIN_OUT3        7
+
+// INs
+#define IN_NUMBER       2
+
+#define PIN_IN0         11
+#define PIN_IN1         12
+
+// Status OUTs
 #define PIN_OUT_ON        1
 #define PIN_OUT_OFF       0
 
-// Pull-up INs
-#define PIN_IN_OFF        1   
-#define PIN_IN_ON         0
+// Status Pull-up INs
+#define PIN_IN_OFF        0   
+#define PIN_IN_ON         1
 
 // IO definition
-#define IO_ON             1
 #define IO_OFF            0
+#define IO_ON             1
 
 #define OUT_OFF           0
 #define OUT_ON            1
-
-#define IN_STATUS_INIT    0
-#define IN_STATUS_ON      1
-#define IN_STATUS_OFF     2
-
-// Pulsación
-#define NO_PULSACION        0   // x10ms
-#define PULSACION_OK        75  // x10ms
-
-#define FLANCO_UP     0
-#define FLANCO_DOWN   1
-#define FLANCO        FLANCO_UP  // FLANCO_DOWN
 
 #endif // _IO_H_
 

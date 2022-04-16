@@ -31,5 +31,5 @@ void _GenTimeLoop(void)
       }
     }
   }
-  genMinOn++;
+  //genMinOn++;
 }

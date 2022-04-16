@@ -4,13 +4,26 @@
 /////////////////
 void _ADCsSetup()
 {
-  int i;
-  
-  Adc0InDig = 0;
-  for (i = 0; i < ADC0_ARRAY_SIZE; i++)
-    Adc0InArray[i] = 0;
+  int i, j;
 
-  Adc0InPointer = 0;
+  for (i = 0; i < ADC_NUMBER; i++)
+  {
+    AdcDig[i] = 0;
+    for (j = 0; j < ADC_ARRAY_SIZE; j++)
+      AdcArray[i][j] = 0;
+      
+    AdcPointer[i] = 0;  
+  }
+
+  // No bigger than ADC_NUMBER
+  AdcPin[0] = PIN_ADC0;
+  AdcPin[1] = PIN_ADC1;
+  AdcPin[2] = PIN_ADC2;
+  AdcPin[3] = PIN_ADC3;
+  //AdcPin[4] = PIN_ADC4;
+  //AdcPin[5] = PIN_ADC5;
+  //AdcPin[6] = PIN_ADC6;
+  //AdcPin[7] = PIN_ADC7; 
 }
 
 ////////////////////////
@@ -18,28 +31,29 @@ void _ADCsSetup()
 ////////////////////////
 void _ADCsLoop()
 {
-  if (cfgADC0 == 1)
-  {
-    int digAcc0 = 0;
-    
-    Adc0InArray[Adc0InPointer] = analogRead(PIN_ADC0_IN);
-    Adc0InPointer++;
-    if (Adc0InPointer >= ADC0_ARRAY_SIZE)
-      Adc0InPointer = 0;
-  
-    // Media del Array...
-    for (int i = 0; i < ADC0_ARRAY_SIZE; i++)
-      digAcc0 = digAcc0 + Adc0InArray[i];
-    
-    Adc0InDig = digAcc0/ADC0_ARRAY_SIZE;
-  }
-  else
-    Adc0InDig = analogRead(PIN_ADC0_IN);
+  int i, j, acc, pin;
 
-  /*
-  if (cfgADCs == 0)
-    Adc0InVal = (float)Adc0InDig*((float)cfgADC0m)/(float)cfgADC0p - (float)cfgADC0b/1000;
-  else
-    Adc0InVal = (float)Adc0InDig*((float)cfgADC0m)/(float)cfgADC0p + (float)cfgADC0b/1000;
-  */
+  for (i = 0; i < ADC_NUMBER; i++)
+  {
+    pin = AdcPin[i];
+
+    // Filter
+    if (cfgADCf[i] == 1)
+    {
+      acc = 0;
+      AdcArray[i][AdcPointer[i]] = analogRead(pin);
+      AdcPointer[i]++;
+      if (AdcPointer[i] >= ADC_ARRAY_SIZE)
+        AdcPointer[i] = 0;
+    
+      // Media del Array...
+      for (j = 0; j < ADC_ARRAY_SIZE; j++)
+        acc = acc + AdcArray[i][j];
+      
+      AdcDig[i] = acc/ADC_ARRAY_SIZE;
+    }
+    // No filter
+    else
+      AdcDig[i] = analogRead(pin);
+  }
 }

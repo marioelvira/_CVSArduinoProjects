@@ -9,6 +9,7 @@
 #include "intisr.h"
 #include "main.h"
 #include "mRAM.h"
+#include "mUart.h"
 #include "wde.h"
 
 /////////////
@@ -86,6 +87,14 @@ int   inPulseAntD3 = 0;
 int   RpmCounter = 0;
 unsigned long RmpTick = 0;
 
+///////////
+// MUART //
+///////////
+#if (_USE_MUART_ == 1)
+String uartBuffer = "";
+bool uartCMD;
+#endif
+
 //////////
 // mRAM //
 //////////
@@ -137,14 +146,19 @@ void _PINSetup(void)
 //============//
 void setup(void)
 {
-#if (_SERIAL_DEBUG_ == 1)
+  #if (_USE_MUART_ == 1)
+  _MUARTSetup();
+  #endif
+  
+  #if (_SERIAL_DEBUG_ == 1)
   delay(100);  // 100ms
   Serial.begin(115200);
+  
   Serial.print("Project: ");
   Serial.println(PROJECT);
   Serial.print("Version: ");
   Serial.println(FW_VERSION);
-#endif
+  #endif
 
   // Config setup
   _ConfigSetup();
@@ -219,4 +233,8 @@ void loop()
   //_CtrLoop();
 
   _TimeLoop();
+
+  #if (_USE_MUART_ == 1)
+  _MUARTLoop();
+  #endif
 }

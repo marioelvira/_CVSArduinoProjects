@@ -114,48 +114,36 @@ void setup()
 
 void loop()
 {
-  //unsigned char fen_L, fen_H, miao_L, miao_H; 
-
-  /*
-  EPD_HW_Init();
-  EPD_WhiteScreen_ALL(gImage_1);
-  delay(2000);
-  */
-  // Partial refresh digital presentation 
-  /*
-  EPD_HW_Init();
-  EPD_SetRAMValue_BaseMap(gImage_basemap);
-  delay(100);
-  EPD_Dis_Part(0,32,gImage_num1,32,32);
-  EPD_Dis_Part(0,32,gImage_num2,32,32);
-  EPD_Dis_Part(0,32,gImage_num3,32,32);
-  EPD_Dis_Part(0,32,gImage_num4,32,32);
-  EPD_Dis_Part(0,32,gImage_num5,32,32);
-  //delay(2000);
-
   // Clean
   EPD_HW_Init();
-  EPD_WhiteScreen_White();
-  EPD_DeepSleep();
-  */
+  //EPD_WhiteScreen_White();
+  EPD_SetRAMValue_BaseMap(gImage_basemap);
+  delay(100);
+  //EPD_DeepSleep();
+  
   while(1) 
   {
-    EPD_HW_Init();
-    EPD_SetRAMValue_BaseMap(gImage_basemap);
-    delay(100);
-    EPD_Dis_Part(0,32,gImage_num1,32,32); // [0,32] - 32x32
-    EPD_Dis_Part(0,32,gImage_num2,32,32); // [0,32] - 32x32
-    
-    EPD_Dis_Part(0,32,gImage_num3,32,32);
-    EPD_Dis_Part(0,32,gImage_num4,32,32);
-    EPD_Dis_Part(0,32,gImage_num5,32,32);
-    EPD_Dis_Part(0,32,gImage_num6,32,32);
-    EPD_Dis_Part(0,32,gImage_num7,32,32);
-    EPD_Dis_Part(0,32,gImage_num8,32,32);
-    EPD_Dis_Part(0,32,gImage_num9,32,32);
+    EPD_Dis_Part(32,132,gImage_num1,32,32); // [0,32] - 32x32
+    EPD_Dis_Part(32,132,gImage_num2,32,32); // [0,32] - 32x32
+    EPD_Dis_Part(32,132,gImage_num3,32,32);
+    EPD_Dis_Part(32,132,gImage_num4,32,32);
+    EPD_Dis_Part(32,132,gImage_num5,32,32);
+    EPD_Dis_Part(32,132,gImage_num6,32,32);
+    EPD_Dis_Part(32,132,gImage_num7,32,32);
+    EPD_Dis_Part(32,132,gImage_num8,32,32);
+    EPD_Dis_Part(32,132,gImage_num9,32,32);
+    EPD_Dis_Part(32,132,gImage_num8,32,32); // [0,32] - 32x32
+    EPD_Dis_Part(32,132,gImage_num7,32,32); // [0,32] - 32x32
+    EPD_Dis_Part(32,132,gImage_num6,32,32);
+    EPD_Dis_Part(32,132,gImage_num5,32,32);
+    EPD_Dis_Part(32,132,gImage_num4,32,32);
+    EPD_Dis_Part(32,132,gImage_num3,32,32);
+    EPD_Dis_Part(32,132,gImage_num2,32,32);
+    EPD_Dis_Part(32,132,gImage_num1,32,32);
     delay(1000);
     EPD_HW_Init();
     EPD_WhiteScreen_White();
+    //EPD_SetRAMValue_BaseMap(gImage_basemap);
     delay(2000);
     Sys_run(); // System run
     LED_run(); // Breathing lamp

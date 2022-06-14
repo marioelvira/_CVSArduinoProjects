@@ -5,6 +5,7 @@
 void _NTCSetup()
 {
   NtcInADC = 0;
+  NtcIn = 25;
 
   for (int i = 0; i < NTC_ARRAY_SIZE; i++)
     NtcInArray[i] = 0;
@@ -17,7 +18,7 @@ void _NTCSetup()
 //////////////////////
 void _NTCLoop()
 {
-  float V, R, logR, R_th, kelvin;
+  float V, /*R,*/ logR, R_th, kelvin;
 
   if (cfgADCf == 1)
   {
@@ -41,11 +42,11 @@ void _NTCLoop()
   // NTC calculation //
   /////////////////////
   V = ((float)NtcInADC / 1024) * Vcc;
-  R = (Rc * V) / (Vcc - V);
+  NtcR = (Rc * V) / (Vcc - V);
 
-  logR  = log(R);
+  logR  = log(NtcR);
   // Aprox Steinhart-Hart
   R_th = 1.0 / (A + B*logR + C*logR*logR*logR);
-  kelvin = R_th - V*V/(K * R)*1000;
+  kelvin = R_th - V*V/(K * NtcR)*1000;
   NtcIn = kelvin - 273.15;
 }

@@ -17,8 +17,6 @@ extern "C" {
 #define MQTT_PUBLISH_TIMEOUT      800   // 800 ms
 
 // MQTT broker credentials
-//#define MQTT_BROKER       "maqiatto.com"
-//#define MQTT_BROKER_PORT  1883
 #define MQTT_BROKER         "sdpelicanos.webhop.me"
 #define MQTT_BROKER_PORT    7000
 
@@ -38,7 +36,7 @@ extern "C" {
 #define TOPIC_AUX2CTR      "ahiclavijo@gmail.com/aux2Ctr"
 #define TOPIC_AUX2STBY     "ahiclavijo@gmail.com/aux2Stby"
 
-#define TOPIC_WATCHDOG    "ahiclavijo@gmail.com/watchdog"
+#define TOPIC_WATCHDOG     "ahiclavijo@gmail.com/watchdog"
 
 #define TOPIC_OFFSET            21
 

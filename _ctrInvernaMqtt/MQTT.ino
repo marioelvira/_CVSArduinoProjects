@@ -265,16 +265,16 @@ void _MQTTSend(void)
   if (ControlState == STATE_TEMPHI)
   {
     if (openLoopState == OPEN_WINDOW)
-      str = str + "\"ctr\":\"Apertura\"";
+      str = str + "\"ctr\":\"Abriendo\"";
     else
-      str = str + "\"ctr\":\"Espera A\"";
+      str = str + "\"ctr\":\"Espera Apertura\"";
   }
   else if (ControlState == STATE_TEMPLO)
   {
     if (closeLoopState == CLOSE_WINDOW)
-      str = str + "\"ctr\":\"Cierre\"";
+      str = str + "\"ctr\":\"Cerrando\"";
     else
-      str = str + "\"ctr\":\"Espera C\"";
+      str = str + "\"ctr\":\"Espera Cierre\"";
   }
   else
     str = str + "\"ctr\":\"Standby\"";

@@ -815,14 +815,14 @@ void _readOUTS()
     if (openLoopState == OPEN_WINDOW)
       html = html + "<td><font style=\"color:green\">Abriendo</font> " + String((millis() - openLoopTick)/1000) + "</td>";
     else if (openLoopState == WAIT_TO_NOPEN)
-      html = html + "<td><font style=\"color:blue\">Espera</font> " + String((millis() - openLoopTick)/1000) + "</td>";
+      html = html + "<td><font style=\"color:blue\">Espera Apertura</font> " + String((millis() - openLoopTick)/1000) + "</td>";
   }
   else if (ControlState == STATE_TEMPLO)
   {
     if (closeLoopState == CLOSE_WINDOW)
       html = html + "<td><font style=\"color:green\">Cerrando</font> " + String((millis() - closeLoopTick)/1000) + "</td>";
     else if (closeLoopState == WAIT_TO_NOPEN)
-      html = html + "<td><font style=\"color:blue\">Espera</font> " + String((millis() - closeLoopTick)/1000) + "</td>";
+      html = html + "<td><font style=\"color:blue\">Espera Cierre</font> " + String((millis() - closeLoopTick)/1000) + "</td>";
   }
   else 
     html = html + "<td><font style=\"color:grey\">Stand by</font></td>";

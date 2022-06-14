@@ -55,10 +55,11 @@ int    NtcInADC;
 int    NtcInArray[NTC_ARRAY_SIZE];
 int    NtcInPointer;
 float  NtcIn;
+float  NtcR;
 
 // NTC constantes
-float Rc = 10000; // 10k
-float Vcc = 3.3;  // Vcc
+float Rc = 9500; // 10000; // 10k
+float Vcc = 3.3; // Vcc
 
 float A = 1.11492089e-3;
 float B = 2.372075385e-4;
@@ -353,23 +354,23 @@ void _PINLoop()
   //-----//
   // INS //
   //-----//
-  if (digitalRead(PIN_INOPEN) == PIN_IN_OFF /*cfgLogicIns*/)
+  if (digitalRead(PIN_INOPEN) == cfgLogicIns)//PIN_IN_OFF)
     InOpen = IO_OFF;
   else
     InOpen = IO_ON;
 
-  if (digitalRead(PIN_INCLOSE) == PIN_IN_OFF /*cfgLogicIns*/)
+  if (digitalRead(PIN_INCLOSE) == cfgLogicIns)//PIN_IN_OFF)
     InClose = IO_OFF;
   else
     InClose = IO_ON;
 
   #if (_SERIAL_DEBUG_ == 0)
-  if (digitalRead(PIN_WOPEN) == PIN_IN_OFF /*cfgLogicIns*/)
+  if (digitalRead(PIN_WOPEN) == cfgLogicIns)//PIN_IN_OFF)
     InWOpen = IO_OFF;
   else
     InWOpen = IO_ON;
 
-  if (digitalRead(PIN_WCLOSE) == PIN_IN_OFF /*cfgLogicIns*/)
+  if (digitalRead(PIN_WCLOSE) == cfgLogicIns)//PIN_IN_OFF)
     InWClose = IO_OFF;
   else
     InWClose = IO_ON;

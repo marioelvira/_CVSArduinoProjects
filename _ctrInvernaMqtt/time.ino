@@ -108,7 +108,9 @@ void _TimeLoop(void)
     Serial.print("NTC In Dig: ");
     Serial.println(NtcInADC);
     Serial.print("NTC In: ");
-    Serial.println(NtcIn);    
+    Serial.println(NtcIn);
+    Serial.print("NTC R: ");
+    Serial.println(NtcR); 
 
     Serial.println("<><><><><><><>");
     Serial.println(" ");

@@ -58,7 +58,12 @@ void _CtrLoop(void)
       _CtrCloseLoop();
 
       if (NtcIn > (cfgTempLo + 2))  // Histéres
+      {
+        // Reset outs
+        OutClose = OUT_OFF;
+        OutOpen = OUT_OFF;
         ControlState = STATE_STANDBY;
+      }
 
       // Permitimos control
       _IOPulsLoop();  

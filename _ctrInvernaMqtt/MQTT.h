@@ -36,6 +36,9 @@ extern "C" {
 #define TOPIC_AUX2CTR      "ahiclavijo@gmail.com/aux2Ctr"
 #define TOPIC_AUX2STBY     "ahiclavijo@gmail.com/aux2Stby"
 
+#define TOPIC_OPCTR        "ahiclavijo@gmail.com/oOpCtr"
+#define TOPIC_CLCTR        "ahiclavijo@gmail.com/oClCtr"
+
 #define TOPIC_WATCHDOG     "ahiclavijo@gmail.com/watchdog"
 
 #define TOPIC_OFFSET            21

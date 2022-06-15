@@ -193,7 +193,58 @@ void mqttDataCallback(char* rtopic, byte* rpayload, unsigned int rlength)
       #endif
     }
   }
-  
+
+  // Open
+  else if (rtopicStr.equals(TOPIC_OPCTR))
+  {
+    if(rpayloadStr.equals("1"))
+    {
+      #if (_MQTT_SERIAL_DEBUG_ == 1)
+      Serial.println("TOPIC_OPCTR ->> 1");
+      #endif
+
+      // Solo si NO estamos abriendo...
+      if (windowState != STATE_WOPENING)
+      {
+        #if (_PULS_SERIAL_DEBUG_ == 1)
+        Serial.println(">>>>>>>>>>>>>>>>>>>>>>>>>>> Opening");
+        #endif
+        windowState = STATE_WOPENING;
+      }
+    }
+    else
+    {
+      #if (_MQTT_SERIAL_DEBUG_ == 1)
+      Serial.println("TOPIC_OPCTR ->> Error");
+      #endif
+    }
+  }
+  // Close
+  else if (rtopicStr.equals(TOPIC_CLCTR))
+  {
+    if(rpayloadStr.equals("1"))
+    {
+      #if (_MQTT_SERIAL_DEBUG_ == 1)
+      Serial.println("TOPIC_CLCTR ->> 1");
+      #endif
+      
+      // Solo si NO estamos cerrando...
+      if (windowState != STATE_WCLOSING)
+      {
+        #if (_PULS_SERIAL_DEBUG_ == 1)
+        Serial.println(">>>>>>>>>>>>>>>>>>>>>>>>>>> Closing");
+        # endif
+        windowState = STATE_WCLOSING;
+      }
+    }
+    else
+    {
+      #if (_MQTT_SERIAL_DEBUG_ == 1)
+      Serial.println("TOPIC_CLCTR ->> Error");
+      #endif
+    }
+  }
+    
   // Watchdog
   else if (rtopicStr.equals(TOPIC_WATCHDOG))
   {
@@ -379,15 +430,15 @@ void _MQTTSend(void)
   if(mqttPublish(TOPIC_STATE, (char*)spayload))
   {
     #if (_MQTT_SERIAL_DEBUG_ == 1)
-    Serial.println("TOPIC_STATE publish was succeeded");
-    Serial.println(spayload);
+    //Serial.println("TOPIC_STATE publish was succeeded");
+    //Serial.println(spayload);
     #endif
   }
   else
   {
     #if (_MQTT_SERIAL_DEBUG_ == 1)
-    Serial.println("TOPIC_STATE publish was error");
-    Serial.println(spayload);
+    //Serial.println("TOPIC_STATE publish was error");
+    //Serial.println(spayload);
     #endif  
   }
 }
@@ -524,6 +575,10 @@ void _MQTTLoop(void)
             // AUX2
             mqttSubscribe(TOPIC_AUX2CTR)   &&
             mqttSubscribe(TOPIC_AUX2STBY)  &&
+            // Open
+            mqttSubscribe(TOPIC_OPCTR)     &&
+            // Close
+            mqttSubscribe(TOPIC_CLCTR)     &&
             // Watchdog
             mqttSubscribe(TOPIC_WATCHDOG))
         {

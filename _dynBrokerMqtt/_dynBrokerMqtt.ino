@@ -143,6 +143,8 @@ class MyBroker: public sMQTTBroker
         return false;
       }
       */
+
+      #if (_SDPELICANOS_DDNS_ == 1)
       if (((char)username[0]  == 's') &&
           ((char)username[1]  == 'd') &&
           ((char)username[2]  == 'p') &&
@@ -165,6 +167,32 @@ class MyBroker: public sMQTTBroker
           ((char)username[19] == 'o') &&
           ((char)username[20] == 'm'))
       {
+      #endif
+
+      #if (_AHICLAVIJO_DDNS_ == 1)
+      if (((char)username[0]  == 'a') &&
+          ((char)username[1]  == 'h') &&
+          ((char)username[2]  == 'i') &&
+          ((char)username[3]  == 'c') &&
+          ((char)username[4]  == 'l') &&
+          ((char)username[5]  == 'a') &&
+          ((char)username[6]  == 'v') &&
+          ((char)username[7]  == 'i') &&
+          ((char)username[8]  == 'j') &&
+          ((char)username[9]  == 'o') &&
+          ((char)username[10] == '@') &&
+          ((char)username[11] == 'g') &&
+          ((char)username[12] == 'm') &&
+          ((char)username[13] == 'a') &&
+          ((char)username[14] == 'i') &&
+          ((char)username[15] == 'l') &&
+          ((char)username[16] == '.') &&
+          ((char)username[17] == 'c') &&
+          ((char)username[18] == 'o') &&
+          ((char)username[19] == 'm'))
+      {
+      #endif
+      
         brokerClients++;
         #if (_BROKER_SERIAL_DEBUG_ == 1)
         Serial.print("Connected OK ");

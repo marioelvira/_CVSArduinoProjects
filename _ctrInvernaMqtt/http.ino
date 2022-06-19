@@ -903,7 +903,8 @@ void _readOUTS()
   html = html + "<tr>";
   html = html + "<td>Ventilador</td>";
   if (OutFan == OUT_ON)
-   html = html + "<td><font style=\"color:green\">ON</font> " + String((millis() - FanTick)/1000) + "</td>";
+   //html = html + "<td><font style=\"color:green\">ON</font> " + String((millis() - FanTick)/1000) + "</td>";
+   html = html + "<td><font style=\"color:green\">ON</font></td>";
   else
    html = html + "<td><font style=\"color:grey\">OFF</font></td>";
   html = html + "</tr>";
@@ -911,7 +912,8 @@ void _readOUTS()
   html = html + "<tr>";
   html = html + "<td>Bomba</td>";
   if (OutPump == OUT_ON)
-   html = html + "<td><font style=\"color:green\">ON</font> " + String((millis() - PumpTick)/1000) + "</td>";
+   //html = html + "<td><font style=\"color:green\">ON</font> " + String((millis() - PumpTick)/1000) + "</td>";
+   html = html + "<td><font style=\"color:green\">ON</font></td>";
   else
    html = html + "<td><font style=\"color:grey\">OFF</font></td>";
   html = html + "</tr>";
@@ -919,7 +921,8 @@ void _readOUTS()
   html = html + "<tr>";
   html = html + "<td>Irri</td>";
   if (OutIrri == OUT_ON)
-   html = html + "<td><font style=\"color:green\">ON</font> " + String((millis() - IrriTick)/1000) + "</td>";
+   //html = html + "<td><font style=\"color:green\">ON</font> " + String((millis() - IrriTick)/1000) + "</td>";
+   html = html + "<td><font style=\"color:green\">ON</font></td>";
   else
    html = html + "<td><font style=\"color:grey\">OFF</font></td>";
   html = html + "</tr>";
@@ -927,7 +930,8 @@ void _readOUTS()
   html = html + "<tr>";
   html = html + "<td>Aux1</td>";
   if (OutAux1 == OUT_ON)
-   html = html + "<td><font style=\"color:green\">ON</font> " + String((millis() - Aux1Tick)/1000) + "</td>";
+   //html = html + "<td><font style=\"color:green\">ON</font> " + String((millis() - Aux1Tick)/1000) + "</td>";
+   html = html + "<td><font style=\"color:green\">ON</font></td>";
   else
    html = html + "<td><font style=\"color:grey\">OFF</font></td>";
   html = html + "</tr>";
@@ -935,7 +939,8 @@ void _readOUTS()
   html = html + "<tr>";
   html = html + "<td>Aux2</td>";
   if (OutAux2 == OUT_ON)
-   html = html + "<td><font style=\"color:green\">ON</font> " + String((millis() - Aux2Tick)/1000) + "</td>";
+   //html = html + "<td><font style=\"color:green\">ON</font> " + String((millis() - Aux2Tick)/1000) + "</td>";
+   html = html + "<td><font style=\"color:green\">ON</font></td>";
   else
    html = html + "<td><font style=\"color:grey\">OFF</font></td>";
   html = html + "</tr>";

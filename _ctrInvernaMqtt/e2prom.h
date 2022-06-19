@@ -60,7 +60,7 @@ extern "C" {
 //#define EEPROM_ADD_MAX          0xFA // 250
 
 // Values
-#define EEPROM_VAL_OK             0xA2
+#define EEPROM_VAL_OK             0xA4
 
 #define EEPROM_VAL_IP_MODE        DHCP_MODE
 #define EEPROM_VAL_IP1            192
@@ -81,7 +81,7 @@ extern "C" {
 #define EEPROM_VAL_WIFI_MODE      ACCESSPOINT_MODE // STATION_MODE
 
 //#define EEPROM_VAL_BROKER       
-#define EEPROM_VAL_BROKER_PORT    7000
+#define EEPROM_VAL_BROKER_PORT    7001
 
 #define EEPROM_VAL_SCALE_XM       5   // 5min
 #define EEPROM_VAL_FAN_XM         1

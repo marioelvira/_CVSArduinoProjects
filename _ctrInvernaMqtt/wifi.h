@@ -14,7 +14,7 @@ extern "C" {
 #define WIFI_BLINK_CONNECTING      100
 //#define WIFI_BLINK_STATION       2000
 
-#define WIFI_ACCESSPOINT_TIMEOUT  30000 // 30 sec
+#define WIFI_ACCESSPOINT_TIMEOUT  45000 // 45 sec
 /*
 #define SSIDST   "SSID"
 #define PSKST    "password"

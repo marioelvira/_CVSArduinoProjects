@@ -17,11 +17,15 @@ extern "C" {
 #define MQTT_PUBLISH_TIMEOUT      800   // 800 ms
 
 // MQTT broker credentials
-#define MQTT_BROKER         "sdpelicanos.webhop.me"
-#define MQTT_BROKER_PORT    7000
+//#define MQTT_BROKER         "sdpelicanos.webhop.me"
+//#define MQTT_BROKER_PORT    7000
+//#define MQTT_USERNAME       "sdpelicanos@gmail.com"
 
-#define MQTT_USERNAME     "sdpelicanos@gmail.com" // "ahiclavijo@gmail.com"
-#define MQTT_KEY          "MQTTSup3rP@@sw0rd"
+#define MQTT_BROKER         "ahiclavijo.webhop.me"
+#define MQTT_BROKER_PORT    7001
+#define MQTT_USERNAME       "ahiclavijo@gmail.com"
+
+#define MQTT_KEY            "MQTTSup3rP@@sw0rd"
 
 // MQTT Topics
 #define TOPIC_STATE        "ahiclavijo@gmail.com/state"
@@ -39,6 +43,7 @@ extern "C" {
 #define TOPIC_OPCTR        "ahiclavijo@gmail.com/oOpCtr"
 #define TOPIC_CLCTR        "ahiclavijo@gmail.com/oClCtr"
 
+#define TOPIC_RESTORE      "ahiclavijo@gmail.com/restore"
 #define TOPIC_WATCHDOG     "ahiclavijo@gmail.com/watchdog"
 
 #define TOPIC_OFFSET            21

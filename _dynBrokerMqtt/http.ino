@@ -102,6 +102,7 @@ void _setACCESS()
      Serial.println(raccesspsd);
      #endif 
 
+     #if (_SDPELICANOS_DDNS_ == 1)
       if (((char)raccessuser[0]  == 's') &&
           ((char)raccessuser[1]  == 'd') &&
           ((char)raccessuser[2]  == 'p') &&
@@ -124,6 +125,32 @@ void _setACCESS()
           ((char)raccessuser[19] == 'o') &&
           ((char)raccessuser[20] == 'm'))
       {
+     #endif
+
+     #if (_AHICLAVIJO_DDNS_ == 1)
+      if (((char)raccessuser[0]  == 'a') &&
+          ((char)raccessuser[1]  == 'h') &&
+          ((char)raccessuser[2]  == 'i') &&
+          ((char)raccessuser[3]  == 'c') &&
+          ((char)raccessuser[4]  == 'l') &&
+          ((char)raccessuser[5]  == 'a') &&
+          ((char)raccessuser[6]  == 'v') &&
+          ((char)raccessuser[7]  == 'i') &&
+          ((char)raccessuser[8]  == 'j') &&
+          ((char)raccessuser[9]  == 'o') &&
+          ((char)raccessuser[10] == '@') &&
+          ((char)raccessuser[11] == 'g') &&
+          ((char)raccessuser[12] == 'm') &&
+          ((char)raccessuser[13] == 'a') &&
+          ((char)raccessuser[14] == 'i') &&
+          ((char)raccessuser[15] == 'l') &&
+          ((char)raccessuser[16] == '.') &&
+          ((char)raccessuser[17] == 'c') &&
+          ((char)raccessuser[18] == 'o') &&
+          ((char)raccessuser[19] == 'm'))
+      {
+      #endif
+ 
         httpLockedSec = HTTP_LOCKED_TIMEOUT;    
       }
       else

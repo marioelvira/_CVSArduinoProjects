@@ -42,7 +42,7 @@ extern "C" {
 //#define EEPROM_ADD_MAX          0xFA // 250
 
 // Values
-#define EEPROM_VAL_OK             0xA7
+#define EEPROM_VAL_OK             0xA1
 
 #define EEPROM_VAL_IP_MODE        DHCP_MODE
 #define EEPROM_VAL_IP1            192
@@ -62,8 +62,13 @@ extern "C" {
 #define STATION_MODE              1
 #define EEPROM_VAL_WIFI_MODE      ACCESSPOINT_MODE // STATION_MODE
 
-//#define EEPROM_VAL_BROKER       
+//#define EEPROM_VAL_BROKER    
+#if (_SDPELICANOS_DDNS_ == 1)  
 #define EEPROM_VAL_BROKER_PORT    7000
+#endif
+#if (_AHICLAVIJO_DDNS_ == 1)     
+#define EEPROM_VAL_BROKER_PORT    7001
+#endif
 
 #endif // _E2PROM_H_
 

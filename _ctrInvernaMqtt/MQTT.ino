@@ -244,7 +244,26 @@ void mqttDataCallback(char* rtopic, byte* rpayload, unsigned int rlength)
       #endif
     }
   }
-    
+
+  // Restore
+  else if (rtopicStr.equals(TOPIC_RESTORE))
+  {
+    if(rpayloadStr.equals("1"))
+    {
+      _ResetEEPROM();
+      
+      #if (_MQTT_SERIAL_DEBUG_ == 1)
+      Serial.println("TOPIC_RESTORE ->> 1");
+      #endif
+    }
+    else
+    {
+      #if (_MQTT_SERIAL_DEBUG_ == 1)
+      Serial.println("TOPIC_RESTORE ->> Error");
+      #endif
+    }
+  }
+  
   // Watchdog
   else if (rtopicStr.equals(TOPIC_WATCHDOG))
   {
@@ -261,7 +280,7 @@ void mqttDataCallback(char* rtopic, byte* rpayload, unsigned int rlength)
     else
     {
       #if (_MQTT_SERIAL_DEBUG_ == 1)
-      Serial.println("TOPIC_LUZSTANDBY ->> Error");
+      Serial.println("TOPIC_WATCHDOG ->> Error");
       #endif
     }
   }  
@@ -340,6 +359,15 @@ void _MQTTSend(void)
     str = str + "\"tm\":0";
   str = str + ",\n";
 
+  // Window timer
+  if (windowState == STATE_WCLOSING)
+    str = str + "\"wt\":" + String( ((cfgTimeCloseMin*60000) - (millis() - windowControlTick))/1000 );
+  else if (windowState == STATE_WOPENING)
+    str = str + "\"wt\":" + String( ((cfgTimeOpenMin*60000) - (millis() - windowControlTick))/1000 );
+  else
+    str = str + "\"wt\":0";
+  str = str + ",\n";
+  
   // FC WClose
   if (InWClose == IO_OFF)
     str = str + "\"fcC\":0";
@@ -430,15 +458,15 @@ void _MQTTSend(void)
   if(mqttPublish(TOPIC_STATE, (char*)spayload))
   {
     #if (_MQTT_SERIAL_DEBUG_ == 1)
-    //Serial.println("TOPIC_STATE publish was succeeded");
-    //Serial.println(spayload);
+    Serial.println("TOPIC_STATE publish was succeeded");
+    Serial.println(spayload);
     #endif
   }
   else
   {
     #if (_MQTT_SERIAL_DEBUG_ == 1)
-    //Serial.println("TOPIC_STATE publish was error");
-    //Serial.println(spayload);
+    Serial.println("TOPIC_STATE publish was error");
+    Serial.println(spayload);
     #endif  
   }
 }
@@ -579,6 +607,8 @@ void _MQTTLoop(void)
             mqttSubscribe(TOPIC_OPCTR)     &&
             // Close
             mqttSubscribe(TOPIC_CLCTR)     &&
+            // Restore
+            mqttSubscribe(TOPIC_RESTORE)   &&
             // Watchdog
             mqttSubscribe(TOPIC_WATCHDOG))
         {

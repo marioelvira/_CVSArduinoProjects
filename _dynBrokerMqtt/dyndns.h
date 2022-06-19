@@ -16,9 +16,17 @@ extern "C" {
 
 #define DYNDNS_TIMEOUT        60000 // 60seg
 
+#if (_SDPELICANOS_DDNS_== 1)
 #define DYNDS_USER        "sdpelicanos"
 #define DYNDS_PASSWORD    "DDNSSup3rP66sw0rd"
 #define DYNDS_URL         "sdpelicanos.webhop.me"
+#endif
+
+#if (_AHICLAVIJO_DDNS_ == 1)
+#define DYNDS_USER        "ahiclavijo"
+#define DYNDS_PASSWORD    "DDNSSup3rP66sw0rd"
+#define DYNDS_URL         "ahiclavijo.webhop.me"
+#endif
 
 #endif // _DYNDNS_H_
 

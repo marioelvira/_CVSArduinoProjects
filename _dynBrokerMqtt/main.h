@@ -11,8 +11,8 @@ extern "C" {
 //////////
 // DDNS //
 //////////
-#define _SDPELICANOS_DDNS_         0
-#define _AHICLAVIJO_DDNS_          1
+#define _SDPELICANOS_DDNS_         1
+#define _AHICLAVIJO_DDNS_          0
 
 ///////////
 // Debug //

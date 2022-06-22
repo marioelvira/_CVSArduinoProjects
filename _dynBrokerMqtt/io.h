@@ -42,7 +42,7 @@ extern "C" {
  */
 // PIN definition
 //#define PIN_ADC_IN      A0  // Entrada
-#define PIN_LED           1   // 1 - ESP01 // 2 - ESP8266
+#define PIN_LED           2   // 1 - ESP01 // 2 - ESP8266
 
 //#define PIN_A           14  // A
 

@@ -61,7 +61,7 @@ void _serveMAIN()
   html = html + "<p>";
   html = html + "  <a href=\"settings.htm\"><input type=\"button\" value=\"Red\"></a>";
   html = html + "  <a href=\"timeSettings.htm\"><input type=\"button\" value=\"Config\"></a>";
-  //html = html + "  <input type=\"button\" value=\"Reset Timers\" onclick=\"sendOUT(20)\">";
+  html = html + "  <input type=\"button\" value=\"Restore\" onclick=\"sendOUT(20)\">";
   html = html + "</p>";
   html = html + "</div>";
 
@@ -1140,17 +1140,16 @@ void _setOUTS()
     }
   }
   
-  /*
-  // Reset Timers
+  // Restore
   if(out_number == "20")
   {
     _ResetEEPROM();
     #if (_HTTP_SERIAL_DEBUG_ == 1)
-    Serial.println("Reset Timers");
+    Serial.println("Restore");
     #endif
-    html = "Reset Timers";
+    html = "Restore";
   }
-  */
+
   httpServer.send(200, "text/plane", html);
 }
 

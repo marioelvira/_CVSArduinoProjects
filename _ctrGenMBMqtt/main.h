@@ -8,21 +8,18 @@ extern "C" {
 // Libs
 // C:\Users\mario.elvira\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4
 
-//////////
-// DDNS //
-//////////
-#define _SDPELICANOS_DDNS_         0
-#define _AHICLAVIJO_DDNS_          1
-
 ///////////
 // Debug //
 ///////////
-#define _SERIAL_DEBUG_             0
-
 #define _USE_LED_INDICATOR_        1
 #define _USE_WDE_                  1
+#define _USE_MUART_                1
 
-#define SMQTT_LOGD                 1 // Log MQTT
+#if (_USE_MUART_ == 1)
+#define _SERIAL_DEBUG_             0
+#else
+#define _SERIAL_DEBUG_             1
+#endif
 
 #if (_SERIAL_DEBUG_ == 1)
 
@@ -31,8 +28,7 @@ extern "C" {
 #define _HTTP_SERIAL_DEBUG_        1
 #define _WIFI_SERIAL_DEBUG_        1
 #define _STATUS_SERIAL_DEBUG_      1
-#define _BROKER_SERIAL_DEBUG_      1
-#define _DYNDNS_SERIAL_DEBUG_      1
+#define _MQTT_SERIAL_DEBUG_        1
 #define _FREERAM_SERIAL_DEBUG_     1
 
 #else

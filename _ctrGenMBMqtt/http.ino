@@ -18,193 +18,12 @@ void _serveCSS()
   httpServer.send (200, "text/css", cssSTYLE);
 }
 
-void _serveREDIRECT()
-{
-  String html = "";
-  
-  html = "<html>";
-  html = html + "<head>";
-  html = html + "<meta http-equiv=\"refresh\" content=\"1; url=\"/index.htm\" />";
-  html = html + "</head>";
-  html = html + "<body>";
-  html = html + "</body>";
-  html = html + "</html>";
-
-  httpServer.send (200, "text/html", html);
-}
-
-void _serveACCESS()
-{
-  String html = "";
-  
-  html = "<!DOCTYPE HTML><html>";
-  html = html + "<title>DYN MQTT+ #Acceso</title>";
-  html = html + "<head>";
-  html = html + "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"/>";
-  html = html + "<link rel=\"icon\" href=\"data:,\">";
-  html = html + "<link rel=\"stylesheet\" type=\"text/css\" href=\"style.css\" />";
-  html = html + "</head>";
-
-  html = html + "<body>";
-  html = html + "<div class=\"myform\">";
-  html = html + "<h1>DYN MQTT+ #Acceso<span>ESP8266 tech</span><span align=\"right\"> Ver: " + FW_Version + "</span></h1>";
-  html = html + "<form method='get' action='setACCESS'>";
-  
-  // Acceso
-  html = html + "<div class=\"inner-wrap\">";
-  html = html + "<label>User <input type=\"text\" maxlength=\"30\" value=\"\" name=\"accessuser\"/></label>";
-  html = html + "<label>Pasword <input type=\"text\" maxlength=\"16\" value=\"\" name=\"accesspsd\"/></label>";
-  html = html + "</div>";
-  // End
-
-  html = html + "<div class=\"button-section\">";
-  html = html + "  <input type=\"submit\" value=\"Enviar\">";
-  html = html + "</div>";
-  
-  html = html + "</div>";
-  html = html + "</div>";
-  html = html + "</form>";
-  html = html + "</div>";
-
-  html = html + "</body> ";
-  html = html + "</html>";
-
-  httpServer.send (200, "text/html", html);
-}
-
-void _setACCESS()
-{
-  String html = "";
-
-  String raccessuser = httpServer.arg("accessuser");
-  String raccesspsd = httpServer.arg("accesspsd");
-
-  int i, j;
-  int error = 0;
-  
-  // Check broker error
-  if ((raccessuser.length() == 0) ||
-      (raccesspsd.length() == 0))
-  {
-    error = 1;  // falta un campo...
-    #if (_HTTP_SERIAL_DEBUG_ == 1)
-    Serial.println("Error... parametro vacío.");
-    #endif
-  }
-
-  // Si no hay error...
-  if (error == 0)
-  {
-     #if (_HTTP_SERIAL_DEBUG_ == 1)
-     Serial.print("----> User: ");
-     Serial.println(raccessuser);
-     Serial.print("----> Pswd: ");
-     Serial.println(raccesspsd);
-     #endif 
-
-     #if (_SDPELICANOS_DDNS_ == 1)
-      if (((char)raccessuser[0]  == 's') &&
-          ((char)raccessuser[1]  == 'd') &&
-          ((char)raccessuser[2]  == 'p') &&
-          ((char)raccessuser[3]  == 'e') &&
-          ((char)raccessuser[4]  == 'l') &&
-          ((char)raccessuser[5]  == 'i') &&
-          ((char)raccessuser[6]  == 'c') &&
-          ((char)raccessuser[7]  == 'a') &&
-          ((char)raccessuser[8]  == 'n') &&
-          ((char)raccessuser[9]  == 'o') &&
-          ((char)raccessuser[10] == 's') &&
-          ((char)raccessuser[11] == '@') &&
-          ((char)raccessuser[12] == 'g') &&
-          ((char)raccessuser[13] == 'm') &&
-          ((char)raccessuser[14] == 'a') &&
-          ((char)raccessuser[15] == 'i') &&
-          ((char)raccessuser[16] == 'l') &&
-          ((char)raccessuser[17] == '.') &&
-          ((char)raccessuser[18] == 'c') &&
-          ((char)raccessuser[19] == 'o') &&
-          ((char)raccessuser[20] == 'm'))
-      {
-     #endif
-
-     #if (_AHICLAVIJO_DDNS_ == 1)
-      if (((char)raccessuser[0]  == 'a') &&
-          ((char)raccessuser[1]  == 'h') &&
-          ((char)raccessuser[2]  == 'i') &&
-          ((char)raccessuser[3]  == 'c') &&
-          ((char)raccessuser[4]  == 'l') &&
-          ((char)raccessuser[5]  == 'a') &&
-          ((char)raccessuser[6]  == 'v') &&
-          ((char)raccessuser[7]  == 'i') &&
-          ((char)raccessuser[8]  == 'j') &&
-          ((char)raccessuser[9]  == 'o') &&
-          ((char)raccessuser[10] == '@') &&
-          ((char)raccessuser[11] == 'g') &&
-          ((char)raccessuser[12] == 'm') &&
-          ((char)raccessuser[13] == 'a') &&
-          ((char)raccessuser[14] == 'i') &&
-          ((char)raccessuser[15] == 'l') &&
-          ((char)raccessuser[16] == '.') &&
-          ((char)raccessuser[17] == 'c') &&
-          ((char)raccessuser[18] == 'o') &&
-          ((char)raccessuser[19] == 'm'))
-      {
-      #endif
- 
-        httpLockedSec = HTTP_LOCKED_TIMEOUT;    
-      }
-      else
-        error = 1;
-  }
-
-  html = "<!DOCTYPE HTML><html>";
-  html = html + "<title>DYN MQTT+ #Acceso</title>";
-  html = html + "<head>";
-  html = html + "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"/>";
-  html = html + "<link rel=\"icon\" href=\"data:,\">";
-  html = html + "<link rel=\"stylesheet\" type=\"text/css\" href=\"style.css\" />";
-  html = html + "</head>";
-
-  html = html + "<body>";
-
-  html = html + "<div class=\"myform\">";
-  html = html + "<h1>DYN MQTT+ #Acceso<span>ESP8266 tech</span><span align=\"right\"> Ver: " + FW_Version + "</span></h1>";
-  
-  if (error == 0)
-  {
-    html += "<p class=\"sansserif\">Acceso permitido.</p>";
-    html = html + "<div class=\"button-section\">";
-    html = html + "  <a href=\"main.htm\"><input type=\"button\" value=\"Acceder\"></a>";
-    html = html + "</div>";
-  }
-  else
-  {
-    html += "<p class=\"sansserif\">Acceso denegado.</p>";
-    html = html + "<div class=\"button-section\">";
-    html = html + "  <a href=\"index.htm\"><input type=\"button\" value=\"Volver\"></a>";
-    html = html + "</div>";
-  }
-
-  html = html + "</div>";
-
-  html = html + "</body> ";
-  html = html + "</html>";
-
-  httpServer.send (200, "text/html", html);
-}
-
 void _serveMAIN()
 {
-  if (httpLockedSec == 0)
-  {
-    _serveREDIRECT();
-    return;
-  }
-
   String html = "";
-    
+  
   html = "<!DOCTYPE HTML><html>";
-  html = html + "<title>DYN MQTT+ Estado</title>";
+  html = html + "<title>REM MQTT+ Estado</title>";
   html = html + "<head>";
   html = html + "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"/>";
   html = html + "<link rel=\"icon\" href=\"data:,\">";
@@ -213,13 +32,23 @@ void _serveMAIN()
 
   html = html + "<body>";
   html = html + "<div class=\"myform\">";
-  html = html + "<h1>DYN MQTT+ #Estado<span>ESP8266 tech</span><span align=\"right\"> Ver: " + FW_Version + "</span></h1>";
+  html = html + "<h1>REM MQTT+ #Estado<span>ESP8266 tech</span><span align=\"right\"> Ver: " + FW_Version + "</span></h1>";
 
   html = html + "<div class=\"section\">Temporizaciones</div>";
   html = html + "<p class=\"sansserif\" id=\"TEMPSid\">...</p>";
-  html = html + "<div class=\"section\">Estados</div>";
+  html = html + "<div class=\"section\">Entradas</div>";
+  html = html + "<p class=\"sansserif\" id=\"INSid\">...</p>";
+  html = html + "<div class=\"section\">Estados / Salidas</div>";
   html = html + "<p class=\"sansserif\" id=\"OUTSid\">...</p>";
-  html = html + "<div class=\"section\">Watchcog</div>";
+  html = html + "<div class=\"section\">Control</div>";
+  html = html + "<p>";
+  html = html + "  <input type=\"button\" value=\"Cambiar Modo\" onclick=\"sendOUT(0)\">";
+  html = html + "</p><p>";
+  html = html + "  <input type=\"button\" value=\"Gen Pulso\" onclick=\"sendOUT(10)\">";
+  html = html + "  <input type=\"button\" value=\"Gen Paro\" onclick=\"sendOUT(11)\">";
+  html = html + "  <input type=\"button\" value=\"Luz Control\" onclick=\"sendOUT(12)\">";
+  html = html + "</p>";
+  html = html + "<div class=\"section\">Watchdog</div>";
   html = html + "<p>";
   html = html + "  <input type=\"button\" value=\"Reset\" onclick=\"sendOUT(1)\">";
   html = html + "</p>";
@@ -227,7 +56,7 @@ void _serveMAIN()
   html = html + "<p>";
   html = html + "  <a href=\"settings.htm\"><input type=\"button\" value=\"Red\"></a>";
   html = html + "  <a href=\"timeSettings.htm\"><input type=\"button\" value=\"Config\"></a>";
-  html = html + "  <input type=\"button\" value=\"Restore\" onclick=\"sendOUT(20)\">";
+  //html = html + "  <input type=\"button\" value=\"Reset Timers\" onclick=\"sendOUT(20)\">";
   html = html + "</p>";
   html = html + "</div>";
 
@@ -291,16 +120,10 @@ void _serveMAIN()
 
 void _serveTimeSETTINGS()
 {
-  if (httpLockedSec == 0)
-  {
-    _serveREDIRECT();
-    return;
-  }
-
   String html = "";
   
   html = "<!DOCTYPE HTML><html>";
-  html = html + "<title>DYN MQTT+ #Configuraci&oacuten</title>";
+  html = html + "<title>REM MQTT+ #Configuraci&oacuten</title>";
   html = html + "<head>";
   html = html + "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"/>";
   html = html + "<link rel=\"icon\" href=\"data:,\">";
@@ -309,25 +132,43 @@ void _serveTimeSETTINGS()
 
   html = html + "<body>";
   html = html + "<div class=\"myform\">";
-  html = html + "<h1>DYN MQTT+ #Configuraci&oacuten<span>ESP8266 tech</span><span align=\"right\"> Ver: " + FW_Version + "</span></h1>";
+  html = html + "<h1>REM MQTT+ #Configuraci&oacuten<span>ESP8266 tech</span><span align=\"right\"> Ver: " + FW_Version + "</span></h1>";
   html = html + "<form method='get' action='setTimeSettings'>";
-  
-  // Broker
-  html = html + "<div class=\"section\">Broker </div>";
+
+  html = html + "<div class=\"section\"><span>1</span>Tiempos</div>";
   html = html + "<div class=\"inner-wrap\">";
-  html = html + "<label>URL <input type=\"text\" maxlength=\"30\" value=\"" + String(brokerUrl) + "\" name=\"brokerurl\"/></label>";
-  html = html + "<label>Port <input type=\"text\" maxlength=\"16\" value=\"" + String(mqttPort) + "\" name=\"brokerport\"/></label>";
+  html = html + "<label>Pulso Remoto (*100ms)<input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgRemotePulsTick) + "\" name=\"timeRP\"/></label>";
+  html = html + "<label>Luz Ext Off (*15m)<input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgLuzOutTick) + "\" name=\"timeLOFF\"/></label>";
   html = html + "</div>";
-  // End
+
+  html = html + "<div class=\"section\"><span>2</span>Logica</div>";
+  html = html + "<div class=\"inner-wrap\">";
+  html = html + "<label> Salidas ON <input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgLogicIns) + "\" name=\"cfgIns\"/></label>";
+  html = html + "<label> Entradas ON <input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgLogicOuts) + "\" name=\"cfgOuts\"/></label>";
+  html = html + "</div>";
+
+  html = html + "<div class=\"section\"><span>3</span>vBat ADC: y = mx +/- b</div>";
+  html = html + "<div class=\"inner-wrap\">";
+  html = html + "<label>ADC recta:m <input type=\"text\"  maxlength=\"16\" value=\"" + String((int)cfgADCm) + "\" name=\"rADCm\"/></label>";
+  html = html + "<label>ADC recta:b (/1000)<input type=\"text\"  maxlength=\"16\" value=\"" + String((int)cfgADCb) + "\" name=\"rADCb\"/></label>";
+  html = html + "<label>ADC recta:prscal <input type=\"text\"  maxlength=\"16\" value=\"" + String((int)cfgADCp) + "\" name=\"rADCp\"/></label>";
+  html = html + "<label>ADC signo (+/-  1/0)<input type=\"text\"  maxlength=\"16\" value=\"" + String((int)cfgADCs) + "\" name=\"rADCs\"/></label>";
+  html = html + "<label>ADC filtro (si/no 1/0)<input type=\"text\"  maxlength=\"16\" value=\"" + String((int)cfgADCf) + "\" name=\"rADCf\"/></label>";
+  html = html + "</div>";
+  
+  html = html + "<div class=\"section\"><span>4</span>Generador In</div>";
+  html = html + "<div class=\"inner-wrap\">";
+  html = html + "<label><input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgGenOnPin) + "\" name=\"cfgGenon\"/></label>";
+  html = html + "</div>";
   /*
-  html = html + "<div class=\"section\">Debug</div>";
+  html = html + "<div class=\"section\"><span>5</span>Debug</div>";
   html = html + "<div class=\"inner-wrap\">";
   html = html + "<label>Debug (0)<input type=\"text\"  maxlength=\"16\" value=\"" + String(DebugVal) + "\" name=\"tdebugVal\"/></label>";
   html = html + "</div>";
   */
   html = html + "<div class=\"button-section\">";
   html = html + "  <input type=\"submit\" value=\"Guardar\">";
-  html = html + "  <a href=\"main.htm\"><input type=\"button\" value=\"Volver\"></a>";
+  html = html + "  <a href=\"index.htm\"><input type=\"button\" value=\"Volver\"></a>";
   html = html + "</div>";
   
   html = html + "</div>";
@@ -343,26 +184,36 @@ void _serveTimeSETTINGS()
 
 void _setTimeSETTINGS()
 {
-  if (httpLockedSec == 0)
-  {
-    httpServer.send(200, "text/plane", "locked");
-    return; 
-  }
-  
+  int eeprom_value_hi, eeprom_value_lo;
+    
   String html = "";
-  String rbrokerurl = httpServer.arg("brokerurl");
-  String rbrokerport = httpServer.arg("brokerport");
+  
+  String rtimeRP   = httpServer.arg("timeRP");
+  String rtimeLOFF = httpServer.arg("timeLOFF");
+  String cfgIns    = httpServer.arg("cfgIns");
+  String cfgOuts   = httpServer.arg("cfgOuts");
+  String cfgGenon  = httpServer.arg("cfgGenon");
+  String rADCm     = httpServer.arg("rADCm");
+  String rADCb     = httpServer.arg("rADCb");
+  String rADCp     = httpServer.arg("rADCp");
+  String rADCs     = httpServer.arg("rADCs");
+  String rADCf     = httpServer.arg("rADCf");
+  
   //String rdebugVal = httpServer.arg("tdebugVal");
-
-  int i, j;
+  
   int error = 0;
 
-  int eeprom_value_hi, eeprom_value_lo;
-
-  // Check broker error
-  if ((rbrokerurl.length() == 0) ||
-      (rbrokerport.length() == 0))
-   // ((rdebugVal.length() == 0))
+  if ((rtimeRP.length() == 0)   ||
+      (rtimeLOFF.length() == 0) ||
+      (cfgIns.length() == 0)    ||
+      (cfgOuts.length() == 0)   ||
+      (cfgGenon.length() == 0)  ||
+      (rADCm.length() == 0)     ||
+      (rADCb.length() == 0)     ||
+      (rADCp.length() == 0)     ||
+      (rADCs.length() == 0)     ||
+      (rADCf.length() == 0))
+      //(rdebugVal.length() == 0))
   {
     error = 1;  // falta un campo...
     #if (_HTTP_SERIAL_DEBUG_ == 1)
@@ -373,41 +224,64 @@ void _setTimeSETTINGS()
   // Si no hay error...
   if (error == 0)
   {
-     ////////////
-     // Broker //
-     ////////////
-     for (i = 0; i < BROKER_MAX; i++)
-       EEPROM.write(EEPROM_ADD_BROKER + i, 0);
-     j = rbrokerurl.length();
-     for (i = 0; i < j; i++)
-       EEPROM.write(EEPROM_ADD_BROKER + i, rbrokerurl[i]);
-      
-     mqttPort = rbrokerport.toInt();
-     eeprom_value_lo = mqttPort & 0x00FF;
-     EEPROM.write(EEPROM_ADD_BROKER_PORT, eeprom_value_lo);
-     eeprom_value_hi = (mqttPort & 0xFF00)>>8;
-     EEPROM.write(EEPROM_ADD_BROKER_PORT + 1, eeprom_value_hi);
-     
-     //DebugVal = rdebugVal.toInt();
+    cfgRemotePulsTick = rtimeRP.toInt();
+    cfgLuzOutTick = rtimeLOFF.toInt();
+    cfgLogicIns = cfgIns.toInt();
+    cfgLogicOuts = cfgOuts.toInt();
+    cfgGenOnPin = cfgGenon.toInt();
+    cfgADCm = rADCm.toInt();
+    cfgADCb = rADCb.toInt();
+    cfgADCp = rADCp.toInt();
+    cfgADCs = rADCs.toInt();
+    cfgADCf = rADCf.toInt();
     
-     #if (_HTTP_SERIAL_DEBUG_ == 1)
-     // Broker configuration
-     Serial.print("---->Broker Url: ");
-     Serial.println(rbrokerurl);
-     Serial.print("---->Broker Port: ");
-     Serial.println(rbrokerport);
-     
-     //Serial.print("Debug: ");       Serial.print (DebugVal);           Serial.println(" ---");
-     #endif   
+    //DebugVal = rdebugVal.toInt();
+    
+    #if (_HTTP_SERIAL_DEBUG_ == 1)  
+    Serial.print("Remote Pulse: ");  Serial.print (cfgRemotePulsTick);  Serial.println(" *100 ms");
+    Serial.print("Luz Off: ");       Serial.print (cfgLuzOutTick);      Serial.println(" *15 min");
+    Serial.print("cfgLogic Ins: ");  Serial.println(cfgLogicIns);
+    Serial.print("cfgLogic Outs: "); Serial.println(cfgLogicOuts);
+    Serial.print("Gen On Pin: ");    Serial.println(cfgGenOnPin);
 
-     // Data
-     //EEPROM.write(EEPROM_ADD_DEBUG,      (byte)DebugVal);
+    Serial.print("ADC m: ");         Serial.print (cfgADCm);            Serial.println(" ");
+    Serial.print("ADC b: ");         Serial.print (cfgADCb);            Serial.println(" (/1000)");
+    Serial.print("ADC p: ");         Serial.print (cfgADCp);            Serial.println(" ");
+    Serial.print("ADC s: ");         Serial.print (cfgADCs);            Serial.println(" +/-  1/0");
+    Serial.print("ADC f: ");         Serial.print (cfgADCf);            Serial.println(" si/no 1/0");
+  
+    //Serial.print("Debug: ");       Serial.print (DebugVal);           Serial.println(" ---");
+    #endif   
 
-     EEPROM.commit();    //Store data to EEPROM
+    // Data
+    EEPROM.write(EEPROM_ADD_RPUSL_MSEC, (byte)cfgRemotePulsTick);
+    EEPROM.write(EEPROM_ADD_LUZOFF_15M, (byte)cfgLuzOutTick);
+    
+    EEPROM.write(EEPROM_ADD_LOGIC_INS,  (byte)cfgLogicIns);
+    EEPROM.write(EEPROM_ADD_LOGIC_OUTS, (byte)cfgLogicOuts);
+    
+    eeprom_value_lo = cfgADCm & 0x00FF;
+    EEPROM.write(EEPROM_ADD_ADC_M_LO, eeprom_value_lo);
+    eeprom_value_hi = (cfgADCm & 0xFF00)>>8;
+    EEPROM.write(EEPROM_ADD_ADC_M_HI, eeprom_value_hi);
+    eeprom_value_lo = cfgADCb & 0x00FF;
+    EEPROM.write(EEPROM_ADD_ADC_B_LO, eeprom_value_lo);
+    eeprom_value_hi = (cfgADCb & 0xFF00)>>8;
+    EEPROM.write(EEPROM_ADD_ADC_B_HI, eeprom_value_hi);
+    eeprom_value_lo = cfgADCp & 0x00FF;
+    EEPROM.write(EEPROM_ADD_ADC_P_LO, eeprom_value_lo);
+    eeprom_value_hi = (cfgADCp & 0xFF00)>>8;
+    EEPROM.write(EEPROM_ADD_ADC_P_HI, eeprom_value_hi);
+    EEPROM.write(EEPROM_ADD_ADC_S,        (byte)cfgADCs);
+    EEPROM.write(EEPROM_ADD_ADC_F,        (byte)cfgADCf);
+    
+    //EEPROM.write(EEPROM_ADD_DEBUG,      (byte)DebugVal);
+
+    EEPROM.commit();    //Store data to EEPROM
   }
 
   html = "<!DOCTYPE HTML><html>";
-  html = html + "<title>DYN MQTT+ #Configuraci&oacuten</title>";
+  html = html + "<title>REM MQTT+ #Configuraci&oacuten</title>";
   html = html + "<head>";
   html = html + "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"/>";
   html = html + "<link rel=\"icon\" href=\"data:,\">";
@@ -417,7 +291,7 @@ void _setTimeSETTINGS()
   html = html + "<body>";
 
   html = html + "<div class=\"myform\">";
-  html = html + "<h1>DYN MQTT+ #Configuraci&oacuten<span>ESP8266 tech</span><span align=\"right\"> Ver: " + FW_Version + "</span></h1>";
+  html = html + "<h1>REM MQTT+ #Configuraci&oacuten<span>ESP8266 tech</span><span align=\"right\"> Ver: " + FW_Version + "</span></h1>";
   
   if (error == 0)
     html += "<p class=\"sansserif\">Configuraci&oacuten guardada correctamente.</p>";
@@ -425,7 +299,7 @@ void _setTimeSETTINGS()
     html += "<p class=\"sansserif\">Error el guardar la configuraci&oacuten. Revise los datos introducidos.</p>";
 
   html = html + "<div class=\"button-section\">";
-  html = html + "  <a href=\"main.htm\"><input type=\"button\" value=\"Volver\"></a>";
+  html = html + "  <a href=\"index.htm\"><input type=\"button\" value=\"Volver\"></a>";
   html = html + "</div>";
 
   html = html + "</div>";
@@ -438,12 +312,7 @@ void _setTimeSETTINGS()
 
 void _serveSETTINGS()
 {
-  if (httpLockedSec == 0)
-  {
-    _serveREDIRECT();
-    return;
-  }
-
+  //int mobile = 0;
   String html = "";
 
   int n = WiFi.scanNetworks();
@@ -453,11 +322,13 @@ void _serveSETTINGS()
   html = html + "<head>";
   html = html + "<link rel=\"icon\" href=\"data:,\">";
   html = html + "<link rel=\"stylesheet\" type=\"text/css\" href=\"style.css\" />";
+  //html = html + "<meta name='apple-mobile-web-app-capable' content='yes' />";
+  //html = html + "<meta name='apple-mobile-web-app-status-bar-style' content='black-translucent' />";
   html = html + "</head>";
 
   html = html + "<body>";
   html = html + "<div class=\"myform\">";
-  html = html + "<h1>DYN MQTT+ #Network settings<span>ESP8266 tech</span><span align=\"right\"> Ver: " + FW_Version + "</span></h1>";
+  html = html + "<h1>REM MQTT+ #Network settings<span>ESP8266 tech</span><span align=\"right\"> Ver: " + FW_Version + "</span></h1>";
   //html = html + "<form method=\"post\">";
   html = html + "<form method='get' action='networSettings'>";
 
@@ -510,10 +381,20 @@ void _serveSETTINGS()
 
   html = html + "</div>";
   // End
+
+  // Broker
+  html = html + "<div class=\"section\"><span>3</span>Broker </div>";
+  html = html + "<div class=\"inner-wrap\">";
+
+  html = html + "<label>URL <input type=\"text\" maxlength=\"30\" value=\"" + String(brokerUrl) + "\" name=\"brokerurl\"/></label>";
+  html = html + "<label>Port <input type=\"text\" maxlength=\"16\" value=\"" + String(brokerPort) + "\" name=\"brokerport\"/></label>";
+
+  html = html + "</div>";
+  // End
                         
   html = html + "<div class=\"button-section\">";
   html = html + "  <input type=\"submit\" value=\"Guardar\">";
-  html = html + "  <a href=\"main.htm\"><input type=\"button\" value=\"Volver\"></a>";
+  html = html + "  <a href=\"index.htm\"><input type=\"button\" value=\"Volver\"></a>";
   html = html + "</div>";
   
   html = html + "</div>";
@@ -529,12 +410,6 @@ void _serveSETTINGS()
 
 void _setSETTINGS()
 {
-  if (httpLockedSec == 0)
-  {
-    httpServer.send(200, "text/plane", "locked");
-    return; 
-  }
-  
   String rwmode = httpServer.arg("wifimode");
   String rssid = httpServer.arg("ssid");
   String rpass = httpServer.arg("pass");
@@ -543,6 +418,9 @@ void _setSETTINGS()
   String ripaddress = httpServer.arg("ipaddress");
   String rmask = httpServer.arg("mask");
   String rgate = httpServer.arg("gateway");
+  
+  String rbrokerurl = httpServer.arg("brokerurl");
+  String rbrokerport = httpServer.arg("brokerport");
     
   String html = "";
   int i, j, k, m;
@@ -550,6 +428,8 @@ void _setSETTINGS()
   char schar;
   char sbuf[4];
   byte val[4];
+
+  int eeprom_value_hi, eeprom_value_lo;
 
   IPAddress localip;
   IPAddress localmask;
@@ -588,9 +468,29 @@ void _setSETTINGS()
   else
     error = 1;
 
+  // Check broker error
+  if ((rbrokerurl.length() == 0) ||
+      (rbrokerport.length() == 0))
+    error |= 1;
+
   // If no error on data...
   if (error == 0)
   {
+     ////////////
+     // Broker //
+     ////////////
+     for (i = 0; i < BROKER_MAX; i++)
+       EEPROM.write(EEPROM_ADD_BROKER + i, 0);
+     j = rbrokerurl.length();
+     for (i = 0; i < j; i++)
+       EEPROM.write(EEPROM_ADD_BROKER + i, rbrokerurl[i]);
+      
+     brokerPort = rbrokerport.toInt();
+     eeprom_value_lo = brokerPort & 0x00FF;
+     EEPROM.write(EEPROM_ADD_BROKER_PORT, eeprom_value_lo);
+     eeprom_value_hi = (brokerPort & 0xFF00)>>8;
+     EEPROM.write(EEPROM_ADD_BROKER_PORT + 1, eeprom_value_hi);
+          
      /////////////////////////
      // Wi-Fi configuration //
      /////////////////////////
@@ -722,7 +622,6 @@ void _setSETTINGS()
          EEPROM.write(EEPROM_ADD_GATE3, val[2]);
          EEPROM.write(EEPROM_ADD_GATE4, val[3]);
        }
-
      }
      
      #if (_HTTP_SERIAL_DEBUG_ == 1)
@@ -742,6 +641,12 @@ void _setSETTINGS()
      Serial.println(localmask);
      Serial.print("---->Local gateway: ");
      Serial.println(localgate);
+
+     // Broker configuration
+     Serial.print("---->Broker Url: ");
+     Serial.println(rbrokerurl);
+     Serial.print("---->Broker Port: ");
+     Serial.println(rbrokerport);     
      #endif
      
      EEPROM.commit();
@@ -765,10 +670,10 @@ void _setSETTINGS()
 
      // Error
      i = 404;
-   }
+  }
 
   html = "<!DOCTYPE HTML><html>";
-  html = html + "<title>DYN MQTT+ #Configuraci&oacuten</title>";
+  html = html + "<title>REM MQTT+ #Configuraci&oacuten</title>";
   html = html + "<head>";
   html = html + "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"/>";
   html = html + "<link rel=\"icon\" href=\"data:,\">";
@@ -778,7 +683,7 @@ void _setSETTINGS()
   html = html + "<body>";
 
   html = html + "<div class=\"myform\">";
-  html = html + "<h1>DYN MQTT+ #Configuraci&oacuten<span>ESP8266 tech</span><span align=\"right\"> Ver: " + FW_Version + "</span></h1>";
+  html = html + "<h1>REM MQTT+ #Configuraci&oacuten<span>ESP8266 tech</span><span align=\"right\"> Ver: " + FW_Version + "</span></h1>";
   
   if (error == 0)
     html += "<p class=\"sansserif\">Configuraci&oacuten guardada correctamente.</p>";
@@ -786,7 +691,7 @@ void _setSETTINGS()
     html += "<p class=\"sansserif\">Error el guardar la configuraci&oacuten. Revise los datos introducidos.</p>";
 
   html = html + "<div class=\"button-section\">";
-  html = html + "  <a href=\"main.htm\"><input type=\"button\" value=\"Volver\"></a>";
+  html = html + "  <a href=\"index.htm\"><input type=\"button\" value=\"Volver\"></a>";
   html = html + "</div>";
 
   html = html + "</div>";
@@ -801,17 +706,11 @@ void _setSETTINGS()
 // Actions //
 /////////////
 void _readINS()
-{
-  if (httpLockedSec == 0)
-  {
-    httpServer.send(200, "text/plane", "locked");
-    return; 
-  }
- 
+{ 
   String html = "";
 
-  html = "<table style=\"width:100%\">"; 
-  /*
+  html = "<table style=\"width:100%\">";
+
   html = html + "<tr>";
   html = html + "<td>Modo</td>";
   if (controlMode == MODE_AUTO)
@@ -819,79 +718,114 @@ void _readINS()
   else
    html = html + "<td><font style=\"color:red\">Control Manual</font></td>";
   html = html + "</tr>";
-  */
+
+  html = html + "<tr>";
+  html = html + "<td>Indicador LCD</td>";
+  html = html + "<td>" + String(DisplayIndicador) + " -> " + String(InD) + "-" + String(InC) + "-" + String(InB) + "-" + String(InA) + "</td>";
+  html = html + "</tr>";
+
+  html = html + "<tr>";
+  html = html + "<td>Generador In</td>";
+  if (InGenOn == IO_OFF)
+    html = html + "<td><font style=\"color:grey\">OFF</font></td>";
+  else
+    html = html + "<td><font style=\"color:green\">ON</font></td>";
+  html = html + "</tr>";
+
+  html = html + "<tr>";
+  html = html + "<td>Generador In (min)</td>";
+  html = html + "<td>" + String(genMinOn) + "</td>";
+  html = html + "</tr>";
+
+  html = html + "<tr>";
+  html = html + "<td>Generador Off</td>";
+  html = html + "<td>" + String(genTimeDay) + "d " + String(genTimeHour) + " : " + String(genTimeMin) + " : " + String(genTimeSec) + "</td>";
+  html = html + "</tr>";
+  
+  html = html + "<tr>";
+  html = html + "<td>Vbatt In (Dig)</td>";
+  html = html + "<td>" + String(VbattInADC) + "</td>";
+  html = html + "</tr>";
+  
+  html = html + "<tr>";
+  html = html + "<td>Vbatt In (V)</td>";
+  html = html + "<td>" + String(VbattIn) + "</td>";
+  html = html + "</tr>";
+  
   html = html + "</table>";
-    
+  
   httpServer.send(200, "text/plane", html);
 }
 
 void _readOUTS()
 {
-  if (httpLockedSec == 0)
-  {
-    httpServer.send(200, "text/plane", "locked");
-    return; 
-  }
-
   String html = "";
 
   html = "<table style=\"width:100%\">";
-  
+
+  html = html + "<tr>";
+  html = html + "<td>Control State </td>";
+  html = html + "<td>" + String(ControlState) + "</td>";
+  html = html + "</tr>";
+
+  html = html + "<tr>";
+  html = html + "<td>Luz OFF State </td>";
+  html = html + "<td>" + String(LuzState) + "</td>";
+  html = html + "</tr>";
+
   html = html + "<tr>";
   html = html + "<td>Wi-Fi State </td>";
   html = html + "<td>" + String(wifiStatus) + "</td>";
   html = html + "</tr>";
-  
+
   html = html + "<tr>";
-  html = html + "<td>Broker State </td>";
-  html = html + "<td>" + String(brokerStatus) + "</td>";
-  html = html + "</tr>";
-  
-  html = html + "<tr>";
-  html = html + "<td>Num Clientes </td>";
-  html = html + "<td>" + String(brokerClients) + "</td>";
-  html = html + "</tr>";
-  
-  html = html + "<tr>";
-  html = html + "<td>Public IP </td>";
-  html = html + "<td>" + String(new_ip) + "</td>";
+  html = html + "<td>MQTT State </td>";
+  html = html + "<td>" + String(mqttStatus) + "</td>";
   html = html + "</tr>";
 
   html = html + "<tr>";
-  html = html + "<td>HTTP Countdown </td>";
-  html = html + "<td>" + String(httpLockedSec) + "</td>";
+  html = html + "<td>-----------------</td>";
   html = html + "</tr>";
-
+  
   html = html + "<tr>";
-  html = html + "<td>Dns IP </td>";
-  if (ip_sent == 1)
-    html = html + "<td> pubicada</td>";
+  html = html + "<td>Gen Pulsador</td>";
+  if (OutGenPuls == OUT_ON)
+   html = html + "<td><font style=\"color:green\">Activado</font></td>";
   else
-    html = html + "<td> no pubicada</td>";  
+   html = html + "<td><font style=\"color:grey\">Desactivado</font></td>";
   html = html + "</tr>";
-    
+
+  html = html + "<tr>";
+  html = html + "<td>Gen Stop</td>";
+  if (OutStopPuls == OUT_ON)
+   html = html + "<td><font style=\"color:green\">Activado</font></td>";
+  else
+   html = html + "<td><font style=\"color:grey\">Desactivado</font></td>";
+  html = html + "</tr>";
+  
+  html = html + "<tr>";
+  html = html + "<td>Luz OFF</td>";
+  if (OutLuzOff == OUT_ON)
+   html = html + "<td><font style=\"color:green\">Activado</font></td>";
+  else
+   html = html + "<td><font style=\"color:grey\">Desactivado</font></td>";
+  html = html + "</tr>";
+ 
   html = html + "</table>";
-   
+  
   httpServer.send(200, "text/plane", html);
 }
 
 void _setOUTS()
 {
-  if (httpLockedSec == 0)
-  {
-    httpServer.send(200, "text/plane", "locked");
-    return; 
-  }
-
-  String html = "";
   String out_number = httpServer.arg("OUTNumber");
-
+  String html = "";
+ 
   #if (_HTTP_SERIAL_DEBUG_ == 1)
   Serial.print("Change stats out: ");
   Serial.println(out_number);
   #endif
 
-  /*
   // Cambiar Modo
   if(out_number == "0")
   {
@@ -912,8 +846,7 @@ void _setOUTS()
       html = "Mode Test";
     }
   }
-  */
-    
+
   // Reset
   if(out_number == "1")
   {
@@ -925,34 +858,91 @@ void _setOUTS()
     Serial.println("Watchdog reset");
     #endif
   }
-    
-  // Restore
+
+  // Gen Pulso
+  if(out_number == "10")
+  {
+    if (OutGenPuls == OUT_ON)
+    {
+      OutGenPuls = OUT_OFF;
+      #if (_HTTP_SERIAL_DEBUG_ == 1)
+      Serial.println("Gen Pulso OFF");
+      #endif
+      html = "Gen Pulso OFF";
+    }
+    else
+    {
+      OutGenPuls = OUT_ON;
+      #if (_HTTP_SERIAL_DEBUG_ == 1)
+      Serial.println("Gen Pulso ON");
+      #endif
+      html = "Gen Pulso ON";
+    }
+  }
+ 
+  // OutStopPuls
+  if(out_number == "11")
+  {
+    if (OutStopPuls == OUT_ON)
+    {
+      OutStopPuls = OUT_OFF;
+      #if (_HTTP_SERIAL_DEBUG_ == 1)
+      Serial.println("Stop Gen OFF");
+      #endif
+      html = "Stop Gen OFF";
+    }
+    else
+    {
+      OutStopPuls = OUT_ON;
+      #if (_HTTP_SERIAL_DEBUG_ == 1)
+      Serial.println("Stop Gen ON");
+      #endif
+      html = "Stop Gen ON";
+    }
+  }
+
+  // OutLuzOff
+  if(out_number == "12")
+  {
+    if (OutLuzOff == OUT_ON)
+    {
+      OutLuzOff = OUT_OFF;
+      #if (_HTTP_SERIAL_DEBUG_ == 1)
+      Serial.println("Luz Off OFF");
+      #endif
+      html = "Luz off OFF";
+    }
+    else
+    {
+      OutLuzOff = OUT_ON;
+      #if (_HTTP_SERIAL_DEBUG_ == 1)
+      Serial.println("Luz off ON");
+      #endif
+      html = "Luz off ON";
+    }
+  }
+  /*
+  // Reset Timers
   if(out_number == "20")
   {
     _ResetEEPROM();
     #if (_HTTP_SERIAL_DEBUG_ == 1)
-    Serial.println("Restore");
+    Serial.println("Reset Timers");
     #endif
-    html = "Restore";
+    html = "Reset Timers";
   }
-    
+  */
   httpServer.send(200, "text/plane", html);
 }
 
 void _readTEMPS()
 { 
-  if (httpLockedSec == 0)
-  {
-    httpServer.send(200, "text/plane", "locked");
-    return; 
-  }
-
   String html = "";
 
   html = "<table style=\"width:100%\">";
-    
+  
   html = html + "<tr>";
-  html = html + "<td>Tiempo Encendido</td>";
+  html = html + "<td>Tiempo Encendio</td>";
   html = html + "<td>" + String(timeDay) + "d " + String(timeHour) + " : " + String(timeMin) + " : " + String(timeSec) + "</td>";
   html = html + "</tr>";
   
@@ -960,7 +950,7 @@ void _readTEMPS()
   html = html + "<td>Free RAM</td>";
   html = html + "<td>" + String(freeRam) + "</td>";
   html = html + "</tr>";
-    
+
   html = html + "</table>";
   
   httpServer.send(200, "text/plane", html);
@@ -979,14 +969,12 @@ void _HttpLoop()
       httpServer.on("/style.css",        _serveCSS);
 
       // html pages
-      httpServer.on("/",                  _serveACCESS);
-      httpServer.on("/index.htm",         _serveACCESS);
-      httpServer.on("/main.htm",          _serveMAIN);
+      httpServer.on("/",                  _serveMAIN);
+      httpServer.on("/index.htm",         _serveMAIN);
       httpServer.on("/settings.htm",      _serveSETTINGS);
       httpServer.on("/timeSettings.htm",  _serveTimeSETTINGS);
 
       // acctions
-      httpServer.on("/setACCESS",        _setACCESS);
       httpServer.on("/setOUTS",          _setOUTS);
       httpServer.on("/readOUTS",         _readOUTS);
       httpServer.on("/readINS",          _readINS);
@@ -1006,10 +994,6 @@ void _HttpLoop()
     
     case HTTP_ONSERVE:
       httpServer.handleClient();
-
-      if (httpLockedSec < HTTP_LOCKED_TIMEOUT)
-        
-      
       break;
   }
 }

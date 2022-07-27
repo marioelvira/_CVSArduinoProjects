@@ -14,7 +14,7 @@ extern "C" {
 #define _SERIAL_DEBUG_             1
 #define _MQTT_DEBUG_               0
 #define _USE_RS485_                1
-#define _USE_MB_                   0
+#define _USE_MB_                   1
 
 #define _USE_LED_INDICATOR_        1
 #define _USE_WDE_                  1

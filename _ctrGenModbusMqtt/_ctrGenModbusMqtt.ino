@@ -167,7 +167,7 @@ unsigned long freeRam;
 // RS485
 int             mrs485State;
 String          mrs485RxBuffer = "";
-unsigned long   mrs485RxTick;
+unsigned long   mrs485tick;
 char            mrs485TxBuffer[MRS485_ARRAY_SIZE];
 int             mrs485TxNumBytes;
 
@@ -179,6 +179,7 @@ int             OutRS485rxtx;
 #if (_USE_MB_ == 1)
 int             mbState;
 unsigned long   mbTick;
+byte            mbCRC[2];
 #endif
 #endif
 
@@ -331,14 +332,13 @@ void _PINLoop()
   else
     digitalWrite(PIN_LUZ_OFF, PIN_OUT_OFF);
 
-  /*
   #if (_USE_RS485_ == 1)
   if (OutRS485rxtx == OUT_RS485_RX)
     digitalWrite(PIN_RS485_RXTX, LOW);
   else
     digitalWrite(PIN_RS485_RXTX, HIGH);
   #endif
-  */
+
   //-----//
   // INS //
   //-----//

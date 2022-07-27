@@ -1,4 +1,5 @@
 #include "main.h"
+#include "mModbus.h"
 
 #if (_USE_RS485_ == 1)
 
@@ -14,10 +15,9 @@ void _RS485Setup(void)
   mrs485RxBuffer.reserve(MRS485_ARRAY_SIZE);
   //mrs485TxBuffer.reserve(MRS485_ARRAY_SIZE);
 
-  digitalWrite(PIN_RS485_RXTX, LOW);
-  //OutRS485rxtx = OUT_RS485_RX;
+  OutRS485rxtx = OUT_RS485_RX;
 
-  mrs485RxTick = millis();
+  mrs485tick = millis();
 }
 
 /////////////////
@@ -33,74 +33,63 @@ void _RS485Loop(void)
 	    if (Serial.available())
       {
         mrs485State = MRS485_ONRX;
-	      mrs485RxTick = millis();
+	      mrs485tick = millis();
 		    inChar = (char)Serial.read();
 		    mrs485RxBuffer += inChar;
 	    }
-      digitalWrite(PIN_RS485_RXTX, LOW);
+      OutRS485rxtx = OUT_RS485_RX;
+	    
 	    break;
 	  
 	  case MRS485_ONRX:
 	    if (Serial.available())
       {
         mrs485State = MRS485_ONRX;
-	      mrs485RxTick = millis();
+	      mrs485tick = millis();
 		    inChar = (char)Serial.read();
 		    mrs485RxBuffer += inChar;
 	    }
-	    digitalWrite(PIN_RS485_RXTX, LOW);
-     
+      OutRS485rxtx = OUT_RS485_RX;
+      
 	    // Time Out
-	    if (millis() - mrs485RxTick >= 100)  // 100ms
+	    if (millis() - mrs485tick >= MRS485_TOUT_MS)
       {
-		    mrs485State = MRS485_ENDRX;
-       
-        delay(5); // TODO
-        digitalWrite(PIN_RS485_RXTX, HIGH);
-        delay(5); // TODO
+		    mrs485State = MRS485_FRAME_RX;
+        OutRS485rxtx = OUT_RS485_TX;
       }
 
 	    break;
 	  
-	  case MRS485_ENDRX:
+	  case MRS485_FRAME_RX:
 	    // Frame Received
-	    // Analyze Frame and decide
-	    mrs485State = MRS485_ONTX;
+      mrs485State = MRS485_STANDBY;
 	    // clear the string:
 	    mrs485RxBuffer = "";
 
 	    break;
 	  
 	  case MRS485_ONTX:
-   
-      // Send Frame
-      // Node
-      mrs485TxBuffer[0] = 0xFF;
-      // Read input regs
-      mrs485TxBuffer[1] = 0x04;
-      // Address
-      mrs485TxBuffer[2] = 0x00;
-      mrs485TxBuffer[3] = 0x00;
-      // Length
-      mrs485TxBuffer[4] = 0x00;
-      mrs485TxBuffer[5] = 0x08;
       
-      // Num Bytes
-      mrs485TxNumBytes = 6;
-  
-      // Send byffer
+      // Send buffer
       if (mrs485TxNumBytes > MRS485_ARRAY_SIZE)
         mrs485TxNumBytes = MRS485_ARRAY_SIZE;
       Serial.write(mrs485TxBuffer, mrs485TxNumBytes);
-      
-      delay(5); // TODO
-      digitalWrite(PIN_RS485_RXTX, LOW);
-      delay(5); // TODO
-      
-	    mrs485State = MRS485_STANDBY;
+
+      mrs485tick = millis();  
+	    mrs485State = MRS485_ENDTX;
+     
 	    break;
-  }
- 
+
+    case MRS485_ENDTX:
+    
+      // Time Out
+      if (millis() - mrs485tick >= MRS485_TOUT_MS)
+      {
+        mrs485State = MRS485_STANDBY;
+        OutRS485rxtx = OUT_RS485_RX;
+      }      
+      break;
+   }
  }
 
 #endif

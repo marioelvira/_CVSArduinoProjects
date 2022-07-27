@@ -10,6 +10,8 @@ extern "C" {
 #define MB_READINS	  2
 #define MB_WRITEOUTS  3
 
+extern void _MBCRC(void);
+
 #endif // _MMODBUS_H_
 
 #ifdef __cplusplus

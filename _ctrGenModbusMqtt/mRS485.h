@@ -9,9 +9,12 @@ extern "C" {
 
 // Status
 #define MRS485_STANDBY	  1
-#define MRS485_ONRX		  2
-#define MRS485_ENDRX	  3
-#define MRS485_ONTX		  4
+#define MRS485_ONRX		    2
+#define MRS485_ENDRX	    3
+#define MRS485_ONTX		    4
+
+#define OUT_RS485_RX      0
+#define OUT_RS485_TX      1
 
 #endif // _MRS485_H_
 

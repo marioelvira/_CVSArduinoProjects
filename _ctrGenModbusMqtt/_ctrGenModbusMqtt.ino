@@ -163,16 +163,23 @@ unsigned long freeRam;
 ///////////
 // RS485 //
 ///////////
-#if (_USE_MRS485_ == 1)
+#if (_USE_RS485_ == 1)
 // RS485
 int             mrs485State;
 String          mrs485RxBuffer = "";
 unsigned long   mrs485RxTick;
-String          mrs485TxBuffer = "";
+char            mrs485TxBuffer[MRS485_ARRAY_SIZE];
+int             mrs485TxNumBytes;
 
-// Modbus
+int             OutRS485rxtx;
+
+////////////
+// Modbus //
+////////////
+#if (_USE_MB_ == 1)
 int             mbState;
 unsigned long   mbTick;
+#endif
 #endif
 
 ////////
@@ -225,8 +232,11 @@ void _PINSetup(void)
   digitalWrite(PIN_LUZ_OFF, !cfgLogicOuts);
   OutLuzOff = OUT_OFF; 
 
+  #if (_USE_RS485_ == 1)
   pinMode(PIN_RS485_RXTX, OUTPUT);
   digitalWrite(PIN_RS485_RXTX, HIGH);
+  OutRS485rxtx = OUT_RS485_RX;
+  #endif
   
   //-----//
   // INS //
@@ -242,11 +252,7 @@ void _PINSetup(void)
 // MAIN SETUP //
 //============//
 void setup(void)
-{ 
-  #if (_USE_MRS485_ == 1)
-  _MRS485Setup();
-  #endif
-  
+{  
   #if (_SERIAL_DEBUG_ == 1)
   delay(100);  // 100ms
   Serial.begin(9600);
@@ -275,6 +281,13 @@ void setup(void)
 
   // MQTT setup
   _MQTTSetup();
+
+  #if (_USE_RS485_ == 1)
+  _RS485Setup();
+  #if (_USE_MB_ == 1)
+  _MBSetup();
+  #endif
+  #endif
   
   // Ctr setup
   _CtrSetup();
@@ -317,7 +330,15 @@ void _PINLoop()
     digitalWrite(PIN_LUZ_OFF, PIN_OUT_ON);
   else
     digitalWrite(PIN_LUZ_OFF, PIN_OUT_OFF);
-  
+
+  /*
+  #if (_USE_RS485_ == 1)
+  if (OutRS485rxtx == OUT_RS485_RX)
+    digitalWrite(PIN_RS485_RXTX, LOW);
+  else
+    digitalWrite(PIN_RS485_RXTX, HIGH);
+  #endif
+  */
   //-----//
   // INS //
   //-----//
@@ -373,7 +394,10 @@ void loop()
   
   _TimeLoop();
 
-  #if (_USE_MRS485_ == 1)
-  _MRS485Loop();
+  #if (_USE_RS485_ == 1)
+  _RS485Loop();
+  #if (_USE_MB_ == 1)
+  _MBLoop();
+  #endif
   #endif
 }

@@ -5,7 +5,7 @@
 ////////////////////
 // mModbus set up //
 ////////////77//////
-void _MMBSetup(void)
+void _MBSetup(void)
 {
   mbState = MB_STANDBY;
   //mbTick = millis();
@@ -14,7 +14,7 @@ void _MMBSetup(void)
 //////////////////
 // mModbus Loop //
 //////////////////
-void _MMBTLoop(void)
+void _MBTLoop(void)
 {
 
   switch (mbState)
@@ -24,34 +24,34 @@ void _MMBTLoop(void)
 
     case MB_READINS:
       // Node
-      uartTxBuffer[0] = 0x01;
+      mrs485TxBuffer[0] = 0xFF;
       // Read input regs
-      uartTxBuffer[1] = 0x04;
+      mrs485TxBuffer[1] = 0x04;
       // Address
-      uartTxBuffer[2] = 0x00;
-      uartTxBuffer[3] = 0x00;
+      mrs485TxBuffer[2] = 0x00;
+      mrs485TxBuffer[3] = 0x00;
       // Length
-      uartTxBuffer[4] = 0x00;
-      uartTxBuffer[5] = 0x08;
+      mrs485TxBuffer[4] = 0x00;
+      mrs485TxBuffer[5] = 0x08;
       // Crc (TODO)
-      //uartTxBuffer[6] = 0x00;
-      //uartTxBuffer[7] = 0x00;
+      //mrs485TxBuffer[6] = 0x00;
+      //mrs485TxBuffer[7] = 0x00;
       break;
 
     case MB_WRITEOUTS:
       // Node
-      uartTxBuffer[0] = 0x01;
+      mrs485TxBuffer[0] = 0xFF;
       // Write single reg
-      uartTxBuffer[1] = 0x06;
+      mrs485TxBuffer[1] = 0x06;
       // Address (out)
-      uartTxBuffer[2] = 0x00;
-      uartTxBuffer[3] = 0x00;
+      mrs485TxBuffer[2] = 0x00;
+      mrs485TxBuffer[3] = 0x00;
       // Value
-      uartTxBuffer[4] = 0x00; // uartTxBuffer[4] = 0xFF;
-      uartTxBuffer[5] = 0x00; // uartTxBuffer[5] = 0x00;
+      mrs485TxBuffer[4] = 0x00; // mrs485TxBuffer[4] = 0xFF;
+      mrs485TxBuffer[5] = 0x00; // mrs485TxBuffer[5] = 0x00;
       // Crc (TODO)
-      //uartTxBuffer[6] = 0x00;
-      //uartTxBuffer[7] = 0x00;
+      //mrs485TxBuffer[6] = 0x00;
+      //mrs485TxBuffer[7] = 0x00;
       break;
   }
 }

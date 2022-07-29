@@ -1,4 +1,4 @@
- #include <ESP8266WiFi.h>
+#include <ESP8266WiFi.h>
 #include <ESP8266WebServer.h>
 #include <PubSubClient.h>
 #include <EEPROM.h>
@@ -180,6 +180,11 @@ int             OutRS485rxtx;
 int             mbState;
 unsigned long   mbTick;
 byte            mbCRC[2];
+
+// Modbus DIOs
+int             mbIns[8];
+int             mbOuts[8];
+
 #endif
 #endif
 

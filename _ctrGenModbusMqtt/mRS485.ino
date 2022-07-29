@@ -51,8 +51,8 @@ void _RS485Loop(void)
 	    }
       OutRS485rxtx = OUT_RS485_RX;
       
-	    // Time Out
-	    if (millis() - mrs485tick >= MRS485_TOUT_MS)
+	    // Rx Time Out
+	    if (millis() - mrs485tick >= MRS485_RX_TOUT_MS)
       {
 		    mrs485State = MRS485_FRAME_RX;
         OutRS485rxtx = OUT_RS485_TX;
@@ -61,13 +61,25 @@ void _RS485Loop(void)
 	    break;
 	  
 	  case MRS485_FRAME_RX:
-	    // Frame Received
-      mrs485State = MRS485_STANDBY;
-	    // clear the string:
-	    mrs485RxBuffer = "";
+      // Must back to standby other part...
+      // Time Out just in case
+      if (millis() - mrs485tick >= MRS485_BACK_TOUT_MS)
+      {
+        // clear Rx buffer
+        mrs485RxBuffer = "";
+        mrs485State = MRS485_STANDBY;
+      }
 
 	    break;
-	  
+
+    case MRS485_INITTX:
+      OutRS485rxtx = OUT_RS485_TX;
+      // Init Tx Time wait
+      if (millis() - mrs485tick >= MRS485_INITTX_TOUT_MS)
+        mrs485State = MRS485_ONTX;
+
+      break;
+      
 	  case MRS485_ONTX:
       
       // Send buffer
@@ -81,10 +93,12 @@ void _RS485Loop(void)
 	    break;
 
     case MRS485_ENDTX:
+      OutRS485rxtx = OUT_RS485_TX;
     
-      // Time Out
-      if (millis() - mrs485tick >= MRS485_TOUT_MS)
+      // TX Time Out
+      if (millis() - mrs485tick >= MRS485_TX_TOUT_MS)
       {
+        mrs485RxBuffer = "";
         mrs485State = MRS485_STANDBY;
         OutRS485rxtx = OUT_RS485_RX;
       }      

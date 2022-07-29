@@ -725,6 +725,11 @@ void _readINS()
   html = html + "</tr>";
 
   html = html + "<tr>";
+  html = html + "<td>Modbus Ins</td>";
+  html = html + "<td>" + String(mbIns[0]) + "-" + String(mbIns[1]) + "-" + String(mbIns[2]) + "-" + String(mbIns[3]) + "-" + String(mbIns[4]) + "-" + String(mbIns[5]) + "-" + String(mbIns[6]) + "-" + String(mbIns[7]) + "</td>";
+  html = html + "</tr>";
+  
+  html = html + "<tr>";
   html = html + "<td>Generador In</td>";
   if (InGenOn == IO_OFF)
     html = html + "<td><font style=\"color:grey\">OFF</font></td>";

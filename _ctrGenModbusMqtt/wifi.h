@@ -19,11 +19,7 @@ extern "C" {
 #define SSIDST   "SSID"
 #define PSKST    "password"
 */
-#if (_MQTT_DEBUG_ == 1)
-#define SSIDAP    "REM8266_test"
-#else
-#define SSIDAP    "REM8266"
-#endif
+#define SSIDAP    "MBMQTT8266"
 #define PSKAP     "topsecret"
 
 #define WIFI_START_ACCESSPOINT     0

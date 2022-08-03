@@ -86,6 +86,30 @@ void mqttDataCallback(char* rtopic, byte* rpayload, unsigned int rlength)
       #endif
     }
   }
+
+  else if (rtopicStr.equals(TOPIC_O1ON))
+  {
+    if(rpayloadStr.equals("1"))
+    {
+      mbOutNum = 0;
+      mbOutVal = MB_OUT_ON;
+
+      if (mbState == MB_STANDBY)
+        mbState = MB_WRITEOUT;
+    }
+  }
+  else if (rtopicStr.equals(TOPIC_O1OFF))
+  {
+    if(rpayloadStr.equals("1"))
+    {
+      mbOutNum = 0;
+      mbOutVal = MB_OUT_OFF;
+
+      if (mbState == MB_STANDBY)
+        mbState = MB_WRITEOUT;
+    }
+  }
+  
   else if (rtopicStr.equals(TOPIC_WATCHDOG))
   {
     if(rpayloadStr.equals("1"))
@@ -328,6 +352,22 @@ void _MQTTLoop(void)
             mqttSubscribe(TOPIC_GENSTOP)    &&
             mqttSubscribe(TOPIC_LUZCTR)     &&
             mqttSubscribe(TOPIC_LUZSTANDBY) &&
+            
+            mqttSubscribe(TOPIC_O1ON)       &&
+            mqttSubscribe(TOPIC_O1OFF)      &&
+            mqttSubscribe(TOPIC_O2ON)       &&
+            mqttSubscribe(TOPIC_O3OFF)      &&
+            mqttSubscribe(TOPIC_O4ON)       &&
+            mqttSubscribe(TOPIC_O4OFF)      &&
+            mqttSubscribe(TOPIC_O5ON)       &&
+            mqttSubscribe(TOPIC_O5OFF)      &&
+            mqttSubscribe(TOPIC_O6ON)       &&
+            mqttSubscribe(TOPIC_O6OFF)      &&
+            mqttSubscribe(TOPIC_O7ON)       &&
+            mqttSubscribe(TOPIC_O7OFF)      &&
+            mqttSubscribe(TOPIC_O8ON )      &&
+            mqttSubscribe(TOPIC_O8OFF)      &&
+            
             mqttSubscribe(TOPIC_WATCHDOG))
         {
           mqttStatus = MQTT_SUBSCRIBED;

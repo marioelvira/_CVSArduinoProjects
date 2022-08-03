@@ -87,7 +87,7 @@ byte mac[6];
 /////////////////
 // Device Name //
 /////////////////
-#define DEVICENAME      "rem8266"
+#define DEVICENAME      "mbmqtt8266"
 char* deviceName = DEVICENAME;
 
 /////////////////
@@ -107,7 +107,7 @@ int brokerPort;
 WiFiClient wifiClient;
 PubSubClient mqttClient(wifiClient);
 
-String mqttClientId = "rmbMQTT-" + String(ESP.getChipId());
+String mqttClientId = "mbMQTT-" + String(ESP.getChipId());
 
 int mqttStatus;
 unsigned long mqttTick = 0;
@@ -185,6 +185,8 @@ byte            mbCRC[2];
 int             mbIns[8];
 int             mbOuts[8];
 
+int             mbOutNum = 0;
+int             mbOutVal = 0x00;
 #endif
 #endif
 

@@ -23,7 +23,7 @@ void _serveMAIN()
   String html = "";
   
   html = "<!DOCTYPE HTML><html>";
-  html = html + "<title>REM MQTT+ Estado</title>";
+  html = html + "<title>MB MQTT++ Estado</title>";
   html = html + "<head>";
   html = html + "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"/>";
   html = html + "<link rel=\"icon\" href=\"data:,\">";
@@ -32,7 +32,7 @@ void _serveMAIN()
 
   html = html + "<body>";
   html = html + "<div class=\"myform\">";
-  html = html + "<h1>REM MQTT+ #Estado<span>ESP8266 tech</span><span align=\"right\"> Ver: " + FW_Version + "</span></h1>";
+  html = html + "<h1>MB MQTT++ #Estado<span>ESP8266 tech</span><span align=\"right\"> Ver: " + FW_Version + "</span></h1>";
 
   html = html + "<div class=\"section\">Temporizaciones</div>";
   html = html + "<p class=\"sansserif\" id=\"TEMPSid\">...</p>";
@@ -47,6 +47,16 @@ void _serveMAIN()
   html = html + "  <input type=\"button\" value=\"Gen Pulso\" onclick=\"sendOUT(10)\">";
   html = html + "  <input type=\"button\" value=\"Gen Paro\" onclick=\"sendOUT(11)\">";
   html = html + "  <input type=\"button\" value=\"Luz Control\" onclick=\"sendOUT(12)\">";
+  html = html + "</p><p>";
+  html = html + "  <input type=\"button\" value=\"1\" onclick=\"sendOUT(50)\">";
+  html = html + "  <input type=\"button\" value=\"2\" onclick=\"sendOUT(51)\">";
+  html = html + "  <input type=\"button\" value=\"3\" onclick=\"sendOUT(52)\">";
+  html = html + "  <input type=\"button\" value=\"4\" onclick=\"sendOUT(53)\">";
+  html = html + "</p><p>";
+  html = html + "  <input type=\"button\" value=\"5\" onclick=\"sendOUT(54)\">";
+  html = html + "  <input type=\"button\" value=\"6\" onclick=\"sendOUT(55)\">";
+  html = html + "  <input type=\"button\" value=\"7\" onclick=\"sendOUT(56)\">";
+  html = html + "  <input type=\"button\" value=\"8\" onclick=\"sendOUT(57)\">";  
   html = html + "</p>";
   html = html + "<div class=\"section\">Watchdog</div>";
   html = html + "<p>";
@@ -123,7 +133,7 @@ void _serveTimeSETTINGS()
   String html = "";
   
   html = "<!DOCTYPE HTML><html>";
-  html = html + "<title>REM MQTT+ #Configuraci&oacuten</title>";
+  html = html + "<title>MB MQTT++ #Configuraci&oacuten</title>";
   html = html + "<head>";
   html = html + "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"/>";
   html = html + "<link rel=\"icon\" href=\"data:,\">";
@@ -132,7 +142,7 @@ void _serveTimeSETTINGS()
 
   html = html + "<body>";
   html = html + "<div class=\"myform\">";
-  html = html + "<h1>REM MQTT+ #Configuraci&oacuten<span>ESP8266 tech</span><span align=\"right\"> Ver: " + FW_Version + "</span></h1>";
+  html = html + "<h1>MB MQTT++ #Configuraci&oacuten<span>ESP8266 tech</span><span align=\"right\"> Ver: " + FW_Version + "</span></h1>";
   html = html + "<form method='get' action='setTimeSettings'>";
 
   html = html + "<div class=\"section\"><span>1</span>Tiempos</div>";
@@ -281,7 +291,7 @@ void _setTimeSETTINGS()
   }
 
   html = "<!DOCTYPE HTML><html>";
-  html = html + "<title>REM MQTT+ #Configuraci&oacuten</title>";
+  html = html + "<title>MB MQTT++ #Configuraci&oacuten</title>";
   html = html + "<head>";
   html = html + "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"/>";
   html = html + "<link rel=\"icon\" href=\"data:,\">";
@@ -291,7 +301,7 @@ void _setTimeSETTINGS()
   html = html + "<body>";
 
   html = html + "<div class=\"myform\">";
-  html = html + "<h1>REM MQTT+ #Configuraci&oacuten<span>ESP8266 tech</span><span align=\"right\"> Ver: " + FW_Version + "</span></h1>";
+  html = html + "<h1>MB MQTT++ #Configuraci&oacuten<span>ESP8266 tech</span><span align=\"right\"> Ver: " + FW_Version + "</span></h1>";
   
   if (error == 0)
     html += "<p class=\"sansserif\">Configuraci&oacuten guardada correctamente.</p>";
@@ -328,7 +338,7 @@ void _serveSETTINGS()
 
   html = html + "<body>";
   html = html + "<div class=\"myform\">";
-  html = html + "<h1>REM MQTT+ #Network settings<span>ESP8266 tech</span><span align=\"right\"> Ver: " + FW_Version + "</span></h1>";
+  html = html + "<h1>MB MQTT++ #Network settings<span>ESP8266 tech</span><span align=\"right\"> Ver: " + FW_Version + "</span></h1>";
   //html = html + "<form method=\"post\">";
   html = html + "<form method='get' action='networSettings'>";
 
@@ -673,7 +683,7 @@ void _setSETTINGS()
   }
 
   html = "<!DOCTYPE HTML><html>";
-  html = html + "<title>REM MQTT+ #Configuraci&oacuten</title>";
+  html = html + "<title>MB MQTT++ #Configuraci&oacuten</title>";
   html = html + "<head>";
   html = html + "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"/>";
   html = html + "<link rel=\"icon\" href=\"data:,\">";
@@ -683,7 +693,7 @@ void _setSETTINGS()
   html = html + "<body>";
 
   html = html + "<div class=\"myform\">";
-  html = html + "<h1>REM MQTT+ #Configuraci&oacuten<span>ESP8266 tech</span><span align=\"right\"> Ver: " + FW_Version + "</span></h1>";
+  html = html + "<h1>MB MQTT++ #Configuraci&oacuten<span>ESP8266 tech</span><span align=\"right\"> Ver: " + FW_Version + "</span></h1>";
   
   if (error == 0)
     html += "<p class=\"sansserif\">Configuraci&oacuten guardada correctamente.</p>";
@@ -727,6 +737,11 @@ void _readINS()
   html = html + "<tr>";
   html = html + "<td>Modbus Ins</td>";
   html = html + "<td>" + String(mbIns[0]) + "-" + String(mbIns[1]) + "-" + String(mbIns[2]) + "-" + String(mbIns[3]) + "-" + String(mbIns[4]) + "-" + String(mbIns[5]) + "-" + String(mbIns[6]) + "-" + String(mbIns[7]) + "</td>";
+  html = html + "</tr>";
+
+  html = html + "<tr>";
+  html = html + "<td>Modbus Outs</td>";
+  html = html + "<td>" + String(mbOuts[0]) + "-" + String(mbOuts[1]) + "-" + String(mbOuts[2]) + "-" + String(mbOuts[3]) + "-" + String(mbOuts[4]) + "-" + String(mbOuts[5]) + "-" + String(mbOuts[6]) + "-" + String(mbOuts[7]) + "</td>";
   html = html + "</tr>";
   
   html = html + "<tr>";
@@ -937,6 +952,39 @@ void _setOUTS()
     html = "Reset Timers";
   }
   */
+
+  // Outs
+  if ((out_number == "50") || (out_number == "51") || (out_number == "52") || (out_number == "53") ||
+      (out_number == "54") || (out_number == "55") || (out_number == "56") || (out_number == "57"))
+  {
+    if (out_number == "50")
+      mbOutNum = 0; // O1
+    else if (out_number == "51")
+      mbOutNum = 1; // O2
+    else if (out_number == "52")
+      mbOutNum = 2; // O3
+    else if (out_number == "53")
+      mbOutNum = 3; // O4
+    else if (out_number == "54")
+      mbOutNum = 4; // O5
+    else if (out_number == "55")
+      mbOutNum = 5; // O6
+    else if (out_number == "56")
+      mbOutNum = 6; // O7     
+    else
+      mbOutNum = 7; // O8
+    
+    if (mbOuts[mbOutNum] == MB_OUT_OFF)
+      mbOutVal = MB_OUT_ON;
+    else
+      mbOutVal = MB_OUT_OFF;
+
+    if (mbState == MB_STANDBY)
+      mbState = MB_WRITEOUT;
+    
+    html = "Outs";
+  }
+  
   httpServer.send(200, "text/plane", html);
 }
 
@@ -971,7 +1019,7 @@ void _HttpLoop()
     case HTTP_INIT:
 
       // css Style
-      httpServer.on("/style.css",        _serveCSS);
+      httpServer.on("/style.css",         _serveCSS);
 
       // html pages
       httpServer.on("/",                  _serveMAIN);

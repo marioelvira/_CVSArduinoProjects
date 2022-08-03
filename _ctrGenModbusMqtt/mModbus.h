@@ -9,6 +9,9 @@ extern "C" {
 
 #define CRCSIZE       2
 
+#define MB_RXLOOP     4000
+#define MB_RXTOUT	    1000
+
 #define MB_NUM_IOS    8
 
 #define MB_OUT1       0
@@ -31,7 +34,8 @@ extern "C" {
 #define MB_STANDBY	  1
 #define MB_READINS	  2
 #define MB_INSSTATUS  3
-#define MB_WRITEOUTS  4
+#define MB_WRITEOUT   4
+#define MB_OUTSTATUS  5
 
 extern void _MBCRC(void);
 

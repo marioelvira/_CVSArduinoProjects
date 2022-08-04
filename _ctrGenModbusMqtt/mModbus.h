@@ -24,8 +24,8 @@ extern "C" {
 #define MB_OUT8       7
 #define MB_OUTALL     8       
 
-#define MB_OUT_OFF    0
-#define MB_OUT_ON     1
+//#define MB_OUT_OFF    0
+//#define MB_OUT_ON     1
 
 #define MB_RX_OK      0
 #define MB_RX_NOK     1

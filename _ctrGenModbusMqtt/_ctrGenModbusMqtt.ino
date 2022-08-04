@@ -11,7 +11,6 @@
 #include "ip.h"
 #include "main.h"
 #include "ctr.h"
-#include "gen.h"
 #include "wifi.h"
 #include "MQTT.h"
 #include "mModbus.h"
@@ -31,12 +30,12 @@ int   InA;
 int   InB;
 int   InC;
 int   InD;
+int   InE;
 
-int   InGenOn;
+int   OutA;
+int   OutB;
+int   OutC;
 
-int   OutGenPuls;
-int   OutStopPuls;
-int   OutLuzOff;
 int   outLed;
 
 ///////////
@@ -112,13 +111,6 @@ String mqttClientId = "mbMQTT-" + String(ESP.getChipId());
 int mqttStatus;
 unsigned long mqttTick = 0;
 
-/*
-char  topic_state[50];
-char  topic_genctr[50];
-char  topic_genstop[50];
-char  topic_luzctr[50];
-char  topic_luzstandby[50];
-*/
 //////////
 // Time //
 //////////
@@ -128,14 +120,6 @@ int timeMin = 0;
 int timeHour = 0;
 int timeDay = 0;
 
-//////////////
-// Gen Time //
-//////////////
-int genTimeSec = 0;
-int genTimeMin = 0;
-int genTimeHour = 0;
-int genTimeDay = 0;
-
 /////////////
 // Control //
 /////////////
@@ -143,17 +127,6 @@ int   controlMode = MODE_AUTO;
 unsigned long ControlTick = 0;
 int   ControlState;
 int   TimeControlSec;
-int   DisplayIndicador;
-
-int   genInStatus;
-int   genState;
-int   genMinOn;
-
-int   remPulse;
-int   remAct;
-
-int   LuzState;
-unsigned long LuzTick = 0;
 
 //////////
 // mRAM //
@@ -228,17 +201,17 @@ void _PINSetup(void)
   outLed = IO_OFF;
   #endif
 
-  pinMode(PIN_GEN_PULS, OUTPUT);
-  digitalWrite(PIN_GEN_PULS, !cfgLogicOuts);
-  OutGenPuls = OUT_OFF;
+  pinMode(PIN_OA, OUTPUT);
+  digitalWrite(PIN_OA, !cfgLogicOuts);
+  OutA = OUT_OFF;
 
-  pinMode(PIN_STOP_PULS, OUTPUT);
-  digitalWrite(PIN_STOP_PULS, !cfgLogicOuts);
-  OutStopPuls = OUT_OFF;
-
-  pinMode(PIN_LUZ_OFF, OUTPUT);
-  digitalWrite(PIN_LUZ_OFF, !cfgLogicOuts);
-  OutLuzOff = OUT_OFF; 
+  pinMode(PIN_OB, OUTPUT);
+  digitalWrite(PIN_OB, !cfgLogicOuts);
+  OutB = OUT_OFF;
+  
+  pinMode(PIN_OC, OUTPUT);
+  digitalWrite(PIN_OC, !cfgLogicOuts);
+  OutC = OUT_OFF;
 
   #if (_USE_RS485_ == 1)
   pinMode(PIN_RS485_RXTX, OUTPUT);
@@ -249,11 +222,11 @@ void _PINSetup(void)
   //-----//
   // INS //
   //-----//
-  pinMode(PIN_A, INPUT);      InA = IO_OFF;
-  pinMode(PIN_B, INPUT);      InB = IO_OFF;
-  pinMode(PIN_C, INPUT);      InC = IO_OFF;
-  pinMode(PIN_D, INPUT);      InD = IO_OFF;
-  pinMode(PIN_GENON, INPUT);  InGenOn = IO_OFF;
+  pinMode(PIN_A, INPUT);  InA = IO_OFF;
+  pinMode(PIN_B, INPUT);  InB = IO_OFF;
+  pinMode(PIN_C, INPUT);  InC = IO_OFF;
+  pinMode(PIN_D, INPUT);  InD = IO_OFF;
+  pinMode(PIN_E, INPUT);  InE = IO_OFF;
 }
 
 //============//
@@ -300,9 +273,6 @@ void setup(void)
   // Ctr setup
   _CtrSetup();
 
-  // Reset Gen Time
-  _GenTimeReset();
-
   #if (_USE_WDE_ == 1)
   _WDESetup();
   #endif
@@ -324,20 +294,20 @@ void _PINLoop()
     digitalWrite(PIN_LED, PIN_OUT_OFF);
   #endif
 
-  if (OutGenPuls == cfgLogicOuts)
-    digitalWrite(PIN_GEN_PULS, PIN_OUT_ON);
+  if (OutA == OUT_ON /*cfgLogicOuts*/)
+    digitalWrite(PIN_OA, PIN_OUT_ON);
   else
-    digitalWrite(PIN_GEN_PULS, PIN_OUT_OFF); 
+    digitalWrite(PIN_OA, PIN_OUT_OFF);
 
-  if (OutStopPuls == cfgLogicOuts)
-    digitalWrite(PIN_STOP_PULS, PIN_OUT_ON);
+  if (OutB == OUT_ON /*cfgLogicOuts*/)
+    digitalWrite(PIN_OB, PIN_OUT_ON);
   else
-    digitalWrite(PIN_STOP_PULS, PIN_OUT_OFF);
+    digitalWrite(PIN_OB, PIN_OUT_OFF);
 
-  if (OutLuzOff == cfgLogicOuts)
-    digitalWrite(PIN_LUZ_OFF, PIN_OUT_ON);
+  if (OutC == OUT_ON /*cfgLogicOuts*/)
+    digitalWrite(PIN_OC, PIN_OUT_ON);
   else
-    digitalWrite(PIN_LUZ_OFF, PIN_OUT_OFF);
+    digitalWrite(PIN_OC, PIN_OUT_OFF); 
 
   #if (_USE_RS485_ == 1)
   if (OutRS485rxtx == OUT_RS485_RX)
@@ -369,10 +339,10 @@ void _PINLoop()
   else
     InD = IO_OFF;
 
-  if (digitalRead(PIN_GENON) == cfgLogicIns)
-    InGenOn = IO_ON;
+  if (digitalRead(PIN_E) == PIN_IN_ON /*cfgLogicIns*/)
+    InE = IO_ON;
   else
-    InGenOn = IO_OFF;
+    InE = IO_OFF;
 }
 
 //===========//
@@ -382,8 +352,6 @@ void loop()
 {
   _PINLoop();
   //_IOLoop();
-
-  _IOLcdLoop();
 
   _WifiLoop();
   _WifiLedLoop();

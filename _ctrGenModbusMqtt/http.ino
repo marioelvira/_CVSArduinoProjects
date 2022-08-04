@@ -44,9 +44,9 @@ void _serveMAIN()
   html = html + "<p>";
   html = html + "  <input type=\"button\" value=\"Cambiar Modo\" onclick=\"sendOUT(0)\">";
   html = html + "</p><p>";
-  html = html + "  <input type=\"button\" value=\"Gen Pulso\" onclick=\"sendOUT(10)\">";
-  html = html + "  <input type=\"button\" value=\"Gen Paro\" onclick=\"sendOUT(11)\">";
-  html = html + "  <input type=\"button\" value=\"Luz Control\" onclick=\"sendOUT(12)\">";
+  html = html + "  <input type=\"button\" value=\"A\" onclick=\"sendOUT(10)\">";
+  html = html + "  <input type=\"button\" value=\"B\" onclick=\"sendOUT(11)\">";
+  html = html + "  <input type=\"button\" value=\"C\" onclick=\"sendOUT(12)\">";
   html = html + "</p><p>";
   html = html + "  <input type=\"button\" value=\"1\" onclick=\"sendOUT(50)\">";
   html = html + "  <input type=\"button\" value=\"2\" onclick=\"sendOUT(51)\">";
@@ -730,38 +730,15 @@ void _readINS()
   html = html + "</tr>";
 
   html = html + "<tr>";
-  html = html + "<td>Indicador LCD</td>";
-  html = html + "<td>" + String(DisplayIndicador) + " -> " + String(InD) + "-" + String(InC) + "-" + String(InB) + "-" + String(InA) + "</td>";
+  html = html + "<td>Boards Ins</td>";
+  html = html + "<td>" + String(InA) + "-" + String(InB) + "-" + String(InC) + "-" + String(InD) + "-" + String(InE) + "</td>";
   html = html + "</tr>";
-
+  
   html = html + "<tr>";
   html = html + "<td>Modbus Ins</td>";
   html = html + "<td>" + String(mbIns[0]) + "-" + String(mbIns[1]) + "-" + String(mbIns[2]) + "-" + String(mbIns[3]) + "-" + String(mbIns[4]) + "-" + String(mbIns[5]) + "-" + String(mbIns[6]) + "-" + String(mbIns[7]) + "</td>";
   html = html + "</tr>";
-
-  html = html + "<tr>";
-  html = html + "<td>Modbus Outs</td>";
-  html = html + "<td>" + String(mbOuts[0]) + "-" + String(mbOuts[1]) + "-" + String(mbOuts[2]) + "-" + String(mbOuts[3]) + "-" + String(mbOuts[4]) + "-" + String(mbOuts[5]) + "-" + String(mbOuts[6]) + "-" + String(mbOuts[7]) + "</td>";
-  html = html + "</tr>";
-  
-  html = html + "<tr>";
-  html = html + "<td>Generador In</td>";
-  if (InGenOn == IO_OFF)
-    html = html + "<td><font style=\"color:grey\">OFF</font></td>";
-  else
-    html = html + "<td><font style=\"color:green\">ON</font></td>";
-  html = html + "</tr>";
-
-  html = html + "<tr>";
-  html = html + "<td>Generador In (min)</td>";
-  html = html + "<td>" + String(genMinOn) + "</td>";
-  html = html + "</tr>";
-
-  html = html + "<tr>";
-  html = html + "<td>Generador Off</td>";
-  html = html + "<td>" + String(genTimeDay) + "d " + String(genTimeHour) + " : " + String(genTimeMin) + " : " + String(genTimeSec) + "</td>";
-  html = html + "</tr>";
-  
+ 
   html = html + "<tr>";
   html = html + "<td>Vbatt In (Dig)</td>";
   html = html + "<td>" + String(VbattInADC) + "</td>";
@@ -789,11 +766,6 @@ void _readOUTS()
   html = html + "</tr>";
 
   html = html + "<tr>";
-  html = html + "<td>Luz OFF State </td>";
-  html = html + "<td>" + String(LuzState) + "</td>";
-  html = html + "</tr>";
-
-  html = html + "<tr>";
   html = html + "<td>Wi-Fi State </td>";
   html = html + "<td>" + String(wifiStatus) + "</td>";
   html = html + "</tr>";
@@ -806,31 +778,17 @@ void _readOUTS()
   html = html + "<tr>";
   html = html + "<td>-----------------</td>";
   html = html + "</tr>";
-  
-  html = html + "<tr>";
-  html = html + "<td>Gen Pulsador</td>";
-  if (OutGenPuls == OUT_ON)
-   html = html + "<td><font style=\"color:green\">Activado</font></td>";
-  else
-   html = html + "<td><font style=\"color:grey\">Desactivado</font></td>";
-  html = html + "</tr>";
 
   html = html + "<tr>";
-  html = html + "<td>Gen Stop</td>";
-  if (OutStopPuls == OUT_ON)
-   html = html + "<td><font style=\"color:green\">Activado</font></td>";
-  else
-   html = html + "<td><font style=\"color:grey\">Desactivado</font></td>";
+  html = html + "<td>Boards Outs</td>";
+  html = html + "<td>" + String(OutA) + "-" + String(OutB) + "-" + String(OutC) + "</td>";
   html = html + "</tr>";
   
   html = html + "<tr>";
-  html = html + "<td>Luz OFF</td>";
-  if (OutLuzOff == OUT_ON)
-   html = html + "<td><font style=\"color:green\">Activado</font></td>";
-  else
-   html = html + "<td><font style=\"color:grey\">Desactivado</font></td>";
+  html = html + "<td>Modbus Outs</td>";
+  html = html + "<td>" + String(mbOuts[0]) + "-" + String(mbOuts[1]) + "-" + String(mbOuts[2]) + "-" + String(mbOuts[3]) + "-" + String(mbOuts[4]) + "-" + String(mbOuts[5]) + "-" + String(mbOuts[6]) + "-" + String(mbOuts[7]) + "</td>";
   html = html + "</tr>";
- 
+   
   html = html + "</table>";
   
   httpServer.send(200, "text/plane", html);
@@ -879,68 +837,49 @@ void _setOUTS()
     #endif
   }
 
-  // Gen Pulso
+  // Out A
   if(out_number == "10")
   {
-    if (OutGenPuls == OUT_ON)
+    if (OutA == OUT_ON)
     {
-      OutGenPuls = OUT_OFF;
-      #if (_HTTP_SERIAL_DEBUG_ == 1)
-      Serial.println("Gen Pulso OFF");
-      #endif
-      html = "Gen Pulso OFF";
+      OutA = OUT_OFF;
+      html = "Out A OFF";
     }
     else
     {
-      OutGenPuls = OUT_ON;
-      #if (_HTTP_SERIAL_DEBUG_ == 1)
-      Serial.println("Gen Pulso ON");
-      #endif
-      html = "Gen Pulso ON";
+      OutA = OUT_ON;
+      html = "Out A ON";
     }
   }
- 
-  // OutStopPuls
-  if(out_number == "11")
+  // Out B
+  else if(out_number == "11")
   {
-    if (OutStopPuls == OUT_ON)
+    if (OutB == OUT_ON)
     {
-      OutStopPuls = OUT_OFF;
-      #if (_HTTP_SERIAL_DEBUG_ == 1)
-      Serial.println("Stop Gen OFF");
-      #endif
-      html = "Stop Gen OFF";
+      OutB = OUT_OFF;
+      html = "Out B OFF";
     }
     else
     {
-      OutStopPuls = OUT_ON;
-      #if (_HTTP_SERIAL_DEBUG_ == 1)
-      Serial.println("Stop Gen ON");
-      #endif
-      html = "Stop Gen ON";
+      OutB = OUT_ON;
+      html = "Out B ON";
+    }
+  }
+  // Out C
+  else if(out_number == "12")
+  {
+    if (OutC == OUT_ON)
+    {
+      OutC = OUT_OFF;
+      html = "Out C OFF";
+    }
+    else
+    {
+      OutC = OUT_ON;
+      html = "Out C ON";
     }
   }
 
-  // OutLuzOff
-  if(out_number == "12")
-  {
-    if (OutLuzOff == OUT_ON)
-    {
-      OutLuzOff = OUT_OFF;
-      #if (_HTTP_SERIAL_DEBUG_ == 1)
-      Serial.println("Luz Off OFF");
-      #endif
-      html = "Luz off OFF";
-    }
-    else
-    {
-      OutLuzOff = OUT_ON;
-      #if (_HTTP_SERIAL_DEBUG_ == 1)
-      Serial.println("Luz off ON");
-      #endif
-      html = "Luz off ON";
-    }
-  }
   /*
   // Reset Timers
   if(out_number == "20")
@@ -974,10 +913,10 @@ void _setOUTS()
     else
       mbOutNum = 7; // O8
     
-    if (mbOuts[mbOutNum] == MB_OUT_OFF)
-      mbOutVal = MB_OUT_ON;
+    if (mbOuts[mbOutNum] == OUT_OFF)
+      mbOutVal = OUT_ON;
     else
-      mbOutVal = MB_OUT_OFF;
+      mbOutVal = OUT_OFF;
 
     if (mbState == MB_STANDBY)
       mbState = MB_WRITEOUT;

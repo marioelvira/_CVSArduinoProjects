@@ -4,8 +4,9 @@ void mqttDataCallback(char* rtopic, byte* rpayload, unsigned int rlength)
 {
   String rtopicStr((char*)rtopic);
   String rpayloadStr((char*)rpayload);
+  
   rpayloadStr[rlength] = 0;
-    
+      
   #if (_MQTT_SERIAL_DEBUG_ == 1)
   Serial.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
   Serial.print (" Topic :");    Serial.println (rtopic);
@@ -13,97 +14,82 @@ void mqttDataCallback(char* rtopic, byte* rpayload, unsigned int rlength)
   Serial.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
   #endif
 
-  if(rtopicStr.equals(TOPIC_GENCTR))
+  // Outs
+  if (rtopicStr.equals(TOPIC_OON) ||
+      rtopicStr.equals(TOPIC_OOFF))
   {
-    Serial.print(" ");
-    if(rpayloadStr.equals("1"))
-    {
-      if (ControlState == STATE_STANDBY)
-        ControlState = STATE_GEN_PULSE;
-    
-      #if (_MQTT_SERIAL_DEBUG_ == 1)
-      Serial.println("TOPIC_GENCTR ->> 1");
-      #endif
-    }
-    else
-    {
-      #if (_MQTT_SERIAL_DEBUG_ == 1)
-      Serial.println("TOPIC_GENCTR ->> Error");
-      #endif
-    }
-  }
-  else if(rtopicStr.equals(TOPIC_GENSTOP))
-  {
-    Serial.print(" ");
-    if(rpayloadStr.equals("1"))
-    {
-      if (ControlState == STATE_STANDBY)
-        ControlState = STATE_STOP_PULSE;
+    int board = 2; // MB
+    int outNum = 0;
+    int outVal = 0;
 
-      #if (_MQTT_SERIAL_DEBUG_ == 1)
-      Serial.println("TOPIC_GENSTOP ->> 1");
-      #endif
-    }
+    // Value
+    if (rtopicStr.equals(TOPIC_OON))
+      outVal = OUT_ON;
     else
-    {
-      #if (_MQTT_SERIAL_DEBUG_ == 1)
-      Serial.println("TOPIC_GENSTOP ->> Error");
-      #endif
-    }
-  }
-  else if (rtopicStr.equals(TOPIC_LUZCTR))
-  {
-    if(rpayloadStr.equals("1"))
-    {
-      if (LuzState == STATE_STANDBY)
-        LuzState = STATE_LUZ_OFF;
+      outVal = OUT_OFF;
 
-      #if (_MQTT_SERIAL_DEBUG_ == 1)
-      Serial.println("TOPIC_LUZCTR ->> 1");
-      #endif
+    // Board 2
+    if(rpayloadStr.equals("1"))
+      outNum = 0;
+    else if (rpayloadStr.equals("2"))
+      outNum = 1;
+    else if (rpayloadStr.equals("3"))
+      outNum = 2;
+    else if (rpayloadStr.equals("4"))
+      outNum = 3;
+    else if (rpayloadStr.equals("5"))
+      outNum = 4;      
+    else if (rpayloadStr.equals("6"))
+      outNum = 5;
+    else if (rpayloadStr.equals("7"))
+      outNum = 6;
+    else if (rpayloadStr.equals("8"))
+      outNum = 7;
+    // Board 1
+    else if (rpayloadStr.equals("A"))
+    {
+      board = 1; 
+      outNum = 0;
     }
+    else if (rpayloadStr.equals("B"))
+    {
+      board = 1; 
+      outNum = 1;
+    }
+    else if (rpayloadStr.equals("C"))
+    {
+      board = 1; 
+      outNum = 2;
+    }
+    else if (rpayloadStr.equals("D"))
+    {
+      board = 1; 
+      outNum = 3;
+    }
+    // Error
     else
-    {
-      #if (_MQTT_SERIAL_DEBUG_ == 1)
-      Serial.println("TOPIC_LUZCTR ->> Error");
-      #endif
-    }
-  }
-  else if (rtopicStr.equals(TOPIC_LUZSTANDBY))
-  {
-    if(rpayloadStr.equals("1"))
-    {
-      LuzState = STATE_STANDBY;
-    
-      #if (_MQTT_SERIAL_DEBUG_ == 1)
-      Serial.println("TOPIC_LUZSTANDBY ->> 1");
-      #endif
-    }
-    else
-    {
-      #if (_MQTT_SERIAL_DEBUG_ == 1)
-      Serial.println("TOPIC_LUZSTANDBY ->> Error");
-      #endif
-    }
-  }
+      board = 0;  // No board
 
-  else if (rtopicStr.equals(TOPIC_O1ON))
-  {
-    if(rpayloadStr.equals("1"))
+    // Board
+    if (board == 1) // Own
     {
-      mbOutNum = 0;
-      mbOutVal = MB_OUT_ON;
-
-      if (mbState == MB_STANDBY)
-        mbState = MB_WRITEOUT;
+      if ((outNum == 0) && (outVal == OUT_ON))
+        OutA = OUT_ON;
+      else if ((outNum == 0) && (outVal == OUT_OFF))
+        OutA = OUT_OFF;
+      else if ((outNum == 1) && (outVal == OUT_ON))
+        OutB = OUT_ON;
+      else if ((outNum == 1) && (outVal == OUT_OFF))
+        OutB = OUT_OFF;    
+      else if ((outNum == 2) && (outVal == OUT_ON))
+        OutC = OUT_ON;
+      else if ((outNum == 2) && (outVal == OUT_OFF))
+        OutC = OUT_OFF;    
     }
-  }
-  else if (rtopicStr.equals(TOPIC_O1OFF))
-  {
-    if(rpayloadStr.equals("1"))
+    else if (board == 2) // MB
     {
-      mbOutNum = 0;
-      mbOutVal = MB_OUT_OFF;
+      mbOutNum = outNum;
+      mbOutVal = outVal;
 
       if (mbState == MB_STANDBY)
         mbState = MB_WRITEOUT;
@@ -116,16 +102,6 @@ void mqttDataCallback(char* rtopic, byte* rpayload, unsigned int rlength)
     {
       #if (_USE_WDE_ == 1)
       wdeForceReset = 1;
-      #endif
-      
-      #if (_MQTT_SERIAL_DEBUG_ == 1)
-      Serial.println("TOPIC_WATCHDOG ->> 1");
-      #endif
-    }
-    else
-    {
-      #if (_MQTT_SERIAL_DEBUG_ == 1)
-      Serial.println("TOPIC_LUZSTANDBY ->> Error");
       #endif
     }
   }  
@@ -166,6 +142,23 @@ void _MQTTSend(void)
   str = str + String(freeRam);
   str = str + ",\n";
 
+  str = str + "\"bO\":\"";
+  str = str + String(OutA) + String(OutB) + String(OutC);
+  str = str + "\",\n";
+
+  str = str + "\"mbO\":\"";
+  str = str + String(mbOuts[0]) + String(mbOuts[1]) + String(mbOuts[2]) + String(mbOuts[3]);
+  str = str + String(mbOuts[4]) + String(mbOuts[5]) + String(mbOuts[6]) + String(mbOuts[7]);
+  str = str + "\",\n";
+
+  str = str + "\"bI\":\"";
+  str = str + String(InA) + String(InB) + String(InC) + String(InD) + String(InE);
+  str = str + "\",\n";
+  
+  str = str + "\"mbI\":\"";
+  str = str + String(mbIns[0]) + String(mbIns[1]) + String(mbIns[2]) + String(mbIns[3]);
+  str = str + String(mbIns[4]) + String(mbIns[5]) + String(mbIns[6]) + String(mbIns[7]);
+  str = str + "\",\n";
   // vBatt
   str = str + "\"vbatt\":";
   str = str + String(VbattIn);
@@ -174,42 +167,6 @@ void _MQTTSend(void)
   // vBattADC
   str = str + "\"vbattADC\":";
   str = str + String(VbattInADC);
-  str = str + ",\n";
-
-  // DispIndicator
-  str = str + "\"genDisp\":";
-  str = str + String(DisplayIndicador);
-  str = str + ",\n";
-
-  // genInState
-  if (genInStatus == 0)
-    str = str + "\"genState\":0";
-  else
-    str = str + "\"genState\":1";
-  str = str + ",\n";
-
-  // genMinOn
-  str = str + "\"genMinOn\":\"";
-  str = str + String(genMinOn);
-  str = str + "m\",\n";
-
-  // genOff
-  str = str + "\"genOff\":\"";
-  str = str + String(genTimeDay) + "d " + String(genTimeHour) + " : " + String(genTimeMin) + " : " + String(genTimeSec);
-  str = str + "\",\n";
-  
-  // remote Activation
-  if (remAct == 1)
-    str = str + "\"rem\":1";
-  else
-    str = str + "\"rem\":0";
-  str = str + ",\n";
-
-  // luzState
-  if (LuzState == STATE_STANDBY)
-    str = str + "\"luzState\":0";
-  else
-    str = str + "\"luzState\":1";
   str = str + ",\n";
 
   // ipAdd
@@ -348,25 +305,8 @@ void _MQTTLoop(void)
         
         mqttTick = millis();
         
-        if (mqttSubscribe(TOPIC_GENCTR)     &&
-            mqttSubscribe(TOPIC_GENSTOP)    &&
-            mqttSubscribe(TOPIC_LUZCTR)     &&
-            mqttSubscribe(TOPIC_LUZSTANDBY) &&
-            
-            mqttSubscribe(TOPIC_O1ON)       &&
-            mqttSubscribe(TOPIC_O1OFF)      &&
-            mqttSubscribe(TOPIC_O2ON)       &&
-            mqttSubscribe(TOPIC_O3OFF)      &&
-            mqttSubscribe(TOPIC_O4ON)       &&
-            mqttSubscribe(TOPIC_O4OFF)      &&
-            mqttSubscribe(TOPIC_O5ON)       &&
-            mqttSubscribe(TOPIC_O5OFF)      &&
-            mqttSubscribe(TOPIC_O6ON)       &&
-            mqttSubscribe(TOPIC_O6OFF)      &&
-            mqttSubscribe(TOPIC_O7ON)       &&
-            mqttSubscribe(TOPIC_O7OFF)      &&
-            mqttSubscribe(TOPIC_O8ON )      &&
-            mqttSubscribe(TOPIC_O8OFF)      &&
+        if (mqttSubscribe(TOPIC_OON)    &&
+            mqttSubscribe(TOPIC_OOFF)   &&
             
             mqttSubscribe(TOPIC_WATCHDOG))
         {

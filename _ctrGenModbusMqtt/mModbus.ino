@@ -1,4 +1,5 @@
 #include "main.h"
+#include "io.h"
 
 #if (_USE_MB_ == 1)
 
@@ -343,10 +344,10 @@ void _MBLoop(void)
 
 	  case MB_WRITEOUT:
 	    _mbWriteOut(mbOutNum, mbOutVal);
-      if (mbOutVal == MB_OUT_OFF)
-        mbOuts[mbOutNum] = MB_OUT_OFF;
+      if (mbOutVal == OUT_OFF)
+        mbOuts[mbOutNum] = OUT_OFF;
       else
-        mbOuts[mbOutNum] = MB_OUT_ON;
+        mbOuts[mbOutNum] = OUT_ON;
 
       // Analyse Response
       mbTick = millis();

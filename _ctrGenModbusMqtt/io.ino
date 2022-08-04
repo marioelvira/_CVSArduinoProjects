@@ -4,7 +4,6 @@
 //////////////////////
 void _IOSetup()
 {  
-  DisplayIndicador = 1;
 }
 
 void _ADCSetup()
@@ -46,29 +45,4 @@ void _ADCLoop()
     VbattIn = (float)VbattInADC*((float)cfgADCm)/(float)cfgADCp - (float)cfgADCb/1000;
   else
     VbattIn = (float)VbattInADC*((float)cfgADCm)/(float)cfgADCp + (float)cfgADCb/1000;
-}
-
-void _IOLcdLoop(void) {
-
-  // DisplayIndicador
-  if ((InD == OUT_OFF) && (InC == OUT_OFF) && (InB == OUT_OFF) && (InA == OUT_OFF)) 
-    DisplayIndicador = 0;
-  else if ((InD == OUT_OFF) && (InC == OUT_OFF) && (InB == OUT_OFF) && (InA == OUT_ON)) 
-    DisplayIndicador = 1;
-  else if ((InD == OUT_OFF) && (InC == OUT_OFF) && (InB == OUT_ON) && (InA == OUT_OFF)) 
-    DisplayIndicador = 2;
-  else if ((InD == OUT_OFF) && (InC == OUT_OFF) && (InB == OUT_ON) && (InA == OUT_ON)) 
-    DisplayIndicador = 3;
-  else if ((InD == OUT_OFF) && (InC == OUT_ON) && (InB == OUT_OFF) && (InA == OUT_OFF)) 
-    DisplayIndicador = 4;
-  else if ((InD == OUT_OFF) && (InC == OUT_ON) && (InB == OUT_OFF) && (InA == OUT_ON)) 
-    DisplayIndicador = 5;
-  else if ((InD == OUT_OFF) && (InC == OUT_ON) && (InB == OUT_ON) && (InA == OUT_OFF)) 
-    DisplayIndicador = 6;    
-  else if ((InD == OUT_OFF) && (InC == OUT_ON) && (InB == OUT_ON) && (InA == OUT_ON)) 
-    DisplayIndicador = 7;
-  else if ((InD == OUT_ON) && (InC == OUT_OFF) && (InB == OUT_OFF) && (InA == OUT_OFF)) 
-    DisplayIndicador = 8;
-  else
-    DisplayIndicador = 9;
 }

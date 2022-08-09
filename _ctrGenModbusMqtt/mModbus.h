@@ -7,6 +7,15 @@ extern "C" {
 
 // https://a.aliexpress.com/_vN7zfb
 
+// Nodo 1
+// send :   00 10 00 00 00 01 02 00 01 6A 00
+// return : 00 10 00 00 00 01 02 00 01 6A 00
+// Nodo 2
+// send :   00 10 00 00 00 01 02 00 02 6A 01
+// return : 00 10 00 00 00 01 02 00 02 6A 01
+
+// Apagar y encender 
+
 #define CRCSIZE       2
 
 #define MB_RXLOOP     4000

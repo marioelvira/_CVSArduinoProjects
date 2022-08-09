@@ -90,11 +90,10 @@ void _readCONFIG (void)
     EEPROM.write(EEPROM_ADD_BROKER_PORT + 1, eeprom_value_hi);
 
     // Other Data
-    EEPROM.write(EEPROM_ADD_RPUSL_MSEC, EEPROM_VAL_RPUSL_MSEC);
-    EEPROM.write(EEPROM_ADD_LUZOFF_15M, EEPROM_VAL_LUZOFF_15M);  
     EEPROM.write(EEPROM_ADD_LOGIC_INS,  EEPROM_VAL_LOGIC_INS);
     EEPROM.write(EEPROM_ADD_LOGIC_OUTS, EEPROM_VAL_LOGIC_OUTS);
-    EEPROM.write(EEPROM_ADD_GENON_PIN,  EEPROM_VAL_GENON_PIN);
+    EEPROM.write(EEPROM_ADD_MBADD1,     EEPROM_VAL_MBADD1);
+    EEPROM.write(EEPROM_ADD_MBADD2,     EEPROM_VAL_MBADD2);
     
     eeprom_value_lo = EEPROM_VAL_ADC_M & 0x00FF;
     EEPROM.write(EEPROM_ADD_ADC_M_LO, eeprom_value_lo);
@@ -210,11 +209,11 @@ void _readCONFIG (void)
   #endif 
 
   // Other Data
-  cfgRemotePulsTick = (int)EEPROM.read(EEPROM_ADD_RPUSL_MSEC);
-  cfgLuzOutTick     = (int)EEPROM.read(EEPROM_ADD_LUZOFF_15M);
   cfgLogicIns       = (int)EEPROM.read(EEPROM_ADD_LOGIC_INS);
   cfgLogicOuts      = (int)EEPROM.read(EEPROM_ADD_LOGIC_OUTS);
-  cfgGenOnPin       = (int)EEPROM.read(EEPROM_ADD_GENON_PIN);
+  
+  cfgMB1Add         = (int)EEPROM.read(EEPROM_ADD_MBADD1);
+  cfgMB2Add         = (int)EEPROM.read(EEPROM_ADD_MBADD2);
 
   eeprom_value_hi   = (int)EEPROM.read(EEPROM_ADD_ADC_M_HI);
   eeprom_value_lo   = (int)EEPROM.read(EEPROM_ADD_ADC_M_LO);   
@@ -231,11 +230,10 @@ void _readCONFIG (void)
   //DebugVal        = (int)EEPROM.read(EEPROM_ADD_DEBUG);
   
   #if (_EEPROM_SERIAL_DEBUG_ == 1)
-  Serial.print("Remote Pulse: ");  Serial.print (cfgRemotePulsTick);  Serial.println(" *100 ms");
-  Serial.print("Luz Off: ");       Serial.print (cfgLuzOutTick);      Serial.println(" *15 min");
   Serial.print("Logic Ins: ");     Serial.println(cfgLogicIns);
   Serial.print("Logic Outs: ");    Serial.println(cfgLogicOuts);
-  Serial.print("Gen On Pin: ");    Serial.println(cfgGenOnPin);
+  Serial.print("Modbus Add1: ");   Serial.println(cfgMB1Add);
+  Serial.print("Modbus Add2: ");   Serial.println(cfgMB2Add);
 
   Serial.print("ADC m: ");         Serial.print (cfgADCm);            Serial.println(" ");
   Serial.print("ADC b: ");         Serial.print (cfgADCb);            Serial.println(" (/1000)");

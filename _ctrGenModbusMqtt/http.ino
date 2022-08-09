@@ -23,7 +23,7 @@ void _serveMAIN()
   String html = "";
   
   html = "<!DOCTYPE HTML><html>";
-  html = html + "<title>MB MQTT++ Estado</title>";
+  html = html + "<title>" + PROJECT + " Estado</title>";
   html = html + "<head>";
   html = html + "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"/>";
   html = html + "<link rel=\"icon\" href=\"data:,\">";
@@ -32,7 +32,7 @@ void _serveMAIN()
 
   html = html + "<body>";
   html = html + "<div class=\"myform\">";
-  html = html + "<h1>MB MQTT++ #Estado<span>ESP8266 tech</span><span align=\"right\"> Ver: " + FW_Version + "</span></h1>";
+  html = html + "<h1>" + PROJECT + " #Estado<span>ESP8266 tech</span><span align=\"right\"> Ver: " + FW_Version + "</span></h1>";
 
   html = html + "<div class=\"section\">Temporizaciones</div>";
   html = html + "<p class=\"sansserif\" id=\"TEMPSid\">...</p>";
@@ -66,7 +66,7 @@ void _serveMAIN()
   html = html + "<p>";
   html = html + "  <a href=\"settings.htm\"><input type=\"button\" value=\"Red\"></a>";
   html = html + "  <a href=\"timeSettings.htm\"><input type=\"button\" value=\"Config\"></a>";
-  //html = html + "  <input type=\"button\" value=\"Reset Timers\" onclick=\"sendOUT(20)\">";
+  html = html + "  <input type=\"button\" value=\"Restore\" onclick=\"sendOUT(2)\">";
   html = html + "</p>";
   html = html + "</div>";
 
@@ -133,7 +133,7 @@ void _serveTimeSETTINGS()
   String html = "";
   
   html = "<!DOCTYPE HTML><html>";
-  html = html + "<title>MB MQTT++ #Configuraci&oacuten</title>";
+  html = html + "<title>" + PROJECT + " Config</title>";
   html = html + "<head>";
   html = html + "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"/>";
   html = html + "<link rel=\"icon\" href=\"data:,\">";
@@ -142,36 +142,31 @@ void _serveTimeSETTINGS()
 
   html = html + "<body>";
   html = html + "<div class=\"myform\">";
-  html = html + "<h1>MB MQTT++ #Configuraci&oacuten<span>ESP8266 tech</span><span align=\"right\"> Ver: " + FW_Version + "</span></h1>";
+  html = html + "<h1>" + PROJECT + " #Config<span>ESP8266 tech</span><span align=\"right\"> Ver: " + FW_Version + "</span></h1>";
   html = html + "<form method='get' action='setTimeSettings'>";
 
-  html = html + "<div class=\"section\"><span>1</span>Tiempos</div>";
+  html = html + "<div class=\"section\"><span>1</span>Logica</div>";
   html = html + "<div class=\"inner-wrap\">";
-  html = html + "<label>Pulso Remoto (*100ms)<input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgRemotePulsTick) + "\" name=\"timeRP\"/></label>";
-  html = html + "<label>Luz Ext Off (*15m)<input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgLuzOutTick) + "\" name=\"timeLOFF\"/></label>";
+  html = html + "<label> Entradas ON <input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgLogicIns) + "\" name=\"cfgIns\"/></label>";
+  html = html + "<label> Salidas ON <input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgLogicOuts) + "\" name=\"cfgOuts\"/></label>";
   html = html + "</div>";
 
-  html = html + "<div class=\"section\"><span>2</span>Logica</div>";
+  html = html + "<div class=\"section\"><span>2</span>Adc: y = mx +/- b</div>";
   html = html + "<div class=\"inner-wrap\">";
-  html = html + "<label> Salidas ON <input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgLogicIns) + "\" name=\"cfgIns\"/></label>";
-  html = html + "<label> Entradas ON <input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgLogicOuts) + "\" name=\"cfgOuts\"/></label>";
-  html = html + "</div>";
-
-  html = html + "<div class=\"section\"><span>3</span>vBat ADC: y = mx +/- b</div>";
-  html = html + "<div class=\"inner-wrap\">";
-  html = html + "<label>ADC recta:m <input type=\"text\"  maxlength=\"16\" value=\"" + String((int)cfgADCm) + "\" name=\"rADCm\"/></label>";
+  html = html + "<label>ADC recta:m (/10)<input type=\"text\"  maxlength=\"16\" value=\"" + String((int)cfgADCm) + "\" name=\"rADCm\"/></label>";
   html = html + "<label>ADC recta:b (/1000)<input type=\"text\"  maxlength=\"16\" value=\"" + String((int)cfgADCb) + "\" name=\"rADCb\"/></label>";
   html = html + "<label>ADC recta:prscal <input type=\"text\"  maxlength=\"16\" value=\"" + String((int)cfgADCp) + "\" name=\"rADCp\"/></label>";
   html = html + "<label>ADC signo (+/-  1/0)<input type=\"text\"  maxlength=\"16\" value=\"" + String((int)cfgADCs) + "\" name=\"rADCs\"/></label>";
   html = html + "<label>ADC filtro (si/no 1/0)<input type=\"text\"  maxlength=\"16\" value=\"" + String((int)cfgADCf) + "\" name=\"rADCf\"/></label>";
   html = html + "</div>";
   
-  html = html + "<div class=\"section\"><span>4</span>Generador In</div>";
+  html = html + "<div class=\"section\"><span>3</span>Modbus</div>";
   html = html + "<div class=\"inner-wrap\">";
-  html = html + "<label><input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgGenOnPin) + "\" name=\"cfgGenon\"/></label>";
+  html = html + "<label>Address 1<input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgMB1Add) + "\" name=\"cfgMb1add\"/></label>";
+  html = html + "<label>Address 2<input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgMB2Add) + "\" name=\"cfgMb2add\"/></label>";
   html = html + "</div>";
   /*
-  html = html + "<div class=\"section\"><span>5</span>Debug</div>";
+  html = html + "<div class=\"section\"><span>*</span>Debug</div>";
   html = html + "<div class=\"inner-wrap\">";
   html = html + "<label>Debug (0)<input type=\"text\"  maxlength=\"16\" value=\"" + String(DebugVal) + "\" name=\"tdebugVal\"/></label>";
   html = html + "</div>";
@@ -198,30 +193,28 @@ void _setTimeSETTINGS()
     
   String html = "";
   
-  String rtimeRP   = httpServer.arg("timeRP");
-  String rtimeLOFF = httpServer.arg("timeLOFF");
-  String cfgIns    = httpServer.arg("cfgIns");
-  String cfgOuts   = httpServer.arg("cfgOuts");
-  String cfgGenon  = httpServer.arg("cfgGenon");
-  String rADCm     = httpServer.arg("rADCm");
-  String rADCb     = httpServer.arg("rADCb");
-  String rADCp     = httpServer.arg("rADCp");
-  String rADCs     = httpServer.arg("rADCs");
-  String rADCf     = httpServer.arg("rADCf");
+  String rcfgIns     = httpServer.arg("cfgIns");
+  String rcfgOuts    = httpServer.arg("cfgOuts");
+  String rcfgMb1add  = httpServer.arg("cfgMb1add");
+  String rcfgMb2add  = httpServer.arg("cfgMb2add");
+  String rADCm       = httpServer.arg("rADCm");
+  String rADCb       = httpServer.arg("rADCb");
+  String rADCp       = httpServer.arg("rADCp");
+  String rADCs       = httpServer.arg("rADCs");
+  String rADCf       = httpServer.arg("rADCf");
   
   //String rdebugVal = httpServer.arg("tdebugVal");
   
   int error = 0;
 
-  if ((rtimeRP.length() == 0)   ||
-      (rtimeLOFF.length() == 0) ||
-      (cfgIns.length() == 0)    ||
-      (cfgOuts.length() == 0)   ||
-      (cfgGenon.length() == 0)  ||
-      (rADCm.length() == 0)     ||
-      (rADCb.length() == 0)     ||
-      (rADCp.length() == 0)     ||
-      (rADCs.length() == 0)     ||
+  if ((rcfgIns.length() == 0)     ||
+      (rcfgOuts.length() == 0)    ||
+      (rcfgMb1add.length() == 0)  ||
+      (rcfgMb2add.length() == 0)  ||
+      (rADCm.length() == 0)       ||
+      (rADCb.length() == 0)       ||
+      (rADCp.length() == 0)       ||
+      (rADCs.length() == 0)       ||
       (rADCf.length() == 0))
       //(rdebugVal.length() == 0))
   {
@@ -234,11 +227,10 @@ void _setTimeSETTINGS()
   // Si no hay error...
   if (error == 0)
   {
-    cfgRemotePulsTick = rtimeRP.toInt();
-    cfgLuzOutTick = rtimeLOFF.toInt();
-    cfgLogicIns = cfgIns.toInt();
-    cfgLogicOuts = cfgOuts.toInt();
-    cfgGenOnPin = cfgGenon.toInt();
+    cfgLogicIns  = rcfgIns.toInt();
+    cfgLogicOuts = rcfgOuts.toInt();
+    cfgMB1Add    = rcfgMb1add.toInt();
+    cfgMB2Add    = rcfgMb2add.toInt();
     cfgADCm = rADCm.toInt();
     cfgADCb = rADCb.toInt();
     cfgADCp = rADCp.toInt();
@@ -248,11 +240,10 @@ void _setTimeSETTINGS()
     //DebugVal = rdebugVal.toInt();
     
     #if (_HTTP_SERIAL_DEBUG_ == 1)  
-    Serial.print("Remote Pulse: ");  Serial.print (cfgRemotePulsTick);  Serial.println(" *100 ms");
-    Serial.print("Luz Off: ");       Serial.print (cfgLuzOutTick);      Serial.println(" *15 min");
     Serial.print("cfgLogic Ins: ");  Serial.println(cfgLogicIns);
     Serial.print("cfgLogic Outs: "); Serial.println(cfgLogicOuts);
-    Serial.print("Gen On Pin: ");    Serial.println(cfgGenOnPin);
+    Serial.print("Modbus Add1: ");   Serial.println(cfgMB1Add);
+    Serial.print("Modbus Add2: ");   Serial.println(cfgMB2Add);
 
     Serial.print("ADC m: ");         Serial.print (cfgADCm);            Serial.println(" ");
     Serial.print("ADC b: ");         Serial.print (cfgADCb);            Serial.println(" (/1000)");
@@ -263,13 +254,12 @@ void _setTimeSETTINGS()
     //Serial.print("Debug: ");       Serial.print (DebugVal);           Serial.println(" ---");
     #endif   
 
-    // Data
-    EEPROM.write(EEPROM_ADD_RPUSL_MSEC, (byte)cfgRemotePulsTick);
-    EEPROM.write(EEPROM_ADD_LUZOFF_15M, (byte)cfgLuzOutTick);
-    
+    // Data 
     EEPROM.write(EEPROM_ADD_LOGIC_INS,  (byte)cfgLogicIns);
     EEPROM.write(EEPROM_ADD_LOGIC_OUTS, (byte)cfgLogicOuts);
-    
+    EEPROM.write(EEPROM_ADD_MBADD1,     (byte)cfgMB1Add);
+    EEPROM.write(EEPROM_ADD_MBADD2,     (byte)cfgMB2Add);
+
     eeprom_value_lo = cfgADCm & 0x00FF;
     EEPROM.write(EEPROM_ADD_ADC_M_LO, eeprom_value_lo);
     eeprom_value_hi = (cfgADCm & 0xFF00)>>8;
@@ -291,7 +281,7 @@ void _setTimeSETTINGS()
   }
 
   html = "<!DOCTYPE HTML><html>";
-  html = html + "<title>MB MQTT++ #Configuraci&oacuten</title>";
+  html = html + "<title>" + PROJECT + " Config</title>";
   html = html + "<head>";
   html = html + "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"/>";
   html = html + "<link rel=\"icon\" href=\"data:,\">";
@@ -301,7 +291,7 @@ void _setTimeSETTINGS()
   html = html + "<body>";
 
   html = html + "<div class=\"myform\">";
-  html = html + "<h1>MB MQTT++ #Configuraci&oacuten<span>ESP8266 tech</span><span align=\"right\"> Ver: " + FW_Version + "</span></h1>";
+  html = html + "<h1>" + PROJECT + " #Config<span>ESP8266 tech</span><span align=\"right\"> Ver: " + FW_Version + "</span></h1>";
   
   if (error == 0)
     html += "<p class=\"sansserif\">Configuraci&oacuten guardada correctamente.</p>";
@@ -328,22 +318,20 @@ void _serveSETTINGS()
   int n = WiFi.scanNetworks();
   
   html = "<!DOCTYPE HTML><html>";
-  html = html + "<title>Network Settings</title>";
+  html = html + "<title>" + PROJECT + " Red Config</title>";
   html = html + "<head>";
   html = html + "<link rel=\"icon\" href=\"data:,\">";
   html = html + "<link rel=\"stylesheet\" type=\"text/css\" href=\"style.css\" />";
-  //html = html + "<meta name='apple-mobile-web-app-capable' content='yes' />";
-  //html = html + "<meta name='apple-mobile-web-app-status-bar-style' content='black-translucent' />";
   html = html + "</head>";
 
   html = html + "<body>";
   html = html + "<div class=\"myform\">";
-  html = html + "<h1>MB MQTT++ #Network settings<span>ESP8266 tech</span><span align=\"right\"> Ver: " + FW_Version + "</span></h1>";
+  html = html + "<h1>" + PROJECT + " #Red Config<span>ESP8266 tech</span><span align=\"right\"> Ver: " + FW_Version + "</span></h1>";
   //html = html + "<form method=\"post\">";
   html = html + "<form method='get' action='networSettings'>";
 
   // Wi-Fi
-  html = html + "<div class=\"section\"><span>1</span>Wi-Fi Settings</div>";
+  html = html + "<div class=\"section\"><span>1</span>Wi-Fi</div>";
   html = html + "<div class=\"inner-wrap\">";
 
   if (wifiMode == STATION_MODE)
@@ -371,7 +359,7 @@ void _serveSETTINGS()
   // End
 
   // Red
-  html = html + "<div class=\"section\"><span>2</span>IP Settings</div>";
+  html = html + "<div class=\"section\"><span>2</span>IP</div>";
   html = html + "<div class=\"inner-wrap\">";
 
   if (ipMode == DHCP_MODE)
@@ -683,7 +671,7 @@ void _setSETTINGS()
   }
 
   html = "<!DOCTYPE HTML><html>";
-  html = html + "<title>MB MQTT++ #Configuraci&oacuten</title>";
+  html = html + "<title>" + PROJECT + " Config</title>";
   html = html + "<head>";
   html = html + "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"/>";
   html = html + "<link rel=\"icon\" href=\"data:,\">";
@@ -693,7 +681,7 @@ void _setSETTINGS()
   html = html + "<body>";
 
   html = html + "<div class=\"myform\">";
-  html = html + "<h1>MB MQTT++ #Configuraci&oacuten<span>ESP8266 tech</span><span align=\"right\"> Ver: " + FW_Version + "</span></h1>";
+  html = html + "<h1>" + PROJECT + " #Config<span>ESP8266 tech</span><span align=\"right\"> Ver: " + FW_Version + "</span></h1>";
   
   if (error == 0)
     html += "<p class=\"sansserif\">Configuraci&oacuten guardada correctamente.</p>";
@@ -740,13 +728,13 @@ void _readINS()
   html = html + "</tr>";
  
   html = html + "<tr>";
-  html = html + "<td>Vbatt In (Dig)</td>";
-  html = html + "<td>" + String(VbattInADC) + "</td>";
+  html = html + "<td>Adc Dig</td>";
+  html = html + "<td>" + String(AdcIn) + "</td>";
   html = html + "</tr>";
   
   html = html + "<tr>";
-  html = html + "<td>Vbatt In (V)</td>";
-  html = html + "<td>" + String(VbattIn) + "</td>";
+  html = html + "<td>Adc Val</td>";
+  html = html + "<td>" + String(AdcVal) + "</td>";
   html = html + "</tr>";
   
   html = html + "</table>";
@@ -837,6 +825,13 @@ void _setOUTS()
     #endif
   }
 
+  // Restore
+  if(out_number == "2")
+  {
+    _ResetEEPROM();
+    html = "Restore";
+  }
+
   // Out A
   if(out_number == "10")
   {
@@ -879,18 +874,6 @@ void _setOUTS()
       html = "Out C ON";
     }
   }
-
-  /*
-  // Reset Timers
-  if(out_number == "20")
-  {
-    _ResetEEPROM();
-    #if (_HTTP_SERIAL_DEBUG_ == 1)
-    Serial.println("Reset Timers");
-    #endif
-    html = "Reset Timers";
-  }
-  */
 
   // Outs
   if ((out_number == "50") || (out_number == "51") || (out_number == "52") || (out_number == "53") ||

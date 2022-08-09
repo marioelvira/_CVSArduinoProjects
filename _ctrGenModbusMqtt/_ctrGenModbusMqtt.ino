@@ -5,6 +5,7 @@
 
 #include "__ver.h"
 
+#include "adcs.h"
 #include "e2prom.h"
 #include "http.h"
 #include "io.h"
@@ -39,12 +40,12 @@ int   OutC;
 int   outLed;
 
 ///////////
-// Vbatt //
+// Adc //
 ///////////
-int    VbattInADC;
-int    VbattInArray[VBATT_ARRAY_SIZE];
-int    VbattInPointer;
-float  VbattIn;
+int    AdcIn;
+int    AdcInArray[ADC_ARRAY_SIZE];
+int    AdcInPointer;
+float  AdcVal;
 
 ///////////
 // Wi-Fi //
@@ -173,11 +174,11 @@ int wdeForceReset;
 ////////////
 // Config //
 ////////////
-int     cfgRemotePulsTick;
-int     cfgLuzOutTick;
 int     cfgLogicIns;
 int     cfgLogicOuts;
-int     cfgGenOnPin;
+int     cfgMB1Add;
+int     cfgMB2Add;
+
 int     cfgADCm;
 int     cfgADCb;
 int     cfgADCp;
@@ -248,7 +249,7 @@ void setup(void)
 
   // IO setup
   _PINSetup();
-  _IOSetup();
+  //_IOSetup();
   _ADCSetup();
 
   // Wi-Fi setup
@@ -294,17 +295,17 @@ void _PINLoop()
     digitalWrite(PIN_LED, PIN_OUT_OFF);
   #endif
 
-  if (OutA == OUT_ON /*cfgLogicOuts*/)
+  if (OutA == cfgLogicOuts /*OUT_ON*/)
     digitalWrite(PIN_OA, PIN_OUT_ON);
   else
     digitalWrite(PIN_OA, PIN_OUT_OFF);
 
-  if (OutB == OUT_ON /*cfgLogicOuts*/)
+  if (OutB == cfgLogicOuts /*OUT_ON*/)
     digitalWrite(PIN_OB, PIN_OUT_ON);
   else
     digitalWrite(PIN_OB, PIN_OUT_OFF);
 
-  if (OutC == OUT_ON /*cfgLogicOuts*/)
+  if (OutC == cfgLogicOuts /*OUT_ON*/)
     digitalWrite(PIN_OC, PIN_OUT_ON);
   else
     digitalWrite(PIN_OC, PIN_OUT_OFF); 
@@ -319,27 +320,27 @@ void _PINLoop()
   //-----//
   // INS //
   //-----//
-  if (digitalRead(PIN_A) == PIN_IN_ON /*cfgLogicIns*/)
+  if (digitalRead(PIN_A) == cfgLogicIns /*PIN_IN_ON*/)
     InA = IO_ON;
   else
     InA = IO_OFF;
 
-  if (digitalRead(PIN_B) == PIN_IN_ON /*cfgLogicIns*/)
+  if (digitalRead(PIN_B) == cfgLogicIns /*PIN_IN_ON*/)
     InB = IO_ON;
   else
     InB = IO_OFF;
 
-  if (digitalRead(PIN_C) == PIN_IN_ON /*cfgLogicIns*/)
+  if (digitalRead(PIN_C) == cfgLogicIns /*PIN_IN_ON*/)
     InC = IO_ON;
   else
     InC = IO_OFF;
 
-  if (digitalRead(PIN_D) == PIN_IN_ON /*cfgLogicIns*/)
+  if (digitalRead(PIN_D) == cfgLogicIns /*PIN_IN_ON*/)
     InD = IO_ON;
   else
     InD = IO_OFF;
 
-  if (digitalRead(PIN_E) == PIN_IN_ON /*cfgLogicIns*/)
+  if (digitalRead(PIN_E) == cfgLogicIns /*PIN_IN_ON*/)
     InE = IO_ON;
   else
     InE = IO_OFF;

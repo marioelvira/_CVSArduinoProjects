@@ -159,14 +159,15 @@ void _MQTTSend(void)
   str = str + String(mbIns[0]) + String(mbIns[1]) + String(mbIns[2]) + String(mbIns[3]);
   str = str + String(mbIns[4]) + String(mbIns[5]) + String(mbIns[6]) + String(mbIns[7]);
   str = str + "\",\n";
-  // vBatt
-  str = str + "\"vbatt\":";
-  str = str + String(VbattIn);
+  
+  // Adc
+  str = str + "\"adc\":";
+  str = str + String(AdcVal);
   str = str + ",\n";
 
-  // vBattADC
-  str = str + "\"vbattADC\":";
-  str = str + String(VbattInADC);
+  // AdcDig
+  str = str + "\"adcDig\":";
+  str = str + String(AdcIn);
   str = str + ",\n";
 
   // ipAdd
@@ -201,53 +202,6 @@ void _MQTTSetup(void)
   mqttClient.setCallback(mqttDataCallback);
   
   mqttStatus = MQTT_NOT_CONNECTED;
-
-  /*
-  if (DebugVal == 69)
-  {
-    str = _TOPIC_STATE;
-    str_len = str.length() + 1;
-    str.toCharArray(topic_state, str_len);
-
-    str = _TOPIC_GENCTR;
-    str_len = str.length() + 1;
-    str.toCharArray(topic_genctr, str_len);
-    
-    str = _TOPIC_GENSTOP;
-    str_len = str.length() + 1;
-    str.toCharArray(topic_genstop, str_len);
-    
-    str = _TOPIC_LUZCTR;
-    str_len = str.length() + 1;
-    str.toCharArray(topic_luzctr, str_len);
-         
-    str = _TOPIC_LUZSTANDBY;
-    str_len = str.length() + 1;
-    str.toCharArray(topic_luzstandby, str_len);
-  }
-  else
-  {
-    str = TOPIC_STATE;
-    str_len = str.length() + 1;
-    str.toCharArray(topic_state, str_len);
-
-    str = TOPIC_GENCTR;
-    str_len = str.length() + 1;
-    str.toCharArray(topic_genctr, str_len);
-    
-    str = TOPIC_GENSTOP;
-    str_len = str.length() + 1;
-    str.toCharArray(topic_genstop, str_len);
-    
-    str = TOPIC_LUZCTR;
-    str_len = str.length() + 1;
-    str.toCharArray(topic_luzctr, str_len);
-         
-    str = TOPIC_LUZSTANDBY;
-    str_len = str.length() + 1;
-    str.toCharArray(topic_luzstandby, str_len);
-  }
-  */
 }
 
 ////////////////////////

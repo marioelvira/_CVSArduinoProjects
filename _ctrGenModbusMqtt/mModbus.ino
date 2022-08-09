@@ -82,12 +82,12 @@ void _mbCRC(void)
 
 // Tx: FF 02 00 00 00 08 6C 12
 // Rx: FF 02 01 01 51 A0
-void _mbReadIns(void)
+void _mbReadIns(char address)
 {
   // Num Bytes
   mrs485TxNumBytes = 8;
 
-  mrs485TxBuffer[0] = 0xFF;
+  mrs485TxBuffer[0] = (char)address;
   mrs485TxBuffer[1] = 0x02;
   mrs485TxBuffer[2] = 0x00;
   mrs485TxBuffer[3] = 0x00;
@@ -103,11 +103,11 @@ void _mbReadIns(void)
 }
 
 // Rx: FF 02 01 01 51 A0
-int _mbAnalyseIns(void)
+int _mbAnalyseIns(char address)
 {
   int error = 0;
 
-  if ((mrs485RxBuffer[0] == 0xFF) &&
+  if ((mrs485RxBuffer[0] == (char)address) &&
       (mrs485RxBuffer[1] == 0x02) &&
       (mrs485RxBuffer[2] == 0x01))
   {
@@ -232,12 +232,12 @@ void _mbUdateOuts (void)
 // Rx: FF 05 00 01 FF 00 C8 24
 // out: 0 to 7; 8 all relays
 // val: 0 OFF, 1 ON
-void _mbWriteOut (int out, int val)
+void _mbWriteOut (char address, int out, int val)
 {
   // Num Bytes
   mrs485TxNumBytes = 8;
       
-  mrs485TxBuffer[0] = 0xFF;
+  mrs485TxBuffer[0] = (char)address;
   mrs485TxBuffer[1] = 0x05;
   mrs485TxBuffer[2] = 0x00;
   mrs485TxBuffer[3] = out;
@@ -256,11 +256,11 @@ void _mbWriteOut (int out, int val)
 }
 
 // Rx: FF 05 00 01 FF 00 C8 24
-int _mbAnalyseOut (int out) //, int val)
+int _mbAnalyseOut (char address, int out) //, int val)
 {
   int error = 0;
 
-  if ((mrs485RxBuffer[0] == 0xFF) &&
+  if ((mrs485RxBuffer[0] == (char)address) &&
       (mrs485RxBuffer[1] == 0x05) &&
 	    (mrs485RxBuffer[2] == 0x00) &&
 	    (mrs485TxBuffer[3] == out))
@@ -306,7 +306,7 @@ void _MBLoop(void)
 	    break;
 
     case MB_READINS:
-      _mbReadIns();
+      _mbReadIns((char)cfgMB1Add);
 
       // Analyse Response
       mbTick = millis();
@@ -327,7 +327,7 @@ void _MBLoop(void)
       if (mrs485State == MRS485_FRAME_RX)
       {
         // Analyse response
-        if (_mbAnalyseIns() == MB_RX_OK)
+        if (_mbAnalyseIns((char)cfgMB1Add) == MB_RX_OK)
          _mbUdateIns();
         //else
           // Error;
@@ -343,7 +343,7 @@ void _MBLoop(void)
       break;
 
 	  case MB_WRITEOUT:
-	    _mbWriteOut(mbOutNum, mbOutVal);
+	    _mbWriteOut((char)cfgMB1Add, mbOutNum, mbOutVal);
       if (mbOutVal == OUT_OFF)
         mbOuts[mbOutNum] = OUT_OFF;
       else
@@ -368,7 +368,7 @@ void _MBLoop(void)
       if (mrs485State == MRS485_FRAME_RX)
       {
         // Analyse response
-        _mbAnalyseOut(mbOutNum); //, mbOutVal);
+        _mbAnalyseOut((char)0xFF, mbOutNum); //, mbOutVal);
         
         mbTick = millis();
         mbState = MB_STANDBY;

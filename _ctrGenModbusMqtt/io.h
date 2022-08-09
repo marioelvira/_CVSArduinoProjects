@@ -32,7 +32,7 @@ extern "C" {
  */
 
 // PIN definition
-#define PIN_VBATT_IN      A0  // Entrada
+#define PIN_ADC_IN        A0  // Entrada
 
 #define PIN_LED           2
 
@@ -51,8 +51,6 @@ extern "C" {
 #define PIN_OUT_ON        1
 #define PIN_OUT_OFF       0
 
-#define VBATT_ARRAY_SIZE  5
-
 // Pull-up INs
 #define PIN_IN_OFF        0   
 #define PIN_IN_ON         1
@@ -63,10 +61,6 @@ extern "C" {
 
 #define OUT_OFF           0
 #define OUT_ON            1
-
-//#define VBATT_DIG_OFFSET        0     // Digital Offset
-//#define VBATT_DIG_EOS           1024  // Digital End Of Scale
-//#define VBATT_ANA_EOS           24    // Analog Enf Of Scale
 
 #endif // _IO_H_
 

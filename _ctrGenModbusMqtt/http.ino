@@ -42,8 +42,8 @@ void _serveMAIN()
   html = html + "<p class=\"sansserif\" id=\"OUTSid\">...</p>";
   html = html + "<div class=\"section\">Control</div>";
   html = html + "<p>";
-  html = html + "  <input type=\"button\" value=\"Cambiar Modo\" onclick=\"sendOUT(0)\">";
-  html = html + "</p><p>";
+  //html = html + "  <input type=\"button\" value=\"Cambiar Modo\" onclick=\"sendOUT(0)\">";
+  //html = html + "</p><p>";
   html = html + "  <input type=\"button\" value=\"A\" onclick=\"sendOUT(10)\">";
   html = html + "  <input type=\"button\" value=\"B\" onclick=\"sendOUT(11)\">";
   html = html + "  <input type=\"button\" value=\"C\" onclick=\"sendOUT(12)\">";
@@ -57,7 +57,18 @@ void _serveMAIN()
   html = html + "  <input type=\"button\" value=\"6\" onclick=\"sendOUT(55)\">";
   html = html + "  <input type=\"button\" value=\"7\" onclick=\"sendOUT(56)\">";
   html = html + "  <input type=\"button\" value=\"8\" onclick=\"sendOUT(57)\">";  
+  html = html + "</p><p>";
+  html = html + "  <input type=\"button\" value=\"11\" onclick=\"sendOUT(60)\">";
+  html = html + "  <input type=\"button\" value=\"12\" onclick=\"sendOUT(61)\">";
+  html = html + "  <input type=\"button\" value=\"13\" onclick=\"sendOUT(62)\">";
+  html = html + "  <input type=\"button\" value=\"14\" onclick=\"sendOUT(63)\">";
+  html = html + "</p><p>";
+  html = html + "  <input type=\"button\" value=\"15\" onclick=\"sendOUT(64)\">";
+  html = html + "  <input type=\"button\" value=\"16\" onclick=\"sendOUT(65)\">";
+  html = html + "  <input type=\"button\" value=\"17\" onclick=\"sendOUT(66)\">";
+  html = html + "  <input type=\"button\" value=\"18\" onclick=\"sendOUT(67)\">";  
   html = html + "</p>";
+  
   html = html + "<div class=\"section\">Watchdog</div>";
   html = html + "<p>";
   html = html + "  <input type=\"button\" value=\"Reset\" onclick=\"sendOUT(1)\">";
@@ -724,7 +735,8 @@ void _readINS()
   
   html = html + "<tr>";
   html = html + "<td>Modbus Ins</td>";
-  html = html + "<td>" + String(mbIns[0]) + "-" + String(mbIns[1]) + "-" + String(mbIns[2]) + "-" + String(mbIns[3]) + "-" + String(mbIns[4]) + "-" + String(mbIns[5]) + "-" + String(mbIns[6]) + "-" + String(mbIns[7]) + "</td>";
+  html = html + "<td>" + String(mbIns[0][0]) + "-" + String(mbIns[1][0]) + "-" + String(mbIns[2][0]) + "-" + String(mbIns[3][0]) + "-" + String(mbIns[4][0]) + "-" + String(mbIns[5][0]) + "-" + String(mbIns[6][0]) + "-" + String(mbIns[7][0]) + "</td>";
+  html = html + "<td>" + String(mbIns[0][1]) + "-" + String(mbIns[1][1]) + "-" + String(mbIns[2][1]) + "-" + String(mbIns[3][1]) + "-" + String(mbIns[4][1]) + "-" + String(mbIns[5][1]) + "-" + String(mbIns[6][1]) + "-" + String(mbIns[7][1]) + "</td>";
   html = html + "</tr>";
  
   html = html + "<tr>";
@@ -774,7 +786,8 @@ void _readOUTS()
   
   html = html + "<tr>";
   html = html + "<td>Modbus Outs</td>";
-  html = html + "<td>" + String(mbOuts[0]) + "-" + String(mbOuts[1]) + "-" + String(mbOuts[2]) + "-" + String(mbOuts[3]) + "-" + String(mbOuts[4]) + "-" + String(mbOuts[5]) + "-" + String(mbOuts[6]) + "-" + String(mbOuts[7]) + "</td>";
+  html = html + "<td>" + String(mbOuts[0][0]) + "-" + String(mbOuts[1][0]) + "-" + String(mbOuts[2][0]) + "-" + String(mbOuts[3][0]) + "-" + String(mbOuts[4][0]) + "-" + String(mbOuts[5][0]) + "-" + String(mbOuts[6][0]) + "-" + String(mbOuts[7][0]) + "</td>";
+  html = html + "<td>" + String(mbOuts[0][1]) + "-" + String(mbOuts[1][1]) + "-" + String(mbOuts[2][1]) + "-" + String(mbOuts[3][1]) + "-" + String(mbOuts[4][1]) + "-" + String(mbOuts[5][1]) + "-" + String(mbOuts[6][1]) + "-" + String(mbOuts[7][1]) + "</td>";
   html = html + "</tr>";
    
   html = html + "</table>";
@@ -879,6 +892,8 @@ void _setOUTS()
   if ((out_number == "50") || (out_number == "51") || (out_number == "52") || (out_number == "53") ||
       (out_number == "54") || (out_number == "55") || (out_number == "56") || (out_number == "57"))
   {
+    mbOutBoard = 0;
+    
     if (out_number == "50")
       mbOutNum = 0; // O1
     else if (out_number == "51")
@@ -896,7 +911,41 @@ void _setOUTS()
     else
       mbOutNum = 7; // O8
     
-    if (mbOuts[mbOutNum] == OUT_OFF)
+    if (mbOuts[mbOutNum][mbOutBoard] == OUT_OFF)
+      mbOutVal = OUT_ON;
+    else
+      mbOutVal = OUT_OFF;
+
+    if (mbState == MB_STANDBY)
+      mbState = MB_WRITEOUT;
+    
+    html = "Outs";
+  }
+
+  // Outs
+  if ((out_number == "60") || (out_number == "61") || (out_number == "62") || (out_number == "63") ||
+      (out_number == "64") || (out_number == "65") || (out_number == "66") || (out_number == "67"))
+  {
+    mbOutBoard = 1;
+    
+    if (out_number == "60")
+      mbOutNum = 0; // O1
+    else if (out_number == "61")
+      mbOutNum = 1; // O2
+    else if (out_number == "62")
+      mbOutNum = 2; // O3
+    else if (out_number == "63")
+      mbOutNum = 3; // O4
+    else if (out_number == "64")
+      mbOutNum = 4; // O5
+    else if (out_number == "65")
+      mbOutNum = 5; // O6
+    else if (out_number == "66")
+      mbOutNum = 6; // O7     
+    else
+      mbOutNum = 7; // O8
+    
+    if (mbOuts[mbOutNum][mbOutBoard] == OUT_OFF)
       mbOutVal = OUT_ON;
     else
       mbOutVal = OUT_OFF;

@@ -156,9 +156,11 @@ unsigned long   mbTick;
 byte            mbCRC[2];
 
 // Modbus DIOs
-int             mbIns[8];
-int             mbOuts[8];
+int             mbInBoard = 0;
+int             mbIns[MB_NUM_IOS][MB_NUM_BRS];
+int             mbOuts[MB_NUM_IOS][MB_NUM_BRS];
 
+int             mbOutBoard = 0;
 int             mbOutNum = 0;
 int             mbOutVal = 0x00;
 #endif

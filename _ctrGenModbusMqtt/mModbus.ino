@@ -119,47 +119,47 @@ int _mbAnalyseIns(char address)
   return error;
 }
 
-void _mbUdateIns (void)
+void _mbUdateIns (int board)
 {
   if ((mrs485RxBuffer[3] & 0x01) != 0)
-    mbIns[0] = IO_ON;
+    mbIns[0][board] = IO_ON;
   else
-    mbIns[0] = IO_OFF;
+    mbIns[0][board] = IO_OFF;
 
   if ((mrs485RxBuffer[3] & 0x02) != 0)
-    mbIns[1] = IO_ON;
+    mbIns[1][board] = IO_ON;
   else
-    mbIns[1] = IO_OFF;
+    mbIns[1][board] = IO_OFF;
 
   if ((mrs485RxBuffer[3] & 0x04) != 0)
-    mbIns[2] = IO_ON;
+    mbIns[2][board] = IO_ON;
   else
-    mbIns[2] = IO_OFF;
+    mbIns[2][board] = IO_OFF;
 
   if ((mrs485RxBuffer[3] & 0x08) != 0)
-    mbIns[3] = IO_ON;
+    mbIns[3][board] = IO_ON;
   else
-    mbIns[3] = IO_OFF;
+    mbIns[3][board] = IO_OFF;
 
   if ((mrs485RxBuffer[3] & 0x10) != 0)
-    mbIns[4] = IO_ON;
+    mbIns[4][board] = IO_ON;
   else
-    mbIns[4] = IO_OFF;
+    mbIns[4][board] = IO_OFF;
 
   if ((mrs485RxBuffer[3] & 0x20) != 0)
-    mbIns[5] = IO_ON;
+    mbIns[5][board] = IO_ON;
   else
-    mbIns[5] = IO_OFF;
+    mbIns[5][board] = IO_OFF;
 
   if ((mrs485RxBuffer[3] & 0x40) != 0)
-    mbIns[6] = IO_ON;
+    mbIns[6][board] = IO_ON;
   else
-    mbIns[6] = IO_OFF;
+    mbIns[6][board] = IO_OFF;
 
   if ((mrs485RxBuffer[3] & 0x80) != 0)
-    mbIns[7] = IO_ON;
+    mbIns[7][board] = IO_ON;
   else
-    mbIns[7] = IO_OFF;
+    mbIns[7][board] = IO_OFF;
 }
 
 /*
@@ -279,14 +279,21 @@ int _mbAnalyseOut (char address, int out) //, int val)
 ////////////////////
 void _MBSetup(void)
 {
+  int i, j;
   mbState = MB_STANDBY;
   mbTick = millis();
 
+  mbInBoard = 0;
+  mbOutBoard = 0;
+
   // Modbus DIOs reset
-  for (int i = 0; i < MB_NUM_IOS; i++)
+  for (j = 0; j < MB_NUM_BRS; j++)
   {
-    mbIns[i] = 0;
-    mbOuts[i] = 0;
+    for (i = 0; i < MB_NUM_IOS; i++)
+    {
+      mbIns[i][j] = 0;
+      mbOuts[i][j] = 0;
+    }
   }
 }
 
@@ -306,7 +313,10 @@ void _MBLoop(void)
 	    break;
 
     case MB_READINS:
-      _mbReadIns((char)cfgMB1Add);
+      if ( mbInBoard == 0)
+        _mbReadIns((char)cfgMB1Add);
+      else
+        _mbReadIns((char)cfgMB2Add);      
 
       // Analyse Response
       mbTick = millis();
@@ -326,12 +336,27 @@ void _MBLoop(void)
       // if response received
       if (mrs485State == MRS485_FRAME_RX)
       {
-        // Analyse response
-        if (_mbAnalyseIns((char)cfgMB1Add) == MB_RX_OK)
-         _mbUdateIns();
-        //else
-          // Error;
-
+        if (mbInBoard == 0)
+        {
+          // Analyse response
+          if (_mbAnalyseIns((char)cfgMB1Add) == MB_RX_OK)
+          _mbUdateIns(mbInBoard);
+          //else
+            // Error;
+          // Next board
+          mbInBoard = 1;
+        }
+        else
+        {
+          // Analyse response
+          if (_mbAnalyseIns((char)cfgMB2Add) == MB_RX_OK)
+          _mbUdateIns(mbInBoard);
+          //else
+            // Error;
+          // Next board
+          mbInBoard = 0;
+        }
+                
         mbTick = millis();
         mbState = MB_STANDBY;
                 
@@ -343,11 +368,16 @@ void _MBLoop(void)
       break;
 
 	  case MB_WRITEOUT:
-	    _mbWriteOut((char)cfgMB1Add, mbOutNum, mbOutVal);
-      if (mbOutVal == OUT_OFF)
-        mbOuts[mbOutNum] = OUT_OFF;
+      // select board
+      if (mbOutBoard == 0)
+	      _mbWriteOut((char)cfgMB1Add, mbOutNum, mbOutVal);
       else
-        mbOuts[mbOutNum] = OUT_ON;
+       _mbWriteOut((char)cfgMB2Add, mbOutNum, mbOutVal);
+       
+      if (mbOutVal == OUT_OFF)
+        mbOuts[mbOutNum][mbOutBoard] = OUT_OFF;
+      else
+        mbOuts[mbOutNum][mbOutBoard] = OUT_ON;
 
       // Analyse Response
       mbTick = millis();
@@ -368,8 +398,11 @@ void _MBLoop(void)
       if (mrs485State == MRS485_FRAME_RX)
       {
         // Analyse response
-        _mbAnalyseOut((char)0xFF, mbOutNum); //, mbOutVal);
-        
+        if (mbOutBoard == 0)
+          _mbAnalyseOut((char)cfgMB1Add, mbOutNum); //, mbOutVal);
+        else 
+          _mbAnalyseOut((char)cfgMB2Add, mbOutNum); //, mbOutVal);
+ 
         mbTick = millis();
         mbState = MB_STANDBY;
                 

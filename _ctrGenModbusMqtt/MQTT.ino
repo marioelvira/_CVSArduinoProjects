@@ -18,7 +18,7 @@ void mqttDataCallback(char* rtopic, byte* rpayload, unsigned int rlength)
   if (rtopicStr.equals(TOPIC_OON) ||
       rtopicStr.equals(TOPIC_OOFF))
   {
-    int board = 2; // MB
+    int boardType = 2; // MB
     int outNum = 0;
     int outVal = 0;
 
@@ -28,7 +28,7 @@ void mqttDataCallback(char* rtopic, byte* rpayload, unsigned int rlength)
     else
       outVal = OUT_OFF;
 
-    // Board 2
+    // mbInBoard 0 - boardType 2 MB
     if(rpayloadStr.equals("1"))
       outNum = 0;
     else if (rpayloadStr.equals("2"))
@@ -45,33 +45,51 @@ void mqttDataCallback(char* rtopic, byte* rpayload, unsigned int rlength)
       outNum = 6;
     else if (rpayloadStr.equals("8"))
       outNum = 7;
-    // Board 1
+    // mbInBoard 1 - boardType 2 MB
+    else if (rpayloadStr.equals("11"))
+      outNum = 10;
+    else if (rpayloadStr.equals("12"))
+      outNum = 11;
+    else if (rpayloadStr.equals("13"))
+      outNum = 12;
+    else if (rpayloadStr.equals("14"))
+      outNum = 13;
+    else if (rpayloadStr.equals("15"))
+      outNum = 14;      
+    else if (rpayloadStr.equals("16"))
+      outNum = 15;
+    else if (rpayloadStr.equals("17"))
+      outNum = 16;
+    else if (rpayloadStr.equals("18"))
+      outNum = 17;
+      
+    // boardType 1
     else if (rpayloadStr.equals("A"))
     {
-      board = 1; 
+      boardType = 1;
       outNum = 0;
     }
     else if (rpayloadStr.equals("B"))
     {
-      board = 1; 
+      boardType = 1; 
       outNum = 1;
     }
     else if (rpayloadStr.equals("C"))
     {
-      board = 1; 
+      boardType = 1; 
       outNum = 2;
     }
     else if (rpayloadStr.equals("D"))
     {
-      board = 1; 
+      boardType = 1; 
       outNum = 3;
     }
     // Error
     else
-      board = 0;  // No board
+      boardType = 0;  // No board
 
     // Board
-    if (board == 1) // Own
+    if (boardType == 1) // Own
     {
       if ((outNum == 0) && (outVal == OUT_ON))
         OutA = OUT_ON;
@@ -86,8 +104,16 @@ void mqttDataCallback(char* rtopic, byte* rpayload, unsigned int rlength)
       else if ((outNum == 2) && (outVal == OUT_OFF))
         OutC = OUT_OFF;    
     }
-    else if (board == 2) // MB
+    else if (boardType == 2) // MB
     {
+      if (outNum >= 10)
+      {
+        mbOutBoard = 1;
+        outNum = outNum - 10;
+      }
+      else
+        mbOutBoard = 0;
+        
       mbOutNum = outNum;
       mbOutVal = outVal;
 
@@ -146,18 +172,28 @@ void _MQTTSend(void)
   str = str + String(OutA) + String(OutB) + String(OutC);
   str = str + "\",\n";
 
-  str = str + "\"mbO\":\"";
-  str = str + String(mbOuts[0]) + String(mbOuts[1]) + String(mbOuts[2]) + String(mbOuts[3]);
-  str = str + String(mbOuts[4]) + String(mbOuts[5]) + String(mbOuts[6]) + String(mbOuts[7]);
+  str = str + "\"mbO1\":\"";
+  str = str + String(mbOuts[0][0]) + String(mbOuts[1][0]) + String(mbOuts[2][0]) + String(mbOuts[3][0]);
+  str = str + String(mbOuts[4][0]) + String(mbOuts[5][0]) + String(mbOuts[6][0]) + String(mbOuts[7][0]);
   str = str + "\",\n";
 
+  str = str + "\"mbO2\":\"";
+  str = str + String(mbOuts[0][1]) + String(mbOuts[1][1]) + String(mbOuts[2][1]) + String(mbOuts[3][1]);
+  str = str + String(mbOuts[4][1]) + String(mbOuts[5][1]) + String(mbOuts[6][1]) + String(mbOuts[7][1]);
+  str = str + "\",\n";
+  
   str = str + "\"bI\":\"";
   str = str + String(InA) + String(InB) + String(InC) + String(InD) + String(InE);
   str = str + "\",\n";
   
-  str = str + "\"mbI\":\"";
-  str = str + String(mbIns[0]) + String(mbIns[1]) + String(mbIns[2]) + String(mbIns[3]);
-  str = str + String(mbIns[4]) + String(mbIns[5]) + String(mbIns[6]) + String(mbIns[7]);
+  str = str + "\"mbI1\":\"";
+  str = str + String(mbIns[0][0]) + String(mbIns[1][0]) + String(mbIns[2][0]) + String(mbIns[3][0]);
+  str = str + String(mbIns[4][0]) + String(mbIns[5][0]) + String(mbIns[6][0]) + String(mbIns[7][0]);
+  str = str + "\",\n";
+
+  str = str + "\"mbI2\":\"";
+  str = str + String(mbIns[0][1]) + String(mbIns[1][1]) + String(mbIns[2][1]) + String(mbIns[3][1]);
+  str = str + String(mbIns[4][1]) + String(mbIns[5][1]) + String(mbIns[6][1]) + String(mbIns[7][1]);
   str = str + "\",\n";
   
   // Adc
@@ -165,13 +201,13 @@ void _MQTTSend(void)
   str = str + String(AdcVal);
   str = str + ",\n";
 
-  // AdcDig
-  str = str + "\"adcDig\":";
+  // AdcIn
+  str = str + "\"adci\":";
   str = str + String(AdcIn);
   str = str + ",\n";
 
   // ipAdd
-  str = str + "\"ipAdd\":\"";
+  str = str + "\"ip\":\"";
   str = str + String(ipAddress.toString());
   str = str + "\"\n";
 

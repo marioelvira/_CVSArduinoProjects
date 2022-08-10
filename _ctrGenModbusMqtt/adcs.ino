@@ -15,6 +15,7 @@ void _ADCSetup()
 //////////////////////
 // IO state machine //
 //////////////////////
+// Nota: Se ejecuta dentro de _TimeLoop
 void _ADCLoop()
 {
   if (cfgADCf == 1)

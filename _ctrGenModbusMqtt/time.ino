@@ -43,6 +43,8 @@ void _TimeLoop(void)
     
     timeTick = millis();
 
+    _ADCLoop();
+
     _FreeRAM();
 
     #if (_USE_WDE_ == 1)
@@ -104,11 +106,10 @@ void _TimeLoop(void)
     else
      Serial.println("Luz OFF: OFF");
 
-    _ADCLoop();
-    Serial.print("Vbatt In Dig: ");
-    Serial.println(VbattInADC);
-    Serial.print("Vbatt In: ");
-    Serial.println(VbattIn);    
+    Serial.print("AdcVal: ");
+    Serial.println(AdcIn);
+    Serial.print("AdcIn: ");
+    Serial.println(AdcVal);    
 
     Serial.println("<><><><><><><>");
     Serial.println(" ");

@@ -41,8 +41,11 @@ extern "C" {
  *  ---------------------------------
  */
 // PIN definition
-//#define PIN_ADC_IN      A0  // Entrada
-#define PIN_LED           2   // 1 - ESP01 // 2 - ESP8266
+#if (_ARCH_ == _ARCH_ESP01_)
+#define PIN_LED           1   // 1 - ESP01
+#else
+#define PIN_LED           2   // 2 - ESP8266
+#endif
 
 //#define PIN_A           14  // A
 

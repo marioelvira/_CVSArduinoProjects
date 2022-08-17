@@ -14,6 +14,11 @@ extern "C" {
 #define _SDPELICANOS_DDNS_         1
 #define _AHICLAVIJO_DDNS_          0
 
+#define _ARCH_                     1
+#define _ARCH_ESP8266_             1
+#define _ARCH_ESP01_               2
+#define _ARCH_ESP01S_              3
+
 ///////////
 // Debug //
 ///////////

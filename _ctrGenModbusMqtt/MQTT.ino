@@ -64,25 +64,20 @@ void mqttDataCallback(char* rtopic, byte* rpayload, unsigned int rlength)
       outNum = 17;
       
     // boardType 1
-    else if (rpayloadStr.equals("A"))
+    else if (rpayloadStr.equals("41"))
     {
       boardType = 1;
       outNum = 0;
     }
-    else if (rpayloadStr.equals("B"))
+    else if (rpayloadStr.equals("42"))
     {
       boardType = 1; 
       outNum = 1;
     }
-    else if (rpayloadStr.equals("C"))
+    else if (rpayloadStr.equals("43"))
     {
       boardType = 1; 
       outNum = 2;
-    }
-    else if (rpayloadStr.equals("D"))
-    {
-      boardType = 1; 
-      outNum = 3;
     }
     // Error
     else

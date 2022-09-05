@@ -11,7 +11,7 @@ extern "C" {
 ///////////
 // Debug //
 ///////////
-#define _SERIAL_DEBUG_             1
+#define _SERIAL_DEBUG_             0
 
 #define _USE_LED_INDICATOR_        1
 #define _USE_WDE_                  1

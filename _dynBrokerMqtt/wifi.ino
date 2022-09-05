@@ -47,7 +47,7 @@ void _WifiLoop()
       // Station mode...
       if (wifiMode == STATION_MODE)
       {       
-        if (millis() - wifiAPTick >= WIFI_ACCESSPOINT_TIMEOUT)
+        if (millis() - wifiAPTick >= (unsigned long)(WIFI_ACCESSPOINT_TIMEOUT*1000))
         {
           _HttpEnd();
 

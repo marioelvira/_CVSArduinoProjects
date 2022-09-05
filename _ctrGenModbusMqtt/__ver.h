@@ -1,2 +1,2 @@
 #define PROJECT     "REM MBMQTT+"
-#define FW_VERSION  "4.6.2"
+#define FW_VERSION  "5.0.0"

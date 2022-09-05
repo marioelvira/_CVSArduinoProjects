@@ -112,11 +112,16 @@ void mqttDataCallback(char* rtopic, byte* rpayload, unsigned int rlength)
       mbOutNum = outNum;
       mbOutVal = outVal;
 
-      if (mbState == MB_STANDBY)
-        mbState = MB_WRITEOUT;
+      // Solo en modo Test
+      if (controlMode == MODE_TEST)
+      {
+        if (mbState == MB_STANDBY)
+          mbState = MB_WRITEOUT;
+      }
     }
   }
-  
+
+  // Watchdog
   else if (rtopicStr.equals(TOPIC_WATCHDOG))
   {
     if(rpayloadStr.equals("1"))
@@ -125,7 +130,24 @@ void mqttDataCallback(char* rtopic, byte* rpayload, unsigned int rlength)
       wdeForceReset = 1;
       #endif
     }
-  }  
+  }
+
+  // Mode
+  else if (rtopicStr.equals(TOPIC_MODE_AUTO))
+  {
+    if(rpayloadStr.equals("1"))
+    {
+      controlMode = MODE_AUTO;
+    }
+  }
+  else if (rtopicStr.equals(TOPIC_MODE_TEST))
+  {
+    if(rpayloadStr.equals("1"))
+    {
+      controlMode = MODE_TEST;
+    }
+  }
+  
 }
 
 boolean mqttPublish(const char* topic, char* payload)
@@ -158,9 +180,20 @@ void _MQTTSend(void)
   str = str + String(timeDay) + "d " + String(timeHour) + " : " + String(timeMin) + " : " + String(timeSec);
   str = str + "\",\n";
 
-  // mRAM
   str = str + "\"mRAM\":";
   str = str + String(freeRam);
+  str = str + ",\n";
+
+  str = str + "\"al\":\"0x";
+  str = str + String(alarm[0]) + String(alarm[1]) + String(alarm[2]) + String(alarm[3]);
+  str = str + String(alarm[4]) + String(alarm[5]) + String(alarm[6]) + String(alarm[7]);
+  str = str + "\",\n";
+
+  str = str + "\"md\":";
+  if (controlMode == MODE_AUTO)
+    str = str + "Auto";
+  else
+    str = str + "Test";
   str = str + ",\n";
 
   str = str + "\"bO\":\"";
@@ -290,9 +323,12 @@ void _MQTTLoop(void)
         
         mqttTick = millis();
         
-        if (mqttSubscribe(TOPIC_OON)    &&
-            mqttSubscribe(TOPIC_OOFF)   &&
-            
+        if (mqttSubscribe(TOPIC_OON)       &&
+            mqttSubscribe(TOPIC_OOFF)      &&
+
+            mqttSubscribe(TOPIC_MODE_AUTO) &&
+            mqttSubscribe(TOPIC_MODE_TEST) &&
+
             mqttSubscribe(TOPIC_WATCHDOG))
         {
           mqttStatus = MQTT_SUBSCRIBED;

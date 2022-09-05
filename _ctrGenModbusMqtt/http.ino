@@ -845,116 +845,122 @@ void _setOUTS()
     html = "Restore";
   }
 
-  // Out A
-  if(out_number == "10")
-  {
-    if (OutA == OUT_ON)
+  // Solo en modo Test
+  if (controlMode == MODE_TEST)
+  {   
+    // Out A
+    if(out_number == "10")
     {
-      OutA = OUT_OFF;
-      html = "Out A OFF";
+      if (OutA == OUT_ON)
+      {
+        OutA = OUT_OFF;
+        html = "Out A OFF";
+      }
+      else
+      {
+        OutA = OUT_ON;
+        html = "Out A ON";
+      }
     }
-    else
+    // Out B
+    else if(out_number == "11")
     {
-      OutA = OUT_ON;
-      html = "Out A ON";
+      if (OutB == OUT_ON)
+      {
+        OutB = OUT_OFF;
+        html = "Out B OFF";
+      }
+      else
+      {
+        OutB = OUT_ON;
+        html = "Out B ON";
+      }
+    }
+    // Out C
+    else if(out_number == "12")
+    {
+      if (OutC == OUT_ON)
+      {
+        OutC = OUT_OFF;
+        html = "Out C OFF";
+      }
+      else
+      {
+        OutC = OUT_ON;
+        html = "Out C ON";
+      }
+    }
+  
+    // Outs
+    if ((out_number == "50") || (out_number == "51") || (out_number == "52") || (out_number == "53") ||
+        (out_number == "54") || (out_number == "55") || (out_number == "56") || (out_number == "57"))
+    {
+      mbOutBoard = 0;
+      
+      if (out_number == "50")
+        mbOutNum = 0; // O1
+      else if (out_number == "51")
+        mbOutNum = 1; // O2
+      else if (out_number == "52")
+        mbOutNum = 2; // O3
+      else if (out_number == "53")
+        mbOutNum = 3; // O4
+      else if (out_number == "54")
+        mbOutNum = 4; // O5
+      else if (out_number == "55")
+        mbOutNum = 5; // O6
+      else if (out_number == "56")
+        mbOutNum = 6; // O7     
+      else
+        mbOutNum = 7; // O8
+      
+      if (mbOuts[mbOutNum][mbOutBoard] == OUT_OFF)
+        mbOutVal = OUT_ON;
+      else
+        mbOutVal = OUT_OFF;
+  
+      if (mbState == MB_STANDBY)
+        mbState = MB_WRITEOUT;
+      
+      html = "Outs";
+    }
+  
+    // Outs
+    if ((out_number == "60") || (out_number == "61") || (out_number == "62") || (out_number == "63") ||
+        (out_number == "64") || (out_number == "65") || (out_number == "66") || (out_number == "67"))
+    {
+      mbOutBoard = 1;
+      
+      if (out_number == "60")
+        mbOutNum = 0; // O1
+      else if (out_number == "61")
+        mbOutNum = 1; // O2
+      else if (out_number == "62")
+        mbOutNum = 2; // O3
+      else if (out_number == "63")
+        mbOutNum = 3; // O4
+      else if (out_number == "64")
+        mbOutNum = 4; // O5
+      else if (out_number == "65")
+        mbOutNum = 5; // O6
+      else if (out_number == "66")
+        mbOutNum = 6; // O7     
+      else
+        mbOutNum = 7; // O8
+      
+      if (mbOuts[mbOutNum][mbOutBoard] == OUT_OFF)
+        mbOutVal = OUT_ON;
+      else
+        mbOutVal = OUT_OFF;
+  
+      if (mbState == MB_STANDBY)
+        mbState = MB_WRITEOUT;
+      
+      html = "Outs";
     }
   }
-  // Out B
-  else if(out_number == "11")
-  {
-    if (OutB == OUT_ON)
-    {
-      OutB = OUT_OFF;
-      html = "Out B OFF";
-    }
-    else
-    {
-      OutB = OUT_ON;
-      html = "Out B ON";
-    }
-  }
-  // Out C
-  else if(out_number == "12")
-  {
-    if (OutC == OUT_ON)
-    {
-      OutC = OUT_OFF;
-      html = "Out C OFF";
-    }
-    else
-    {
-      OutC = OUT_ON;
-      html = "Out C ON";
-    }
-  }
-
-  // Outs
-  if ((out_number == "50") || (out_number == "51") || (out_number == "52") || (out_number == "53") ||
-      (out_number == "54") || (out_number == "55") || (out_number == "56") || (out_number == "57"))
-  {
-    mbOutBoard = 0;
-    
-    if (out_number == "50")
-      mbOutNum = 0; // O1
-    else if (out_number == "51")
-      mbOutNum = 1; // O2
-    else if (out_number == "52")
-      mbOutNum = 2; // O3
-    else if (out_number == "53")
-      mbOutNum = 3; // O4
-    else if (out_number == "54")
-      mbOutNum = 4; // O5
-    else if (out_number == "55")
-      mbOutNum = 5; // O6
-    else if (out_number == "56")
-      mbOutNum = 6; // O7     
-    else
-      mbOutNum = 7; // O8
-    
-    if (mbOuts[mbOutNum][mbOutBoard] == OUT_OFF)
-      mbOutVal = OUT_ON;
-    else
-      mbOutVal = OUT_OFF;
-
-    if (mbState == MB_STANDBY)
-      mbState = MB_WRITEOUT;
-    
-    html = "Outs";
-  }
-
-  // Outs
-  if ((out_number == "60") || (out_number == "61") || (out_number == "62") || (out_number == "63") ||
-      (out_number == "64") || (out_number == "65") || (out_number == "66") || (out_number == "67"))
-  {
-    mbOutBoard = 1;
-    
-    if (out_number == "60")
-      mbOutNum = 0; // O1
-    else if (out_number == "61")
-      mbOutNum = 1; // O2
-    else if (out_number == "62")
-      mbOutNum = 2; // O3
-    else if (out_number == "63")
-      mbOutNum = 3; // O4
-    else if (out_number == "64")
-      mbOutNum = 4; // O5
-    else if (out_number == "65")
-      mbOutNum = 5; // O6
-    else if (out_number == "66")
-      mbOutNum = 6; // O7     
-    else
-      mbOutNum = 7; // O8
-    
-    if (mbOuts[mbOutNum][mbOutBoard] == OUT_OFF)
-      mbOutVal = OUT_ON;
-    else
-      mbOutVal = OUT_OFF;
-
-    if (mbState == MB_STANDBY)
-      mbState = MB_WRITEOUT;
-    
-    html = "Outs";
-  }
+  else
+    html = "NO Outs";
   
   httpServer.send(200, "text/plane", html);
 }

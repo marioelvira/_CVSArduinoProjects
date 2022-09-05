@@ -12,9 +12,9 @@ void _ADCSetup()
   AdcInPointer = 0;
 }
 
-//////////////////////
-// IO state machine //
-//////////////////////
+///////////////////////
+// ADC state machine //
+///////////////////////
 // Nota: Se ejecuta dentro de _TimeLoop
 void _ADCLoop()
 {

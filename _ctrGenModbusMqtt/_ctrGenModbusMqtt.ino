@@ -6,6 +6,7 @@
 #include "__ver.h"
 
 #include "adcs.h"
+#include "alarm.h"
 #include "e2prom.h"
 #include "http.h"
 #include "io.h"
@@ -39,13 +40,18 @@ int   OutC;
 
 int   outLed;
 
-///////////
+/////////
 // Adc //
-///////////
+/////////
 int    AdcIn;
 int    AdcInArray[ADC_ARRAY_SIZE];
 int    AdcInPointer;
 float  AdcVal;
+
+///////////
+// Alarm //
+///////////
+int    alarm[AL_ARRAY_SIZE];
 
 ///////////
 // Wi-Fi //
@@ -254,6 +260,8 @@ void setup(void)
   //_IOSetup();
   _ADCSetup();
 
+  _ALARMSetup();
+
   // Wi-Fi setup
   _WifiSetup();
 
@@ -378,4 +386,6 @@ void loop()
   _MBLoop();
   #endif
   #endif
+
+  //_ALARMLoop();
 }

@@ -31,6 +31,9 @@ extern "C" {
 #define TOPIC_OON         "sdpelicanos@gmail.com/Oon"
 #define TOPIC_OOFF        "sdpelicanos@gmail.com/Ooff"
 
+#define TOPIC_MODE_AUTO   "sdpelicanos@gmail.com/mda"
+#define TOPIC_MODE_TEST   "sdpelicanos@gmail.com/mdt"
+
 #define TOPIC_WATCHDOG    "sdpelicanos@gmail.com/wd"
 
 #define TOPIC_OFFSET            21

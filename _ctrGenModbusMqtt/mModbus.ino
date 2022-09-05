@@ -1,3 +1,4 @@
+#include "alarm.h"
 #include "main.h"
 #include "io.h"
 
@@ -331,6 +332,18 @@ void _MBLoop(void)
       {   
         mbTick = millis();
         mbState = MB_STANDBY;
+
+        // Alarm
+        if (mbInBoard == 0)
+        {
+          alarm[AL_ERROR_MB1] = 1;
+          mbInBoard = 1;
+        }
+        else
+        {
+          alarm[AL_ERROR_MB2] = 1;
+          mbInBoard = 0;
+        }
       }
 
       // if response received
@@ -340,9 +353,13 @@ void _MBLoop(void)
         {
           // Analyse response
           if (_mbAnalyseIns((char)cfgMB1Add) == MB_RX_OK)
-          _mbUdateIns(mbInBoard);
+          {
+            _mbUdateIns(mbInBoard);
+            alarm[AL_ERROR_MB1] = 0;
+          }
           //else
             // Error;
+          
           // Next board
           mbInBoard = 1;
         }
@@ -350,9 +367,13 @@ void _MBLoop(void)
         {
           // Analyse response
           if (_mbAnalyseIns((char)cfgMB2Add) == MB_RX_OK)
-          _mbUdateIns(mbInBoard);
+          {
+            _mbUdateIns(mbInBoard);
+            alarm[AL_ERROR_MB2] = 0;
+          }
           //else
             // Error;
+          
           // Next board
           mbInBoard = 0;
         }

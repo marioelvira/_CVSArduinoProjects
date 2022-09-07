@@ -34,16 +34,26 @@ void _serveMAIN()
   html = html + "<div class=\"myform\">";
   html = html + "<h1>" + PROJECT + " #Estado<span>ESP8266 tech</span><span align=\"right\"> Ver: " + FW_Version + "</span></h1>";
 
-  html = html + "<div class=\"section\">Temporizaciones</div>";
+  html = html + "<div class=\"section\"><span>1</span>Sistema</div>";
   html = html + "<p class=\"sansserif\" id=\"TEMPSid\">...</p>";
-  html = html + "<div class=\"section\">Entradas</div>";
-  html = html + "<p class=\"sansserif\" id=\"INSid\">...</p>";
-  html = html + "<div class=\"section\">Estados / Salidas</div>";
-  html = html + "<p class=\"sansserif\" id=\"OUTSid\">...</p>";
-  html = html + "<div class=\"section\">Control</div>";
   html = html + "<p>";
-  //html = html + "  <input type=\"button\" value=\"Cambiar Modo\" onclick=\"sendOUT(0)\">";
-  //html = html + "</p><p>";
+  html = html + "  <input type=\"button\" value=\"Reset\" onclick=\"sendOUT(1)\">";
+  html = html + "  <input type=\"button\" value=\"Restore\" onclick=\"sendOUT(2)\">";
+  html = html + "</p>";
+
+  html = html + "<div class=\"section\"><span>2</span>Control</div>";
+  html = html + "<p class=\"sansserif\" id=\"CTRid\">...</p>";
+  
+  html = html + "<div class=\"section\"><span>3</span>Entradas</div>";
+  html = html + "<p class=\"sansserif\" id=\"INSid\">...</p>";
+  
+  html = html + "<div class=\"section\"><span>4</span>Salidas</div>";
+  html = html + "<p class=\"sansserif\" id=\"OUTSid\">...</p>";
+  
+  html = html + "<div class=\"section\"><span>5</span>Test</div>";
+  html = html + "<p>";
+  html = html + "  <input type=\"button\" value=\"Cambiar Modo\" onclick=\"sendOUT(0)\">";
+  html = html + "</p><p>";
   html = html + "  <input type=\"button\" value=\"A\" onclick=\"sendOUT(10)\">";
   html = html + "  <input type=\"button\" value=\"B\" onclick=\"sendOUT(11)\">";
   html = html + "  <input type=\"button\" value=\"C\" onclick=\"sendOUT(12)\">";
@@ -69,16 +79,12 @@ void _serveMAIN()
   html = html + "  <input type=\"button\" value=\"18\" onclick=\"sendOUT(67)\">";  
   html = html + "</p>";
   
-  html = html + "<div class=\"section\">Watchdog</div>";
-  html = html + "<p>";
-  html = html + "  <input type=\"button\" value=\"Reset\" onclick=\"sendOUT(1)\">";
-  html = html + "</p>";
-  html = html + "<div class=\"section\">Configuraci&oacuten</div>";
+  html = html + "<div class=\"section\"><span>6</span>Configuraci&oacuten</div>";
   html = html + "<p>";
   html = html + "  <a href=\"settings.htm\"><input type=\"button\" value=\"Red\"></a>";
-  html = html + "  <a href=\"timeSettings.htm\"><input type=\"button\" value=\"Config\"></a>";
-  html = html + "  <input type=\"button\" value=\"Restore\" onclick=\"sendOUT(2)\">";
-  html = html + "</p>";
+  html = html + "  <a href=\"timeSettings.htm\"><input type=\"button\" value=\"Logic IOs\"></a>";
+  html = html + "  <a href=\"ctrSettings.htm\"><input type=\"button\" value=\"Control\"></a>";
+  html = html + "</p>"; 
   html = html + "</div>";
 
   html = html + "<script>";
@@ -90,10 +96,22 @@ void _serveMAIN()
   html = html + "}";
   
   html = html + "setInterval(function() {";
+  html = html + "  getCTR();";
   html = html + "  getOUTS();";
   html = html + "  getINS();";
   html = html + "  getTEMPS();";
   html = html + "}, 1000);";
+  
+  html = html + "function getCTR() {";
+  html = html + "  var xhttp = new XMLHttpRequest();";
+  html = html + "  xhttp.onreadystatechange = function() {";
+  html = html + "    if (this.readyState == 4 && this.status == 200) {";
+  html = html + "      document.getElementById(\"CTRid\").innerHTML = this.responseText;";
+  html = html + "   }";
+  html = html + "  };";
+  html = html + "  xhttp.open(\"GET\", \"readCTR\", true);";
+  html = html + "  xhttp.send();";
+  html = html + "}";
   
   html = html + "function getOUTS() {";
   html = html + "  var xhttp = new XMLHttpRequest();";
@@ -139,6 +157,7 @@ void _serveMAIN()
   httpServer.send (200, "text/html", html);
 }
 
+// Time Settings
 void _serveTimeSETTINGS()
 {
   String html = "";
@@ -321,12 +340,192 @@ void _setTimeSETTINGS()
   httpServer.send (200, "text/html", html);
 }
 
+// Control Settings
+void _serveCtrSETTINGS()
+{
+  String html = "";
+  
+  html = "<!DOCTYPE HTML><html>";
+  html = html + "<title>" + PROJECT + " Config</title>";
+  html = html + "<head>";
+  html = html + "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"/>";
+  html = html + "<link rel=\"icon\" href=\"data:,\">";
+  html = html + "<link rel=\"stylesheet\" type=\"text/css\" href=\"style.css\" />";
+  html = html + "</head>";
+
+  html = html + "<body>";
+  html = html + "<div class=\"myform\">";
+  html = html + "<h1>" + PROJECT + " #Config<span>ESP8266 tech</span><span align=\"right\"> Ver: " + FW_Version + "</span></h1>";
+  html = html + "<form method='get' action='setCtrSettings'>";
+
+  // Temporizaciones
+  html = html + "<div class=\"section\"><span>1</span>Temporizaciones</div>";
+  html = html + "<div class=\"inner-wrap\">";
+  
+  html = html + "<label>Tiempo Buzzer (segundos)<input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgTimeBuzzerOn) + "\" name=\"timeBZ\"/></label>";
+  html = html + "<label>Tiempo Start (segundos)<input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgTimeOutStart) + "\" name=\"timeStart\"/></label>";
+  html = html + "<label>Tiempo Stop (segundos)<input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgTimeOutStop) + "\" name=\"timeStop\"/></label>";
+  
+  html = html + "</div>";
+  html = html + "<div class=\"section\"><span>2</span>Temps Generador</div>";
+  html = html + "<div class=\"inner-wrap\">";
+  
+  html = html + "<label>Tiempo P1 (minutos)<input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgTimeGenerador1P) + "\" name=\"time1\"/></label>";
+  html = html + "<label>Tiempo P2 (minutos)<input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgTimeGenerador2P) + "\" name=\"time2\"/></label>";
+  html = html + "<label>Tiempo P3 (minutos)<input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgTimeGenerador3P) + "\" name=\"time3\"/></label>";
+  html = html + "<label>Tiempo P4 (minutos)<input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgTimeGenerador4P) + "\" name=\"time4\"/></label>";
+  html = html + "<label>Tiempo P5 (minutos)<input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgTimeGenerador5P) + "\" name=\"time5\"/></label>";
+  html = html + "<label>Tiempo P6 (horas)<input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgTimeGenerador6P) + "\" name=\"time6\"/></label>";
+  html = html + "<label>Tiempo P7 (horas)<input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgTimeGenerador7P) + "\" name=\"time7\"/></label>";
+  html = html + "<label>Tiempo P8 (horas)<input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgTimeGenerador8P) + "\" name=\"time8\"/></label>";
+  html = html + "<label>Tiempo P9 (horas)<input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgTimeGenerador9P) + "\" name=\"time9\"/></label>";
+
+  html = html + "<div class=\"button-section\">";
+  html = html + "  <input type=\"submit\" value=\"Guardar\">";
+  html = html + "  <a href=\"index.htm\"><input type=\"button\" value=\"Volver\"></a>";
+  html = html + "</div>";
+  
+  html = html + "</div>";
+  html = html + "</div>";
+  html = html + "</form>";
+  html = html + "</div>";
+
+  html = html + "</body> ";
+  html = html + "</html>";
+
+  httpServer.send (200, "text/html", html);
+}
+
+void _setCtrSETTINGS()
+{
+  int eeprom_value_hi, eeprom_value_lo;
+    
+  String html = "";
+  
+  String rtimeBZ = httpServer.arg("timeBZ");
+  String rtimeStart = httpServer.arg("timeStart");
+  String rtimeStop = httpServer.arg("timeStop");
+  
+  String rtime1 = httpServer.arg("time1");
+  String rtime2 = httpServer.arg("time2");
+  String rtime3 = httpServer.arg("time3");
+  String rtime4 = httpServer.arg("time4");
+  String rtime5 = httpServer.arg("time5");
+  String rtime6 = httpServer.arg("time6");
+  String rtime7 = httpServer.arg("time7");
+  String rtime8 = httpServer.arg("time8");
+  String rtime9 = httpServer.arg("time9");
+  
+  int error = 0;
+
+  if ((rtimeBZ.length() == 0)    ||
+      (rtimeStart.length() == 0) ||
+      (rtimeStop.length() == 0)  ||
+      (rtime1.length() == 0)  ||
+      (rtime2.length() == 0)  ||
+      (rtime3.length() == 0)  ||
+      (rtime4.length() == 0)  ||
+      (rtime5.length() == 0)  ||
+      (rtime6.length() == 0)  ||
+      (rtime7.length() == 0)  ||
+      (rtime8.length() == 0)  ||
+      (rtime9.length() == 0))
+  {
+    error = 1;  // falta un campo...
+    #if (_HTTP_SERIAL_DEBUG_ == 1)
+    Serial.println("Error... parametro vacío.");
+    #endif
+  }
+
+  // Si no hay error...
+  if (error == 0)
+  {
+    cfgTimeBuzzerOn = rtimeBZ.toInt();
+    cfgTimeOutStart = rtimeStart.toInt();
+    cfgTimeOutStop = rtimeStop.toInt();
+    
+    cfgTimeGenerador1P = rtime1.toInt();
+    cfgTimeGenerador2P = rtime2.toInt();
+    cfgTimeGenerador3P = rtime3.toInt();
+    cfgTimeGenerador4P = rtime4.toInt();
+    cfgTimeGenerador5P = rtime5.toInt();
+    cfgTimeGenerador6P = rtime6.toInt();
+    cfgTimeGenerador7P = rtime7.toInt();
+    cfgTimeGenerador8P = rtime8.toInt();
+    cfgTimeGenerador9P = rtime9.toInt();
+    
+    //DebugVal = rdebugVal.toInt();
+    
+    #if (_HTTP_SERIAL_DEBUG_ == 1)  
+    Serial.print("Time 1P: ");  Serial.print (cfgTimeGenerador1P);  Serial.println(" min");
+    Serial.print("Time 2P: ");  Serial.print (cfgTimeGenerador2P);  Serial.println(" min");
+    Serial.print("Time 3P: ");  Serial.print (cfgTimeGenerador3P);  Serial.println(" min");
+    Serial.print("Time 4P: ");  Serial.print (cfgTimeGenerador4P);  Serial.println(" min");
+    Serial.print("Time 5P: ");  Serial.print (cfgTimeGenerador5P);  Serial.println(" min");
+    Serial.print("Time 6P: ");  Serial.print (cfgTimeGenerador6P);  Serial.println(" hour");
+    Serial.print("Time 7P: ");  Serial.print (cfgTimeGenerador7P);  Serial.println(" hour");
+    Serial.print("Time 8P: ");  Serial.print (cfgTimeGenerador8P);  Serial.println(" hour");
+    Serial.print("Time 9P: ");  Serial.print (cfgTimeGenerador9P);  Serial.println(" hour");
+
+    Serial.print("Time Buzzer: "); Serial.print (cfgTimeBuzzerOn);  Serial.println(" secs");
+    Serial.print("Time Start: ");  Serial.print (cfgTimeOutStart);  Serial.println(" secs");
+    Serial.print("Time Stop: ");   Serial.print (cfgTimeOutStop);  Serial.println(" secs");
+  
+    //Serial.print("Debug: ");       Serial.print (DebugVal);           Serial.println(" ---");
+    #endif   
+
+    // Data 
+    EEPROM.write(EEPROM_ADD_1P_TIMER_GEN, cfgTimeGenerador1P);
+    EEPROM.write(EEPROM_ADD_2P_TIMER_GEN, cfgTimeGenerador2P);
+    EEPROM.write(EEPROM_ADD_3P_TIMER_GEN, cfgTimeGenerador3P);
+    EEPROM.write(EEPROM_ADD_4P_TIMER_GEN, cfgTimeGenerador4P);
+    EEPROM.write(EEPROM_ADD_5P_TIMER_GEN, cfgTimeGenerador5P);
+    EEPROM.write(EEPROM_ADD_6P_TIMER_GEN, cfgTimeGenerador6P);
+    EEPROM.write(EEPROM_ADD_7P_TIMER_GEN, cfgTimeGenerador7P);
+    EEPROM.write(EEPROM_ADD_8P_TIMER_GEN, cfgTimeGenerador8P);
+    EEPROM.write(EEPROM_ADD_9P_TIMER_GEN, cfgTimeGenerador9P);
+
+    EEPROM.write(EEPROM_ADD_BUZZER_ON, cfgTimeBuzzerOn);
+    EEPROM.write(EEPROM_ADD_TSTART,    cfgTimeOutStart);
+    EEPROM.write(EEPROM_ADD_TSTOP,     cfgTimeOutStop);
+    
+    EEPROM.commit();    //Store data to EEPROM
+  }
+
+  html = "<!DOCTYPE HTML><html>";
+  html = html + "<title>" + PROJECT + " Config</title>";
+  html = html + "<head>";
+  html = html + "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"/>";
+  html = html + "<link rel=\"icon\" href=\"data:,\">";
+  html = html + "<link rel=\"stylesheet\" type=\"text/css\" href=\"style.css\" />";
+  html = html + "</head>";
+
+  html = html + "<body>";
+
+  html = html + "<div class=\"myform\">";
+  html = html + "<h1>" + PROJECT + " #Config<span>ESP8266 tech</span><span align=\"right\"> Ver: " + FW_Version + "</span></h1>";
+  
+  if (error == 0)
+    html += "<p class=\"sansserif\">Configuraci&oacuten guardada correctamente.</p>";
+  else
+    html += "<p class=\"sansserif\">Error el guardar la configuraci&oacuten. Revise los datos introducidos.</p>";
+
+  html = html + "<div class=\"button-section\">";
+  html = html + "  <a href=\"index.htm\"><input type=\"button\" value=\"Volver\"></a>";
+  html = html + "</div>";
+
+  html = html + "</div>";
+
+  html = html + "</body> ";
+  html = html + "</html>";
+
+  httpServer.send (200, "text/html", html);
+}
+
+// Network Settings
 void _serveSETTINGS()
 {
-  //int mobile = 0;
   String html = "";
-
-  int n = WiFi.scanNetworks();
   
   html = "<!DOCTYPE HTML><html>";
   html = html + "<title>" + PROJECT + " Red Config</title>";
@@ -714,8 +913,8 @@ void _setSETTINGS()
 /////////////
 // Actions //
 /////////////
-void _readINS()
-{ 
+void _readCTR()
+{
   String html = "";
 
   html = "<table style=\"width:100%\">";
@@ -725,12 +924,84 @@ void _readINS()
   if (controlMode == MODE_AUTO)
    html = html + "<td><font style=\"color:blue\">Autom&aacutetico</font></td>";
   else
-   html = html + "<td><font style=\"color:red\">Control Manual</font></td>";
+   html = html + "<td><font style=\"color:red\">Test</font></td>";
   html = html + "</tr>";
 
   html = html + "<tr>";
+  html = html + "<td>Control " + String(ControlState) + "</td>";
+  if (ControlState == STATE_START)
+    html = html + "<td><font style=\"color:blue\">Arrancando...</font></td>";
+  else if (ControlState == STATE_GEN_ON)
+    html = html + "<td><font style=\"color:green\">Bomba: ON - Gen: ON</font></td>";
+  else if (ControlState == STATE_GEN_ZUMB)
+    html = html + "<td><font style=\"color:red\">Buzzer aviso...</font></td>";
+  else if (ControlState == STATE_GEN_OFF)
+    html = html + "<td><font style=\"color:red\">Bomba: ON - Gen: OFF</font></td>";
+  else
+    html = html + "<td><font style=\"color:grey\">Bomba: OFF - Gen: OFF</font></td>";
+
+  html = html + "</tr>";
+
+  html = html + "<tr>";
+  html = html + "<td>LCD </td>";
+  html = html + "<td>" + String(DisplayIndicador) + " -> " + String(OutD) + "-" + String(OutC) + "-" + String(OutB) + "-" + String(OutA) + "</td>";
+  html = html + "</tr>";
+
+  html = html + "<tr>";
+  html = html + "<td>Alarmas </td>";
+  html = html + "<td>" + "0x" + String(alarm[0]) + String(alarm[1]) + String(alarm[2]) + String(alarm[3]) + String(alarm[4]) + String(alarm[5]) + String(alarm[6]) + String(alarm[7]) + "</td>";
+  html = html + "</tr>";
+  
+  html = html + "<tr>";
+  html = html + "<td>-----------------</td>";
+  html = html + "</tr>";
+  
+  html = html + "<tr>";
+  html = html + "<td>Generador</td>";
+  if (OutGen == OUT_ON)
+   html = html + "<td><font style=\"color:green\">Activado</font></td>";
+  else
+   html = html + "<td><font style=\"color:grey\">Desactivado</font></td>";
+  html = html + "</tr>";
+
+  html = html + "<tr>";
+  html = html + "<td>Bomba</td>";
+  if (OutBomba == OUT_ON)
+   html = html + "<td><font style=\"color:green\">Activado</font></td>";
+  else
+   html = html + "<td><font style=\"color:grey\">Desactivado</font></td>";
+  html = html + "</tr>";
+
+  html = html + "<tr>";
+  html = html + "<td>Zumbador</td>";
+  if (OutZumb == OUT_ON)
+   html = html + "<td><font style=\"color:blue\">Activado</font></td>";
+  else
+   html = html + "<td><font style=\"color:grey\">Desactivado</font></td>";
+  html = html + "</tr>";
+
+  html = html + "<tr>";
+  html = html + "<td>Display</td>";
+  if (OutDisp == OUT_ON)
+   html = html + "<td><font style=\"color:blue\">Activado</font></td>";
+  else
+   html = html + "<td><font style=\"color:grey\">Desactivado</font></td>";
+  html = html + "</tr>";
+  
+  html = html + "</table>";
+  
+  httpServer.send(200, "text/plane", html);
+}
+
+void _readINS()
+{ 
+  String html = "";
+
+  html = "<table style=\"width:100%\">";
+
+  html = html + "<tr>";
   html = html + "<td>Boards Ins</td>";
-  html = html + "<td>" + String(InA) + "-" + String(InB) + "-" + String(InC) + "-" + String(InD) + "-" + String(InE) + "</td>";
+  html = html + "<td>" + String(ioInA) + "-" + String(ioInB) + "-" + String(ioInC) + "-" + String(ioInD) + "-" + String(ioInE) + "</td>";
   html = html + "</tr>";
   
   html = html + "<tr>";
@@ -759,29 +1030,10 @@ void _readOUTS()
   String html = "";
 
   html = "<table style=\"width:100%\">";
-
-  html = html + "<tr>";
-  html = html + "<td>Control State </td>";
-  html = html + "<td>" + String(ControlState) + "</td>";
-  html = html + "</tr>";
-
-  html = html + "<tr>";
-  html = html + "<td>Wi-Fi State </td>";
-  html = html + "<td>" + String(wifiStatus) + "</td>";
-  html = html + "</tr>";
-
-  html = html + "<tr>";
-  html = html + "<td>MQTT State </td>";
-  html = html + "<td>" + String(mqttStatus) + "</td>";
-  html = html + "</tr>";
-
-  html = html + "<tr>";
-  html = html + "<td>-----------------</td>";
-  html = html + "</tr>";
-
+  
   html = html + "<tr>";
   html = html + "<td>Boards Outs</td>";
-  html = html + "<td>" + String(OutA) + "-" + String(OutB) + "-" + String(OutC) + "</td>";
+  html = html + "<td>" + String(ioOutA) + "-" + String(ioOutB) + "-" + String(ioOutC) + "</td>";
   html = html + "</tr>";
   
   html = html + "<tr>";
@@ -851,42 +1103,42 @@ void _setOUTS()
     // Out A
     if(out_number == "10")
     {
-      if (OutA == OUT_ON)
+      if (ioOutA == OUT_ON)
       {
-        OutA = OUT_OFF;
+        ioOutA = OUT_OFF;
         html = "Out A OFF";
       }
       else
       {
-        OutA = OUT_ON;
+        ioOutA = OUT_ON;
         html = "Out A ON";
       }
     }
     // Out B
     else if(out_number == "11")
     {
-      if (OutB == OUT_ON)
+      if (ioOutB == OUT_ON)
       {
-        OutB = OUT_OFF;
+        ioOutB = OUT_OFF;
         html = "Out B OFF";
       }
       else
       {
-        OutB = OUT_ON;
+        ioOutB = OUT_ON;
         html = "Out B ON";
       }
     }
     // Out C
     else if(out_number == "12")
     {
-      if (OutC == OUT_ON)
+      if (ioOutC == OUT_ON)
       {
-        OutC = OUT_OFF;
+        ioOutC = OUT_OFF;
         html = "Out C OFF";
       }
       else
       {
-        OutC = OUT_ON;
+        ioOutC = OUT_ON;
         html = "Out C ON";
       }
     }
@@ -981,6 +1233,16 @@ void _readTEMPS()
   html = html + "<td>" + String(freeRam) + "</td>";
   html = html + "</tr>";
 
+  html = html + "<tr>";
+  html = html + "<td>Wi-Fi </td>";
+  html = html + "<td>" + String(wifiStatus) + "</td>";
+  html = html + "</tr>";
+
+  html = html + "<tr>";
+  html = html + "<td>MQTT </td>";
+  html = html + "<td>" + String(mqttStatus) + "</td>";
+  html = html + "</tr>";
+
   html = html + "</table>";
   
   httpServer.send(200, "text/plane", html);
@@ -1003,14 +1265,17 @@ void _HttpLoop()
       httpServer.on("/index.htm",         _serveMAIN);
       httpServer.on("/settings.htm",      _serveSETTINGS);
       httpServer.on("/timeSettings.htm",  _serveTimeSETTINGS);
+      httpServer.on("/ctrSettings.htm",   _serveCtrSETTINGS);
 
       // acctions
-      httpServer.on("/setOUTS",          _setOUTS);
+      httpServer.on("/readCTR",          _readCTR);
+      httpServer.on("/setOUTS",          _setOUTS);      
       httpServer.on("/readOUTS",         _readOUTS);
       httpServer.on("/readINS",          _readINS);
       httpServer.on("/readTEMPS",        _readTEMPS);
       httpServer.on("/networSettings",   _setSETTINGS);
       httpServer.on("/setTimeSettings",  _setTimeSETTINGS);
+      httpServer.on("/setCtrSettings",   _setCtrSETTINGS);
 
       httpServer.begin();
 

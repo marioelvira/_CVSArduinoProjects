@@ -53,12 +53,28 @@ extern "C" {
 #define EEPROM_ADD_ADC_S          0x7B
 #define EEPROM_ADD_ADC_F          0x7C
 
+// Control
+#define EEPROM_ADD_1P_TIMER_GEN   0x7D
+#define EEPROM_ADD_2P_TIMER_GEN   0x7E
+#define EEPROM_ADD_3P_TIMER_GEN   0x7F
+#define EEPROM_ADD_4P_TIMER_GEN   0x80
+#define EEPROM_ADD_5P_TIMER_GEN   0x81
+#define EEPROM_ADD_6P_TIMER_GEN   0x82
+#define EEPROM_ADD_7P_TIMER_GEN   0x83
+#define EEPROM_ADD_8P_TIMER_GEN   0x84
+#define EEPROM_ADD_9P_TIMER_GEN   0x85
+
+#define EEPROM_ADD_BUZZER_ON      0x86
+#define EEPROM_ADD_TSTART         0x97
+#define EEPROM_ADD_TSTOP          0x88
+#define EEPROM_ADD_DEBUG          0x89
+
 //#define EEPROM_ADD_DEBUG        0x7D
 
 //#define EEPROM_ADD_MAX          0xFA // 250
 
 // Values
-#define EEPROM_VAL_OK             0xAE
+#define EEPROM_VAL_OK             0xA0
 
 #define EEPROM_VAL_IP_MODE        DHCP_MODE
 #define EEPROM_VAL_IP1            192
@@ -91,6 +107,21 @@ extern "C" {
 #define EEPROM_VAL_ADC_P          10000
 #define EEPROM_VAL_ADC_S          0   // +/-  1/0
 #define EEPROM_VAL_ADC_F          0   // si/no 1/0
+
+// Control
+#define EEPROM_VAL_1P_TIMER_GEN   15  // Min
+#define EEPROM_VAL_2P_TIMER_GEN   30  // Min
+#define EEPROM_VAL_3P_TIMER_GEN   60  // Min
+#define EEPROM_VAL_4P_TIMER_GEN   90  // Min
+#define EEPROM_VAL_5P_TIMER_GEN   120 // Min
+#define EEPROM_VAL_6P_TIMER_GEN   3   // Horas
+#define EEPROM_VAL_7P_TIMER_GEN   4   // Horas
+#define EEPROM_VAL_8P_TIMER_GEN   5   // Horas
+#define EEPROM_VAL_9P_TIMER_GEN   7   // Horas
+
+#define EEPROM_VAL_BUZZER_ON      10  // Secs
+#define EEPROM_VAL_TSTART         10  // Secs
+#define EEPROM_VAL_TSTOP          20  // Secs
 
 //#define EEPROM_VAL_DEBUG          0
 

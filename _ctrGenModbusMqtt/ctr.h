@@ -10,16 +10,22 @@ extern "C" {
 #define MODE_TEST   1
 #define MODE_AUTO   0
 
+#define CTR_BUZZER_TICK          500     // 500ms
+
 // Estados principales...
-#define STATE_STANDBY         0
-#define STATE_GEN_PULSE       1
-#define STATE_STOP_PULSE      2
+#define STATE_STANDBY       0
+#define STATE_START         1
+#define STATE_GEN_ON        2
+#define STATE_GEN_ZUMB      3
+#define STATE_GEN_OFF       4
 
-#define STATE_GEN_OFF         0
-#define STATE_GEN_REM_ON      1
-#define STATE_GEN_ON          2
+// Pulsación
+#define NO_PULSACION        0   // x10ms
+#define PULSACION_OK        75  // x10ms
 
-#define STATE_LUZ_OFF         1
+#define FLANCO_UP     0
+#define FLANCO_DOWN   1
+#define FLANCO        FLANCO_UP  // FLANCO_DOWN
 
 #endif // _CTR_H_
 

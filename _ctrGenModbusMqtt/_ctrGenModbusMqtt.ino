@@ -28,15 +28,25 @@ const char* FW_Version = FW_VERSION;
 ////////////////////
 // DIO definition //
 ////////////////////
-int   InA;
-int   InB;
-int   InC;
-int   InD;
-int   InE;
+int   ioInA;
+int   ioInB;
+int   ioInC;
+int   ioInD;
+int   ioInE;
 
-int   OutA;
-int   OutB;
-int   OutC;
+int   ioOutA;
+int   ioOutB;
+int   ioOutC;
+
+int   InStartVal = 0;
+int   InStartVal_ant = 0;
+int   InStartCounter = 0;
+int   InStartState = 0;
+
+int   InEndVal = 0;
+int   InEndVal_ant = 0;
+int   InEndCounter = 0;
+int   InEndState = 0;
 
 int   outLed;
 
@@ -135,6 +145,18 @@ unsigned long ControlTick = 0;
 int   ControlState;
 int   TimeControlSec;
 
+int   DisplayIndicador;
+
+int   OutGen;
+int   OutBomba;
+int   OutDisp;
+int   OutZumb;
+
+int   OutA;
+int   OutB;
+int   OutC;
+int   OutD;
+
 //////////
 // mRAM //
 //////////
@@ -182,16 +204,34 @@ int wdeForceReset;
 ////////////
 // Config //
 ////////////
-int     cfgLogicIns;
-int     cfgLogicOuts;
-int     cfgMB1Add;
-int     cfgMB2Add;
+int cfgLogicIns;
+int cfgLogicOuts;
+int cfgMB1Add;
+int cfgMB2Add;
 
-int     cfgADCm;
-int     cfgADCb;
-int     cfgADCp;
-int     cfgADCs;
-int     cfgADCf;
+int cfgADCm;
+int cfgADCb;
+int cfgADCp;
+int cfgADCs;
+int cfgADCf;
+
+// Control
+int cfgTimeGenerador1P;
+int cfgTimeGenerador2P;
+int cfgTimeGenerador3P;
+int cfgTimeGenerador4P;
+int cfgTimeGenerador5P;
+int cfgTimeGenerador6P;
+int cfgTimeGenerador7P;
+int cfgTimeGenerador8P;
+int cfgTimeGenerador9P;
+
+int cfgTimeBuzzerOn;
+int cfgTimeOutStart;
+int cfgTimeOutStop;
+
+int X_60 = 60;
+int X_3600 = 3600;
 
 //int     DebugVal = 0;
 
@@ -212,15 +252,15 @@ void _PINSetup(void)
 
   pinMode(PIN_OA, OUTPUT);
   digitalWrite(PIN_OA, !cfgLogicOuts);
-  OutA = OUT_OFF;
+  ioOutA = OUT_OFF;
 
   pinMode(PIN_OB, OUTPUT);
   digitalWrite(PIN_OB, !cfgLogicOuts);
-  OutB = OUT_OFF;
+  ioOutB = OUT_OFF;
   
   pinMode(PIN_OC, OUTPUT);
   digitalWrite(PIN_OC, !cfgLogicOuts);
-  OutC = OUT_OFF;
+  ioOutC = OUT_OFF;
 
   #if (_USE_RS485_ == 1)
   pinMode(PIN_RS485_RXTX, OUTPUT);
@@ -231,11 +271,11 @@ void _PINSetup(void)
   //-----//
   // INS //
   //-----//
-  pinMode(PIN_A, INPUT);  InA = IO_OFF;
-  pinMode(PIN_B, INPUT);  InB = IO_OFF;
-  pinMode(PIN_C, INPUT);  InC = IO_OFF;
-  pinMode(PIN_D, INPUT);  InD = IO_OFF;
-  pinMode(PIN_E, INPUT);  InE = IO_OFF;
+  pinMode(PIN_A, INPUT);  ioInA = IO_OFF;
+  pinMode(PIN_B, INPUT);  ioInB = IO_OFF;
+  pinMode(PIN_C, INPUT);  ioInC = IO_OFF;
+  pinMode(PIN_D, INPUT);  ioInD = IO_OFF;
+  pinMode(PIN_E, INPUT);  ioInE = IO_OFF;
 }
 
 //============//
@@ -305,17 +345,17 @@ void _PINLoop()
     digitalWrite(PIN_LED, PIN_OUT_OFF);
   #endif
 
-  if (OutA == cfgLogicOuts /*OUT_ON*/)
+  if (ioOutA == cfgLogicOuts /*OUT_ON*/)
     digitalWrite(PIN_OA, PIN_OUT_ON);
   else
     digitalWrite(PIN_OA, PIN_OUT_OFF);
 
-  if (OutB == cfgLogicOuts /*OUT_ON*/)
+  if (ioOutB == cfgLogicOuts /*OUT_ON*/)
     digitalWrite(PIN_OB, PIN_OUT_ON);
   else
     digitalWrite(PIN_OB, PIN_OUT_OFF);
 
-  if (OutC == cfgLogicOuts /*OUT_ON*/)
+  if (ioOutC == cfgLogicOuts /*OUT_ON*/)
     digitalWrite(PIN_OC, PIN_OUT_ON);
   else
     digitalWrite(PIN_OC, PIN_OUT_OFF); 
@@ -331,29 +371,29 @@ void _PINLoop()
   // INS //
   //-----//
   if (digitalRead(PIN_A) == cfgLogicIns /*PIN_IN_ON*/)
-    InA = IO_ON;
+    ioInA = IO_ON;
   else
-    InA = IO_OFF;
+    ioInA = IO_OFF;
 
   if (digitalRead(PIN_B) == cfgLogicIns /*PIN_IN_ON*/)
-    InB = IO_ON;
+    ioInB = IO_ON;
   else
-    InB = IO_OFF;
+    ioInB = IO_OFF;
 
   if (digitalRead(PIN_C) == cfgLogicIns /*PIN_IN_ON*/)
-    InC = IO_ON;
+    ioInC = IO_ON;
   else
-    InC = IO_OFF;
+    ioInC = IO_OFF;
 
   if (digitalRead(PIN_D) == cfgLogicIns /*PIN_IN_ON*/)
-    InD = IO_ON;
+    ioInD = IO_ON;
   else
-    InD = IO_OFF;
+    ioInD = IO_OFF;
 
   if (digitalRead(PIN_E) == cfgLogicIns /*PIN_IN_ON*/)
-    InE = IO_ON;
+    ioInE = IO_ON;
   else
-    InE = IO_OFF;
+    ioInE = IO_OFF;
 }
 
 //===========//

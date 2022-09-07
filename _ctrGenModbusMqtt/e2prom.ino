@@ -107,8 +107,23 @@ void _readCONFIG (void)
     EEPROM.write(EEPROM_ADD_ADC_P_LO, eeprom_value_lo);
     eeprom_value_hi = (EEPROM_VAL_ADC_P & 0xFF00)>>8;
     EEPROM.write(EEPROM_ADD_ADC_P_HI, eeprom_value_hi);   
-    EEPROM.write(EEPROM_ADD_ADC_S,      EEPROM_VAL_ADC_S);
-    EEPROM.write(EEPROM_ADD_ADC_F,      EEPROM_VAL_ADC_F);
+    EEPROM.write(EEPROM_ADD_ADC_S, EEPROM_VAL_ADC_S);
+    EEPROM.write(EEPROM_ADD_ADC_F, EEPROM_VAL_ADC_F);
+
+    // Control
+    EEPROM.write(EEPROM_ADD_1P_TIMER_GEN,   EEPROM_VAL_1P_TIMER_GEN);
+    EEPROM.write(EEPROM_ADD_2P_TIMER_GEN,   EEPROM_VAL_2P_TIMER_GEN);
+    EEPROM.write(EEPROM_ADD_3P_TIMER_GEN,   EEPROM_VAL_3P_TIMER_GEN);
+    EEPROM.write(EEPROM_ADD_4P_TIMER_GEN,   EEPROM_VAL_4P_TIMER_GEN);
+    EEPROM.write(EEPROM_ADD_5P_TIMER_GEN,   EEPROM_VAL_5P_TIMER_GEN);
+    EEPROM.write(EEPROM_ADD_6P_TIMER_GEN,   EEPROM_VAL_6P_TIMER_GEN);
+    EEPROM.write(EEPROM_ADD_7P_TIMER_GEN,   EEPROM_VAL_7P_TIMER_GEN);
+    EEPROM.write(EEPROM_ADD_8P_TIMER_GEN,   EEPROM_VAL_8P_TIMER_GEN);
+    EEPROM.write(EEPROM_ADD_9P_TIMER_GEN,   EEPROM_VAL_9P_TIMER_GEN);
+
+    EEPROM.write(EEPROM_ADD_BUZZER_ON, EEPROM_VAL_BUZZER_ON);
+    EEPROM.write(EEPROM_ADD_TSTART,    EEPROM_VAL_TSTART);
+    EEPROM.write(EEPROM_ADD_TSTOP,     EEPROM_VAL_TSTOP);
     
     //EEPROM.write(EEPROM_ADD_DEBUG,    EEPROM_VAL_DEBUG);
     
@@ -226,6 +241,20 @@ void _readCONFIG (void)
   cfgADCp           = (int)((eeprom_value_hi & 0x00FF)<<8)|(eeprom_value_lo & 0x00FF); 
   cfgADCs           = (int)EEPROM.read(EEPROM_ADD_ADC_S);
   cfgADCf           = (int)EEPROM.read(EEPROM_ADD_ADC_F);
+
+  cfgTimeGenerador1P = (int)EEPROM.read(EEPROM_ADD_1P_TIMER_GEN); //*60; // Min
+  cfgTimeGenerador2P = (int)EEPROM.read(EEPROM_ADD_2P_TIMER_GEN); //*60; // Min
+  cfgTimeGenerador3P = (int)EEPROM.read(EEPROM_ADD_3P_TIMER_GEN); //*60; // Min
+  cfgTimeGenerador4P = (int)EEPROM.read(EEPROM_ADD_4P_TIMER_GEN); //*60; // Min
+  cfgTimeGenerador5P = (int)EEPROM.read(EEPROM_ADD_5P_TIMER_GEN); //*60; // Min
+  cfgTimeGenerador6P = (int)EEPROM.read(EEPROM_ADD_6P_TIMER_GEN); //*3600; // Hour
+  cfgTimeGenerador7P = (int)EEPROM.read(EEPROM_ADD_7P_TIMER_GEN); //*3600; // Hour
+  cfgTimeGenerador8P = (int)EEPROM.read(EEPROM_ADD_8P_TIMER_GEN); //*3600; // Hour
+  cfgTimeGenerador9P = (int)EEPROM.read(EEPROM_ADD_9P_TIMER_GEN); //*3600; // Hour
+
+  cfgTimeBuzzerOn = (int)EEPROM.read(EEPROM_ADD_BUZZER_ON);    // Secs
+  cfgTimeOutStart = (int)EEPROM.read(EEPROM_ADD_TSTART);       // Secs
+  cfgTimeOutStop  = (int)EEPROM.read(EEPROM_ADD_TSTOP);        // Secs
   
   //DebugVal        = (int)EEPROM.read(EEPROM_ADD_DEBUG);
   
@@ -240,8 +269,23 @@ void _readCONFIG (void)
   Serial.print("ADC p: ");         Serial.print (cfgADCp);            Serial.println(" ");
   Serial.print("ADC s: ");         Serial.print (cfgADCs);            Serial.println(" +/-  1/0");
   Serial.print("ADC f: ");         Serial.print (cfgADCf);            Serial.println(" si/no 1/0");
+
+  // Control
+  Serial.print("Time 1P: ");  Serial.print (cfgTimeGenerador1P);  Serial.println(" min");
+  Serial.print("Time 2P: ");  Serial.print (cfgTimeGenerador2P);  Serial.println(" min");
+  Serial.print("Time 3P: ");  Serial.print (cfgTimeGenerador3P);  Serial.println(" min");
+  Serial.print("Time 4P: ");  Serial.print (cfgTimeGenerador4P);  Serial.println(" min");
+  Serial.print("Time 5P: ");  Serial.print (cfgTimeGenerador5P);  Serial.println(" min");
+  Serial.print("Time 6P: ");  Serial.print (cfgTimeGenerador6P);  Serial.println(" hour");
+  Serial.print("Time 7P: ");  Serial.print (cfgTimeGenerador7P);  Serial.println(" hour");
+  Serial.print("Time 8P: ");  Serial.print (cfgTimeGenerador8P);  Serial.println(" hour");
+  Serial.print("Time 9P: ");  Serial.print (cfgTimeGenerador9P);  Serial.println(" hour");
+
+  Serial.print("Time Buzzer: "); Serial.print (cfgTimeBuzzerOn);  Serial.println(" secs");
+  Serial.print("Time Start: ");  Serial.print (cfgTimeOutStart);  Serial.println(" secs");
+  Serial.print("Time Stop: ");   Serial.print (cfgTimeOutStop);   Serial.println(" secs");
   
-  //Serial.print("Debug: ");       Serial.print (DebugVal);           Serial.println(" ---");
+  //Serial.print("Debug: ");       Serial.print (DebugVal);       Serial.println(" ---");
   #endif
 }
 

@@ -87,17 +87,17 @@ void mqttDataCallback(char* rtopic, byte* rpayload, unsigned int rlength)
     if (boardType == 1) // Own
     {
       if ((outNum == 0) && (outVal == OUT_ON))
-        OutA = OUT_ON;
+        ioOutA = OUT_ON;
       else if ((outNum == 0) && (outVal == OUT_OFF))
-        OutA = OUT_OFF;
+        ioOutA = OUT_OFF;
       else if ((outNum == 1) && (outVal == OUT_ON))
-        OutB = OUT_ON;
+        ioOutB = OUT_ON;
       else if ((outNum == 1) && (outVal == OUT_OFF))
-        OutB = OUT_OFF;    
+        ioOutB = OUT_OFF;    
       else if ((outNum == 2) && (outVal == OUT_ON))
-        OutC = OUT_ON;
+        ioOutC = OUT_ON;
       else if ((outNum == 2) && (outVal == OUT_OFF))
-        OutC = OUT_OFF;    
+        ioOutC = OUT_OFF;    
     }
     else if (boardType == 2) // MB
     {
@@ -197,7 +197,7 @@ void _MQTTSend(void)
   str = str + ",\n";
 
   str = str + "\"bO\":\"";
-  str = str + String(OutA) + String(OutB) + String(OutC);
+  str = str + String(ioOutA) + String(ioOutB) + String(ioOutC);
   str = str + "\",\n";
 
   str = str + "\"mbO1\":\"";
@@ -211,7 +211,7 @@ void _MQTTSend(void)
   str = str + "\",\n";
   
   str = str + "\"bI\":\"";
-  str = str + String(InA) + String(InB) + String(InC) + String(InD) + String(InE);
+  str = str + String(ioInA) + String(ioInB) + String(ioInC) + String(ioInD) + String(ioInE);
   str = str + "\",\n";
   
   str = str + "\"mbI1\":\"";

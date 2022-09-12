@@ -82,10 +82,12 @@ int cfgADCf[ADC_NUMBER];
 //int inPulseD2 = 0;
 #define _SEC_TO_RPM_  60000
 
-int   inPulseD3 = 0;
-int   inPulseAntD3 = 0;
-int   RpmCounter = 0;
-unsigned long RmpTick = 0;
+unsigned long   inPulseD3 = 0;
+unsigned long   inPulseAntD3 = 0;
+unsigned long   pulsesD3;
+unsigned long   RpmCounterD3 = 0;
+unsigned long   RpmTickD3 = 0;
+unsigned long   RpmPeriodD3 = 0;
 
 ///////////
 // MUART //

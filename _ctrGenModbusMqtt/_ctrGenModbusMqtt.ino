@@ -9,6 +9,7 @@
 #include "alarm.h"
 #include "e2prom.h"
 #include "http.h"
+#include "gen.h"
 #include "io.h"
 #include "ip.h"
 #include "main.h"
@@ -137,6 +138,11 @@ int timeMin = 0;
 int timeHour = 0;
 int timeDay = 0;
 
+//////////
+// mRAM //
+//////////
+unsigned long freeRam;
+
 /////////////
 // Control //
 /////////////
@@ -146,6 +152,7 @@ int   ControlState;
 int   TimeControlSec;
 
 int   DisplayIndicador;
+int   remAct;
 
 int   OutGen;
 int   OutBomba;
@@ -157,10 +164,15 @@ int   OutB;
 int   OutC;
 int   OutD;
 
-//////////
-// mRAM //
-//////////
-unsigned long freeRam;
+//////////////
+// Gen Time //
+//////////////
+int genTimeSec = 0;
+int genTimeMin = 0;
+int genTimeHour = 0;
+int genTimeDay = 0;
+
+int genMinOn = 0;
 
 ///////////
 // RS485 //

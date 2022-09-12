@@ -8,7 +8,10 @@ void _CtrSetup(void)
   ControlTick = millis();
   
   TimeControlSec = 0;
-  DisplayIndicador = 1;
+  DisplayIndicador = 0;
+  remAct = 0;
+
+  genMinOn = 0;
 
   // Control
   OutBomba = OUT_OFF;
@@ -20,7 +23,11 @@ void _CtrSetup(void)
 ///////////////////////
 void _CtrLoop(void)
 {
-
+  if (ControlState == STATE_STANDBY)
+    genMinOn = 0;
+  else
+    _GenTimeReset();
+      
   switch (ControlState)
   {
     case STATE_STANDBY:    
@@ -31,9 +38,12 @@ void _CtrLoop(void)
       // Indicadores
       OutZumb = OUT_OFF;
       OutDisp = OUT_OFF;
+      // Remote
+      remAct = 0;
     
       TimeControlSec = 0;
       ControlTick = millis();
+
       break;
 
     case STATE_START:
@@ -119,18 +129,61 @@ void _CtrLoop(void)
 void ctrIOsLoop(void)
 {
   // Ins
-  InStartVal= mbIns[0][0];
-  InEndVal  = mbIns[1][0]; 
+  InStartVal= ioInB; // mbIns[0][0];
+  InEndVal  = ioInC; // mbIns[1][0]; 
 
   // Outs
-  mbOuts[0][0] = OutGen;
-  mbOuts[1][0] = OutBomba;
-  mbOuts[2][0] = OutDisp;
-  mbOuts[3][0] = OutZumb;
-  mbOuts[4][0] = OutA;
-  mbOuts[5][0] = OutB;
-  mbOuts[6][0] = OutC;
-  mbOuts[7][0] = OutD;
+  ioOutA = OutGen;
+  ioOutB = OutBomba;
+  ioOutC = OutZumb;
+  
+  if (OutA != mbOuts[0][0])
+  {  
+    mbOutVal = OutA;
+    mbOutBoard = 0;
+    mbOutNum = 0; // O1
+    
+    if (mbState == MB_STANDBY)
+      mbState = MB_WRITEOUT;
+  }
+  else if (OutB != mbOuts[1][0])
+  {
+    mbOutVal = OutB;
+    mbOutBoard = 0;
+    mbOutNum = 1; // O2
+    
+    if (mbState == MB_STANDBY)
+      mbState = MB_WRITEOUT;
+    
+  }
+  else if (OutC != mbOuts[2][0])
+  {
+    mbOutVal = OutC;
+    mbOutBoard = 0;
+    mbOutNum = 2; // O3
+    
+    if (mbState == MB_STANDBY)
+      mbState = MB_WRITEOUT;    
+  }
+  else if (OutD != mbOuts[3][0])
+  {
+    mbOutVal = OutD;
+    mbOutBoard = 0;
+    mbOutNum = 3; // O2
+    
+    if (mbState == MB_STANDBY)
+      mbState = MB_WRITEOUT;
+  }
+  else if (OutDisp != mbOuts[4][0])
+  {
+    mbOutVal = OutDisp;
+    mbOutBoard = 0;
+    mbOutNum = 4; // O3
+    
+    if (mbState == MB_STANDBY)
+      mbState = MB_WRITEOUT;
+  }
+
 }
 
 // Ins loop
@@ -197,10 +250,13 @@ void ctrPulsLoop(void)
     Serial.println(">>>>>>>>>>>>>>>>>>>>>>>>>>> Start -> Incrementa");
     #endif
 
-    // Mantenemos el arranque
-    if (ControlState != STATE_START)
+    // Si estamos en paaro
+    if (ControlState == STATE_STANDBY)
+      ControlState = STATE_START;
+    // Mantenemos el arranque 
+    else if (ControlState != STATE_START)
       ControlState = STATE_GEN_ON;
-
+    
     if (DisplayIndicador == 9)
       TimeControlSec = cfgTimeGenerador9P*X_3600;
       

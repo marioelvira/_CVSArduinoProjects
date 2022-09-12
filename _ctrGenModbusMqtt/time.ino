@@ -40,6 +40,8 @@ void _TimeLoop(void)
         }
       }
     }
+
+    _GenTimeLoop();
     
     timeTick = millis();
 

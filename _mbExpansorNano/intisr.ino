@@ -7,8 +7,8 @@ void _INTISRsSetup()
   //attachInterrupt(digitalPinToInterrupt(2), interruptD2, RISING);
 
   // RPM test
-  RmpTick = millis();
-  RpmCounter = 0;
+  RpmTickD3 = millis();
+  RpmCounterD3 = 0;
   attachInterrupt(digitalPinToInterrupt(3), interruptD3, RISING);
 }
 
@@ -17,18 +17,17 @@ void _INTISRsSetup()
 ///////////////////////////
 void _INTISRsLoop()
 {
-  unsigned long rmpPeriod;
-  int pulses;
+ 
+  detachInterrupt(digitalPinToInterrupt(3));
   
-  //detachInterrupt(digitalPinToInterrupt(3));
-  pulses =  inPulseD3 - inPulseAntD3;
-  rmpPeriod = millis() - RmpTick;
-  RpmCounter = (pulses/rmpPeriod)*_SEC_TO_RPM_;
+  pulsesD3 =  inPulseD3 - inPulseAntD3;
+  RpmPeriodD3 = millis() - RpmTickD3;
+  
+  RpmCounterD3 = (pulsesD3*_SEC_TO_RPM_)/RpmPeriodD3;
   inPulseAntD3 = inPulseD3;
-  RmpTick = millis();
-  //inPulseD3 = 0;
+  RpmTickD3 = millis();
   
-  //attachInterrupt(digitalPinToInterrupt(3), interruptD3, RISING);
+  attachInterrupt(digitalPinToInterrupt(3), interruptD3, RISING);
 }
 
 ////////////////

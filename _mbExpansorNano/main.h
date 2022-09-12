@@ -15,7 +15,7 @@ extern "C" {
 #define _USE_BOARDLED_             1
 #define _USE_WDE_                  0
 #define _USE_FREERAM_              0
-#define _USE_MUART_                1
+#define _USE_MUART_                0
 
 #if (_USE_MUART_ == 1)
 #define _SERIAL_DEBUG_             0

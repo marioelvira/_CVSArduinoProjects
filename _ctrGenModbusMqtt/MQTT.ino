@@ -121,6 +121,30 @@ void mqttDataCallback(char* rtopic, byte* rpayload, unsigned int rlength)
     }
   }
 
+  else if (rtopicStr.equals(TOPIC_GENCTR))
+  {
+    if(rpayloadStr.equals("1"))
+    {
+      InStartState = PULSACION_OK;
+      remAct = 1;
+    }
+  }
+  else if (rtopicStr.equals(TOPIC_GENSTOP))
+  {
+    if(rpayloadStr.equals("1"))
+      InEndState = PULSACION_OK;
+  }
+  else if (rtopicStr.equals(TOPIC_LUZCTR))
+  {
+    if(rpayloadStr.equals("1"))
+    {}
+  }
+  else if (rtopicStr.equals(TOPIC_LUZSTOP))
+  {
+    if(rpayloadStr.equals("1"))
+    {}
+  }
+
   // Watchdog
   else if (rtopicStr.equals(TOPIC_WATCHDOG))
   {
@@ -196,6 +220,39 @@ void _MQTTSend(void)
     str = str + "Test";
   str = str + ",\n";
 
+  /////////////
+  // Control //
+  /////////////
+
+  if (OutGen == OUT_OFF)
+    str = str + "\"gSt\":0";
+  else
+    str = str + "\"gSt\":1";
+  str = str + ",\n";
+
+  if (OutBomba == OUT_OFF)
+    str = str + "\"bSt\":0";
+  else
+    str = str + "\"bSt\":1";
+  str = str + ",\n";
+
+  str = str + "\"gOn\":\"";
+  str = str + String(genMinOn);
+  str = str + "m\",\n";
+
+  str = str + "\"gOff\":\"";
+  str = str + String(genTimeDay) + "d " + String(genTimeHour) + " : " + String(genTimeMin) + " : " + String(genTimeSec);
+  str = str + "\",\n";
+  
+  if (remAct == 1)
+    str = str + "\"gR\":1";
+  else
+    str = str + "\"gR\":0";
+  str = str + ",\n";
+  
+  /////////
+  // IOs //
+  /////////
   str = str + "\"bO\":\"";
   str = str + String(ioOutA) + String(ioOutB) + String(ioOutC);
   str = str + "\",\n";
@@ -329,6 +386,11 @@ void _MQTTLoop(void)
             mqttSubscribe(TOPIC_MODE_AUTO) &&
             mqttSubscribe(TOPIC_MODE_TEST) &&
 
+            mqttSubscribe(TOPIC_GENCTR)    &&
+            mqttSubscribe(TOPIC_GENSTOP)   &&
+            mqttSubscribe(TOPIC_LUZCTR)    &&
+            mqttSubscribe(TOPIC_LUZSTOP)   &&
+            
             mqttSubscribe(TOPIC_WATCHDOG))
         {
           mqttStatus = MQTT_SUBSCRIBED;

@@ -87,9 +87,9 @@ void _TimeLoop(void)
     */
     Serial.println("---------------");
 
-    //Serial.print("intNumberD2: ");  Serial.println(inPulseD2);
-    Serial.print("intNumberD3: ");    Serial.println(inPulseD3);
-    Serial.print("RPM in D3: ");      Serial.println(RpmCounter);
+    Serial.print("pulsesD3: ");       Serial.println(pulsesD3);
+    Serial.print("RpmPeriodD3: ");    Serial.println(RpmPeriodD3);
+    Serial.print("RpmCounterD3: ");   Serial.println(RpmCounterD3);
         
     Serial.println("---------------");
 

@@ -36,7 +36,12 @@ extern "C" {
 
 #define TOPIC_WATCHDOG    "sdpelicanos@gmail.com/wd"
 
-#define TOPIC_OFFSET            21
+#define TOPIC_GENCTR      "sdpelicanos@gmail.com/gOn"
+#define TOPIC_GENSTOP     "sdpelicanos@gmail.com/gOff"
+#define TOPIC_LUZCTR      "sdpelicanos@gmail.com/lOn"
+#define TOPIC_LUZSTOP     "sdpelicanos@gmail.com/lOff"
+
+//#define TOPIC_OFFSET            21
 
 #define MQTT_BLINK_CONNECTING   3000
 

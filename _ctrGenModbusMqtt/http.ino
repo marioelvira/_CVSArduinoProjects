@@ -943,8 +943,18 @@ void _readCTR()
   html = html + "</tr>";
 
   html = html + "<tr>";
+  html = html + "<td>Tiempo OFF</td>";
+  html = html + "<td>" + String(genTimeDay) + "d " + String(genTimeHour) + " : " + String(genTimeMin) + " : " + String(genTimeSec) + "</td>";
+  html = html + "</tr>";
+
+  html = html + "<tr>";
   html = html + "<td>LCD </td>";
   html = html + "<td>" + String(DisplayIndicador) + " -> " + String(OutD) + "-" + String(OutC) + "-" + String(OutB) + "-" + String(OutA) + "</td>";
+  html = html + "</tr>";
+
+  html = html + "<tr>";
+  html = html + "<td>Mins ON</td>";
+  html = html + "<td>" + String(genMinOn) + "</td>";
   html = html + "</tr>";
 
   html = html + "<tr>";

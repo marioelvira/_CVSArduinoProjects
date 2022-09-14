@@ -18,107 +18,112 @@ void mqttDataCallback(char* rtopic, byte* rpayload, unsigned int rlength)
   if (rtopicStr.equals(TOPIC_OON) ||
       rtopicStr.equals(TOPIC_OOFF))
   {
-    int boardType = 2; // MB
-    int outNum = 0;
-    int outVal = 0;
-
-    // Value
-    if (rtopicStr.equals(TOPIC_OON))
-      outVal = OUT_ON;
-    else
-      outVal = OUT_OFF;
-
-    // mbInBoard 0 - boardType 2 MB
-    if(rpayloadStr.equals("1"))
-      outNum = 0;
-    else if (rpayloadStr.equals("2"))
-      outNum = 1;
-    else if (rpayloadStr.equals("3"))
-      outNum = 2;
-    else if (rpayloadStr.equals("4"))
-      outNum = 3;
-    else if (rpayloadStr.equals("5"))
-      outNum = 4;      
-    else if (rpayloadStr.equals("6"))
-      outNum = 5;
-    else if (rpayloadStr.equals("7"))
-      outNum = 6;
-    else if (rpayloadStr.equals("8"))
-      outNum = 7;
-    // mbInBoard 1 - boardType 2 MB
-    else if (rpayloadStr.equals("11"))
-      outNum = 10;
-    else if (rpayloadStr.equals("12"))
-      outNum = 11;
-    else if (rpayloadStr.equals("13"))
-      outNum = 12;
-    else if (rpayloadStr.equals("14"))
-      outNum = 13;
-    else if (rpayloadStr.equals("15"))
-      outNum = 14;      
-    else if (rpayloadStr.equals("16"))
-      outNum = 15;
-    else if (rpayloadStr.equals("17"))
-      outNum = 16;
-    else if (rpayloadStr.equals("18"))
-      outNum = 17;
-      
-    // boardType 1
-    else if (rpayloadStr.equals("41"))
+    // Solo en modo Test
+    if (controlMode == MODE_TEST)
     {
-      boardType = 1;
-      outNum = 0;
-    }
-    else if (rpayloadStr.equals("42"))
-    {
-      boardType = 1; 
-      outNum = 1;
-    }
-    else if (rpayloadStr.equals("43"))
-    {
-      boardType = 1; 
-      outNum = 2;
-    }
-    // Error
-    else
-      boardType = 0;  // No board
-
-    // Board
-    if (boardType == 1) // Own
-    {
-      if ((outNum == 0) && (outVal == OUT_ON))
-        ioOutA = OUT_ON;
-      else if ((outNum == 0) && (outVal == OUT_OFF))
-        ioOutA = OUT_OFF;
-      else if ((outNum == 1) && (outVal == OUT_ON))
-        ioOutB = OUT_ON;
-      else if ((outNum == 1) && (outVal == OUT_OFF))
-        ioOutB = OUT_OFF;    
-      else if ((outNum == 2) && (outVal == OUT_ON))
-        ioOutC = OUT_ON;
-      else if ((outNum == 2) && (outVal == OUT_OFF))
-        ioOutC = OUT_OFF;    
-    }
-    else if (boardType == 2) // MB
-    {
-      if (outNum >= 10)
-      {
-        mbOutBoard = 1;
-        outNum = outNum - 10;
-      }
+    
+      int boardType = 2; // MB
+      int outNum = 0;
+      int outVal = 0;
+  
+      // Value
+      if (rtopicStr.equals(TOPIC_OON))
+        outVal = OUT_ON;
       else
-        mbOutBoard = 0;
+        outVal = OUT_OFF;
+  
+      // mbInBoard 0 - boardType 2 MB
+      if(rpayloadStr.equals("1"))
+        outNum = 0;
+      else if (rpayloadStr.equals("2"))
+        outNum = 1;
+      else if (rpayloadStr.equals("3"))
+        outNum = 2;
+      else if (rpayloadStr.equals("4"))
+        outNum = 3;
+      else if (rpayloadStr.equals("5"))
+        outNum = 4;      
+      else if (rpayloadStr.equals("6"))
+        outNum = 5;
+      else if (rpayloadStr.equals("7"))
+        outNum = 6;
+      else if (rpayloadStr.equals("8"))
+        outNum = 7;
+      // mbInBoard 1 - boardType 2 MB
+      else if (rpayloadStr.equals("11"))
+        outNum = 10;
+      else if (rpayloadStr.equals("12"))
+        outNum = 11;
+      else if (rpayloadStr.equals("13"))
+        outNum = 12;
+      else if (rpayloadStr.equals("14"))
+        outNum = 13;
+      else if (rpayloadStr.equals("15"))
+        outNum = 14;      
+      else if (rpayloadStr.equals("16"))
+        outNum = 15;
+      else if (rpayloadStr.equals("17"))
+        outNum = 16;
+      else if (rpayloadStr.equals("18"))
+        outNum = 17;
         
-      mbOutNum = outNum;
-      mbOutVal = outVal;
-
-      // Solo en modo Test
-      if (controlMode == MODE_TEST)
+      // boardType 1
+      else if (rpayloadStr.equals("41"))
       {
-        if (mbState == MB_STANDBY)
-          mbState = MB_WRITEOUT;
+        boardType = 1;
+        outNum = 0;
       }
-    }
+      else if (rpayloadStr.equals("42"))
+      {
+        boardType = 1; 
+        outNum = 1;
+      }
+      else if (rpayloadStr.equals("43"))
+      {
+        boardType = 1; 
+        outNum = 2;
+      }
+      // Error
+      else
+        boardType = 0;  // No board
+  
+      // Board
+      if (boardType == 1) // Own
+      {
+        if ((outNum == 0) && (outVal == OUT_ON))
+          ioOutA = OUT_ON;
+        else if ((outNum == 0) && (outVal == OUT_OFF))
+          ioOutA = OUT_OFF;
+        else if ((outNum == 1) && (outVal == OUT_ON))
+          ioOutB = OUT_ON;
+        else if ((outNum == 1) && (outVal == OUT_OFF))
+          ioOutB = OUT_OFF;    
+        else if ((outNum == 2) && (outVal == OUT_ON))
+          ioOutC = OUT_ON;
+        else if ((outNum == 2) && (outVal == OUT_OFF))
+          ioOutC = OUT_OFF;    
+      }
+      else if (boardType == 2) // MB
+      {
+        if (outNum >= 10)
+        {
+          mbOutBoard = 1;
+          outNum = outNum - 10;
+        }
+        else
+          mbOutBoard = 0;
+          
+        mbOutNum = outNum;
+        mbOutVal = outVal;
+  
+        // Solo en modo Test
+        if (controlMode == MODE_TEST)
+        {
+          if (mbState == MB_STANDBY)
+            mbState = MB_WRITEOUT;
+        }
+      }
+    } // (controlMode == MODE_TEST)
   }
 
   else if (rtopicStr.equals(TOPIC_GENCTR))
@@ -134,6 +139,7 @@ void mqttDataCallback(char* rtopic, byte* rpayload, unsigned int rlength)
     if(rpayloadStr.equals("1"))
       InEndState = PULSACION_OK;
   }
+  /*
   else if (rtopicStr.equals(TOPIC_LUZCTR))
   {
     if(rpayloadStr.equals("1"))
@@ -144,7 +150,7 @@ void mqttDataCallback(char* rtopic, byte* rpayload, unsigned int rlength)
     if(rpayloadStr.equals("1"))
     {}
   }
-
+  */
   // Watchdog
   else if (rtopicStr.equals(TOPIC_WATCHDOG))
   {
@@ -194,7 +200,7 @@ boolean mqttSubscribe(const char* topicToSubscribe)
 ///////////////
 void _MQTTSend(void)
 {
-  char    spayload[200];
+  char    spayload[300];
   String  str;
   int     str_len;
 
@@ -207,7 +213,7 @@ void _MQTTSend(void)
   str = str + "\"mRAM\":";
   str = str + String(freeRam);
   str = str + ",\n";
-
+  
   str = str + "\"al\":\"0x";
   str = str + String(alarm[0]) + String(alarm[1]) + String(alarm[2]) + String(alarm[3]);
   str = str + String(alarm[4]) + String(alarm[5]) + String(alarm[6]) + String(alarm[7]);
@@ -223,75 +229,86 @@ void _MQTTSend(void)
   /////////////
   // Control //
   /////////////
-
-  if (OutGen == OUT_OFF)
-    str = str + "\"gSt\":0";
-  else
-    str = str + "\"gSt\":1";
-  str = str + ",\n";
-
-  if (OutBomba == OUT_OFF)
-    str = str + "\"bSt\":0";
-  else
-    str = str + "\"bSt\":1";
-  str = str + ",\n";
-
-  str = str + "\"gOn\":\"";
-  str = str + String(genMinOn);
-  str = str + "m\",\n";
-
-  str = str + "\"gOff\":\"";
-  str = str + String(genTimeDay) + "d " + String(genTimeHour) + " : " + String(genTimeMin) + " : " + String(genTimeSec);
-  str = str + "\",\n";
+  if (controlMode == MODE_AUTO)
+  {
+    if (OutGen == OUT_OFF)
+      str = str + "\"gSt\":0";
+    else
+      str = str + "\"gSt\":1";
+    str = str + ",\n";
   
-  if (remAct == 1)
-    str = str + "\"gR\":1";
-  else
-    str = str + "\"gR\":0";
-  str = str + ",\n";
+    if (OutBomba == OUT_OFF)
+      str = str + "\"bSt\":0";
+    else
+      str = str + "\"bSt\":1";
+    str = str + ",\n";
+
+    str = str + "\"gD\":";
+    str = str + String(DisplayIndicador);
+    str = str + ",\n";
+        
+    str = str + "\"gOn\":\"";
+    str = str + String(genMinOn);
+    str = str + "m\",\n";
+    
+    str = str + "\"gOff\":\"";
+    str = str + String(genTimeDay) + "d " + String(genTimeHour) + " : " + String(genTimeMin) + " : " + String(genTimeSec);
+    str = str + "\",\n";
+    
+    if (remAct == 1)
+      str = str + "\"gR\":1";
+    else
+      str = str + "\"gR\":0";
+    str = str + ",\n";
+
+    // Adc
+    str = str + "\"adc\":";
+    str = str + String(AdcVal);
+    str = str + ",\n";
+  }
+
+  //////////
+  // Test //
+  //////////
+  if (controlMode == MODE_TEST)
+  {
+    /////////
+    // IOs //
+    /////////
+    str = str + "\"bO\":\"";
+    str = str + String(ioOutA) + String(ioOutB) + String(ioOutC);
+    str = str + "\",\n";
   
-  /////////
-  // IOs //
-  /////////
-  str = str + "\"bO\":\"";
-  str = str + String(ioOutA) + String(ioOutB) + String(ioOutC);
-  str = str + "\",\n";
-
-  str = str + "\"mbO1\":\"";
-  str = str + String(mbOuts[0][0]) + String(mbOuts[1][0]) + String(mbOuts[2][0]) + String(mbOuts[3][0]);
-  str = str + String(mbOuts[4][0]) + String(mbOuts[5][0]) + String(mbOuts[6][0]) + String(mbOuts[7][0]);
-  str = str + "\",\n";
-
-  str = str + "\"mbO2\":\"";
-  str = str + String(mbOuts[0][1]) + String(mbOuts[1][1]) + String(mbOuts[2][1]) + String(mbOuts[3][1]);
-  str = str + String(mbOuts[4][1]) + String(mbOuts[5][1]) + String(mbOuts[6][1]) + String(mbOuts[7][1]);
-  str = str + "\",\n";
+    str = str + "\"mbO1\":\"";
+    str = str + String(mbOuts[0][0]) + String(mbOuts[1][0]) + String(mbOuts[2][0]) + String(mbOuts[3][0]);
+    str = str + String(mbOuts[4][0]) + String(mbOuts[5][0]) + String(mbOuts[6][0]) + String(mbOuts[7][0]);
+    str = str + "\",\n";
   
-  str = str + "\"bI\":\"";
-  str = str + String(ioInA) + String(ioInB) + String(ioInC) + String(ioInD) + String(ioInE);
-  str = str + "\",\n";
+    str = str + "\"mbO2\":\"";
+    str = str + String(mbOuts[0][1]) + String(mbOuts[1][1]) + String(mbOuts[2][1]) + String(mbOuts[3][1]);
+    str = str + String(mbOuts[4][1]) + String(mbOuts[5][1]) + String(mbOuts[6][1]) + String(mbOuts[7][1]);
+    str = str + "\",\n";
+    
+    str = str + "\"bI\":\"";
+    str = str + String(ioInA) + String(ioInB) + String(ioInC) + String(ioInD) + String(ioInE);
+    str = str + "\",\n";
+    
+    str = str + "\"mbI1\":\"";
+    str = str + String(mbIns[0][0]) + String(mbIns[1][0]) + String(mbIns[2][0]) + String(mbIns[3][0]);
+    str = str + String(mbIns[4][0]) + String(mbIns[5][0]) + String(mbIns[6][0]) + String(mbIns[7][0]);
+    str = str + "\",\n";
   
-  str = str + "\"mbI1\":\"";
-  str = str + String(mbIns[0][0]) + String(mbIns[1][0]) + String(mbIns[2][0]) + String(mbIns[3][0]);
-  str = str + String(mbIns[4][0]) + String(mbIns[5][0]) + String(mbIns[6][0]) + String(mbIns[7][0]);
-  str = str + "\",\n";
+    str = str + "\"mbI2\":\"";
+    str = str + String(mbIns[0][1]) + String(mbIns[1][1]) + String(mbIns[2][1]) + String(mbIns[3][1]);
+    str = str + String(mbIns[4][1]) + String(mbIns[5][1]) + String(mbIns[6][1]) + String(mbIns[7][1]);
+    str = str + "\",\n";
 
-  str = str + "\"mbI2\":\"";
-  str = str + String(mbIns[0][1]) + String(mbIns[1][1]) + String(mbIns[2][1]) + String(mbIns[3][1]);
-  str = str + String(mbIns[4][1]) + String(mbIns[5][1]) + String(mbIns[6][1]) + String(mbIns[7][1]);
-  str = str + "\",\n";
-  
-  // Adc
-  str = str + "\"adc\":";
-  str = str + String(AdcVal);
-  str = str + ",\n";
+    // AdcIn
+    str = str + "\"adci\":";
+    str = str + String(AdcIn);
+    str = str + ",\n";
+  }
 
-  // AdcIn
-  str = str + "\"adci\":";
-  str = str + String(AdcIn);
-  str = str + ",\n";
-
-  // ipAdd
   str = str + "\"ip\":\"";
   str = str + String(ipAddress.toString());
   str = str + "\"\n";
@@ -385,11 +402,11 @@ void _MQTTLoop(void)
 
             mqttSubscribe(TOPIC_MODE_AUTO) &&
             mqttSubscribe(TOPIC_MODE_TEST) &&
-
+            
             mqttSubscribe(TOPIC_GENCTR)    &&
             mqttSubscribe(TOPIC_GENSTOP)   &&
-            mqttSubscribe(TOPIC_LUZCTR)    &&
-            mqttSubscribe(TOPIC_LUZSTOP)   &&
+            //mqttSubscribe(TOPIC_LUZCTR)  &&
+            //mqttSubscribe(TOPIC_LUZSTOP) &&
             
             mqttSubscribe(TOPIC_WATCHDOG))
         {

@@ -117,9 +117,13 @@ int httpStatus;
 //////////
 // MQTT //
 //////////
-const char* brokerSt = MQTT_BROKER;
-char brokerUrl[BROKER_MAX];
+const char* brokerUrlSt = MQTT_BROKER;
+char brokerUrl[MQTT_URL_MAX];
 int brokerPort;
+const char* brokerUserSt = MQTT_USERNAME;
+char brokerUser[MQTT_USER_MAX];
+const char* brokerPswdSt = MQTT_PASSWORD;
+char brokerPswd[MQTT_PSWD_MAX];
 
 WiFiClient wifiClient;
 PubSubClient mqttClient(wifiClient);

@@ -30,51 +30,53 @@ extern "C" {
 
 #define EEPROM_ADD_WIFI_MODE      0x0E
 #define EEPROM_ADD_WIFI_SSID      0x0F
-#define WIFI_SSID_MAX             32 // SSID max 32 char -> Next 0x2F
+#define WIFI_SSID_MAX             32 // max 32 char -> Next 0x2F
 #define EEPROM_ADD_WIFI_PSWD      0x2F
-#define WIFI_PSWD_MAX             32 // Password max 32 char -> Next 0x4F
+#define WIFI_PSWD_MAX             32 // max 32 char -> Next 0x4F
 
 #define EEPROM_ADD_BROKER         0x4F
-#define BROKER_MAX                32 // Broker max 32 char -> Next 0x6F
-#define EEPROM_ADD_BROKER_PORT    0x6F
+#define MQTT_URL_MAX              24 // max 24 char -> Next 0x67
+#define EEPROM_ADD_BROKER_PORT    0x67
 #define BROKER_PORT_MAX           2
+#define EEPROM_ADD_MQTT_USER      0x69
+#define MQTT_USER_MAX             24 // max 24 char -> Next 0x81
+#define EEPROM_ADD_MQTT_PSWD      0x81
+#define MQTT_PSWD_MAX             24 // max 24 char -> Next 0x99
 
-#define EEPROM_ADD_LOGIC_INS      0x71
-#define EEPROM_ADD_LOGIC_OUTS     0x72
-#define EEPROM_ADD_MBADD1         0x73
-#define EEPROM_ADD_MBADD2         0x74
+#define EEPROM_ADD_LOGIC_INS      0x99
+#define EEPROM_ADD_LOGIC_OUTS     0x9A
+#define EEPROM_ADD_MBADD1         0x9B
+#define EEPROM_ADD_MBADD2         0x9C
 
-#define EEPROM_ADD_ADC_M_LO       0x75
-#define EEPROM_ADD_ADC_M_HI       0x76
-#define EEPROM_ADD_ADC_B_LO       0x77
-#define EEPROM_ADD_ADC_B_HI       0x78
-#define EEPROM_ADD_ADC_P_LO       0x79
-#define EEPROM_ADD_ADC_P_HI       0x7A
-#define EEPROM_ADD_ADC_S          0x7B
-#define EEPROM_ADD_ADC_F          0x7C
+#define EEPROM_ADD_ADC_M_LO       0x9D
+#define EEPROM_ADD_ADC_M_HI       0x9E
+#define EEPROM_ADD_ADC_B_LO       0x9F
+#define EEPROM_ADD_ADC_B_HI       0xA0
+#define EEPROM_ADD_ADC_P_LO       0xA1
+#define EEPROM_ADD_ADC_P_HI       0xA2
+#define EEPROM_ADD_ADC_S          0xA3
+#define EEPROM_ADD_ADC_F          0xA4
 
 // Control
-#define EEPROM_ADD_1P_TIMER_GEN   0x7D
-#define EEPROM_ADD_2P_TIMER_GEN   0x7E
-#define EEPROM_ADD_3P_TIMER_GEN   0x7F
-#define EEPROM_ADD_4P_TIMER_GEN   0x80
-#define EEPROM_ADD_5P_TIMER_GEN   0x81
-#define EEPROM_ADD_6P_TIMER_GEN   0x82
-#define EEPROM_ADD_7P_TIMER_GEN   0x83
-#define EEPROM_ADD_8P_TIMER_GEN   0x84
-#define EEPROM_ADD_9P_TIMER_GEN   0x85
+#define EEPROM_ADD_1P_TIMER_GEN   0xA5
+#define EEPROM_ADD_2P_TIMER_GEN   0xA6
+#define EEPROM_ADD_3P_TIMER_GEN   0xA7
+#define EEPROM_ADD_4P_TIMER_GEN   0xA8
+#define EEPROM_ADD_5P_TIMER_GEN   0xA9
+#define EEPROM_ADD_6P_TIMER_GEN   0xAA
+#define EEPROM_ADD_7P_TIMER_GEN   0xAB
+#define EEPROM_ADD_8P_TIMER_GEN   0xAC
+#define EEPROM_ADD_9P_TIMER_GEN   0xAD
 
-#define EEPROM_ADD_BUZZER_ON      0x86
-#define EEPROM_ADD_TSTART         0x97
-#define EEPROM_ADD_TSTOP          0x88
-#define EEPROM_ADD_DEBUG          0x89
-
-//#define EEPROM_ADD_DEBUG        0x7D
+#define EEPROM_ADD_BUZZER_ON      0xAE
+#define EEPROM_ADD_TSTART         0xAF
+#define EEPROM_ADD_TSTOP          0xB0
+#define EEPROM_ADD_DEBUG          0xB1
 
 //#define EEPROM_ADD_MAX          0xFA // 250
 
 // Values
-#define EEPROM_VAL_OK             0xA0
+#define EEPROM_VAL_OK             0xAA
 
 #define EEPROM_VAL_IP_MODE        DHCP_MODE
 #define EEPROM_VAL_IP1            192
@@ -94,8 +96,10 @@ extern "C" {
 #define STATION_MODE              1
 #define EEPROM_VAL_WIFI_MODE      ACCESSPOINT_MODE // STATION_MODE
 
-//#define EEPROM_VAL_BROKER       
-#define EEPROM_VAL_BROKER_PORT    7000
+//#define EEPROM_VAL_BROKER  
+//#define EEPROM_VAL_MQTT_USER
+//#define EEPROM_ADD_MQTT_PSWD    
+//#define EEPROM_VAL_BROKER_PORT    7000
 
 #define EEPROM_VAL_LOGIC_INS      1
 #define EEPROM_VAL_LOGIC_OUTS     1

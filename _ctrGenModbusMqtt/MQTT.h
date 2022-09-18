@@ -17,13 +17,10 @@ extern "C" {
 #define MQTT_PUBLISH_TIMEOUT      800   // 800 ms
 
 // MQTT broker credentials
-//#define MQTT_BROKER       "maqiatto.com"
-//#define MQTT_BROKER_PORT  1883
 #define MQTT_BROKER         "sdpelicanos.webhop.me"
 #define MQTT_BROKER_PORT    7000
-
-#define MQTT_USERNAME     "sdpelicanos@gmail.com"
-#define MQTT_KEY          "MQTTSup3rP@ssw0rd"
+#define MQTT_USERNAME       "sdpelicanos@gmail.com"
+#define MQTT_PASSWORD       "MQTTSup3rP@@sw0rd"
 
 // MQTT Topics
 #define TOPIC_STATE       "sdpelicanos@gmail.com/st"
@@ -36,10 +33,10 @@ extern "C" {
 
 #define TOPIC_WATCHDOG    "sdpelicanos@gmail.com/wd"
 
-#define TOPIC_GENCTR      "sdpelicanos@gmail.com/gOn"
-#define TOPIC_GENSTOP     "sdpelicanos@gmail.com/gOff"
-//#define TOPIC_LUZCTR    "sdpelicanos@gmail.com/lOn"
-//#define TOPIC_LUZSTOP   "sdpelicanos@gmail.com/lOff"
+#define TOPIC_GENON       "sdpelicanos@gmail.com/gOn"
+#define TOPIC_GENOFF      "sdpelicanos@gmail.com/gOff"
+#define TOPIC_OUTON       "sdpelicanos@gmail.com/oOn"
+#define TOPIC_OUTOFF      "sdpelicanos@gmail.com/oOff"
 
 #define MQTT_BLINK_CONNECTING   3000
 

@@ -126,7 +126,7 @@ void mqttDataCallback(char* rtopic, byte* rpayload, unsigned int rlength)
     } // (controlMode == MODE_TEST)
   }
 
-  else if (rtopicStr.equals(TOPIC_GENCTR))
+  else if (rtopicStr.equals(TOPIC_GENON))
   {
     if(rpayloadStr.equals("1"))
     {
@@ -134,7 +134,7 @@ void mqttDataCallback(char* rtopic, byte* rpayload, unsigned int rlength)
       remAct = 1;
     }
   }
-  else if (rtopicStr.equals(TOPIC_GENSTOP))
+  else if (rtopicStr.equals(TOPIC_GENOFF))
   {
     if(rpayloadStr.equals("1"))
       InEndState = PULSACION_OK;
@@ -220,12 +220,9 @@ void _MQTTSend(void)
   str = str + "\",\n";
 
   str = str + "\"md\":";
-  if (controlMode == MODE_AUTO)
-    str = str + "Auto";
-  else
-    str = str + "Test";
+  str = str + String(controlMode);
   str = str + ",\n";
-
+  
   /////////////
   // Control //
   /////////////
@@ -254,14 +251,11 @@ void _MQTTSend(void)
     str = str + "\"gOff\":\"";
     str = str + String(genTimeDay) + "d " + String(genTimeHour) + " : " + String(genTimeMin) + " : " + String(genTimeSec);
     str = str + "\",\n";
-    
-    if (remAct == 1)
-      str = str + "\"gR\":1";
-    else
-      str = str + "\"gR\":0";
-    str = str + ",\n";
 
-    // Adc
+    str = str + "\"gR\":";
+    str = str + String(remAct);
+    str = str + ",\n";
+	    
     str = str + "\"adc\":";
     str = str + String(AdcVal);
     str = str + ",\n";
@@ -370,7 +364,8 @@ void _MQTTLoop(void)
         Serial.printf("Attempting MQTT connection...\n");
         #endif
       
-        if (mqttClient.connect(mqttClientId.c_str(), MQTT_USERNAME, MQTT_KEY))
+        //if (mqttClient.connect(mqttClientId.c_str(), MQTT_USERNAME, MQTT_PASSWORD))
+        if (mqttClient.connect(mqttClientId.c_str(), brokerUser, brokerPswd))
         {
           #if (_MQTT_SERIAL_DEBUG_ == 1)
           Serial.printf("MQTT connected!!!...\n");
@@ -403,8 +398,8 @@ void _MQTTLoop(void)
             mqttSubscribe(TOPIC_MODE_AUTO) &&
             mqttSubscribe(TOPIC_MODE_TEST) &&
             
-            mqttSubscribe(TOPIC_GENCTR)    &&
-            mqttSubscribe(TOPIC_GENSTOP)   &&
+            mqttSubscribe(TOPIC_GENON)     &&
+            mqttSubscribe(TOPIC_GENOFF)    &&
             //mqttSubscribe(TOPIC_LUZCTR)  &&
             //mqttSubscribe(TOPIC_LUZSTOP) &&
             

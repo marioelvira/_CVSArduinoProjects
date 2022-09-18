@@ -594,8 +594,10 @@ void _serveSETTINGS()
   html = html + "<div class=\"section\"><span>3</span>Broker </div>";
   html = html + "<div class=\"inner-wrap\">";
 
-  html = html + "<label>URL <input type=\"text\" maxlength=\"30\" value=\"" + String(brokerUrl) + "\" name=\"brokerurl\"/></label>";
+  html = html + "<label>Url <input type=\"text\" maxlength=\"30\" value=\"" + String(brokerUrl) + "\" name=\"brokerurl\"/></label>";
   html = html + "<label>Port <input type=\"text\" maxlength=\"16\" value=\"" + String(brokerPort) + "\" name=\"brokerport\"/></label>";
+  html = html + "<label>User <input type=\"text\" maxlength=\"30\" value=\"" + String(brokerUser) + "\" name=\"brokeruser\"/></label>";
+  html = html + "<label>Pswd <input type=\"text\" maxlength=\"30\" value=\"" + String(brokerPswd) + "\" name=\"brokerpswd\"/></label>";
 
   html = html + "</div>";
   // End
@@ -629,7 +631,9 @@ void _setSETTINGS()
   
   String rbrokerurl = httpServer.arg("brokerurl");
   String rbrokerport = httpServer.arg("brokerport");
-    
+  String rbrokeruser = httpServer.arg("brokeruser");
+  String rbrokerpswd = httpServer.arg("brokerpswd");
+      
   String html = "";
   int i, j, k, m;
   int error = 0;
@@ -677,28 +681,40 @@ void _setSETTINGS()
     error = 1;
 
   // Check broker error
-  if ((rbrokerurl.length() == 0) ||
-      (rbrokerport.length() == 0))
+  if ((rbrokerurl.length() == 0)  ||
+      (rbrokerport.length() == 0) ||
+      (rbrokeruser.length() == 0) ||
+      (rbrokerpswd.length() == 0))
     error |= 1;
 
   // If no error on data...
   if (error == 0)
   {
-     ////////////
-     // Broker //
-     ////////////
-     for (i = 0; i < BROKER_MAX; i++)
+     // Broker Url
+     for (i = 0; i < MQTT_URL_MAX; i++)
        EEPROM.write(EEPROM_ADD_BROKER + i, 0);
      j = rbrokerurl.length();
      for (i = 0; i < j; i++)
        EEPROM.write(EEPROM_ADD_BROKER + i, rbrokerurl[i]);
-      
+      // Broker Port   
      brokerPort = rbrokerport.toInt();
      eeprom_value_lo = brokerPort & 0x00FF;
      EEPROM.write(EEPROM_ADD_BROKER_PORT, eeprom_value_lo);
      eeprom_value_hi = (brokerPort & 0xFF00)>>8;
      EEPROM.write(EEPROM_ADD_BROKER_PORT + 1, eeprom_value_hi);
-          
+     // Broker User
+     for (i = 0; i < MQTT_USER_MAX; i++)
+       EEPROM.write(EEPROM_ADD_MQTT_USER + i, 0);
+     j = rbrokeruser.length();
+     for (i = 0; i < j; i++)
+       EEPROM.write(EEPROM_ADD_MQTT_USER + i, rbrokeruser[i]);
+     // Broker Password
+     for (i = 0; i < MQTT_PSWD_MAX; i++)
+       EEPROM.write(EEPROM_ADD_MQTT_PSWD + i, 0);
+     j = rbrokerpswd.length();
+     for (i = 0; i < j; i++)
+       EEPROM.write(EEPROM_ADD_MQTT_PSWD + i, rbrokerpswd[i]);
+ 
      /////////////////////////
      // Wi-Fi configuration //
      /////////////////////////

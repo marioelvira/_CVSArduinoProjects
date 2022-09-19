@@ -200,7 +200,7 @@ boolean mqttSubscribe(const char* topicToSubscribe)
 ///////////////
 void _MQTTSend(void)
 {
-  char    spayload[300];
+  char    spayload[255];
   String  str;
   int     str_len;
 
@@ -209,10 +209,14 @@ void _MQTTSend(void)
   str = str + "\"tOn\":\"";
   str = str + String(timeDay) + "d " + String(timeHour) + " : " + String(timeMin) + " : " + String(timeSec);
   str = str + "\",\n";
-
-  str = str + "\"mRAM\":";
+  /*
+  str = str + "\"ram\":";
   str = str + String(freeRam);
   str = str + ",\n";
+  */
+  str = str + "\"ip\":\"";
+  str = str + String(ipAddress.toString());
+  str = str + "\",\n";
   
   str = str + "\"al\":\"0x";
   str = str + String(alarm[0]) + String(alarm[1]) + String(alarm[2]) + String(alarm[3]);
@@ -259,6 +263,39 @@ void _MQTTSend(void)
     str = str + "\"adc\":";
     str = str + String(AdcVal);
     str = str + ",\n";
+    /*
+    str = str + "\"i11\":";
+    str = str + String(mbIns[0][1]);
+    str = str + ",\n";
+ 
+    str = str + "\"i12\":";
+    str = str + String(mbIns[1][1]);
+    str = str + ",\n";
+
+    str = str + "\"i13\":";
+    str = str + String(mbIns[2][1]);
+    str = str + ",\n";
+
+    str = str + "\"i14\":";
+    str = str + String(mbIns[3][1]);
+    str = str + ",\n";
+ 
+    str = str + "\"i15\":";
+    str = str + String(mbIns[4][1]);
+    str = str + ",\n";
+ 
+    str = str + "\"i16\":";
+    str = str + String(mbIns[5][1]);
+    str = str + ",\n";
+ 
+    str = str + "\"i17\":";
+    str = str + String(mbIns[6][1]);
+    str = str + ",\n";
+
+    str = str + "\"i18\":";
+    str = str + String(mbIns[7][1]);
+    str = str + ",\n";
+    */
   }
 
   //////////
@@ -303,8 +340,9 @@ void _MQTTSend(void)
     str = str + ",\n";
   }
 
-  str = str + "\"ip\":\"";
-  str = str + String(ipAddress.toString());
+  str_len = str.length();
+  str = str + "\"len\":\"";
+  str = str + String(str_len + 12);
   str = str + "\"\n";
 
   str = str + "}";

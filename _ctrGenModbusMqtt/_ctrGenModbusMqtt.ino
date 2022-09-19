@@ -167,7 +167,16 @@ int   OutA;
 int   OutB;
 int   OutC;
 int   OutD;
-
+/*
+int   Out11;
+int   Out12;
+int   Out13;
+int   Out14;
+int   Out15;
+int   Out16;
+int   Out17;
+int   Out18;
+*/
 //////////////
 // Gen Time //
 //////////////
@@ -246,10 +255,17 @@ int cfgTimeBuzzerOn;
 int cfgTimeOutStart;
 int cfgTimeOutStop;
 
+int	cfgTimeO11;
+int	cfgTimeO12;
+int	cfgTimeO13;
+int	cfgTimeO14;
+int	cfgTimeO15;
+int	cfgTimeO16;
+int	cfgTimeO17;
+int	cfgTimeO18;
+
 int X_60 = 60;
 int X_3600 = 3600;
-
-//int     DebugVal = 0;
 
 ///////////////
 // PIN steup //

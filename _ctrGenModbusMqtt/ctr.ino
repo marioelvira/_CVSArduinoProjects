@@ -16,6 +16,16 @@ void _CtrSetup(void)
   // Control
   OutBomba = OUT_OFF;
   OutGen = OUT_OFF;
+  /*
+  Out11 = OUT_OFF;
+  Out12 = OUT_OFF;
+  Out13 = OUT_OFF;
+  Out14 = OUT_OFF;
+  Out15 = OUT_OFF;
+  Out16 = OUT_OFF;
+  Out17 = OUT_OFF;
+  Out18 = OUT_OFF;
+  */
 }
 
 ///////////////////////
@@ -130,7 +140,7 @@ void ctrIOsLoop(void)
 {
   // Ins
   InStartVal= ioInB; // mbIns[0][0];
-  InEndVal  = ioInC; // mbIns[1][0]; 
+  InEndVal  = ioInC; // mbIns[1][0];
 
   // Outs
   ioOutA = OutGen;
@@ -183,7 +193,27 @@ void ctrIOsLoop(void)
     if (mbState == MB_STANDBY)
       mbState = MB_WRITEOUT;
   }
-
+  /* 
+  // General Outs
+  else if (Out11 != mbOuts[0][1])
+  {  
+    mbOutVal = Out11;
+    mbOutBoard = 1;
+    mbOutNum = 0; // O11
+    
+    if (mbState == MB_STANDBY)
+      mbState = MB_WRITEOUT;
+  }
+  else if (Out12 != mbOuts[1][1])
+  {  
+    mbOutVal = Out12;
+    mbOutBoard = 1;
+    mbOutNum = 1; // O11
+    
+    if (mbState == MB_STANDBY)
+      mbState = MB_WRITEOUT;
+  }
+  */
 }
 
 // Ins loop

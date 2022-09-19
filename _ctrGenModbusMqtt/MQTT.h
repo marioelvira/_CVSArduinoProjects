@@ -18,7 +18,7 @@ extern "C" {
 
 // MQTT broker credentials
 #define MQTT_BROKER         "sdpelicanos.webhop.me"
-#define MQTT_BROKER_PORT    7000
+#define MQTT_BROKER_PORT    1883 // 7000
 #define MQTT_USERNAME       "sdpelicanos@gmail.com"
 #define MQTT_PASSWORD       "MQTTSup3rP@@sw0rd"
 

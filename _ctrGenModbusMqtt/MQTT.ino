@@ -18,75 +18,94 @@ void mqttDataCallback(char* rtopic, byte* rpayload, unsigned int rlength)
   if (rtopicStr.equals(TOPIC_OON) ||
       rtopicStr.equals(TOPIC_OOFF))
   {
-    // Solo en modo Test
-    if (controlMode == MODE_TEST)
-    {
-    
-      int boardType = 2; // MB
-      int outNum = 0;
-      int outVal = 0;
+    int boardType = 2; // MB
+    int outNum = 0;
+    int outVal = 0;
   
-      // Value
-      if (rtopicStr.equals(TOPIC_OON))
-        outVal = OUT_ON;
-      else
-        outVal = OUT_OFF;
+    // Value
+    if (rtopicStr.equals(TOPIC_OON))
+      outVal = OUT_ON;
+    else
+      outVal = OUT_OFF;
   
-      // mbInBoard 0 - boardType 2 MB
-      if(rpayloadStr.equals("1"))
-        outNum = 0;
-      else if (rpayloadStr.equals("2"))
-        outNum = 1;
-      else if (rpayloadStr.equals("3"))
-        outNum = 2;
-      else if (rpayloadStr.equals("4"))
-        outNum = 3;
-      else if (rpayloadStr.equals("5"))
-        outNum = 4;      
-      else if (rpayloadStr.equals("6"))
-        outNum = 5;
-      else if (rpayloadStr.equals("7"))
-        outNum = 6;
-      else if (rpayloadStr.equals("8"))
-        outNum = 7;
-      // mbInBoard 1 - boardType 2 MB
-      else if (rpayloadStr.equals("11"))
-        outNum = 10;
-      else if (rpayloadStr.equals("12"))
-        outNum = 11;
-      else if (rpayloadStr.equals("13"))
-        outNum = 12;
-      else if (rpayloadStr.equals("14"))
-        outNum = 13;
-      else if (rpayloadStr.equals("15"))
-        outNum = 14;      
-      else if (rpayloadStr.equals("16"))
-        outNum = 15;
-      else if (rpayloadStr.equals("17"))
-        outNum = 16;
-      else if (rpayloadStr.equals("18"))
-        outNum = 17;
+    // mbInBoard 0 - boardType 2 MB
+    if(rpayloadStr.equals("1"))
+      outNum = 0;
+    else if (rpayloadStr.equals("2"))
+      outNum = 1;
+    else if (rpayloadStr.equals("3"))
+      outNum = 2;
+    else if (rpayloadStr.equals("4"))
+      outNum = 3;
+    else if (rpayloadStr.equals("5"))
+      outNum = 4;      
+    else if (rpayloadStr.equals("6"))
+      outNum = 5;
+    else if (rpayloadStr.equals("7"))
+      outNum = 6;
+    else if (rpayloadStr.equals("8"))
+      outNum = 7;
+    // mbInBoard 1 - boardType 2 MB
+    else if (rpayloadStr.equals("11"))
+      outNum = 10;
+    else if (rpayloadStr.equals("12"))
+      outNum = 11;
+    else if (rpayloadStr.equals("13"))
+      outNum = 12;
+    else if (rpayloadStr.equals("14"))
+      outNum = 13;
+    else if (rpayloadStr.equals("15"))
+      outNum = 14;      
+    else if (rpayloadStr.equals("16"))
+      outNum = 15;
+    else if (rpayloadStr.equals("17"))
+      outNum = 16;
+    else if (rpayloadStr.equals("18"))
+      outNum = 17;
         
-      // boardType 1
-      else if (rpayloadStr.equals("41"))
+    // boardType 1
+    else if (rpayloadStr.equals("41"))
+    {
+      boardType = 1;
+      outNum = 0;
+    }
+    else if (rpayloadStr.equals("42"))
+    {
+      boardType = 1; 
+      outNum = 1;
+    }
+    else if (rpayloadStr.equals("43"))
+    {
+      boardType = 1;
+      outNum = 2;
+    }
+    // Error
+    else
+      boardType = 0;  // No board
+
+    // Auto Mode
+    if (controlMode == MODE_AUTO)
+    {
+      // MB Board
+      if (boardType == 2)
       {
-        boardType = 1;
-        outNum = 0;
+        // Only 
+        if (outNum >= 10)
+        {
+          mbOutBoard = 1;
+          mbOutNum = outNum - 10;
+          mbOutVal = outVal;
+
+          if (mbOutVal == OUT_ON)
+            outO1XState[mbOutNum] = STATE_O1X_ON;
+          else
+            outO1XState[mbOutNum] = STATE_O1X_OFF;
+        }
       }
-      else if (rpayloadStr.equals("42"))
-      {
-        boardType = 1; 
-        outNum = 1;
-      }
-      else if (rpayloadStr.equals("43"))
-      {
-        boardType = 1; 
-        outNum = 2;
-      }
-      // Error
-      else
-        boardType = 0;  // No board
-  
+    }
+    // Test Mode
+    else if (controlMode == MODE_TEST)
+    {
       // Board
       if (boardType == 1) // Own
       {
@@ -198,40 +217,42 @@ boolean mqttSubscribe(const char* topicToSubscribe)
 ///////////////
 // MQTT send //
 ///////////////
-void _MQTTSend(void)
+void _MQTTSend(int itopic)
 {
+  char    stopic[50];
   char    spayload[255];
   String  str;
   int     str_len;
 
   str = "{\n";
-
-  str = str + "\"tOn\":\"";
-  str = str + String(timeDay) + "d " + String(timeHour) + " : " + String(timeMin) + " : " + String(timeSec);
-  str = str + "\",\n";
-  /*
-  str = str + "\"ram\":";
-  str = str + String(freeRam);
-  str = str + ",\n";
-  */
-  str = str + "\"ip\":\"";
-  str = str + String(ipAddress.toString());
-  str = str + "\",\n";
-  
-  str = str + "\"al\":\"0x";
-  str = str + String(alarm[0]) + String(alarm[1]) + String(alarm[2]) + String(alarm[3]);
-  str = str + String(alarm[4]) + String(alarm[5]) + String(alarm[6]) + String(alarm[7]);
-  str = str + "\",\n";
-
-  str = str + "\"md\":";
-  str = str + String(controlMode);
-  str = str + ",\n";
   
   /////////////
   // Control //
   /////////////
-  if (controlMode == MODE_AUTO)
+  if (itopic == 0)
   {
+    
+    str = str + "\"tOn\":\"";
+    str = str + String(timeDay) + "d " + String(timeHour) + " : " + String(timeMin) + " : " + String(timeSec);
+    str = str + "\",\n";
+    /*
+    str = str + "\"ram\":";
+    str = str + String(freeRam);
+    str = str + ",\n";
+    */
+    str = str + "\"ip\":\"";
+    str = str + String(ipAddress.toString());
+    str = str + "\",\n";
+    
+    str = str + "\"al\":\"0x";
+    str = str + String(alarm[0]) + String(alarm[1]) + String(alarm[2]) + String(alarm[3]);
+    str = str + String(alarm[4]) + String(alarm[5]) + String(alarm[6]) + String(alarm[7]);
+    str = str + "\",\n";
+  
+    str = str + "\"md\":";
+    str = str + String(controlMode);
+    str = str + ",\n";
+  
     if (OutGen == OUT_OFF)
       str = str + "\"gSt\":0";
     else
@@ -263,7 +284,45 @@ void _MQTTSend(void)
     str = str + "\"adc\":";
     str = str + String(AdcVal);
     str = str + ",\n";
-    /*
+
+  }
+  ///////////////////
+  // Extra Control //
+  ///////////////////
+  else if (itopic == 1)
+  {
+    str = str + "\"i1\":";
+    str = str + String(mbIns[0][0]);
+    str = str + ",\n";
+ 
+    str = str + "\"i2\":";
+    str = str + String(mbIns[1][0]);
+    str = str + ",\n";
+
+    str = str + "\"i3\":";
+    str = str + String(mbIns[2][0]);
+    str = str + ",\n";
+
+    str = str + "\"i4\":";
+    str = str + String(mbIns[3][0]);
+    str = str + ",\n";
+ 
+    str = str + "\"i5\":";
+    str = str + String(mbIns[4][0]);
+    str = str + ",\n";
+ 
+    str = str + "\"i6\":";
+    str = str + String(mbIns[5][0]);
+    str = str + ",\n";
+ 
+    str = str + "\"i7\":";
+    str = str + String(mbIns[6][0]);
+    str = str + ",\n";
+
+    str = str + "\"i8\":";
+    str = str + String(mbIns[7][0]);
+    str = str + ",\n";
+    
     str = str + "\"i11\":";
     str = str + String(mbIns[0][1]);
     str = str + ",\n";
@@ -295,13 +354,11 @@ void _MQTTSend(void)
     str = str + "\"i18\":";
     str = str + String(mbIns[7][1]);
     str = str + ",\n";
-    */
   }
-
   //////////
   // Test //
   //////////
-  if (controlMode == MODE_TEST)
+  else if (itopic == 2)
   {
     /////////
     // IOs //
@@ -350,13 +407,24 @@ void _MQTTSend(void)
   str_len = str.length() + 1;
   str.toCharArray(spayload, str_len);
 
-  if(mqttPublish(TOPIC_STATE, (char*)spayload))
+  if (itopic == 1)
+    str = TOPIC_SINS;
+  else if (itopic == 2)
+    str = TOPIC_TEST;
+  else
+    str = TOPIC_SCTR;
+  
+  str_len = str.length() + 1;
+  str.toCharArray(stopic, str_len);
+
+  //if(mqttPublish(TOPIC_STATE, (char*)spayload))
+  if(mqttPublish((char*)stopic, (char*)spayload))
   {
     #if (_MQTT_SERIAL_DEBUG_ == 1)
     Serial.println("TOPIC_STATE publish was succeeded");
     Serial.println(spayload);
     #endif
-  }  
+  } 
 }
 
 /////////////////
@@ -372,6 +440,7 @@ void _MQTTSetup(void)
   mqttClient.setCallback(mqttDataCallback);
   
   mqttStatus = MQTT_NOT_CONNECTED;
+  mqttPayload = 0;
 }
 
 ////////////////////////
@@ -466,7 +535,12 @@ void _MQTTLoop(void)
         mqttTick = millis();
         
         mqttClient.loop();
-        _MQTTSend();        
+		    _MQTTSend(mqttPayload);
+
+		    mqttPayload++;	
+		    if (mqttPayload > 2)
+		      mqttPayload = 0;
+
       }
       else
       {

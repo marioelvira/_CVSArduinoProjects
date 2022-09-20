@@ -19,6 +19,11 @@ extern "C" {
 #define STATE_GEN_ZUMB      3
 #define STATE_GEN_OFF       4
 
+#define STATE_O1X_STANDBY   0
+#define STATE_O1X_ON        1
+#define STATE_O1X_TOUT_ON   2
+#define STATE_O1X_OFF       3
+
 // Pulsación
 #define NO_PULSACION        0   // x10ms
 #define PULSACION_OK        75  // x10ms

@@ -144,6 +144,8 @@ extern "C" {
 #define EEPROM_VAL_O17_TIMER   	3  	// Horas
 #define EEPROM_VAL_O18_TIMER   	4  	// Horas
 
+#define NUM_O1X_MAX		8
+
 #endif // _E2PROM_H_
 
 #ifdef __cplusplus

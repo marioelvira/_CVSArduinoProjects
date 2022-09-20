@@ -285,14 +285,14 @@ void _readCONFIG (void)
   cfgTimeOutStart = (int)EEPROM.read(EEPROM_ADD_TSTART);       // Secs
   cfgTimeOutStop  = (int)EEPROM.read(EEPROM_ADD_TSTOP);        // Secs
   
-  cfgTimeO11 = (int)EEPROM.read(EEPROM_ADD_O11_TIMER); //*60; // Min
-  cfgTimeO12 = (int)EEPROM.read(EEPROM_ADD_O12_TIMER); //*60; // Min
-  cfgTimeO13 = (int)EEPROM.read(EEPROM_ADD_O13_TIMER); //*60; // Min
-  cfgTimeO14 = (int)EEPROM.read(EEPROM_ADD_O14_TIMER); //*60; // Min
-  cfgTimeO15 = (int)EEPROM.read(EEPROM_ADD_O15_TIMER); //*3600; // Hour
-  cfgTimeO16 = (int)EEPROM.read(EEPROM_ADD_O16_TIMER); //*3600; // Hour
-  cfgTimeO17 = (int)EEPROM.read(EEPROM_ADD_O17_TIMER); //*3600; // Hour
-  cfgTimeO18 = (int)EEPROM.read(EEPROM_ADD_O18_TIMER); //*3600; // Hour
+  cfgTimeO1X[0] = (int)EEPROM.read(EEPROM_ADD_O11_TIMER); //*60; // Min
+  cfgTimeO1X[1] = (int)EEPROM.read(EEPROM_ADD_O12_TIMER); //*60; // Min
+  cfgTimeO1X[2] = (int)EEPROM.read(EEPROM_ADD_O13_TIMER); //*60; // Min
+  cfgTimeO1X[3] = (int)EEPROM.read(EEPROM_ADD_O14_TIMER); //*60; // Min
+  cfgTimeO1X[4] = (int)EEPROM.read(EEPROM_ADD_O15_TIMER); //*3600; // Hour
+  cfgTimeO1X[5] = (int)EEPROM.read(EEPROM_ADD_O16_TIMER); //*3600; // Hour
+  cfgTimeO1X[6] = (int)EEPROM.read(EEPROM_ADD_O17_TIMER); //*3600; // Hour
+  cfgTimeO1X[7] = (int)EEPROM.read(EEPROM_ADD_O18_TIMER); //*3600; // Hour
   
   #if (_EEPROM_SERIAL_DEBUG_ == 1)
   Serial.print("Logic Ins: ");     Serial.println(cfgLogicIns);
@@ -321,14 +321,14 @@ void _readCONFIG (void)
   Serial.print("Time Start: ");  Serial.print (cfgTimeOutStart);  Serial.println(" secs");
   Serial.print("Time Stop: ");   Serial.print (cfgTimeOutStop);   Serial.println(" secs");
   
-  Serial.print("Time O11: ");  Serial.print (cfgTimeO11);  Serial.println(" min");
-  Serial.print("Time O12: ");  Serial.print (cfgTimeO12);  Serial.println(" min");
-  Serial.print("Time O13: ");  Serial.print (cfgTimeO13);  Serial.println(" min");
-  Serial.print("Time O14: ");  Serial.print (cfgTimeO14);  Serial.println(" min");
-  Serial.print("Time O15: ");  Serial.print (cfgTimeO15);  Serial.println(" hour");
-  Serial.print("Time O16: ");  Serial.print (cfgTimeO16);  Serial.println(" hour");
-  Serial.print("Time O17: ");  Serial.print (cfgTimeO17);  Serial.println(" hour");
-  Serial.print("Time O18: ");  Serial.print (cfgTimeO18);  Serial.println(" hour");
+  Serial.print("Time O11: ");  Serial.print (cfgTimeO1X[0]);  Serial.println(" min");
+  Serial.print("Time O12: ");  Serial.print (cfgTimeO1X[1]);  Serial.println(" min");
+  Serial.print("Time O13: ");  Serial.print (cfgTimeO1X[2]);  Serial.println(" min");
+  Serial.print("Time O14: ");  Serial.print (cfgTimeO1X[3]);  Serial.println(" min");
+  Serial.print("Time O15: ");  Serial.print (cfgTimeO1X[4]);  Serial.println(" hour");
+  Serial.print("Time O16: ");  Serial.print (cfgTimeO1X[5]);  Serial.println(" hour");
+  Serial.print("Time O17: ");  Serial.print (cfgTimeO1X[6]);  Serial.println(" hour");
+  Serial.print("Time O18: ");  Serial.print (cfgTimeO1X[7]);  Serial.println(" hour");
   #endif
 }
 

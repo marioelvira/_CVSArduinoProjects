@@ -24,6 +24,8 @@ void _TimeLoop(void)
     if (TimeControlSec != 0)
       TimeControlSec--;
     
+	timeTickSec++;	// Forever
+	
     timeSec++;
     if (timeSec >= 60)
     {

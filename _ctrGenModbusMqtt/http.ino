@@ -384,14 +384,14 @@ void _serveCtrSETTINGS()
   html = html + "<div class=\"section\"><span>3</span>Temps OUTs</div>";
   html = html + "<div class=\"inner-wrap\">";
   
-  html = html + "<label>Tiempo O11 (minutos)<input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgTimeO11) + "\" name=\"timeO11\"/></label>";
-  html = html + "<label>Tiempo O12 (minutos)<input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgTimeO12) + "\" name=\"timeO12\"/></label>";
-  html = html + "<label>Tiempo O13 (minutos)<input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgTimeO13) + "\" name=\"timeO13\"/></label>";
-  html = html + "<label>Tiempo O14 (minutos)<input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgTimeO14) + "\" name=\"timeO14\"/></label>";
-  html = html + "<label>Tiempo O15 (horas)<input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgTimeO15) + "\" name=\"timeO15\"/></label>";
-  html = html + "<label>Tiempo O16 (horas)<input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgTimeO16) + "\" name=\"timeO16\"/></label>";
-  html = html + "<label>Tiempo O17 (horas)<input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgTimeO17) + "\" name=\"timeO17\"/></label>";
-  html = html + "<label>Tiempo O18 (horas)<input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgTimeO18) + "\" name=\"timeO18\"/></label>";
+  html = html + "<label>Tiempo O11 (minutos)<input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgTimeO1X[0]) + "\" name=\"timeO11\"/></label>";
+  html = html + "<label>Tiempo O12 (minutos)<input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgTimeO1X[1]) + "\" name=\"timeO12\"/></label>";
+  html = html + "<label>Tiempo O13 (minutos)<input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgTimeO1X[2]) + "\" name=\"timeO13\"/></label>";
+  html = html + "<label>Tiempo O14 (minutos)<input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgTimeO1X[3]) + "\" name=\"timeO14\"/></label>";
+  html = html + "<label>Tiempo O15 (horas)<input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgTimeO1X[4]) + "\" name=\"timeO15\"/></label>";
+  html = html + "<label>Tiempo O16 (horas)<input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgTimeO1X[5]) + "\" name=\"timeO16\"/></label>";
+  html = html + "<label>Tiempo O17 (horas)<input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgTimeO1X[6]) + "\" name=\"timeO17\"/></label>";
+  html = html + "<label>Tiempo O18 (horas)<input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgTimeO1X[7]) + "\" name=\"timeO18\"/></label>";
 
   html = html + "</div>";   
   html = html + "<div class=\"button-section\">";
@@ -487,14 +487,14 @@ void _setCtrSETTINGS()
     cfgTimeGenerador8P = rtime8.toInt();
     cfgTimeGenerador9P = rtime9.toInt();
     
-    cfgTimeO11 = rtimeO11.toInt();
-	  cfgTimeO12 = rtimeO12.toInt();
-    cfgTimeO13 = rtimeO13.toInt();
-	  cfgTimeO14 = rtimeO14.toInt();
-	  cfgTimeO15 = rtimeO15.toInt();
-	  cfgTimeO16 = rtimeO16.toInt();
-	  cfgTimeO17 = rtimeO17.toInt();
-	  cfgTimeO18 = rtimeO18.toInt();
+    cfgTimeO1X[0] = rtimeO11.toInt();
+	cfgTimeO1X[1] = rtimeO12.toInt();
+    cfgTimeO1X[2] = rtimeO13.toInt();
+	cfgTimeO1X[3] = rtimeO14.toInt();
+	cfgTimeO1X[4] = rtimeO15.toInt();
+	cfgTimeO1X[5] = rtimeO16.toInt();
+	cfgTimeO1X[6] = rtimeO17.toInt();
+	cfgTimeO1X[7] = rtimeO18.toInt();
 
     #if (_HTTP_SERIAL_DEBUG_ == 1)  
     Serial.print("Time 1P: ");  Serial.print (cfgTimeGenerador1P);  Serial.println(" min");
@@ -511,14 +511,14 @@ void _setCtrSETTINGS()
     Serial.print("Time Start: ");  Serial.print (cfgTimeOutStart);  Serial.println(" secs");
     Serial.print("Time Stop: ");   Serial.print (cfgTimeOutStop);  Serial.println(" secs");
   
-    Serial.print("Time O11: ");  Serial.print (cfgTimeO11);  Serial.println(" min");
-	  Serial.print("Time O12: ");  Serial.print (cfgTimeO12);  Serial.println(" min");
-	  Serial.print("Time O13: ");  Serial.print (cfgTimeO13);  Serial.println(" min");
-	  Serial.print("Time O14: ");  Serial.print (cfgTimeO14);  Serial.println(" min");
-	  Serial.print("Time O15: ");  Serial.print (cfgTimeO15);  Serial.println(" hour");
-	  Serial.print("Time O16: ");  Serial.print (cfgTimeO16);  Serial.println(" hour");
-	  Serial.print("Time O17: ");  Serial.print (cfgTimeO17);  Serial.println(" hour");
-	  Serial.print("Time O18: ");  Serial.print (cfgTimeO18);  Serial.println(" hour");
+	  Serial.print("Time O11: ");  Serial.print (cfgTimeO1X[0]);  Serial.println(" min");
+	  Serial.print("Time O12: ");  Serial.print (cfgTimeO1X[1]);  Serial.println(" min");
+	  Serial.print("Time O13: ");  Serial.print (cfgTimeO1X[2]);  Serial.println(" min");
+	  Serial.print("Time O14: ");  Serial.print (cfgTimeO1X[3]);  Serial.println(" min");
+	  Serial.print("Time O15: ");  Serial.print (cfgTimeO1X[4]);  Serial.println(" hour");
+	  Serial.print("Time O16: ");  Serial.print (cfgTimeO1X[5]);  Serial.println(" hour");
+	  Serial.print("Time O17: ");  Serial.print (cfgTimeO1X[6]);  Serial.println(" hour");
+	  Serial.print("Time O18: ");  Serial.print (cfgTimeO1X[7]);  Serial.println(" hour");
     
     #endif   
 
@@ -537,14 +537,14 @@ void _setCtrSETTINGS()
     EEPROM.write(EEPROM_ADD_TSTART,    cfgTimeOutStart);
     EEPROM.write(EEPROM_ADD_TSTOP,     cfgTimeOutStop);
     
-	EEPROM.write(EEPROM_ADD_O11_TIMER,   cfgTimeO11);
-	EEPROM.write(EEPROM_ADD_O12_TIMER,   cfgTimeO12);
-	EEPROM.write(EEPROM_ADD_O13_TIMER,   cfgTimeO13);
-	EEPROM.write(EEPROM_ADD_O14_TIMER,   cfgTimeO14);
-	EEPROM.write(EEPROM_ADD_O15_TIMER,   cfgTimeO15);
-	EEPROM.write(EEPROM_ADD_O16_TIMER,   cfgTimeO16);
-	EEPROM.write(EEPROM_ADD_O17_TIMER,   cfgTimeO17);
-	EEPROM.write(EEPROM_ADD_O18_TIMER,   cfgTimeO18);
+	  EEPROM.write(EEPROM_ADD_O11_TIMER,   cfgTimeO1X[0]);
+	  EEPROM.write(EEPROM_ADD_O12_TIMER,   cfgTimeO1X[1]);
+	  EEPROM.write(EEPROM_ADD_O13_TIMER,   cfgTimeO1X[2]);
+	  EEPROM.write(EEPROM_ADD_O14_TIMER,   cfgTimeO1X[3]);
+	  EEPROM.write(EEPROM_ADD_O15_TIMER,   cfgTimeO1X[4]);
+	  EEPROM.write(EEPROM_ADD_O16_TIMER,   cfgTimeO1X[5]);
+	  EEPROM.write(EEPROM_ADD_O17_TIMER,   cfgTimeO1X[6]);
+	  EEPROM.write(EEPROM_ADD_O18_TIMER,   cfgTimeO1X[7]);
 
     EEPROM.commit();    //Store data to EEPROM
   }

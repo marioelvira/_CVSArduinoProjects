@@ -16,16 +16,21 @@ void _CtrSetup(void)
   // Control
   OutBomba = OUT_OFF;
   OutGen = OUT_OFF;
-  /*
-  Out11 = OUT_OFF;
-  Out12 = OUT_OFF;
-  Out13 = OUT_OFF;
-  Out14 = OUT_OFF;
-  Out15 = OUT_OFF;
-  Out16 = OUT_OFF;
-  Out17 = OUT_OFF;
-  Out18 = OUT_OFF;
-  */
+
+  // Outs Time Setup
+  ctrOTimeSetup();
+}
+
+// Outs Time Setup
+void ctrOTimeSetup(void)
+{
+  int i;
+   
+  for (i = 0; i < NUM_O1X_MAX; i++)
+  {
+    outO1XState[i] = STATE_O1X_STANDBY;
+    outO1XSec[i] = 0;
+  }
 }
 
 ///////////////////////
@@ -48,8 +53,6 @@ void _CtrLoop(void)
       // Indicadores
       OutZumb = OUT_OFF;
       OutDisp = OUT_OFF;
-      // Remote
-      remAct = 0;
     
       TimeControlSec = 0;
       ControlTick = millis();
@@ -122,8 +125,12 @@ void _CtrLoop(void)
       TimeControlSec = 0;
 
       if (millis() - ControlTick >= (cfgTimeOutStop*1000))
+      {
+        // Remote
+        remAct = 0;
         ControlState = STATE_STANDBY;
-
+      }
+      
       break;
 
   }
@@ -133,6 +140,7 @@ void _CtrLoop(void)
   ctrInsLoop();
   ctrPulsLoop();
   ctrLcdLoop();
+  ctrOTimeLoop();
 }
 
 // IOs used in ctr
@@ -193,27 +201,6 @@ void ctrIOsLoop(void)
     if (mbState == MB_STANDBY)
       mbState = MB_WRITEOUT;
   }
-  /* 
-  // General Outs
-  else if (Out11 != mbOuts[0][1])
-  {  
-    mbOutVal = Out11;
-    mbOutBoard = 1;
-    mbOutNum = 0; // O11
-    
-    if (mbState == MB_STANDBY)
-      mbState = MB_WRITEOUT;
-  }
-  else if (Out12 != mbOuts[1][1])
-  {  
-    mbOutVal = Out12;
-    mbOutBoard = 1;
-    mbOutNum = 1; // O11
-    
-    if (mbState == MB_STANDBY)
-      mbState = MB_WRITEOUT;
-  }
-  */
 }
 
 // Ins loop
@@ -414,5 +401,54 @@ void ctrLcdLoop(void) {
     OutB = OUT_OFF;
     OutC = OUT_OFF;
     OutD = OUT_OFF;  
+  }
+}
+
+// Outs Time
+void ctrOTimeLoop(void)
+{
+  int i, minHour;
+
+  for (i = 0; i < NUM_O1X_MAX ; i++)
+  {
+	  if (i < 4) minHour = X_60;
+	  else minHour = X_3600;
+	
+	  switch (outO1XState[i])
+	  {
+      case STATE_O1X_STANDBY:
+        break;
+ 
+	    case STATE_O1X_ON:
+        mbOutBoard = 1;
+        mbOutNum = i;
+        mbOutVal = OUT_ON;
+
+        if (mbState == MB_STANDBY)
+        {
+          mbState = MB_WRITEOUT;
+          outO1XState[i] = STATE_O1X_TOUT_ON;
+          outO1XSec[i] = timeTickSec;
+        }
+        break;
+      
+      case STATE_O1X_TOUT_ON:
+		    if (timeTickSec - outO1XSec[i] >= (cfgTimeO1X[i]*minHour))
+		      outO1XState[i] = STATE_O1X_OFF;
+
+		    break;
+
+      case STATE_O1X_OFF:
+        mbOutBoard = 1;
+        mbOutNum = i;
+        mbOutVal = OUT_OFF;
+
+        if (mbState == MB_STANDBY)
+        {
+          mbState = MB_WRITEOUT;
+          outO1XState[i] = STATE_O1X_STANDBY;
+        }
+        break;
+	  }
   }
 }

@@ -132,6 +132,7 @@ String mqttClientId = "mbMQTT-" + String(ESP.getChipId());
 
 int mqttStatus;
 unsigned long mqttTick = 0;
+int mqttPayload;
 
 //////////
 // Time //
@@ -141,6 +142,8 @@ int timeSec = 0;
 int timeMin = 0;
 int timeHour = 0;
 int timeDay = 0;
+
+int timeTickSec = 0;
 
 //////////
 // mRAM //
@@ -167,16 +170,10 @@ int   OutA;
 int   OutB;
 int   OutC;
 int   OutD;
-/*
-int   Out11;
-int   Out12;
-int   Out13;
-int   Out14;
-int   Out15;
-int   Out16;
-int   Out17;
-int   Out18;
-*/
+
+int	  outO1XState[NUM_O1X_MAX];
+int	  outO1XSec[NUM_O1X_MAX];
+
 //////////////
 // Gen Time //
 //////////////
@@ -255,14 +252,7 @@ int cfgTimeBuzzerOn;
 int cfgTimeOutStart;
 int cfgTimeOutStop;
 
-int	cfgTimeO11;
-int	cfgTimeO12;
-int	cfgTimeO13;
-int	cfgTimeO14;
-int	cfgTimeO15;
-int	cfgTimeO16;
-int	cfgTimeO17;
-int	cfgTimeO18;
+int	cfgTimeO1X[NUM_O1X_MAX];
 
 int X_60 = 60;
 int X_3600 = 3600;

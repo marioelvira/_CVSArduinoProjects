@@ -14,7 +14,7 @@ extern "C" {
 
 #define MQTT_CONNECTION_TIMEOUT   5000  // 5 sec
 #define MQTT_SUBSCRIBE_TIMEOUT    1000  // 1 sec
-#define MQTT_PUBLISH_TIMEOUT      800   // 800 ms
+#define MQTT_PUBLISH_TIMEOUT      500   // 500 ms
 
 // MQTT broker credentials
 #define MQTT_BROKER         "sdpelicanos.webhop.me"
@@ -23,7 +23,9 @@ extern "C" {
 #define MQTT_PASSWORD       "MQTTSup3rP@@sw0rd"
 
 // MQTT Topics
-#define TOPIC_STATE       "sdpelicanos@gmail.com/st"
+#define TOPIC_SCTR        "sdpelicanos@gmail.com/sctr"
+#define TOPIC_SINS        "sdpelicanos@gmail.com/sins"
+#define TOPIC_TEST        "sdpelicanos@gmail.com/test"
 
 #define TOPIC_OON         "sdpelicanos@gmail.com/Oon"
 #define TOPIC_OOFF        "sdpelicanos@gmail.com/Ooff"

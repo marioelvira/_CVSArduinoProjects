@@ -398,9 +398,9 @@ void _MQTTSend(int itopic)
   }
 
   str_len = str.length();
-  str = str + "\"len\":\"";
+  str = str + "\"len\":";
   str = str + String(str_len + 12);
-  str = str + "\"\n";
+  str = str + "\n";
 
   str = str + "}";
 

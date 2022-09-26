@@ -49,6 +49,7 @@ int   InEndVal_ant = 0;
 int   InEndCounter = 0;
 int   InEndState = 0;
 
+int   InGen = 0;
 int   outLed;
 
 /////////
@@ -174,6 +175,8 @@ int   OutD;
 int	  outO1XState[NUM_O1X_MAX];
 int	  outO1XSec[NUM_O1X_MAX];
 
+int   mqttLastCtr;
+
 //////////////
 // Gen Time //
 //////////////
@@ -251,6 +254,7 @@ int cfgTimeGenerador9P;
 int cfgTimeBuzzerOn;
 int cfgTimeOutStart;
 int cfgTimeOutStop;
+int cfgTimeGenAl;
 
 int	cfgTimeO1X[NUM_O1X_MAX];
 

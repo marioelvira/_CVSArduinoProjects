@@ -31,6 +31,21 @@ extern "C" {
  *                        ------------
  */
 
+/*
+Pins used during Boot
+The ESP8266 can be prevented from booting if some pins are pulled LOW or HIGH.
+The following list shows the state of the following pins on BOOT:
+
+ GPIO0: boot failure if pulled LOW
+ GPIO2: pin is high on BOOT, boot failure if pulled LOW
+ GPIO15: boot failure if pulled HIGH
+ GPIO1: pin is high at BOOT, boot failure if pulled LOW
+ GPIO16: pin is high at BOOT
+ GPIO10: pin is high at BOOT
+ GPIO9: pin is high at BOOT
+ GPIO3: pin is high at BOOT
+*/
+
 // PIN definition
 #define PIN_ADC_IN        A0  // Entrada
 

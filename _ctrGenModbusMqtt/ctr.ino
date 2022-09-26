@@ -53,6 +53,9 @@ void _CtrLoop(void)
       // Indicadores
       OutZumb = OUT_OFF;
       OutDisp = OUT_OFF;
+
+      // Alarm reset
+      alarm[AL_ERROR_GEN] = 0;
     
       TimeControlSec = 0;
       ControlTick = millis();
@@ -80,7 +83,14 @@ void _CtrLoop(void)
       // Indicadores
       OutDisp = OUT_ON;
       OutZumb = OUT_OFF;
-             
+
+      // Alarm
+      if (TimeControlSec > cfgTimeGenAl)
+      { 
+        if (InGen == IO_OFF)
+          alarm[AL_ERROR_GEN] = 1;
+      }
+
       if (TimeControlSec <= cfgTimeBuzzerOn)
         ControlState = STATE_GEN_ZUMB;
 
@@ -147,8 +157,9 @@ void _CtrLoop(void)
 void ctrIOsLoop(void)
 {
   // Ins
-  InStartVal= ioInB; // mbIns[0][0];
-  InEndVal  = ioInC; // mbIns[1][0];
+  InStartVal= ioInB;
+  InEndVal  = ioInC;
+  InGen = ioInE;
 
   // Outs
   ioOutA = OutGen;

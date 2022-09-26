@@ -133,18 +133,19 @@ void _readCONFIG (void)
     EEPROM.write(EEPROM_ADD_8P_TIMER_GEN,   EEPROM_VAL_8P_TIMER_GEN);
     EEPROM.write(EEPROM_ADD_9P_TIMER_GEN,   EEPROM_VAL_9P_TIMER_GEN);
 
-    EEPROM.write(EEPROM_ADD_BUZZER_ON, EEPROM_VAL_BUZZER_ON);
-    EEPROM.write(EEPROM_ADD_TSTART,    EEPROM_VAL_TSTART);
-    EEPROM.write(EEPROM_ADD_TSTOP,     EEPROM_VAL_TSTOP);
+    EEPROM.write(EEPROM_ADD_BUZZER_ON,  EEPROM_VAL_BUZZER_ON);
+    EEPROM.write(EEPROM_ADD_TSTART,     EEPROM_VAL_TSTART);
+    EEPROM.write(EEPROM_ADD_TSTOP,      EEPROM_VAL_TSTOP);
+    EEPROM.write(EEPROM_ADD_GEN_AL,     EEPROM_VAL_GEN_AL);
     
     EEPROM.write(EEPROM_ADD_O11_TIMER,   EEPROM_VAL_O11_TIMER);
-	EEPROM.write(EEPROM_ADD_O12_TIMER,   EEPROM_VAL_O12_TIMER);
-	EEPROM.write(EEPROM_ADD_O13_TIMER,   EEPROM_VAL_O13_TIMER);
-	EEPROM.write(EEPROM_ADD_O14_TIMER,   EEPROM_VAL_O14_TIMER);
-	EEPROM.write(EEPROM_ADD_O15_TIMER,   EEPROM_VAL_O15_TIMER);
-	EEPROM.write(EEPROM_ADD_O16_TIMER,   EEPROM_VAL_O16_TIMER);
-	EEPROM.write(EEPROM_ADD_O17_TIMER,   EEPROM_VAL_O17_TIMER);
-	EEPROM.write(EEPROM_ADD_O18_TIMER,   EEPROM_VAL_O18_TIMER);
+	  EEPROM.write(EEPROM_ADD_O12_TIMER,   EEPROM_VAL_O12_TIMER);
+	  EEPROM.write(EEPROM_ADD_O13_TIMER,   EEPROM_VAL_O13_TIMER);
+	  EEPROM.write(EEPROM_ADD_O14_TIMER,   EEPROM_VAL_O14_TIMER);
+	  EEPROM.write(EEPROM_ADD_O15_TIMER,   EEPROM_VAL_O15_TIMER);
+	  EEPROM.write(EEPROM_ADD_O16_TIMER,   EEPROM_VAL_O16_TIMER);
+	  EEPROM.write(EEPROM_ADD_O17_TIMER,   EEPROM_VAL_O17_TIMER);
+	  EEPROM.write(EEPROM_ADD_O18_TIMER,   EEPROM_VAL_O18_TIMER);
     
     EEPROM.commit();    //Store data to EEPROM
   }
@@ -284,6 +285,7 @@ void _readCONFIG (void)
   cfgTimeBuzzerOn = (int)EEPROM.read(EEPROM_ADD_BUZZER_ON);    // Secs
   cfgTimeOutStart = (int)EEPROM.read(EEPROM_ADD_TSTART);       // Secs
   cfgTimeOutStop  = (int)EEPROM.read(EEPROM_ADD_TSTOP);        // Secs
+  cfgTimeGenAl    = (int)EEPROM.read(EEPROM_ADD_GEN_AL);       // Secs
   
   cfgTimeO1X[0] = (int)EEPROM.read(EEPROM_ADD_O11_TIMER); //*60; // Min
   cfgTimeO1X[1] = (int)EEPROM.read(EEPROM_ADD_O12_TIMER); //*60; // Min
@@ -317,10 +319,11 @@ void _readCONFIG (void)
   Serial.print("Time 8P: ");  Serial.print (cfgTimeGenerador8P);  Serial.println(" hour");
   Serial.print("Time 9P: ");  Serial.print (cfgTimeGenerador9P);  Serial.println(" hour");
 
-  Serial.print("Time Buzzer: "); Serial.print (cfgTimeBuzzerOn);  Serial.println(" secs");
-  Serial.print("Time Start: ");  Serial.print (cfgTimeOutStart);  Serial.println(" secs");
-  Serial.print("Time Stop: ");   Serial.print (cfgTimeOutStop);   Serial.println(" secs");
-  
+  Serial.print("Time Buzzer: ");  Serial.print (cfgTimeBuzzerOn);  Serial.println(" secs");
+  Serial.print("Time Start: ");   Serial.print (cfgTimeOutStart);  Serial.println(" secs");
+  Serial.print("Time Stop: ");    Serial.print (cfgTimeOutStop);   Serial.println(" secs");
+  Serial.print("Time Gen Al: ");  Serial.print (cfgTimeGenAl);     Serial.println(" secs");
+    
   Serial.print("Time O11: ");  Serial.print (cfgTimeO1X[0]);  Serial.println(" min");
   Serial.print("Time O12: ");  Serial.print (cfgTimeO1X[1]);  Serial.println(" min");
   Serial.print("Time O13: ");  Serial.print (cfgTimeO1X[2]);  Serial.println(" min");

@@ -147,29 +147,27 @@ void mqttDataCallback(char* rtopic, byte* rpayload, unsigned int rlength)
 
   else if (rtopicStr.equals(TOPIC_GENON))
   {
-    if(rpayloadStr.equals("1"))
+    if(rpayloadStr.equals("0"))
+    {}
+    else
     {
+      mqttLastCtr = rpayloadStr.toInt();
       InStartState = PULSACION_OK;
       remAct = 1;
     }
   }
   else if (rtopicStr.equals(TOPIC_GENOFF))
   {
-    if(rpayloadStr.equals("1"))
+    
+    if(rpayloadStr.equals("0"))
+    {}
+    else
+    {
+      mqttLastCtr = rpayloadStr.toInt();
       InEndState = PULSACION_OK;
+    }
   }
-  /*
-  else if (rtopicStr.equals(TOPIC_LUZCTR))
-  {
-    if(rpayloadStr.equals("1"))
-    {}
-  }
-  else if (rtopicStr.equals(TOPIC_LUZSTOP))
-  {
-    if(rpayloadStr.equals("1"))
-    {}
-  }
-  */
+  
   // Watchdog
   else if (rtopicStr.equals(TOPIC_WATCHDOG))
   {
@@ -252,7 +250,11 @@ void _MQTTSend(int itopic)
     str = str + "\"md\":";
     str = str + String(controlMode);
     str = str + ",\n";
-  
+
+    str = str + "\"us\":";
+    str = str + String(mqttLastCtr);
+    str = str + ",\n";
+ 
     if (OutGen == OUT_OFF)
       str = str + "\"gSt\":0";
     else

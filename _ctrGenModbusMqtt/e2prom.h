@@ -71,20 +71,21 @@ extern "C" {
 #define EEPROM_ADD_BUZZER_ON      0xAE
 #define EEPROM_ADD_TSTART         0xAF
 #define EEPROM_ADD_TSTOP          0xB0
+#define EEPROM_ADD_GEN_AL         0xB1
 
-#define EEPROM_ADD_O11_TIMER   	0xB1
-#define EEPROM_ADD_O12_TIMER   	0xB2
-#define EEPROM_ADD_O13_TIMER   	0xB3
-#define EEPROM_ADD_O14_TIMER   	0xB4
-#define EEPROM_ADD_O15_TIMER   	0xB5
-#define EEPROM_ADD_O16_TIMER   	0xB6
-#define EEPROM_ADD_O17_TIMER   	0xB7
-#define EEPROM_ADD_O18_TIMER   	0xB8
+#define EEPROM_ADD_O11_TIMER   	0xB2
+#define EEPROM_ADD_O12_TIMER   	0xB3
+#define EEPROM_ADD_O13_TIMER   	0xB4
+#define EEPROM_ADD_O14_TIMER   	0xB5
+#define EEPROM_ADD_O15_TIMER   	0xB6
+#define EEPROM_ADD_O16_TIMER   	0xB7
+#define EEPROM_ADD_O17_TIMER   	0xB8
+#define EEPROM_ADD_O18_TIMER   	0xB9
 
 //#define EEPROM_ADD_MAX          0xFA // 250
 
 // Values
-#define EEPROM_VAL_OK             0xA1
+#define EEPROM_VAL_OK             0xA0
 
 #define EEPROM_VAL_IP_MODE        DHCP_MODE
 #define EEPROM_VAL_IP1            192
@@ -134,6 +135,7 @@ extern "C" {
 #define EEPROM_VAL_BUZZER_ON      10  // Secs
 #define EEPROM_VAL_TSTART         10  // Secs
 #define EEPROM_VAL_TSTOP          20  // Secs
+#define EEPROM_VAL_GEN_AL         30  // Secs
 
 #define EEPROM_VAL_O11_TIMER   	10  // Min
 #define EEPROM_VAL_O12_TIMER   	20  // Min

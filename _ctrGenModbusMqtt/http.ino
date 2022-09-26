@@ -365,6 +365,7 @@ void _serveCtrSETTINGS()
   html = html + "<label>Tiempo Buzzer (segundos)<input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgTimeBuzzerOn) + "\" name=\"timeBZ\"/></label>";
   html = html + "<label>Tiempo Start (segundos)<input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgTimeOutStart) + "\" name=\"timeStart\"/></label>";
   html = html + "<label>Tiempo Stop (segundos)<input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgTimeOutStop) + "\" name=\"timeStop\"/></label>";
+  html = html + "<label>Tiempo Gen Alarma (segundos)<input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgTimeGenAl) + "\" name=\"timeGenAl\"/></label>";
   
   html = html + "</div>";
   html = html + "<div class=\"section\"><span>2</span>Temps Generador</div>";
@@ -419,7 +420,8 @@ void _setCtrSETTINGS()
   String rtimeBZ = httpServer.arg("timeBZ");
   String rtimeStart = httpServer.arg("timeStart");
   String rtimeStop = httpServer.arg("timeStop");
-  
+  String rtimeGenAl = httpServer.arg("timeGenAl");
+    
   String rtime1 = httpServer.arg("time1");
   String rtime2 = httpServer.arg("time2");
   String rtime3 = httpServer.arg("time3");
@@ -444,6 +446,7 @@ void _setCtrSETTINGS()
   if ((rtimeBZ.length() == 0)    ||
       (rtimeStart.length() == 0) ||
       (rtimeStop.length() == 0)  ||
+      (rtimeGenAl.length() == 0)  ||
 	  
       (rtime1.length() == 0)  ||
       (rtime2.length() == 0)  ||
@@ -476,7 +479,8 @@ void _setCtrSETTINGS()
     cfgTimeBuzzerOn = rtimeBZ.toInt();
     cfgTimeOutStart = rtimeStart.toInt();
     cfgTimeOutStop = rtimeStop.toInt();
-    
+    cfgTimeGenAl = rtimeGenAl.toInt();
+
     cfgTimeGenerador1P = rtime1.toInt();
     cfgTimeGenerador2P = rtime2.toInt();
     cfgTimeGenerador3P = rtime3.toInt();
@@ -488,13 +492,13 @@ void _setCtrSETTINGS()
     cfgTimeGenerador9P = rtime9.toInt();
     
     cfgTimeO1X[0] = rtimeO11.toInt();
-	cfgTimeO1X[1] = rtimeO12.toInt();
+	  cfgTimeO1X[1] = rtimeO12.toInt();
     cfgTimeO1X[2] = rtimeO13.toInt();
-	cfgTimeO1X[3] = rtimeO14.toInt();
-	cfgTimeO1X[4] = rtimeO15.toInt();
-	cfgTimeO1X[5] = rtimeO16.toInt();
-	cfgTimeO1X[6] = rtimeO17.toInt();
-	cfgTimeO1X[7] = rtimeO18.toInt();
+	  cfgTimeO1X[3] = rtimeO14.toInt();
+	  cfgTimeO1X[4] = rtimeO15.toInt();
+	  cfgTimeO1X[5] = rtimeO16.toInt();
+	  cfgTimeO1X[6] = rtimeO17.toInt();
+	  cfgTimeO1X[7] = rtimeO18.toInt();
 
     #if (_HTTP_SERIAL_DEBUG_ == 1)  
     Serial.print("Time 1P: ");  Serial.print (cfgTimeGenerador1P);  Serial.println(" min");
@@ -507,9 +511,10 @@ void _setCtrSETTINGS()
     Serial.print("Time 8P: ");  Serial.print (cfgTimeGenerador8P);  Serial.println(" hour");
     Serial.print("Time 9P: ");  Serial.print (cfgTimeGenerador9P);  Serial.println(" hour");
 
-    Serial.print("Time Buzzer: "); Serial.print (cfgTimeBuzzerOn);  Serial.println(" secs");
-    Serial.print("Time Start: ");  Serial.print (cfgTimeOutStart);  Serial.println(" secs");
-    Serial.print("Time Stop: ");   Serial.print (cfgTimeOutStop);  Serial.println(" secs");
+    Serial.print("Time Buzzer: ");  Serial.print (cfgTimeBuzzerOn);  Serial.println(" secs");
+    Serial.print("Time Start: ");   Serial.print (cfgTimeOutStart);  Serial.println(" secs");
+    Serial.print("Time Stop: ");    Serial.print (cfgTimeOutStop);   Serial.println(" secs");
+    Serial.print("Time Gen Al: ");  Serial.print (cfgTimeGenAl);     Serial.println(" secs");
   
 	  Serial.print("Time O11: ");  Serial.print (cfgTimeO1X[0]);  Serial.println(" min");
 	  Serial.print("Time O12: ");  Serial.print (cfgTimeO1X[1]);  Serial.println(" min");
@@ -536,7 +541,8 @@ void _setCtrSETTINGS()
     EEPROM.write(EEPROM_ADD_BUZZER_ON, cfgTimeBuzzerOn);
     EEPROM.write(EEPROM_ADD_TSTART,    cfgTimeOutStart);
     EEPROM.write(EEPROM_ADD_TSTOP,     cfgTimeOutStop);
-    
+    EEPROM.write(EEPROM_ADD_GEN_AL,    cfgTimeGenAl);
+        
 	  EEPROM.write(EEPROM_ADD_O11_TIMER,   cfgTimeO1X[0]);
 	  EEPROM.write(EEPROM_ADD_O12_TIMER,   cfgTimeO1X[1]);
 	  EEPROM.write(EEPROM_ADD_O13_TIMER,   cfgTimeO1X[2]);

@@ -239,6 +239,7 @@ int cfgADCb;
 int cfgADCp;
 int cfgADCs;
 int cfgADCf;
+int cfgADCal;
 
 // Control
 int cfgTimeGenerador1P;

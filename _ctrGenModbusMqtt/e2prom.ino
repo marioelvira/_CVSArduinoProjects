@@ -119,8 +119,9 @@ void _readCONFIG (void)
     EEPROM.write(EEPROM_ADD_ADC_P_LO, eeprom_value_lo);
     eeprom_value_hi = (EEPROM_VAL_ADC_P & 0xFF00)>>8;
     EEPROM.write(EEPROM_ADD_ADC_P_HI, eeprom_value_hi);   
-    EEPROM.write(EEPROM_ADD_ADC_S, EEPROM_VAL_ADC_S);
-    EEPROM.write(EEPROM_ADD_ADC_F, EEPROM_VAL_ADC_F);
+    EEPROM.write(EEPROM_ADD_ADC_S,  EEPROM_VAL_ADC_S);
+    EEPROM.write(EEPROM_ADD_ADC_F,  EEPROM_VAL_ADC_F);
+    EEPROM.write(EEPROM_ADD_ADC_AL, EEPROM_VAL_ADC_AL);
 
     // Control
     EEPROM.write(EEPROM_ADD_1P_TIMER_GEN,   EEPROM_VAL_1P_TIMER_GEN);
@@ -271,7 +272,8 @@ void _readCONFIG (void)
   cfgADCp           = (int)((eeprom_value_hi & 0x00FF)<<8)|(eeprom_value_lo & 0x00FF); 
   cfgADCs           = (int)EEPROM.read(EEPROM_ADD_ADC_S);
   cfgADCf           = (int)EEPROM.read(EEPROM_ADD_ADC_F);
-
+  cfgADCal          = (int)EEPROM.read(EEPROM_ADD_ADC_AL);
+ 
   cfgTimeGenerador1P = (int)EEPROM.read(EEPROM_ADD_1P_TIMER_GEN); //*60; // Min
   cfgTimeGenerador2P = (int)EEPROM.read(EEPROM_ADD_2P_TIMER_GEN); //*60; // Min
   cfgTimeGenerador3P = (int)EEPROM.read(EEPROM_ADD_3P_TIMER_GEN); //*60; // Min
@@ -307,6 +309,7 @@ void _readCONFIG (void)
   Serial.print("ADC p: ");         Serial.print (cfgADCp);            Serial.println(" ");
   Serial.print("ADC s: ");         Serial.print (cfgADCs);            Serial.println(" +/-  1/0");
   Serial.print("ADC f: ");         Serial.print (cfgADCf);            Serial.println(" si/no 1/0");
+  Serial.print("ADC Al: ");        Serial.print (cfgADCal);           Serial.println(" x10");
 
   // Control
   Serial.print("Time 1P: ");  Serial.print (cfgTimeGenerador1P);  Serial.println(" min");

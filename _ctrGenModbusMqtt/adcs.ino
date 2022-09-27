@@ -18,9 +18,11 @@ void _ADCSetup()
 // Nota: Se ejecuta dentro de _TimeLoop
 void _ADCLoop()
 {
-  if (cfgADCf == 1)
+  float adcAl;
+      
+  if (cfgADCf & 0x01)
   {
-    int   adcAcc = 0;
+    int     adcAcc = 0;
     
     AdcInArray[AdcInPointer] = analogRead(PIN_ADC_IN);
     AdcInPointer++;
@@ -40,4 +42,22 @@ void _ADCLoop()
     AdcVal = (float)AdcIn*((float)cfgADCm)/(float)cfgADCp - (float)cfgADCb/1000;
   else
     AdcVal = (float)AdcIn*((float)cfgADCm)/(float)cfgADCp + (float)cfgADCb/1000;
+
+  // Alarm
+  adcAl = (float)(cfgADCal)/10;
+  
+  if (cfgADCf & 0x02)
+  {
+    if (AdcVal > adcAl)
+      alarm[AL_ERROR_ADC] = 1;
+    else
+      alarm[AL_ERROR_ADC] = 0;
+  }
+  else
+  {
+    if (AdcVal < adcAl)
+      alarm[AL_ERROR_ADC] = 1;
+    else
+      alarm[AL_ERROR_ADC] = 0;    
+  }
 }

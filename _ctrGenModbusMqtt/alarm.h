@@ -10,6 +10,7 @@ extern "C" {
 #define AL_ERROR_MB1      0
 #define AL_ERROR_MB2      1
 #define AL_ERROR_GEN      2
+#define AL_ERROR_ADC      3
 
 #endif // _ALARM_H_
 

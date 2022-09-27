@@ -56,31 +56,32 @@ extern "C" {
 #define EEPROM_ADD_ADC_P_HI       0xA2
 #define EEPROM_ADD_ADC_S          0xA3
 #define EEPROM_ADD_ADC_F          0xA4
+#define EEPROM_ADD_ADC_AL         0xA5
 
 // Control
-#define EEPROM_ADD_1P_TIMER_GEN   0xA5
-#define EEPROM_ADD_2P_TIMER_GEN   0xA6
-#define EEPROM_ADD_3P_TIMER_GEN   0xA7
-#define EEPROM_ADD_4P_TIMER_GEN   0xA8
-#define EEPROM_ADD_5P_TIMER_GEN   0xA9
-#define EEPROM_ADD_6P_TIMER_GEN   0xAA
-#define EEPROM_ADD_7P_TIMER_GEN   0xAB
-#define EEPROM_ADD_8P_TIMER_GEN   0xAC
-#define EEPROM_ADD_9P_TIMER_GEN   0xAD
+#define EEPROM_ADD_1P_TIMER_GEN   0xA6
+#define EEPROM_ADD_2P_TIMER_GEN   0xA7
+#define EEPROM_ADD_3P_TIMER_GEN   0xA8
+#define EEPROM_ADD_4P_TIMER_GEN   0xA9
+#define EEPROM_ADD_5P_TIMER_GEN   0xAA
+#define EEPROM_ADD_6P_TIMER_GEN   0xAB
+#define EEPROM_ADD_7P_TIMER_GEN   0xAC
+#define EEPROM_ADD_8P_TIMER_GEN   0xAD
+#define EEPROM_ADD_9P_TIMER_GEN   0xAE
 
-#define EEPROM_ADD_BUZZER_ON      0xAE
-#define EEPROM_ADD_TSTART         0xAF
-#define EEPROM_ADD_TSTOP          0xB0
-#define EEPROM_ADD_GEN_AL         0xB1
+#define EEPROM_ADD_BUZZER_ON      0xAF
+#define EEPROM_ADD_TSTART         0xB0
+#define EEPROM_ADD_TSTOP          0xB1
+#define EEPROM_ADD_GEN_AL         0xB2
 
-#define EEPROM_ADD_O11_TIMER   	0xB2
-#define EEPROM_ADD_O12_TIMER   	0xB3
-#define EEPROM_ADD_O13_TIMER   	0xB4
-#define EEPROM_ADD_O14_TIMER   	0xB5
-#define EEPROM_ADD_O15_TIMER   	0xB6
-#define EEPROM_ADD_O16_TIMER   	0xB7
-#define EEPROM_ADD_O17_TIMER   	0xB8
-#define EEPROM_ADD_O18_TIMER   	0xB9
+#define EEPROM_ADD_O11_TIMER   	0xB3
+#define EEPROM_ADD_O12_TIMER   	0xB4
+#define EEPROM_ADD_O13_TIMER   	0xB5
+#define EEPROM_ADD_O14_TIMER   	0xB6
+#define EEPROM_ADD_O15_TIMER   	0xB7
+#define EEPROM_ADD_O16_TIMER   	0xB8
+#define EEPROM_ADD_O17_TIMER   	0xB9
+#define EEPROM_ADD_O18_TIMER   	0xBA
 
 //#define EEPROM_ADD_MAX          0xFA // 250
 
@@ -118,8 +119,9 @@ extern "C" {
 #define EEPROM_VAL_ADC_M          153
 #define EEPROM_VAL_ADC_B          0
 #define EEPROM_VAL_ADC_P          10000
-#define EEPROM_VAL_ADC_S          0   // +/-  1/0
-#define EEPROM_VAL_ADC_F          0   // si/no 1/0
+#define EEPROM_VAL_ADC_S          0     // +/-  1/0
+#define EEPROM_VAL_ADC_F          0     // si/no 1/0
+#define EEPROM_VAL_ADC_AL         120   // 12.0
 
 // Control
 #define EEPROM_VAL_1P_TIMER_GEN   15  // Min

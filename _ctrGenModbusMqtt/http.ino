@@ -187,7 +187,8 @@ void _serveTimeSETTINGS()
   html = html + "<label>ADC recta:b (/1000)<input type=\"text\"  maxlength=\"16\" value=\"" + String((int)cfgADCb) + "\" name=\"rADCb\"/></label>";
   html = html + "<label>ADC recta:prscal <input type=\"text\"  maxlength=\"16\" value=\"" + String((int)cfgADCp) + "\" name=\"rADCp\"/></label>";
   html = html + "<label>ADC signo (+/-  1/0)<input type=\"text\"  maxlength=\"16\" value=\"" + String((int)cfgADCs) + "\" name=\"rADCs\"/></label>";
-  html = html + "<label>ADC filtro (si/no 1/0)<input type=\"text\"  maxlength=\"16\" value=\"" + String((int)cfgADCf) + "\" name=\"rADCf\"/></label>";
+  html = html + "<label>ADC Config <input type=\"text\"  maxlength=\"16\" value=\"" + String((int)cfgADCf) + "\" name=\"rADCf\"/></label>";
+  html = html + "<label>ADC Alarm (/10)<input type=\"text\"  maxlength=\"16\" value=\"" + String((int)cfgADCal) + "\" name=\"rADCal\"/></label>";
   html = html + "</div>";
   
   html = html + "<div class=\"section\"><span>3</span>Modbus</div>";
@@ -232,6 +233,7 @@ void _setTimeSETTINGS()
   String rADCp       = httpServer.arg("rADCp");
   String rADCs       = httpServer.arg("rADCs");
   String rADCf       = httpServer.arg("rADCf");
+  String rADCal      = httpServer.arg("rADCal");
   
   //String rdebugVal = httpServer.arg("tdebugVal");
   
@@ -245,7 +247,8 @@ void _setTimeSETTINGS()
       (rADCb.length() == 0)       ||
       (rADCp.length() == 0)       ||
       (rADCs.length() == 0)       ||
-      (rADCf.length() == 0))
+      (rADCf.length() == 0)       ||
+      (rADCal.length() == 0))
       //(rdebugVal.length() == 0))
   {
     error = 1;  // falta un campo...
@@ -261,11 +264,12 @@ void _setTimeSETTINGS()
     cfgLogicOuts = rcfgOuts.toInt();
     cfgMB1Add    = rcfgMb1add.toInt();
     cfgMB2Add    = rcfgMb2add.toInt();
-    cfgADCm = rADCm.toInt();
-    cfgADCb = rADCb.toInt();
-    cfgADCp = rADCp.toInt();
-    cfgADCs = rADCs.toInt();
-    cfgADCf = rADCf.toInt();
+    cfgADCm  = rADCm.toInt();
+    cfgADCb  = rADCb.toInt();
+    cfgADCp  = rADCp.toInt();
+    cfgADCs  = rADCs.toInt();
+    cfgADCf  = rADCf.toInt();
+    cfgADCal = rADCal.toInt();
     
     //DebugVal = rdebugVal.toInt();
     
@@ -302,10 +306,9 @@ void _setTimeSETTINGS()
     EEPROM.write(EEPROM_ADD_ADC_P_LO, eeprom_value_lo);
     eeprom_value_hi = (cfgADCp & 0xFF00)>>8;
     EEPROM.write(EEPROM_ADD_ADC_P_HI, eeprom_value_hi);
-    EEPROM.write(EEPROM_ADD_ADC_S,        (byte)cfgADCs);
-    EEPROM.write(EEPROM_ADD_ADC_F,        (byte)cfgADCf);
-    
-    //EEPROM.write(EEPROM_ADD_DEBUG,      (byte)DebugVal);
+    EEPROM.write(EEPROM_ADD_ADC_S,  (byte)cfgADCs);
+    EEPROM.write(EEPROM_ADD_ADC_F,  (byte)cfgADCf);
+    EEPROM.write(EEPROM_ADD_ADC_AL, (byte)cfgADCal);
 
     EEPROM.commit();    //Store data to EEPROM
   }

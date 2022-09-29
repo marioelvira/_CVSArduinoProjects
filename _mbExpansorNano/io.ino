@@ -8,7 +8,7 @@ void _IOSetup()
   OutPin[0] = PIN_OUT0;
   OutPin[1] = PIN_OUT1;
   OutPin[2] = PIN_OUT2;
-  OutPin[3] = PIN_OUT3;
+  //OutPin[3] = PIN_OUT3;
 
   // No bigger than IN_NUMBER
   InPin[0] = PIN_IN0;

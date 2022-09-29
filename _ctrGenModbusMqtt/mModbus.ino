@@ -65,8 +65,8 @@ void _mbCRC(void)
 { 
   char  ucCRCHi = 0xFF;
   char  ucCRCLo = 0xFF;
-  int   iIndex;
-  int   tmpChar;
+  byte  iIndex;
+  byte  stmpChar;
   int   sizeFrame = mrs485TxNumBytes - (int)CRCSIZE;
   
   for (int i=0; i<sizeFrame; i++)

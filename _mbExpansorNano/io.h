@@ -21,7 +21,7 @@ extern "C" {
  *                   D16 -| A2        D7 |-                 -> OUT0
  *                   D17 -| A3        D6 |- (PWM)           -> OUT1
  *               SDA/D18 -| A4        D5 |- (PWM)           -> OUT2
- *               SCL/D19 -| A5        D4 |-                 -> OUT3
+ *               SCL/D19 -| A5        D4 |-                 -> RS485_RXTX // 0OUT3
  *                   D20 -| A6  [  ]  D3 |- INT1 (PWM)      <- INT1 
  *                   D21 -| A7  ****  D2 |- INT0            <- INT0
  *                    5V -| 5V       GND |- GND  
@@ -51,12 +51,14 @@ extern "C" {
 //#define PIN_ADC7     A7
 
 // OUTs
-#define OUT_NUMBER      4
+#define OUT_NUMBER      3 //4
 
 #define PIN_OUT0        4
 #define PIN_OUT1        5
 #define PIN_OUT2        6
-#define PIN_OUT3        7
+//#define PIN_OUT3      7
+
+#define PIN_RS485_RXTX  7
 
 // INs
 #define IN_NUMBER       2

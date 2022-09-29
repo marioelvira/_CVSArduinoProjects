@@ -8,8 +8,9 @@
 #include "io.h"
 #include "intisr.h"
 #include "main.h"
+#include "mModbus.h"
 #include "mRAM.h"
-#include "mUart.h"
+#include "mRS485.h"
 #include "wde.h"
 
 /////////////
@@ -79,22 +80,41 @@ int cfgADCf[ADC_NUMBER];
 /////////
 // ISR //
 /////////
-//int inPulseD2 = 0;
-#define _SEC_TO_RPM_  60000
-
+/*
+unsigned long   inPulseD2 = 0;
+unsigned long   inPulseAntD2 = 0;
+unsigned long   pulsesD2;
+*/
 unsigned long   inPulseD3 = 0;
 unsigned long   inPulseAntD3 = 0;
 unsigned long   pulsesD3;
+
+#define _SEC_TO_RPM_  60000
 unsigned long   RpmCounterD3 = 0;
 unsigned long   RpmTickD3 = 0;
 unsigned long   RpmPeriodD3 = 0;
 
 ///////////
-// MUART //
+// RS485 //
 ///////////
-#if (_USE_MUART_ == 1)
-String uartBuffer = "";
-bool uartCMD;
+#if (_USE_RS485_ == 1)
+// RS485
+int             mrs485State;
+String          mrs485RxBuffer = "";
+unsigned long   mrs485tick;
+char            mrs485TxBuffer[MRS485_ARRAY_SIZE];
+int             mrs485TxNumBytes;
+
+int             OutRS485rxtx;
+
+////////////
+// Modbus //
+////////////
+#if (_USE_MB_ == 1)
+int             mbState;
+unsigned long   mbTick;
+byte            mbCRC[2];
+#endif
 #endif
 
 //////////
@@ -132,6 +152,12 @@ void _PINSetup(void)
     digitalWrite(OutPin[i], PIN_OUT_OFF);
     OutDig[i] = 0;
   }
+
+  #if (_USE_RS485_ == 1)
+  pinMode(PIN_RS485_RXTX, OUTPUT);
+  digitalWrite(PIN_RS485_RXTX, HIGH);
+  OutRS485rxtx = OUT_RS485_RX;
+  #endif
 
   //-----//
   // INS //
@@ -174,12 +200,19 @@ void setup(void)
   // Time Setup
   _TimeSetup();
 
+  #if (_USE_RS485_ == 1)
+  _RS485Setup();
+  #if (_USE_MB_ == 1)
+  _MBSetup();
+  #endif
+  #endif
+
   // Ctr setup
   //_CtrSetup();
 
-#if (_USE_WDE_ == 1)
+  #if (_USE_WDE_ == 1)
   _WDESetup();
-#endif
+  #endif
 }
 
 ///////////////////////
@@ -208,12 +241,18 @@ void _PINLoop()
       digitalWrite(OutPin[i], PIN_OUT_OFF);
   }
 
+  #if (_USE_RS485_ == 1)
+  if (OutRS485rxtx == OUT_RS485_RX)
+    digitalWrite(PIN_RS485_RXTX, LOW);
+  else
+    digitalWrite(PIN_RS485_RXTX, HIGH);
+  #endif
+
   //-----//
   // INS //
   //-----//
   for (i = 0; i < IN_NUMBER; i++)
   {
-    //if (digitalRead(PIN_IN0) == PIN_IN_OFF)
     if (digitalRead(InPin[i]) == PIN_IN_OFF)
       InDig[i] = IO_OFF;
     else
@@ -236,7 +275,10 @@ void loop()
 
   _TimeLoop();
 
-  #if (_USE_MUART_ == 1)
-  _MUARTLoop();
+  #if (_USE_RS485_ == 1)
+  _RS485Loop();
+  #if (_USE_MB_ == 1)
+  _MBLoop();
+  #endif
   #endif
 }

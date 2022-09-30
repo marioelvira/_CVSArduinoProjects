@@ -80,16 +80,16 @@ int cfgADCf[ADC_NUMBER];
 /////////
 // ISR //
 /////////
-/*
 unsigned long   inPulseD2 = 0;
 unsigned long   inPulseAntD2 = 0;
 unsigned long   pulsesD2;
-*/
+unsigned long   RpmCounterD2 = 0;
+unsigned long   RpmTickD2 = 0;
+unsigned long   RpmPeriodD2 = 0;
+
 unsigned long   inPulseD3 = 0;
 unsigned long   inPulseAntD3 = 0;
 unsigned long   pulsesD3;
-
-#define _SEC_TO_RPM_  60000
 unsigned long   RpmCounterD3 = 0;
 unsigned long   RpmTickD3 = 0;
 unsigned long   RpmPeriodD3 = 0;

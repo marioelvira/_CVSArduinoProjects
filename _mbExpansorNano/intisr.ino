@@ -4,11 +4,10 @@
 ////////////////////
 void _INTISRsSetup()
 {
-  /*
   RpmTickD2 = millis();
   RpmCounterD2 = 0;
   attachInterrupt(digitalPinToInterrupt(2), interruptD2, RISING);
-  */
+
   RpmTickD3 = millis();
   RpmCounterD3 = 0;
   attachInterrupt(digitalPinToInterrupt(3), interruptD3, RISING);
@@ -19,14 +18,15 @@ void _INTISRsSetup()
 ///////////////////////////
 void _INTISRsLoop()
 {
-  /*
   detachInterrupt(digitalPinToInterrupt(2));
   pulsesD2 =  inPulseD2 - inPulseAntD2;
   inPulseAntD2 = inPulseD2;
-  // TODO
+  
+  RpmPeriodD2 = millis() - RpmTickD2;
+  RpmCounterD2 = (pulsesD2*_SEC_TO_RPM_)/RpmPeriodD2;
+  
   RpmTickD2 = millis();
   attachInterrupt(digitalPinToInterrupt(2), interruptD2, RISING);
-  */
   
   detachInterrupt(digitalPinToInterrupt(3));
   pulsesD3 =  inPulseD3 - inPulseAntD3;
@@ -42,12 +42,10 @@ void _INTISRsLoop()
 ////////////////
 // Interrupts //
 ////////////////
-/*
 void interruptD2()
 {
    inPulseD2++;
 }
-*/
 
 void interruptD3()
 {

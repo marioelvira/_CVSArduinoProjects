@@ -96,27 +96,27 @@ void _TimeLoop(void)
     // ADC
     for (i = 0; i< ADC_NUMBER; i++)
     {
-      Serial.print("ADC ");
-      Serial.println(i);
-      Serial.print("Dig: ");
+      Serial.print("ADC");
+      Serial.print(i);
+      Serial.print(": ");
       Serial.println(AdcDig[i]);
     }
 
     // OUTs
     for (i = 0; i< OUT_NUMBER; i++)
     {
-      Serial.print("OUT ");
-      Serial.println(i);
-      Serial.print("Dig: ");
+      Serial.print("OUT");
+      Serial.print(i);
+      Serial.print(": ");
       Serial.println(OutDig[i]);
     }
 
     // INs
     for (i = 0; i< IN_NUMBER; i++)
     {
-      Serial.print("IN ");
-      Serial.println(i);
-      Serial.print("Dig: ");
+      Serial.print(" IN");
+      Serial.print(i);
+      Serial.print(": ");
       Serial.println(InDig[i]);
     }
     

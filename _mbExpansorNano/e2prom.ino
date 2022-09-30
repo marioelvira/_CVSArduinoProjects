@@ -61,7 +61,7 @@ void _readCONFIG (void)
   Serial.print("Modbus ID: ");  Serial.print (cfgMbId);  Serial.println(" ");
   for (i = 0; i < ADC_NUMBER; i++)
   {
-    Serial.print("Filter ADC"); Serial.print (cfgADCf[i]); Serial.print(" "); Serial.println (cfgADCf[i]); 
+    Serial.print("Filter ADC: "); Serial.println(cfgADCf[i]);
   }
   #endif
 }

@@ -87,10 +87,9 @@ void _mbWriteSingleHolding(char address)
   addr  = (int)((mrs485RxBuffer[2] & 0x00FF)<<8)|(mrs485RxBuffer[3] & 0x00FF);
   value = (int)((mrs485RxBuffer[4] & 0x00FF)<<8)|(mrs485RxBuffer[5] & 0x00FF);
 
-  // Meteo 
-  if ((addr >= MB_ADD_OUTS) || (addr <= MB_ADD_OUTS + MB_NREG_OUTS))
+  if ((addr >= MB_ADD_OUTS) && (addr <= MB_ADD_OUTS + MB_NREG_OUTS))
   {
-    i -= MB_ADD_OUTS;
+    i = addr - MB_ADD_OUTS;
     if (value == OUT_OFF)
       OutDig[i] = OUT_OFF;
     else
@@ -134,7 +133,7 @@ void _mbReadHolding(char address)
   nregs = (int)((mrs485RxBuffer[4] & 0x00FF)<<8)|(mrs485RxBuffer[5] & 0x00FF);
 
   // Meteo 
-  if ((addr == MB_ADD_OUTS)  && (nregs == MB_NREG_OUTS))
+  if ((addr == MB_ADD_OUTS) && (nregs == MB_NREG_OUTS))
   {
     mrs485TxBuffer[0] = (char)address;
     mrs485TxBuffer[1] = (char)MB_FUNC_READ_HOLDING_REGISTER;

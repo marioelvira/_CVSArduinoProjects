@@ -53,12 +53,12 @@ extern "C" {
 // OUTs
 #define OUT_NUMBER      3 //4
 
-#define PIN_OUT0        4
-#define PIN_OUT1        5
-#define PIN_OUT2        6
-//#define PIN_OUT3      7
+#define PIN_OUT0        7
+#define PIN_OUT1        6
+#define PIN_OUT2        5
+//#define PIN_OUT3      4
 
-#define PIN_RS485_RXTX  7
+#define PIN_RS485_RXTX  4
 
 // INs
 #define IN_NUMBER       2

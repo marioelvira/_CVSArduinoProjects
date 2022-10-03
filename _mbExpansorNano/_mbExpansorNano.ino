@@ -150,7 +150,7 @@ void _PINSetup(void)
   {
     pinMode(OutPin[i], OUTPUT);
     digitalWrite(OutPin[i], PIN_OUT_OFF);
-    OutDig[i] = 0;
+    OutDig[i] = OUT_OFF;
   }
 
   #if (_USE_RS485_ == 1)
@@ -237,10 +237,10 @@ void _PINLoop()
   {
     if (OutDig[i] == OUT_ON)
       digitalWrite(OutPin[i], PIN_OUT_ON);
-    else if (OutDig[i] == IO_OFF)
+    else
       digitalWrite(OutPin[i], PIN_OUT_OFF);
   }
-
+  
   #if (_USE_RS485_ == 1)
   if (OutRS485rxtx == OUT_RS485_RX)
     digitalWrite(PIN_RS485_RXTX, LOW);
@@ -266,7 +266,7 @@ void _PINLoop()
 void loop()
 {
   _PINLoop();
-  _IOLoop();
+  //_IOLoop();
 
   //if (controlMode == MODE_AUTO)
   // _OUTSLoop();

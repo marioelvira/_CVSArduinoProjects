@@ -41,11 +41,13 @@ extern "C" {
 #define MB_RX_NOK     1
 
 // Status
-#define MB_STANDBY	  1
-#define MB_READINS	  2
-#define MB_INSSTATUS  3
-#define MB_WRITEOUT   4
-#define MB_OUTSTATUS  5
+#define MB_STANDBY	      1
+#define MB_READINS	      2
+#define MB_INSSTATUS      3
+//#define MB_READOUTS     4
+//#define MB_OUTSSTATUS   5
+#define MB_WRITEOUT       6
+#define MB_OUTSTATUS      7
 
 extern void _MBCRC(void);
 

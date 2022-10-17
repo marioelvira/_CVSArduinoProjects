@@ -131,7 +131,7 @@ void mqttDataCallback(char* rtopic, byte* rpayload, unsigned int rlength)
         }
         else
           mbOutBoard = 0;
-          
+       
         mbOutNum = outNum;
         mbOutVal = outVal;
   
@@ -246,6 +246,10 @@ void _MQTTSend(int itopic)
     str = str + String(alarm[0]) + String(alarm[1]) + String(alarm[2]) + String(alarm[3]);
     str = str + String(alarm[4]) + String(alarm[5]) + String(alarm[6]) + String(alarm[7]);
     str = str + "\",\n";
+
+    str = str + "\"mer\":";
+    str = str + String(mbError);
+    str = str + ",\n";
   
     str = str + "\"md\":";
     str = str + String(controlMode);

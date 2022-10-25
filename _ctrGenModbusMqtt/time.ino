@@ -70,13 +70,6 @@ void _TimeLoop(void)
     
     Serial.print("Indicador LCD: ");
     Serial.print(DisplayIndicador);
-    Serial.print(" -> ");
-    Serial.print(InD); Serial.print("-"); Serial.print(InC); Serial.print("-"); Serial.print(InB); Serial.print("-"); Serial.print(InA);
-    Serial.println(" ");
-    if (InGenOn == IO_OFF)
-      Serial.print("Gen In: OFF");
-    else
-      Serial.print("Gen In: ON");
     Serial.println(" ");
     Serial.println("---------------");
     
@@ -85,33 +78,14 @@ void _TimeLoop(void)
     Serial.println("---------------");
 
     Serial.print("Gen Status: ");
-    Serial.print(genState); Serial.print(" "); Serial.print(genMinOn); Serial.println("m ");
+    Serial.print(genMinOn); Serial.println("m ");
     Serial.print(genTimeDay); Serial.print("d "); Serial.print(genTimeHour); Serial.print(" : "); Serial.print(genTimeMin); Serial.print(" : "); Serial.print(genTimeSec);
     Serial.println(" ");
     Serial.println("---------------");
  
-    Serial.print("Luz Off Status: ");
-    Serial.println(LuzState);  
-    Serial.println("---------------");
-
     Serial.print("Wi-Fi Status: ");
     Serial.println(wifiStatus);  
     Serial.println("---------------");
-        
-    if (OutGenPuls == OUT_ON)
-     Serial.println("Gen Puls: ON");
-    else
-     Serial.println("Gen Puls: OFF");
-
-    if (OutStopPuls == OUT_ON)
-     Serial.println("Gen Stop: ON");
-    else
-     Serial.println("Gen Stop: OFF");
-
-    if (OutLuzOff == OUT_ON)
-     Serial.println("Luz OFF: ON");
-    else
-     Serial.println("Luz OFF: OFF");
 
     Serial.print("AdcVal: ");
     Serial.println(AdcIn);

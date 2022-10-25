@@ -59,7 +59,7 @@ The following list shows the state of the following pins on BOOT:
 #define PIN_B             12  // B
 #define PIN_C             13  // C
 #define PIN_D             15  // D
-#define PIN_E             10  // E
+//#define PIN_E           10  // E
 
 #define PIN_RS485_RXTX    0
 

@@ -86,7 +86,7 @@ extern "C" {
 //#define EEPROM_ADD_MAX          0xFA // 250
 
 // Values
-#define EEPROM_VAL_OK             0xA0
+#define EEPROM_VAL_OK             0xAA
 
 #define EEPROM_VAL_IP_MODE        DHCP_MODE
 #define EEPROM_VAL_IP1            192
@@ -113,10 +113,10 @@ extern "C" {
 
 #define EEPROM_VAL_LOGIC_INS      1
 #define EEPROM_VAL_LOGIC_OUTS     1
-#define EEPROM_VAL_MBADD1         255
-#define EEPROM_VAL_MBADD2         1
+#define EEPROM_VAL_MBADD1         1
+#define EEPROM_VAL_MBADD2         2
 
-#define EEPROM_VAL_ADC_M          153
+#define EEPROM_VAL_ADC_M          320
 #define EEPROM_VAL_ADC_B          0
 #define EEPROM_VAL_ADC_P          10000
 #define EEPROM_VAL_ADC_S          0     // +/-  1/0

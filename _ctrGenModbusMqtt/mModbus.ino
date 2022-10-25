@@ -162,7 +162,7 @@ void _mbUdateIns (int board)
   else
     mbIns[7][board] = IO_OFF;
 }
-/*
+
 // Tx: FF 01 00 00 00 08 28 12
 // Rx: FF 01 01 A1 AO
 void _mbReadOuts(char address)
@@ -205,46 +205,46 @@ void _mbUdateOuts (int board)
 {
  
   if (mrs485RxBuffer[3] & 0x01)
-    mbStOuts[0][board] = IO_ON;
+    mbROuts[0][board] = IO_ON;
   else
-    mbStOuts[0][board] = IO_OFF;
+    mbROuts[0][board] = IO_OFF;
 
   if (mrs485RxBuffer[3] & 0x02)
-    mbStOuts[1][board] = IO_ON;
+    mbROuts[1][board] = IO_ON;
   else
-    mbStOuts[1][board] = IO_OFF;
+    mbROuts[1][board] = IO_OFF;
 
   if (mrs485RxBuffer[3] & 0x04)
-    mbStOuts[2][board] = IO_ON;
+    mbROuts[2][board] = IO_ON;
   else
-    mbStOuts[2][board] = IO_OFF;
+    mbROuts[2][board] = IO_OFF;
 
   if (mrs485RxBuffer[3] & 0x08)
-    mbStOuts[3][board] = IO_ON;
+    mbROuts[3][board] = IO_ON;
   else
-    mbStOuts[3][board] = IO_OFF;
+    mbROuts[3][board] = IO_OFF;
 
   if (mrs485RxBuffer[3] & 0x10)
-    mbStOuts[4][board] = IO_ON;
+    mbROuts[4][board] = IO_ON;
   else
-    mbStOuts[4][board] = IO_OFF;
+    mbROuts[4][board] = IO_OFF;
 
   if (mrs485RxBuffer[3] & 0x20)
-    mbStOuts[5][board] = IO_ON;
+    mbROuts[5][board] = IO_ON;
   else
-    mbStOuts[5][board] = IO_OFF;
+    mbROuts[5][board] = IO_OFF;
 
   if (mrs485RxBuffer[3] & 0x40)
-    mbStOuts[6][board] = IO_ON;
+    mbROuts[6][board] = IO_ON;
   else
-    mbStOuts[6][board] = IO_OFF;
+    mbROuts[6][board] = IO_OFF;
 
   if (mrs485RxBuffer[3] & 0x80)
-    mbStOuts[7][board] = IO_ON;
+    mbROuts[7][board] = IO_ON;
   else
-    mbStOuts[7][board] = IO_OFF;
+    mbROuts[7][board] = IO_OFF;
 }
-*/
+
 // Tx: FF 05 00 01 FF 00 C8 24 - Rele 2 a ON
 // Rx: FF 05 00 01 FF 00 C8 24
 // out: 0 to 7; 8 all relays
@@ -291,6 +291,34 @@ int _mbAnalyseOut (char address, int out) //, int val)
   return error;
 }
 
+int _MBOutCheck(void)
+{
+  int i, j;
+
+  // num boards
+  for (j = 0; j < MB_NUM_BRS; j++)
+  {
+    // num outs
+    for (i = 0; i < MB_NUM_IOS; i++)
+    {
+      if (mbOuts[i][j] != mbROuts[i][j])
+      {
+        mbOutBoard = j;
+        mbOutNum = i;
+        mbOutVal = mbOuts[i][j];
+        
+        // Write Out
+        if (mbState == MB_STANDBY)
+          mbState = MB_WRITEOUT;
+        // Salimos
+        return 1;
+      }
+    }
+  }
+
+  return 0;
+}
+ 
 ////////////////////
 // mModbus set up //
 ////////////////////
@@ -350,7 +378,7 @@ void _MBLoop(void)
       {   
         mbTick = millis();
         mbState = MB_STANDBY;
-        mbError++;
+        mbNReply++;
 
         // Alarm
         if (mbInBoard == 0)
@@ -377,7 +405,7 @@ void _MBLoop(void)
             alarm[AL_ERROR_MB1] = 0;
           }
           else
-            mbError++;
+            mbNError++;
           
           // Next board
           mbInBoard = 1;
@@ -391,7 +419,7 @@ void _MBLoop(void)
             alarm[AL_ERROR_MB2] = 0;
           }
           else
-            mbError++;;
+            mbNError++;;
           
           // Next board
           mbInBoard = 0;
@@ -406,7 +434,7 @@ void _MBLoop(void)
       }
 
       break;
-    /*
+
     // Read Outs
     case MB_READOUTS:
       if ( mbInBoard == 0)
@@ -427,7 +455,7 @@ void _MBLoop(void)
       {   
         mbTick = millis();
         mbState = MB_STANDBY;
-        mbError++;
+        mbNReply++;
       }
 
       // if response received
@@ -438,8 +466,8 @@ void _MBLoop(void)
           // Analyse response
           if (_mbAnalyseOuts((char)cfgMB1Add) == MB_RX_OK)
             _mbUdateOuts(mbInBoard);
-          //else
-            // Error;
+          else
+            mbNError++;
           
           // Next board
           mbInBoard = 1;
@@ -449,8 +477,8 @@ void _MBLoop(void)
           // Analyse response
           if (_mbAnalyseOuts((char)cfgMB2Add) == MB_RX_OK)
             _mbUdateIns(mbInBoard);
-          //else
-            // Error;
+          else
+            mbNError++;;
           
           // Next board
           mbInBoard = 0;
@@ -465,7 +493,7 @@ void _MBLoop(void)
       }
 
       break;
-    */
+
     // Write Out
 	  case MB_WRITEOUT:
       // select board
@@ -473,12 +501,7 @@ void _MBLoop(void)
 	      _mbWriteOut((char)cfgMB1Add, mbOutNum, mbOutVal);
       else
        _mbWriteOut((char)cfgMB2Add, mbOutNum, mbOutVal);
-      /*
-      if (mbOutVal == OUT_OFF)
-        mbOuts[mbOutNum][mbOutBoard] = OUT_OFF;
-      else
-        mbOuts[mbOutNum][mbOutBoard] = OUT_ON;
-      */
+
       // Analyse Response
       mbTick = millis();
       mbState = MB_OUTSTATUS;
@@ -492,7 +515,21 @@ void _MBLoop(void)
       {
         mbTick = millis();
         mbState = MB_STANDBY;
-        mbError++;
+        mbNReply++;
+        
+        // Retry ??
+        if (mbRetry == 0)
+        {
+          mbNRetry++;
+          mbState = MB_WRITEOUT;
+          mbRetry = 1;
+        }
+        else
+        {
+          mbTick = millis();
+          mbState = MB_STANDBY;
+          mbRetry = 0;
+        }
       }
 
       // if response received
@@ -510,14 +547,29 @@ void _MBLoop(void)
           if (mbOutVal == OUT_OFF)
             mbOuts[mbOutNum][mbOutBoard] = OUT_OFF;
           else
-            mbOuts[mbOutNum][mbOutBoard] = OUT_ON;        
+            mbOuts[mbOutNum][mbOutBoard] = OUT_ON;   
+
+          mbTick = millis();
+          mbState = MB_STANDBY;         
         }
         else
-          mbError++;
-        
-        mbTick = millis();
-        mbState = MB_STANDBY;
-                        
+        {
+          mbNError++;
+          // Retry ??
+          if (mbRetry == 0)
+          {
+            mbNRetry++;
+            mbState = MB_WRITEOUT;
+            mbRetry = 1;
+          }
+          else
+          {
+            mbTick = millis();
+            mbState = MB_STANDBY;
+            mbRetry = 0;
+          }
+        }
+                              
         // clear Rx buffer
         mrs485RxBuffer = "";
         mrs485State = MRS485_STANDBY;

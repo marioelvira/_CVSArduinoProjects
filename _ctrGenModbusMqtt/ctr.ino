@@ -157,9 +157,9 @@ void _CtrLoop(void)
 void ctrIOsLoop(void)
 {
   // Ins
-  InStartVal= ioInB;
-  InEndVal  = ioInC;
-  InGen = ioInE;
+  InStartVal= ioInA;
+  InEndVal  = ioInB;
+  InGen = ioInC;
 
   // Outs
   ioOutA = OutGen;

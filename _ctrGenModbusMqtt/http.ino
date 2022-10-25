@@ -1043,6 +1043,11 @@ void _readCTR()
   html = html + "<td>Alarmas </td>";
   html = html + "<td>" + "0x" + String(alarm[0]) + String(alarm[1]) + String(alarm[2]) + String(alarm[3]) + String(alarm[4]) + String(alarm[5]) + String(alarm[6]) + String(alarm[7]) + "</td>";
   html = html + "</tr>";
+
+  html = html + "<tr>";
+  html = html + "<td>Modbus St</td>";
+  html = html + "<td>" + String(mbState) + " " + String(mbNError) + " - " +  String(mbNReply) + " - " + String(mbNRetry) + "</td>";
+  html = html + "</tr>";
   
   html = html + "<tr>";
   html = html + "<td>-----------------</td>";
@@ -1093,7 +1098,7 @@ void _readINS()
 
   html = html + "<tr>";
   html = html + "<td>Boards Ins</td>";
-  html = html + "<td>" + String(ioInA) + "-" + String(ioInB) + "-" + String(ioInC) + "-" + String(ioInD) + "-" + String(ioInE) + "</td>";
+  html = html + "<td>" + String(ioInA) + "-" + String(ioInB) + "-" + String(ioInC) + "-" + String(ioInD) + "</td>";
   html = html + "</tr>";
   
   html = html + "<tr>";

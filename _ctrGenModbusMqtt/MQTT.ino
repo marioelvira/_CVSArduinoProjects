@@ -248,7 +248,11 @@ void _MQTTSend(int itopic)
     str = str + "\",\n";
 
     str = str + "\"mer\":";
-    str = str + String(mbError);
+    str = str + String(mbNError);
+    str = str + ",\n";
+    
+    str = str + "\"mrt\":";
+    str = str + String(mbNRetry);
     str = str + ",\n";
   
     str = str + "\"md\":";
@@ -384,7 +388,7 @@ void _MQTTSend(int itopic)
     str = str + "\",\n";
     
     str = str + "\"bI\":\"";
-    str = str + String(ioInA) + String(ioInB) + String(ioInC) + String(ioInD) + String(ioInE);
+    str = str + String(ioInA) + String(ioInB) + String(ioInC) + String(ioInD);
     str = str + "\",\n";
     
     str = str + "\"mbI1\":\"";

@@ -33,7 +33,6 @@ int   ioInA;
 int   ioInB;
 int   ioInC;
 int   ioInD;
-int   ioInE;
 
 int   ioOutA;
 int   ioOutB;
@@ -204,21 +203,25 @@ int             OutRS485rxtx;
 // Modbus //
 ////////////
 #if (_USE_MB_ == 1)
-int             mbState;
-unsigned long   mbTick;
-byte            mbCRC[2];
+int mbState;
+unsigned long mbTick;
+byte mbCRC[2];
 
 // Modbus DIOs
-int             mbInBoard = 0;
-int             mbIns[MB_NUM_IOS][MB_NUM_BRS];
-int             mbOuts[MB_NUM_IOS][MB_NUM_BRS];
-//int           mbStOuts[MB_NUM_IOS][MB_NUM_BRS];
+int mbInBoard = 0;
+int mbIns[MB_NUM_IOS][MB_NUM_BRS];
+int mbOuts[MB_NUM_IOS][MB_NUM_BRS];
+int mbROuts[MB_NUM_IOS][MB_NUM_BRS];
 
-int             mbOutBoard = 0;
-int             mbOutNum = 0;
-int             mbOutVal = 0x00;
+int mbOutBoard = 0;
+int mbOutNum = 0;
+int mbOutVal = 0x00;
 
-int             mbError = 0;
+int mbNError = 0;
+int mbNReply = 0;
+int mbNRetry = 0;
+int mbRetry = 0;
+
 #endif
 #endif
 
@@ -305,7 +308,6 @@ void _PINSetup(void)
   pinMode(PIN_B, INPUT);  ioInB = IO_OFF;
   pinMode(PIN_C, INPUT);  ioInC = IO_OFF;
   pinMode(PIN_D, INPUT);  ioInD = IO_OFF;
-  pinMode(PIN_E, INPUT);  ioInE = IO_OFF;
 }
 
 //============//
@@ -350,7 +352,7 @@ void setup(void)
   _MBSetup();
   #endif
   #endif
-  
+
   // Ctr setup
   _CtrSetup();
 
@@ -419,11 +421,6 @@ void _PINLoop()
     ioInD = IO_ON;
   else
     ioInD = IO_OFF;
-
-  if (digitalRead(PIN_E) == cfgLogicIns /*PIN_IN_ON*/)
-    ioInE = IO_ON;
-  else
-    ioInE = IO_OFF;
 }
 
 //===========//

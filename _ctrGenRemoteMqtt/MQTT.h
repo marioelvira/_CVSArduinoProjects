@@ -17,13 +17,10 @@ extern "C" {
 #define MQTT_PUBLISH_TIMEOUT      800   // 800 ms
 
 // MQTT broker credentials
-//#define MQTT_BROKER       "maqiatto.com"
-//#define MQTT_BROKER_PORT  1883
 #define MQTT_BROKER         "sdpelicanos.webhop.me"
-#define MQTT_BROKER_PORT    7000
-
-#define MQTT_USERNAME     "sdpelicanos@gmail.com"
-#define MQTT_KEY          "MQTTSup3rP@@sw0rd"
+#define MQTT_BROKER_PORT    1883 // 7000
+#define MQTT_USERNAME       "sdpelicanos@gmail.com"
+#define MQTT_PASSWORD       "MQTTSup3rP@@sw0rd"
 
 // MQTT Topics
 #if (_MQTT_DEBUG_ == 1)

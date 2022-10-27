@@ -297,7 +297,7 @@ void _MQTTLoop(void)
         Serial.printf("Attempting MQTT connection...\n");
         #endif
       
-        if (mqttClient.connect(mqttClientId.c_str(), MQTT_USERNAME, MQTT_KEY))
+        if (mqttClient.connect(mqttClientId.c_str(), MQTT_USERNAME, MQTT_PASSWORD))
         {
           #if (_MQTT_SERIAL_DEBUG_ == 1)
           Serial.printf("MQTT connected!!!...\n");

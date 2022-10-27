@@ -39,7 +39,7 @@ void ctrOTimeSetup(void)
 void _CtrLoop(void)
 {
   if (ControlState == STATE_STANDBY)
-    genMinOn = 0;
+  {}  //genMinOn = 0;
   else
     _GenTimeReset();
       
@@ -66,6 +66,8 @@ void _CtrLoop(void)
       // Control
       OutBomba = OUT_OFF;
       OutGen = OUT_OFF;
+      
+      genMinOn = 0;
       
       // Indicadores
       OutDisp = OUT_ON;

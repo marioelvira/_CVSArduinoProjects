@@ -33,12 +33,12 @@ extern "C" {
 #define WIFI_SSID_MAX             32 // SSID max 32 char -> Next 0x2F
 #define EEPROM_ADD_WIFI_PSWD      0x2F
 #define WIFI_PSWD_MAX             32 // Password max 32 char -> Next 0x4F
-
+/*
 #define EEPROM_ADD_BROKER         0x4F
 #define BROKER_MAX                32 // Broker max 32 char -> Next 0x6F
 #define EEPROM_ADD_BROKER_PORT    0x6F
 #define BROKER_PORT_MAX           2
-
+*/
 #define EEPROM_ADD_RPUSL_MSEC     0x71
 #define EEPROM_ADD_LUZOFF_15M     0x72
 #define EEPROM_ADD_LOGIC_INS      0x73
@@ -59,7 +59,7 @@ extern "C" {
 //#define EEPROM_ADD_MAX          0xFA // 250
 
 // Values
-#define EEPROM_VAL_OK             0xA0
+#define EEPROM_VAL_OK             0xAA
 
 #define EEPROM_VAL_IP_MODE        DHCP_MODE
 #define EEPROM_VAL_IP1            192
@@ -80,7 +80,7 @@ extern "C" {
 #define EEPROM_VAL_WIFI_MODE      ACCESSPOINT_MODE // STATION_MODE
 
 //#define EEPROM_VAL_BROKER       
-#define EEPROM_VAL_BROKER_PORT    7000
+//#define EEPROM_VAL_BROKER_PORT    7000
 
 #define EEPROM_VAL_RPUSL_MSEC     10  // 1 Sec
 #define EEPROM_VAL_LUZOFF_15M     16  // 4 h

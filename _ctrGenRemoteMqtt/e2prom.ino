@@ -77,6 +77,7 @@ void _readCONFIG (void)
       EEPROM.write(EEPROM_ADD_WIFI_PSWD + i, passwordSt[i]);
     #endif
 
+    /*
     // Broker
     for (i = 0; i < BROKER_MAX; i++)
       EEPROM.write(EEPROM_ADD_BROKER + i, 0);
@@ -88,7 +89,7 @@ void _readCONFIG (void)
     EEPROM.write(EEPROM_ADD_BROKER_PORT, eeprom_value_lo);
     eeprom_value_hi = (EEPROM_VAL_BROKER_PORT & 0xFF00)>>8;
     EEPROM.write(EEPROM_ADD_BROKER_PORT + 1, eeprom_value_hi);
-
+    */
     // Other Data
     EEPROM.write(EEPROM_ADD_RPUSL_MSEC, EEPROM_VAL_RPUSL_MSEC);
     EEPROM.write(EEPROM_ADD_LUZOFF_15M, EEPROM_VAL_LUZOFF_15M);  
@@ -193,7 +194,7 @@ void _readCONFIG (void)
     Serial.println(password);
     #endif
   }
-
+  /*
   // Broker
   for (i = 0; i < BROKER_MAX; i++)
     brokerUrl[i] = char(EEPROM.read(EEPROM_ADD_BROKER + i));
@@ -201,14 +202,14 @@ void _readCONFIG (void)
   eeprom_value_hi = EEPROM.read(EEPROM_ADD_BROKER_PORT + 1);
   eeprom_value_lo = EEPROM.read(EEPROM_ADD_BROKER_PORT);   
   brokerPort = ((eeprom_value_hi & 0x00FF)<<8)|(eeprom_value_lo & 0x00FF);
- 
+   
   #if (_EEPROM_SERIAL_DEBUG_ == 1)
   Serial.print("Broker URL: ");
   Serial.println(brokerUrl);
   Serial.print("Broker Port: ");
   Serial.println(brokerPort);
   #endif 
-
+  */
   // Other Data
   cfgRemotePulsTick = (int)EEPROM.read(EEPROM_ADD_RPUSL_MSEC);
   cfgLuzOutTick     = (int)EEPROM.read(EEPROM_ADD_LUZOFF_15M);

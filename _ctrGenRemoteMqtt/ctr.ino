@@ -12,6 +12,7 @@ void _CtrSetup(void)
 
   remPulse = 0;
   remAct = 0;
+  genMinOn = 0;
   
   LuzState = STATE_STANDBY;
 }
@@ -42,7 +43,7 @@ void _CtrLoop(void)
   {
     case STATE_GEN_OFF:
       remAct = 0;
-      genMinOn = 0;
+      //genMinOn = 0;
       if (genInStatus == 1)
       {
         if (remPulse == 1)
@@ -51,6 +52,8 @@ void _CtrLoop(void)
           genState = STATE_GEN_ON;
 
         remPulse = 0; //BUG
+        
+        genMinOn = 0;
       }
       break;
 

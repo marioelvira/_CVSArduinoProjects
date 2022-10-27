@@ -381,7 +381,7 @@ void _serveSETTINGS()
 
   html = html + "</div>";
   // End
-
+  /*
   // Broker
   html = html + "<div class=\"section\"><span>3</span>Broker </div>";
   html = html + "<div class=\"inner-wrap\">";
@@ -391,7 +391,7 @@ void _serveSETTINGS()
 
   html = html + "</div>";
   // End
-                        
+  */                        
   html = html + "<div class=\"button-section\">";
   html = html + "  <input type=\"submit\" value=\"Guardar\">";
   html = html + "  <a href=\"index.htm\"><input type=\"button\" value=\"Volver\"></a>";
@@ -419,8 +419,8 @@ void _setSETTINGS()
   String rmask = httpServer.arg("mask");
   String rgate = httpServer.arg("gateway");
   
-  String rbrokerurl = httpServer.arg("brokerurl");
-  String rbrokerport = httpServer.arg("brokerport");
+  //String rbrokerurl = httpServer.arg("brokerurl");
+  //String rbrokerport = httpServer.arg("brokerport");
     
   String html = "";
   int i, j, k, m;
@@ -469,13 +469,14 @@ void _setSETTINGS()
     error = 1;
 
   // Check broker error
-  if ((rbrokerurl.length() == 0) ||
-      (rbrokerport.length() == 0))
-    error |= 1;
+  //if ((rbrokerurl.length() == 0) ||
+  //    (rbrokerport.length() == 0))
+  //  error |= 1;
 
   // If no error on data...
   if (error == 0)
   {
+     /*
      ////////////
      // Broker //
      ////////////
@@ -490,7 +491,7 @@ void _setSETTINGS()
      EEPROM.write(EEPROM_ADD_BROKER_PORT, eeprom_value_lo);
      eeprom_value_hi = (brokerPort & 0xFF00)>>8;
      EEPROM.write(EEPROM_ADD_BROKER_PORT + 1, eeprom_value_hi);
-          
+     */   
      /////////////////////////
      // Wi-Fi configuration //
      /////////////////////////
@@ -641,14 +642,15 @@ void _setSETTINGS()
      Serial.println(localmask);
      Serial.print("---->Local gateway: ");
      Serial.println(localgate);
-
+     /*
      // Broker configuration
      Serial.print("---->Broker Url: ");
      Serial.println(rbrokerurl);
      Serial.print("---->Broker Port: ");
-     Serial.println(rbrokerport);     
-     #endif
+     Serial.println(rbrokerport); 
+     */    
      
+     #endif
      EEPROM.commit();
 
      #if (_READ_EEPROM_ == 1)

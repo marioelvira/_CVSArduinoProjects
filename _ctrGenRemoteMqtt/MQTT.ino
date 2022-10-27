@@ -215,8 +215,8 @@ void _MQTTSetup(void)
   String  str = "";
   int     str_len;
    
-  //mqttClient.setServer(MQTT_BROKER, MQTT_BROKER_PORT);
-  mqttClient.setServer(brokerUrl, brokerPort);
+  mqttClient.setServer(MQTT_BROKER, MQTT_BROKER_PORT);
+  //mqttClient.setServer(brokerUrl, brokerPort);
   mqttClient.setCallback(mqttDataCallback);
   
   mqttStatus = MQTT_NOT_CONNECTED;
@@ -298,6 +298,7 @@ void _MQTTLoop(void)
         #endif
       
         if (mqttClient.connect(mqttClientId.c_str(), MQTT_USERNAME, MQTT_PASSWORD))
+        //if (mqttClient.connect(mqttClientId.c_str(), brokerUser, MQTT_PASSWORD))
         {
           #if (_MQTT_SERIAL_DEBUG_ == 1)
           Serial.printf("MQTT connected!!!...\n");

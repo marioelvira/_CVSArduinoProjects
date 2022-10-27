@@ -99,8 +99,8 @@ int httpStatus;
 // MQTT //
 //////////
 const char* brokerSt = MQTT_BROKER;
-char brokerUrl[BROKER_MAX];
-int brokerPort;
+//char brokerUrl[BROKER_MAX];
+//int brokerPort;
 
 WiFiClient wifiClient;
 PubSubClient mqttClient(wifiClient);

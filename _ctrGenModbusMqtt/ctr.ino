@@ -89,6 +89,8 @@ void _CtrLoop(void)
       { 
         if (InGen == IO_OFF)
           alarm[AL_ERROR_GEN] = 1;
+        else
+          alarm[AL_ERROR_GEN] = 0;
       }
 
       if (TimeControlSec <= cfgTimeBuzzerOn)

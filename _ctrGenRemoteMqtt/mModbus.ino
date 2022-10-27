@@ -162,7 +162,6 @@ void _mbUdateIns (int board)
   else
     mbIns[7][board] = IO_OFF;
 }
-
 /*
 // Tx: FF 01 00 00 00 08 28 12
 // Rx: FF 01 01 A1 AO
@@ -206,44 +205,44 @@ void _mbUdateOuts (int board)
 {
  
   if (mrs485RxBuffer[3] & 0x01)
-    mbROuts[0][board] = IO_ON;
+    mbStOuts[0][board] = IO_ON;
   else
-    mbROuts[0][board] = IO_OFF;
+    mbStOuts[0][board] = IO_OFF;
 
   if (mrs485RxBuffer[3] & 0x02)
-    mbROuts[1][board] = IO_ON;
+    mbStOuts[1][board] = IO_ON;
   else
-    mbROuts[1][board] = IO_OFF;
+    mbStOuts[1][board] = IO_OFF;
 
   if (mrs485RxBuffer[3] & 0x04)
-    mbROuts[2][board] = IO_ON;
+    mbStOuts[2][board] = IO_ON;
   else
-    mbROuts[2][board] = IO_OFF;
+    mbStOuts[2][board] = IO_OFF;
 
   if (mrs485RxBuffer[3] & 0x08)
-    mbROuts[3][board] = IO_ON;
+    mbStOuts[3][board] = IO_ON;
   else
-    mbROuts[3][board] = IO_OFF;
+    mbStOuts[3][board] = IO_OFF;
 
   if (mrs485RxBuffer[3] & 0x10)
-    mbROuts[4][board] = IO_ON;
+    mbStOuts[4][board] = IO_ON;
   else
-    mbROuts[4][board] = IO_OFF;
+    mbStOuts[4][board] = IO_OFF;
 
   if (mrs485RxBuffer[3] & 0x20)
-    mbROuts[5][board] = IO_ON;
+    mbStOuts[5][board] = IO_ON;
   else
-    mbROuts[5][board] = IO_OFF;
+    mbStOuts[5][board] = IO_OFF;
 
   if (mrs485RxBuffer[3] & 0x40)
-    mbROuts[6][board] = IO_ON;
+    mbStOuts[6][board] = IO_ON;
   else
-    mbROuts[6][board] = IO_OFF;
+    mbStOuts[6][board] = IO_OFF;
 
   if (mrs485RxBuffer[3] & 0x80)
-    mbROuts[7][board] = IO_ON;
+    mbStOuts[7][board] = IO_ON;
   else
-    mbROuts[7][board] = IO_OFF;
+    mbStOuts[7][board] = IO_OFF;
 }
 */
 // Tx: FF 05 00 01 FF 00 C8 24 - Rele 2 a ON
@@ -292,34 +291,6 @@ int _mbAnalyseOut (char address, int out) //, int val)
   return error;
 }
 
-int _MBOutCheck(void)
-{
-  int i, j;
-
-  // num boards
-  for (j = 0; j < MB_NUM_BRS; j++)
-  {
-    // num outs
-    for (i = 0; i < MB_NUM_IOS; i++)
-    {
-      if (mbOuts[i][j] != mbROuts[i][j])
-      {
-        mbOutBoard = j;
-        mbOutNum = i;
-        mbOutVal = mbOuts[i][j];
-        
-        // Write Out
-        if (mbState == MB_STANDBY)
-          mbState = MB_WRITEOUT;
-        // Salimos
-        return 1;
-      }
-    }
-  }
-
-  return 0;
-}
- 
 ////////////////////
 // mModbus set up //
 ////////////////////
@@ -379,7 +350,7 @@ void _MBLoop(void)
       {   
         mbTick = millis();
         mbState = MB_STANDBY;
-        mbNReply++;
+        mbNError++;
 
         // Alarm
         if (mbInBoard == 0)
@@ -456,7 +427,7 @@ void _MBLoop(void)
       {   
         mbTick = millis();
         mbState = MB_STANDBY;
-        mbNReply++;
+        mbError++;
       }
 
       // if response received
@@ -467,8 +438,8 @@ void _MBLoop(void)
           // Analyse response
           if (_mbAnalyseOuts((char)cfgMB1Add) == MB_RX_OK)
             _mbUdateOuts(mbInBoard);
-          else
-            mbNError++;
+          //else
+            // Error;
           
           // Next board
           mbInBoard = 1;
@@ -478,8 +449,8 @@ void _MBLoop(void)
           // Analyse response
           if (_mbAnalyseOuts((char)cfgMB2Add) == MB_RX_OK)
             _mbUdateIns(mbInBoard);
-          else
-            mbNError++;;
+          //else
+            // Error;
           
           // Next board
           mbInBoard = 0;
@@ -502,7 +473,12 @@ void _MBLoop(void)
 	      _mbWriteOut((char)cfgMB1Add, mbOutNum, mbOutVal);
       else
        _mbWriteOut((char)cfgMB2Add, mbOutNum, mbOutVal);
-
+      /*
+      if (mbOutVal == OUT_OFF)
+        mbOuts[mbOutNum][mbOutBoard] = OUT_OFF;
+      else
+        mbOuts[mbOutNum][mbOutBoard] = OUT_ON;
+      */
       // Analyse Response
       mbTick = millis();
       mbState = MB_OUTSTATUS;
@@ -516,14 +492,14 @@ void _MBLoop(void)
       {
         mbTick = millis();
         mbState = MB_STANDBY;
-        mbNReply++;
+        mbNError++;
         
         // Retry ??
-        if (mbRetry < MB_NUM_RETRY)
+        if (mbRetry == 0)
         {
           mbNRetry++;
           mbState = MB_WRITEOUT;
-          mbRetry++;
+          mbRetry = 1;
         }
         else
         {
@@ -557,11 +533,11 @@ void _MBLoop(void)
         {
           mbNError++;
           // Retry ??
-          if (mbRetry < MB_NUM_RETRY)
+          if (mbRetry == 0)
           {
             mbNRetry++;
             mbState = MB_WRITEOUT;
-            mbRetry++;
+            mbRetry = 1;
           }
           else
           {

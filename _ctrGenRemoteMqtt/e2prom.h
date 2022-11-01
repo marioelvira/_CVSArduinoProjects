@@ -59,7 +59,7 @@ extern "C" {
 //#define EEPROM_ADD_MAX          0xFA // 250
 
 // Values
-#define EEPROM_VAL_OK             0xAA
+#define EEPROM_VAL_OK             0xA0
 
 #define EEPROM_VAL_IP_MODE        DHCP_MODE
 #define EEPROM_VAL_IP1            192

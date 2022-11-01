@@ -1138,7 +1138,13 @@ void _readOUTS()
   html = html + "<td>" + String(mbOuts[0][0]) + "-" + String(mbOuts[1][0]) + "-" + String(mbOuts[2][0]) + "-" + String(mbOuts[3][0]) + "-" + String(mbOuts[4][0]) + "-" + String(mbOuts[5][0]) + "-" + String(mbOuts[6][0]) + "-" + String(mbOuts[7][0]) + "</td>";
   html = html + "<td>" + String(mbOuts[0][1]) + "-" + String(mbOuts[1][1]) + "-" + String(mbOuts[2][1]) + "-" + String(mbOuts[3][1]) + "-" + String(mbOuts[4][1]) + "-" + String(mbOuts[5][1]) + "-" + String(mbOuts[6][1]) + "-" + String(mbOuts[7][1]) + "</td>";
   html = html + "</tr>";
-   
+
+  html = html + "<tr>";
+  html = html + "<td>Modbus ROuts</td>";
+  html = html + "<td>" + String(mbROuts[0][0]) + "-" + String(mbROuts[1][0]) + "-" + String(mbROuts[2][0]) + "-" + String(mbROuts[3][0]) + "-" + String(mbROuts[4][0]) + "-" + String(mbROuts[5][0]) + "-" + String(mbROuts[6][0]) + "-" + String(mbROuts[7][0]) + "</td>";
+  html = html + "<td>" + String(mbROuts[0][1]) + "-" + String(mbROuts[1][1]) + "-" + String(mbROuts[2][1]) + "-" + String(mbROuts[3][1]) + "-" + String(mbROuts[4][1]) + "-" + String(mbROuts[5][1]) + "-" + String(mbROuts[6][1]) + "-" + String(mbROuts[7][1]) + "</td>";
+  html = html + "</tr>";
+  
   html = html + "</table>";
   
   httpServer.send(200, "text/plane", html);

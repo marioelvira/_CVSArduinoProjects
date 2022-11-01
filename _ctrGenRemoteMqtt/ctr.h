@@ -16,8 +16,7 @@ extern "C" {
 #define STATE_STOP_PULSE      2
 
 #define STATE_GEN_OFF         0
-#define STATE_GEN_REM_ON      1
-#define STATE_GEN_ON          2
+#define STATE_GEN_ON          1
 
 #define STATE_LUZ_OFF         1
 

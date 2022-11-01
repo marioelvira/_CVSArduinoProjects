@@ -33,3 +33,9 @@ void _GenTimeLoop(void)
   }
   //genMinOn++;
 }
+
+void _GenMinLoop(void)
+{
+  if (genState != STATE_GEN_OFF)
+    genMinOn++;
+}

@@ -208,8 +208,9 @@ unsigned long mbTick;
 byte mbCRC[2];
 
 // Modbus DIOs
-int mbInBoard = 0;
+int mbInNBoard = 0;
 int mbIns[MB_NUM_IOS][MB_NUM_BRS];
+int mbOutNBoard = 0;
 int mbOuts[MB_NUM_IOS][MB_NUM_BRS];
 int mbROuts[MB_NUM_IOS][MB_NUM_BRS];
 
@@ -222,6 +223,7 @@ int mbNReply = 0;
 int mbNRetry = 0;
 int mbRetry = 0;
 
+int mbWhat2read = 0;
 #endif
 #endif
 

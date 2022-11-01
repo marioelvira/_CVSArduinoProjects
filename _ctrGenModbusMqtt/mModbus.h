@@ -14,11 +14,11 @@ extern "C" {
 // send :   00 10 00 00 00 01 02 00 02 6A 01
 // return : 00 10 00 00 00 01 02 00 02 6A 01
 
-// Apagar y encender 
+#define NUM_W2R       2
 
 #define CRCSIZE       2
 
-#define MB_RXLOOP     1000
+#define MB_RXLOOP     500
 #define MB_RXTOUT	    1000
 
 #define MB_NUM_IOS    8
@@ -44,8 +44,8 @@ extern "C" {
 #define MB_STANDBY	      1
 #define MB_READINS	      2
 #define MB_INSSTATUS      3
-//#define MB_READOUTS     4
-//#define MB_OUTSSTATUS   5
+#define MB_READOUTS       4
+#define MB_OUTSSTATUS     5
 #define MB_WRITEOUT       6
 #define MB_OUTSTATUS      7
 

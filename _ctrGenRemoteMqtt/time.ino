@@ -39,7 +39,8 @@ void _TimeLoop(void)
           timeDay++;
         }
       }
-      genMinOn++;
+
+      _GenMinLoop();
     }
 
     _GenTimeLoop();

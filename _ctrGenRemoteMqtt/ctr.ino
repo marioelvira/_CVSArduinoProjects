@@ -38,7 +38,9 @@ void _CtrLoop(void)
       genInStatus = 1;
   }
 
-  // Gen Status
+  if (genState != STATE_GEN_OFF)
+    _GenTimeReset();
+
   switch (genState)
   {
     case STATE_GEN_OFF:
@@ -47,29 +49,17 @@ void _CtrLoop(void)
       if (genInStatus == 1)
       {
         if (remPulse == 1)
-          genState = STATE_GEN_REM_ON;
+          remAct = 1;
         else
-          genState = STATE_GEN_ON;
+          remAct = 0;
 
-        remPulse = 0; //BUG
-        
         genMinOn = 0;
-      }
-      break;
-
-    case STATE_GEN_REM_ON:
-      remAct = 1;
-      _GenTimeReset();
-      if (genInStatus == 0)
-      {
+        genState = STATE_GEN_ON;
         remPulse = 0; //BUG
-        genState = STATE_GEN_OFF;
       }
       break;
 
     case STATE_GEN_ON:
-      remAct = 0;
-      _GenTimeReset();
       if (genInStatus == 0)
       {
         remPulse = 0; //BUG

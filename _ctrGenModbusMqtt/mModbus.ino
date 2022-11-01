@@ -163,7 +163,6 @@ void _mbUdateIns (int board)
     mbIns[7][board] = IO_OFF;
 }
 
-/*
 // Tx: FF 01 00 00 00 08 28 12
 // Rx: FF 01 01 A1 AO
 void _mbReadOuts(char address)
@@ -245,7 +244,7 @@ void _mbUdateOuts (int board)
   else
     mbROuts[7][board] = IO_OFF;
 }
-*/
+
 // Tx: FF 05 00 01 FF 00 C8 24 - Rele 2 a ON
 // Rx: FF 05 00 01 FF 00 C8 24
 // out: 0 to 7; 8 all relays
@@ -329,7 +328,7 @@ void _MBSetup(void)
   mbState = MB_STANDBY;
   mbTick = millis();
 
-  mbInBoard = 0;
+  mbInNBoard = 0;
   mbOutBoard = 0;
 
   // Modbus DIOs reset
@@ -355,13 +354,22 @@ void _MBLoop(void)
     case MB_STANDBY:
       
       if (millis() - mbTick >= MB_RXLOOP)
-        mbState = MB_READINS;
+      {
+        if (mbWhat2read < NUM_W2R)
+          mbState = MB_READINS;
+        else
+          mbState = MB_READOUTS;
+
+        mbWhat2read++;
+        if (mbWhat2read > NUM_W2R)
+          mbWhat2read = 0;
+      }
     
 	    break;
 
     // Read Ins
     case MB_READINS:
-      if ( mbInBoard == 0)
+      if (mbInNBoard == 0)
         _mbReadIns((char)cfgMB1Add);
       else
         _mbReadIns((char)cfgMB2Add);      
@@ -382,48 +390,48 @@ void _MBLoop(void)
         mbNReply++;
 
         // Alarm
-        if (mbInBoard == 0)
+        if (mbInNBoard == 0)
         {
           alarm[AL_ERROR_MB1] = 1;
-          mbInBoard = 1;
+          mbInNBoard = 1;
         }
         else
         {
           alarm[AL_ERROR_MB2] = 1;
-          mbInBoard = 0;
+          mbInNBoard = 0;
         }
       }
 
       // if response received
       if (mrs485State == MRS485_FRAME_RX)
       {
-        if (mbInBoard == 0)
+        if (mbInNBoard == 0)
         {
           // Analyse response
           if (_mbAnalyseIns((char)cfgMB1Add) == MB_RX_OK)
           {
-            _mbUdateIns(mbInBoard);
+            _mbUdateIns(mbInNBoard);
             alarm[AL_ERROR_MB1] = 0;
           }
           else
             mbNError++;
           
           // Next board
-          mbInBoard = 1;
+          mbInNBoard = 1;
         }
         else
         {
           // Analyse response
           if (_mbAnalyseIns((char)cfgMB2Add) == MB_RX_OK)
           {
-            _mbUdateIns(mbInBoard);
+            _mbUdateIns(mbInNBoard);
             alarm[AL_ERROR_MB2] = 0;
           }
           else
             mbNError++;;
           
           // Next board
-          mbInBoard = 0;
+          mbInNBoard = 0;
         }
                 
         mbTick = millis();
@@ -435,10 +443,10 @@ void _MBLoop(void)
       }
 
       break;
-    /*
+
     // Read Outs
     case MB_READOUTS:
-      if ( mbInBoard == 0)
+      if (mbOutNBoard == 0)
         _mbReadOuts((char)cfgMB1Add);
       else
         _mbReadOuts((char)cfgMB2Add);      
@@ -462,27 +470,27 @@ void _MBLoop(void)
       // if response received
       if (mrs485State == MRS485_FRAME_RX)
       {
-        if (mbInBoard == 0)
+        if (mbOutNBoard == 0)
         {
           // Analyse response
           if (_mbAnalyseOuts((char)cfgMB1Add) == MB_RX_OK)
-            _mbUdateOuts(mbInBoard);
+            _mbUdateOuts(mbOutNBoard);
           else
             mbNError++;
           
           // Next board
-          mbInBoard = 1;
+          mbOutNBoard = 1;
         }
         else
         {
           // Analyse response
           if (_mbAnalyseOuts((char)cfgMB2Add) == MB_RX_OK)
-            _mbUdateIns(mbInBoard);
+            _mbUdateOuts(mbOutNBoard);
           else
             mbNError++;;
           
           // Next board
-          mbInBoard = 0;
+          mbOutNBoard = 0;
         }
 
         mbTick = millis();
@@ -494,7 +502,7 @@ void _MBLoop(void)
       }
 
       break;
-    */
+
     // Write Out
 	  case MB_WRITEOUT:
       // select board

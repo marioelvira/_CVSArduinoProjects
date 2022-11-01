@@ -386,6 +386,16 @@ void _MQTTSend(int itopic)
     str = str + String(mbOuts[0][1]) + String(mbOuts[1][1]) + String(mbOuts[2][1]) + String(mbOuts[3][1]);
     str = str + String(mbOuts[4][1]) + String(mbOuts[5][1]) + String(mbOuts[6][1]) + String(mbOuts[7][1]);
     str = str + "\",\n";
+
+    str = str + "\"mbrO1\":\"";
+    str = str + String(mbROuts[0][0]) + String(mbROuts[1][0]) + String(mbROuts[2][0]) + String(mbROuts[3][0]);
+    str = str + String(mbROuts[4][0]) + String(mbROuts[5][0]) + String(mbROuts[6][0]) + String(mbROuts[7][0]);
+    str = str + "\",\n";
+  
+    str = str + "\"mbrO2\":\"";
+    str = str + String(mbROuts[0][1]) + String(mbROuts[1][1]) + String(mbROuts[2][1]) + String(mbROuts[3][1]);
+    str = str + String(mbROuts[4][1]) + String(mbROuts[5][1]) + String(mbROuts[6][1]) + String(mbROuts[7][1]);
+    str = str + "\",\n";
     
     str = str + "\"bI\":\"";
     str = str + String(ioInA) + String(ioInB) + String(ioInC) + String(ioInD);

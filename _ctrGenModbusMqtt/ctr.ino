@@ -11,6 +11,7 @@ void _CtrSetup(void)
   DisplayIndicador = 0;
   remAct = 0;
 
+  _GenTimeReset();
   genMinOn = 0;
 
   // Control

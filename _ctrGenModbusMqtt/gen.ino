@@ -8,6 +8,8 @@ void _GenTimeReset(void)
   genTimeMin = 0;
   genTimeHour = 0;
   genTimeDay = 0;
+
+  //genMinOn = 0;
 }
 
 ////////////////////////
@@ -31,5 +33,10 @@ void _GenTimeLoop(void)
       }
     }
   }
-  //genMinOn++;
+}
+
+void _GenMinLoop(void)
+{
+  if (InGen == IO_ON)
+    genMinOn++;
 }

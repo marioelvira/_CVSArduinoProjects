@@ -24,7 +24,7 @@ void _TimeLoop(void)
     if (TimeControlSec != 0)
       TimeControlSec--;
     
-	timeTickSec++;	// Forever
+	  timeTickSec++;	// Forever
 	
     timeSec++;
     if (timeSec >= 60)
@@ -42,7 +42,7 @@ void _TimeLoop(void)
         }
       }
       // Gen control
-      genMinOn++;
+      _GenMinLoop();
     }
 
     // Gen control

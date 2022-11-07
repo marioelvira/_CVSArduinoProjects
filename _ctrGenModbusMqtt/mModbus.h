@@ -18,6 +18,7 @@ extern "C" {
 
 #define CRCSIZE       2
 
+#define MB_TSLEEP     5
 #define MB_RXLOOP     500
 #define MB_RXTOUT	    1000
 
@@ -48,6 +49,7 @@ extern "C" {
 #define MB_OUTSSTATUS     5
 #define MB_WRITEOUT       6
 #define MB_OUTSTATUS      7
+#define MB_SLEEP          10
 
 #define MB_NUM_RETRY      2
 

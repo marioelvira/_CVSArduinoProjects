@@ -386,7 +386,8 @@ void _MBLoop(void)
       if (millis() - mbTick >= MB_RXTOUT)
       {   
         mbTick = millis();
-        mbState = MB_STANDBY;
+        mbState = MB_SLEEP; //MB_STANDBY;
+        mbSWake = MB_STANDBY;
         mbNReply++;
 
         // Alarm
@@ -435,7 +436,8 @@ void _MBLoop(void)
         }
                 
         mbTick = millis();
-        mbState = MB_STANDBY;
+        mbState = MB_SLEEP; //MB_STANDBY;
+        mbSWake = MB_STANDBY;
                 
         // clear Rx buffer
         mrs485RxBuffer = "";
@@ -463,7 +465,8 @@ void _MBLoop(void)
       if (millis() - mbTick >= MB_RXTOUT)
       {   
         mbTick = millis();
-        mbState = MB_STANDBY;
+        mbState = MB_SLEEP; //MB_STANDBY;
+        mbSWake = MB_STANDBY;
         mbNReply++;
       }
 
@@ -494,7 +497,8 @@ void _MBLoop(void)
         }
 
         mbTick = millis();
-        mbState = MB_STANDBY;
+        mbState = MB_SLEEP; //MB_STANDBY;
+        mbSWake = MB_STANDBY;
                 
         // clear Rx buffer
         mrs485RxBuffer = "";
@@ -522,21 +526,22 @@ void _MBLoop(void)
       // wait for response
       if (millis() - mbTick >= MB_RXTOUT)
       {
-        mbTick = millis();
-        mbState = MB_STANDBY;
         mbNReply++;
         
         // Retry ??
         if (mbRetry < MB_NUM_RETRY)
         {
           mbNRetry++;
-          mbState = MB_WRITEOUT;
+          mbTick = millis();
+          mbState = MB_SLEEP; //MB_WRITEOUT;
+          mbSWake = MB_WRITEOUT;
           mbRetry++;
         }
         else
         {
           mbTick = millis();
-          mbState = MB_STANDBY;
+          mbState = MB_SLEEP; //MB_STANDBY;
+          mbSWake = MB_STANDBY;
           mbRetry = 0;
         }
       }
@@ -559,7 +564,8 @@ void _MBLoop(void)
             mbOuts[mbOutNum][mbOutBoard] = OUT_ON;   
 
           mbTick = millis();
-          mbState = MB_STANDBY;         
+          mbState = MB_SLEEP; //MB_STANDBY;
+          mbSWake = MB_STANDBY;      
         }
         else
         {
@@ -568,23 +574,33 @@ void _MBLoop(void)
           if (mbRetry < MB_NUM_RETRY)
           {
             mbNRetry++;
-            mbState = MB_WRITEOUT;
+            mbTick = millis();
+            mbState = MB_SLEEP; //MB_WRITEOUT;
+            mbSWake = MB_WRITEOUT;
             mbRetry++;
           }
           else
           {
             mbTick = millis();
-            mbState = MB_STANDBY;
+            mbState = MB_SLEEP; //MB_STANDBY;
+            mbSWake = MB_STANDBY;      
             mbRetry = 0;
           }
         }
-                              
+
         // clear Rx buffer
         mrs485RxBuffer = "";
         mrs485State = MRS485_STANDBY;
       }
 
       break;
+
+    case MB_SLEEP:
+      if (millis() - mbTick >= MB_TSLEEP)
+        mbState = mbSWake;
+
+      break;
+      
   }
 }
 

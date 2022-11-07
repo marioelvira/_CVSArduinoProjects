@@ -247,13 +247,9 @@ void _MQTTSend(int itopic)
     str = str + String(alarm[4]) + String(alarm[5]) + String(alarm[6]) + String(alarm[7]);
     str = str + "\",\n";
 
-    str = str + "\"mer\":";
-    str = str + String(mbNError);
-    str = str + ",\n";
-    
-    str = str + "\"mrt\":";
-    str = str + String(mbNRetry);
-    str = str + ",\n";
+    str = str + "\"mer\":\"";
+    str = str + String(mbNError) + "-" + String(mbNReply) + "-" + String(mbNRetry);
+    str = str + "\",\n";
   
     str = str + "\"md\":";
     str = str + String(controlMode);

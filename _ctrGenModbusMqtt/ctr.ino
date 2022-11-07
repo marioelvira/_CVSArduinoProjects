@@ -283,11 +283,11 @@ void ctrPulsLoop(void)
     Serial.println(">>>>>>>>>>>>>>>>>>>>>>>>>>> Start -> Incrementa");
     #endif
 
-    // Si estamos en paaro
-    if (ControlState == STATE_STANDBY)
+    if ((ControlState == STATE_STANDBY) || 
+        (ControlState == STATE_START))
       ControlState = STATE_START;
-    // Mantenemos el arranque 
-    else if (ControlState != STATE_START)
+    // Mantenemos el arranque
+    else
       ControlState = STATE_GEN_ON;
     
     if (DisplayIndicador == 9)
@@ -324,7 +324,12 @@ void ctrPulsLoop(void)
   // Si se pulsa la parada...
   if (InEndState == PULSACION_OK)
   {
-    ControlState = STATE_GEN_OFF;
+    if ((ControlState == STATE_GEN_ON) || 
+        (ControlState == STATE_GEN_ZUMB) ||
+        (ControlState == STATE_GEN_OFF))
+      ControlState = STATE_GEN_OFF;
+    else
+      ControlState = STATE_STANDBY;
 
     #if (_PULS_SERIAL_DEBUG_ == 1)
     Serial.println(">>>>>>>>>>>>>>>>>>>>>>>>>>> End -> Paro Gen");

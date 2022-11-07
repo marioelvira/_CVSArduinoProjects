@@ -204,6 +204,7 @@ int             OutRS485rxtx;
 ////////////
 #if (_USE_MB_ == 1)
 int mbState;
+int mbSWake;
 unsigned long mbTick;
 byte mbCRC[2];
 

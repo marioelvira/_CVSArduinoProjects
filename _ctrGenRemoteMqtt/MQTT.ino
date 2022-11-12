@@ -166,7 +166,7 @@ void _MQTTSend(void)
 
   // genMinOn
   str = str + "\"genMinOn\":\"";
-  str = str + String(genMinOn);
+  str = str + String(gentimeMinOn);
   str = str + "m\",\n";
 
   // genOff

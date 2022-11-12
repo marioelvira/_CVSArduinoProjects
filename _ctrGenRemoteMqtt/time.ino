@@ -80,7 +80,7 @@ void _TimeLoop(void)
     Serial.println("---------------");
 
     Serial.print("Gen Status: ");
-    Serial.print(genState); Serial.print(" "); Serial.print(genMinOn); Serial.println("m ");
+    Serial.print(genState); Serial.print(" "); Serial.print(gentimeMinOn); Serial.println("m ");
     Serial.print(genTimeDay); Serial.print("d "); Serial.print(genTimeHour); Serial.print(" : "); Serial.print(genTimeMin); Serial.print(" : "); Serial.print(genTimeSec);
     Serial.println(" ");
     Serial.println("---------------");

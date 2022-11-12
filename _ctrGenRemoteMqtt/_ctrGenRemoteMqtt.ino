@@ -143,9 +143,10 @@ int   ControlState;
 int   TimeControlSec;
 int   DisplayIndicador;
 
+unsigned long genTick = 0;
 int   genInStatus;
 int   genState;
-int   genMinOn;
+int   gentimeMinOn = 0;
 
 int   remPulse;
 int   remAct;

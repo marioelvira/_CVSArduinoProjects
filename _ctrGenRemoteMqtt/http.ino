@@ -736,7 +736,7 @@ void _readINS()
 
   html = html + "<tr>";
   html = html + "<td>Generador In (min)</td>";
-  html = html + "<td>" + String(genMinOn) + "</td>";
+  html = html + "<td>" + String(gentimeMinOn) + "</td>";
   html = html + "</tr>";
 
   html = html + "<tr>";

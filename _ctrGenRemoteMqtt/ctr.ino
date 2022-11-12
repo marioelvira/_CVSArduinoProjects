@@ -12,7 +12,6 @@ void _CtrSetup(void)
 
   remPulse = 0;
   remAct = 0;
-  genMinOn = 0;
   
   LuzState = STATE_STANDBY;
 }
@@ -22,51 +21,7 @@ void _CtrSetup(void)
 ///////////////////////
 void _CtrLoop(void)
 {
-  // Gen State
-  if (cfgGenOnPin == 1)
-  {
-    if (InGenOn == IO_OFF)
-      genInStatus = 0;
-    else
-      genInStatus = 1;
-  }
-  else
-  {
-    if (DisplayIndicador == 0)
-      genInStatus = 0;
-    else
-      genInStatus = 1;
-  }
-
-  if (genState != STATE_GEN_OFF)
-    _GenTimeReset();
-
-  switch (genState)
-  {
-    case STATE_GEN_OFF:
-      remAct = 0;
-      //genMinOn = 0;
-      if (genInStatus == 1)
-      {
-        if (remPulse == 1)
-          remAct = 1;
-        else
-          remAct = 0;
-
-        genMinOn = 0;
-        genState = STATE_GEN_ON;
-        remPulse = 0; //BUG
-      }
-      break;
-
-    case STATE_GEN_ON:
-      if (genInStatus == 0)
-      {
-        remPulse = 0; //BUG
-        genState = STATE_GEN_OFF;
-      }
-      break;
-  }
+  _GenLoop();
 
   // Control de Generador
   switch (ControlState)

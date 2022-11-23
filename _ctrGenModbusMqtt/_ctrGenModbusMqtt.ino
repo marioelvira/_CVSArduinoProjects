@@ -3,8 +3,6 @@
 #include <PubSubClient.h>
 #include <EEPROM.h>
 
-#include "__ver.h"
-
 #include "adcs.h"
 #include "alarm.h"
 #include "e2prom.h"
@@ -24,7 +22,9 @@
 /////////////
 // Version //
 /////////////
-const char* FW_Version = FW_VERSION;
+// Get from compile time
+const char* compdate = __DATE__;
+const char* comptime = __TIME__;
 
 ////////////////////
 // DIO definition //
@@ -137,6 +137,7 @@ int mqttPayload;
 //////////
 // Time //
 //////////
+String timeOnString;
 unsigned long timeTick = 0;
 int timeSec = 0;
 int timeMin = 0;
@@ -179,6 +180,7 @@ int   mqttLastCtr;
 //////////////
 // Gen Time //
 //////////////
+String genTimeOnString;
 int genTimeSec = 0;
 int genTimeMin = 0;
 int genTimeHour = 0;
@@ -324,7 +326,7 @@ void setup(void)
   Serial.print("Project: ");
   Serial.println(PROJECT);
   Serial.print("Version: ");
-  Serial.println(FW_VERSION);
+  Serial.println(compdate);
   #endif
   
   // Config setup

@@ -1,3 +1,24 @@
+void _genTimeOnString(void)
+{
+    if (genTimeHour < 10)
+      genTimeOnString = "0" + String(genTimeHour);
+    else
+      genTimeOnString = String(genTimeHour);
+
+    genTimeOnString = genTimeOnString + ":";
+
+    if (genTimeMin < 10)
+      genTimeOnString = genTimeOnString + "0" + String(genTimeMin);
+    else
+      genTimeOnString = genTimeOnString + String(genTimeMin);
+
+    genTimeOnString = genTimeOnString + ":";
+
+    if (genTimeSec < 10)
+      genTimeOnString = genTimeOnString + "0" + String(genTimeSec);
+    else
+      genTimeOnString = genTimeOnString + String(genTimeSec);
+}
 
 /////////////////
 // Time set up //
@@ -33,6 +54,8 @@ void _GenTimeLoop(void)
       }
     }
   }
+  
+  _genTimeOnString();
 }
 
 void _GenMinLoop(void)

@@ -231,7 +231,7 @@ void _MQTTSend(int itopic)
   {
     
     str = str + "\"tOn\":\"";
-    str = str + String(timeDay) + "d " + String(timeHour) + " : " + String(timeMin) + " : " + String(timeSec);
+    str = str + String(timeDay) + "d " + timeOnString;
     str = str + "\",\n";
     /*
     str = str + "\"ram\":";
@@ -280,7 +280,7 @@ void _MQTTSend(int itopic)
     str = str + "m\",\n";
     
     str = str + "\"gOff\":\"";
-    str = str + String(genTimeDay) + "d " + String(genTimeHour) + " : " + String(genTimeMin) + " : " + String(genTimeSec);
+    str = str + String(genTimeDay) + "d " + genTimeOnString;
     str = str + "\",\n";
 
     str = str + "\"gR\":";

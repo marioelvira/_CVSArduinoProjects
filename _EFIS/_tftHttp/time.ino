@@ -1,3 +1,4 @@
+
 void _timeOnString(void)
 {
     if (timeHour < 10)
@@ -29,8 +30,7 @@ void _TimeSetup(void)
   timeSec = 0;
   timeMin = 0;
   timeHour = 0;
-  timeDay = 0;
-
+  
   // RAM setup
   _RAMSetup();
 }
@@ -41,12 +41,7 @@ void _TimeSetup(void)
 void _TimeLoop(void)
 {
   if (millis() - timeTick >= 1000)
-  {
-    if (TimeControlSec != 0)
-      TimeControlSec--;
-    
-	  timeTickSec++;	// Forever
-	
+  {   
     timeSec++;
     if (timeSec >= 60)
     {
@@ -56,25 +51,15 @@ void _TimeLoop(void)
       {
         timeMin = 0;
         timeHour++;
-        if (timeHour >= 24)
-        {
-          timeHour = 0;
-          timeDay++;
-        }
       }
-      // Gen control
-      _GenMinLoop();
     }
-
-    // Gen control
-    _GenTimeLoop();
 
     _timeOnString();
     timeTick = millis();
 
-    _ADCLoop();
-
     _FreeRAM();
+
+    _LEDTest();
 
     #if (_USE_WDE_ == 1)
     _WDELoop();
@@ -83,37 +68,16 @@ void _TimeLoop(void)
     #if (_STATUS_SERIAL_DEBUG_ == 1)
     
     Serial.println("<><><><><><><>");
-    Serial.print("Tiempo Encendio: ");
-    Serial.print(timeDay); Serial.print("d "); Serial.print(timeOnString);
-    Serial.println(" ");
+    Serial.print("Time On: ");
+    Serial.println(timeOnString);
 
     Serial.print("Free RAM: ");
     Serial.println(freeRam);
+
+    Serial.printf("IOS: %d) %d\n", boardIO1, boardIO2);
+
+    Serial.printf("ANA(%d): %d\n", PIN_ANA0, boardAN0);
     
-    Serial.print("Indicador LCD: ");
-    Serial.print(DisplayIndicador);
-    Serial.println(" ");
-    Serial.println("---------------");
-    
-    Serial.print("Control Status: ");
-    Serial.println(ControlState);  
-    Serial.println("---------------");
-
-    Serial.print("Gen Status: ");
-    Serial.print(genMinOn); Serial.println("m ");
-    Serial.print(genTimeDay); Serial.print("d "); Serial.print(genTimeOnString);
-    Serial.println(" ");
-    Serial.println("---------------");
- 
-    Serial.print("Wi-Fi Status: ");
-    Serial.println(wifiStatus);  
-    Serial.println("---------------");
-
-    Serial.print("AdcVal: ");
-    Serial.println(AdcIn);
-    Serial.print("AdcIn: ");
-    Serial.println(AdcVal);    
-
     Serial.println("<><><><><><><>");
     Serial.println(" ");
 

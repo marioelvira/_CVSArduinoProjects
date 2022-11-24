@@ -2,14 +2,14 @@
 
 void _analogOnString (void)
 {
-  if (boardAN0 < 10)
-    sAnalog = "000" + String(boardAN0);
-  else if (boardAN0 < 100)
-    sAnalog = "00" + String(boardAN0);
-  else if (boardAN0 < 1000)
-    sAnalog = "0" + String(boardAN0);      
+  if (boardP3P3 < 10)
+    sAnalog = "000" + String(boardP3P3);
+  else if (boardP3P3 < 100)
+    sAnalog = "00" + String(boardP3P3);
+  else if (boardP3P3 < 1000)
+    sAnalog = "0" + String(boardP3P3);      
   else 
-    sAnalog = String(boardAN0);
+    sAnalog = String(boardP3P3);
 }
 
 //////////////
@@ -27,7 +27,7 @@ void _ANALoop(void)
 {
   if (millis() - ANTick >= ANA_UPDATE_TICK)
   {
-    boardAN0 = analogRead(PIN_ANA0);
+    boardP3P3 = analogRead(PIN_P3P3);
     
     ANTick = millis();
   }

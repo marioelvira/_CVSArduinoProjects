@@ -23,7 +23,7 @@ void _tftScreenInit(void)
   // Version
   tft.drawCentreString(compdate, XMAX/2 - 30, YMAX/2 - 20, 2);
   tft.drawCentreString(comptime, XMAX/2 + 50, YMAX/2 - 20, 2);
-  tft.drawCentreString("Starting", XMAX/2, YMAX/2, 4);
+  tft.drawCentreString("Starting", XMAX/2, (YMAX*2)/3, 4);
 }
 
 void tftScreen2data (void)
@@ -96,10 +96,11 @@ void _tftScreen2(void)
     
     // BOTTOM
     _analogOnString();
-    tft.drawCentreString(sAnalog, XMAX/2, (YMAX*2)/3, 4);
-    
-    tft.drawCentreString(String(boardIO1), XMAX/2 - 25, (YMAX*5)/6, 4);
-    tft.drawCentreString(String(boardIO2), XMAX/2 + 25, (YMAX*5)/6, 4);
+    tft.drawCentreString("ANA" + String (PIN_P3P3) + ": " + sAnalog, XMAX/2 - 75, (YMAX*2)/3, 4);
+    tft.drawCentreString("JST: " + String(joystickState), XMAX/2 + 75, (YMAX*2)/3, 4);
+        
+    tft.drawCentreString("IN"  + String (PIN_P3P2) + ": " + String(boardP3P2), XMAX/2 - 50, (YMAX*5)/6, 4);    
+    tft.drawCentreString("OUT" + String (PIN_CN12) + ": " + String(boardCN1P2), XMAX/2 + 50, (YMAX*5)/6, 4);
         
     // Tick Update
     screenTick = millis();
@@ -143,6 +144,21 @@ void _mTftLoop(void)
  
     case TFT_SCREEN1:
       _tftScreen1();
+
+      if (joystickState == JOYSTICK_ST_UP)
+      {
+        tft.fillScreen(TFT_BLACK);
+        tftScreen2data();
+        tft.setTextColor(TFT_WHITE, TFT_BLACK);
+        
+        screenTick = millis();
+        tftTick = millis();
+        tftState = TFT_SCREEN2;
+      }
+      else if (joystickState == JOYSTICK_ST_PUSH)
+        engineRMP = 4000;
+
+      /*
       if (millis() - tftTick >= SCREEN_INIT_TIMEOUT)
       {
         tft.fillScreen(TFT_BLACK);
@@ -153,10 +169,26 @@ void _mTftLoop(void)
         tftTick = millis();
         tftState = TFT_SCREEN2;
       }
+      */
       break;
  
     case TFT_SCREEN2:
       _tftScreen2();
+
+      if (joystickState == JOYSTICK_ST_DOWN)
+      {
+        tft.fillScreen(TFT_BLACK);
+        tftScreen2data();
+        tft.setTextColor(TFT_WHITE, TFT_BLACK);
+        
+        screenTick = millis();
+        tftTick = millis();
+        tftState = TFT_SCREEN1;
+      }
+      else if (joystickState == JOYSTICK_ST_PUSH)
+        _TimeSetup();
+        
+      /*
       if (millis() - tftTick >= SCREEN_INIT_TIMEOUT)
       {
         tft.fillScreen(TFT_BLACK);
@@ -167,6 +199,7 @@ void _mTftLoop(void)
         tftTick = millis();
         tftState = TFT_SCREEN1;
       }
+      */
       break;
   }
 }

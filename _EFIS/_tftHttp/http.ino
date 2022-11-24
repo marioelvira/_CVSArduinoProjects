@@ -627,16 +627,8 @@ void _readINS()
   html = html + "</tr>";
   
   html = html + "<tr>";
-  html = html + "<td>In IO1</td>";
-  if (boardIO1 == IO_ON)
-   html = html + "<td><font style=\"color:green\">ON</font></td>";
-  else
-   html = html + "<td><font style=\"color:grey\">OFF</font></td>";
-  html = html + "</tr>";
-
-  html = html + "<tr>";
-  html = html + "<td>In IO2</td>";
-  if (boardIO2 == IO_ON)
+  html = html + "<td>IN" + String(PIN_P3P2) + "</td>";
+  if (boardP3P2 == IO_ON)
    html = html + "<td><font style=\"color:green\">ON</font></td>";
   else
    html = html + "<td><font style=\"color:grey\">OFF</font></td>";
@@ -654,16 +646,8 @@ void _readOUTS()
   html = "<table style=\"width:100%\">";
   
   html = html + "<tr>";
-  html = html + "<td>In IO1</td>";
-  if (boardIO1 == OUT_ON)
-   html = html + "<td><font style=\"color:green\">ON</font></td>";
-  else
-   html = html + "<td><font style=\"color:grey\">OFF</font></td>";
-  html = html + "</tr>";
-
-  html = html + "<tr>";
-  html = html + "<td>In IO2</td>";
-  if (boardIO2 == OUT_ON)
+  html = html + "<td>OUT" + String(PIN_CN12) + "</td>";
+  if (boardCN1P2 == IO_ON)
    html = html + "<td><font style=\"color:green\">ON</font></td>";
   else
    html = html + "<td><font style=\"color:grey\">OFF</font></td>";

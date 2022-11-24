@@ -44,7 +44,7 @@ extern "C" {
  *                        |   |---> SW
  * P3                     |   |
  * --                     |   |
- * 1 - IO21               |   |
+ * 1 - IO21 (No usar)     |   |
  * 2 - IO22 --------------|---|
  * 3 - IO35 --------------|
  * 4 - GND
@@ -52,16 +52,15 @@ extern "C" {
  */
 
 // PIN definition
-#define PIN_ANA0          35
-#define PIN_ANA1          27
-
 #define PIN_LED1          4   // RED
 #define PIN_LED2          16  // GREEN
 #define PIN_LED3          17  // BLUE
 
-#define PIN_IO1           21
-#define PIN_IO2           22
-//#define PIN_IO3         35
+#define PIN_CN12          27  // CN1: Pin 2
+
+//#define PIN_P3P1        21  // P3: Pin 1 (No usar)
+#define PIN_P3P2          22  // P3: Pin 2
+#define PIN_P3P3          35  // P3: Pin 3
 
 #define PIN_OUT_ON        1
 #define PIN_OUT_OFF       0

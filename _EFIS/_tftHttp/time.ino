@@ -30,9 +30,6 @@ void _TimeSetup(void)
   timeSec = 0;
   timeMin = 0;
   timeHour = 0;
-  
-  // RAM setup
-  _RAMSetup();
 }
 
 ////////////////////////
@@ -74,9 +71,9 @@ void _TimeLoop(void)
     Serial.print("Free RAM: ");
     Serial.println(freeRam);
 
-    Serial.printf("IOS: %d) %d\n", boardIO1, boardIO2);
-
-    Serial.printf("ANA(%d): %d\n", PIN_ANA0, boardAN0);
+    Serial.printf("OUT(%d): %d\n", PIN_CN12, boardCN1P2); 
+    Serial.printf("IN(%d): %d\n",  PIN_P3P2, boardP3P2);
+    Serial.printf("ANA(%d): ",     PIN_P3P3); Serial.println(sAnalog);
     
     Serial.println("<><><><><><><>");
     Serial.println(" ");

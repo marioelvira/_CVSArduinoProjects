@@ -5,7 +5,7 @@ extern "C" {
 #ifndef _ANA_H_
 #define _ANA_H_
 
-#define ANA_UPDATE_TICK   500
+#define ANA_UPDATE_TICK   200
 
 #endif // _ANA_H_
 

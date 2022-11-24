@@ -8,15 +8,19 @@
 
 #include <esp_task_wdt.h>
 
+#include "alarm.h"
 #include "ana.h"
 #include "ctr.h"
 #include "e2prom.h"
 #include "http.h"
 #include "io.h"
 #include "ip.h"
+#include "joystick.h"
 #include "leds.h"
 #include "main.h"
+#include "mModbus.h"
 #include "mRAM.h"
+#include "mRS485.h"
 #include "mTft.h"
 #include "wde.h"
 #include "wifi.h"
@@ -31,8 +35,8 @@ const char* comptime = __TIME__;
 ////////////////////
 // DIO definition //
 ////////////////////
-int   boardIO1;
-int   boardIO2;
+int   boardCN1P2;
+int   boardP3P2;
 
 int   boardLed1;  // RED
 int   boardLed2;  // GREEN
@@ -40,12 +44,23 @@ int   boardLed3;  // BLUE
 
 int   ledTest = 0;
 
+///////////
+// Alarm //
+///////////
+int    alarms[AL_ARRAY_SIZE];
+
 ////////////
 // Analog //
 ////////////
 unsigned long ANTick = 0;
-int     boardAN0;
+int     boardP3P3;
 String  sAnalog;
+
+//////////////
+// Joystick //
+//////////////
+unsigned long joystickTick = 0;
+int joystickState;
 
 ///////////
 // Wi-Fi //
@@ -115,6 +130,8 @@ int batteryAmp;
 ////////////
 // Config //
 ////////////
+int cfgMB1Add;
+
 int   TimeGenerador1P;
 int   TimeGenerador2P;
 int   TimeGenerador3P;
@@ -133,6 +150,45 @@ unsigned long tftTick = 0;
 int   tftState;
 
 unsigned long screenTick = 0;
+
+///////////
+// RS485 //
+///////////
+#if (_USE_RS485_ == 1)
+// RS485
+int             mrs485State;
+String          mrs485RxBuffer = "";
+unsigned long   mrs485tick;
+char            mrs485TxBuffer[MRS485_ARRAY_SIZE];
+int             mrs485TxNumBytes;
+
+int             OutRS485rxtx;
+
+////////////
+// Modbus //
+////////////
+#if (_USE_MB_ == 1)
+int mbState;
+int mbSWake;
+unsigned long mbTick;
+byte mbCRC[2];
+
+// Modbus DIOs
+int mbIns[MB_NUM_IOS];
+int mbOuts[MB_NUM_IOS];
+int mbROuts[MB_NUM_IOS];
+
+int mbOutBoard = 0;
+int mbOutNum = 0;
+int mbOutVal = 0x00;
+
+int mbNError = 0;
+int mbNReply = 0;
+int mbNRetry = 0;
+int mbRetry = 0;
+
+#endif
+#endif
 
 //////////
 // mRAM //
@@ -154,11 +210,10 @@ void _PINSetup(void)
   //-----//
   // ADC //
   //-----//
-  pinMode(PIN_ANA0, INPUT);
-  //pinMode(PIN_ANA1, INPUT);
+  pinMode(PIN_P3P3, INPUT);
   
   //------//
-  // OUTS //
+  // LEDS //
   //------//
 
   // Ledboards
@@ -175,10 +230,17 @@ void _PINSetup(void)
   boardLed3 = OUT_OFF;
 
   //-----//
-  // INS //
+  // OUT //
   //-----//
-  pinMode(PIN_IO1, INPUT);
-  pinMode(PIN_IO2, INPUT);
+  
+  pinMode(PIN_CN12, OUTPUT);
+  digitalWrite(PIN_CN12, PIN_OUT_OFF);
+  boardCN1P2 = OUT_OFF;
+  
+  //----//
+  // IN //
+  //----//
+  pinMode(PIN_P3P2, INPUT_PULLUP);
 }
 
 //============//
@@ -202,6 +264,9 @@ void setup(void)
   _PINSetup();
   _IOSetup();
   _ANASetup();
+  _JOYSTICKSetup();
+
+  _ALARMSetup();
 
   // Wi-Fi setup
   _WifiSetup();
@@ -211,6 +276,15 @@ void setup(void)
 
   // Time Setup
   _TimeSetup();
+  // RAM setup
+  _RAMSetup();
+
+  #if (_USE_RS485_ == 1)
+  _RS485Setup();
+  #if (_USE_MB_ == 1)
+  _MBSetup();
+  #endif
+  #endif
 
   // Ctr setup
   _CtrSetup();
@@ -229,7 +303,7 @@ void setup(void)
 void _PINLoop()
 {
   //------//
-  // OUTS //
+  // LEDS //
   //------//
 
   if (boardLed1 == OUT_OFF)
@@ -248,17 +322,25 @@ void _PINLoop()
     digitalWrite(PIN_LED3, PIN_OUT_OFF);  
 
   //-----//
-  // INS //
+  // OUT //
   //-----//
-  if (digitalRead(PIN_IO1) == PIN_IN_OFF)
-    boardIO1 = IO_OFF;
+  
+  if (boardCN1P2 == OUT_OFF)
+    digitalWrite(PIN_CN12, PIN_OUT_ON);
   else
-    boardIO1 = IO_ON;
+    digitalWrite(PIN_CN12, PIN_OUT_OFF); 
+    
+  //----//
+  // IN //
+  //----//
+  
+  if (digitalRead(PIN_P3P2) == PIN_IN_OFF)
+    boardP3P2 = IO_OFF;
+  else
+    boardP3P2 = IO_ON;
 
-  if (digitalRead(PIN_IO2) == PIN_IN_OFF)
-    boardIO2 = IO_OFF;
-  else
-    boardIO2 = IO_ON;
+  // Test
+  boardCN1P2 = boardP3P2;
 }
 
 //===========//
@@ -269,6 +351,7 @@ void loop()
   _PINLoop();
   _IOLoop();
   _ANALoop();
+  _JOYSTICKLoop();
   
   //if (ctrMode == MODE_AUTO)
   //  _OUTSLoop();
@@ -283,4 +366,13 @@ void loop()
   _mTftLoop();
   
   _TimeLoop();
+  
+  #if (_USE_RS485_ == 1)
+  _RS485Loop();
+  #if (_USE_MB_ == 1)
+  _MBLoop();
+  #endif
+  #endif
+
+  //_ALARMLoop();
 }

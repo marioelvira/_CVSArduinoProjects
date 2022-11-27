@@ -8,6 +8,7 @@ extern "C" {
 ///////////////////
 // IO definition //
 ///////////////////
+// Board Select: ESP 32 Arduino -> DEV ESP32 Module
 
 /*                       esp32-2432s028
  *                         ----------
@@ -59,8 +60,8 @@ extern "C" {
 #define PIN_CN12          27  // CN1: Pin 2
 
 //#define PIN_P3P1        21  // P3: Pin 1 (No usar)
-#define PIN_P3P2          22  // P3: Pin 2
-#define PIN_P3P3          35  // P3: Pin 3
+#define PIN_P3P2          22  // P3: Pin 2 (As Digital)
+#define PIN_P3P3          35  // P3: Pin 3 (As Analog)
 
 #define PIN_OUT_ON        1
 #define PIN_OUT_OFF       0

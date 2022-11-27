@@ -12,16 +12,18 @@ extern "C" {
 #define YMAX    239 //240
 
 // Timers
+#define SCREEN_INIT_TIMEOUT   5000  // 5s
 #define SCREEN_UPDATE_TICK    100
-#define SCREEN_INIT_TIMEOUT   10000  // 10s
+#define SCREEN_BLIND_TICK     500
 
 // Colors
 #define TFT_GREY      0x5AEB
 
 // TFT States
-#define TFT_INIT      0
-#define TFT_SCREEN1   1
-#define TFT_SCREEN2   2
+#define TFT_INIT        0
+#define TFT_MENU_INIT   10
+#define TFT_SCREEN1     20
+#define TFT_SCREEN2     30
 
 #endif // _MTFT_H_
 

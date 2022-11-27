@@ -151,6 +151,8 @@ int   tftState;
 
 unsigned long screenTick = 0;
 
+int   tftScreenState;
+
 ///////////
 // RS485 //
 ///////////

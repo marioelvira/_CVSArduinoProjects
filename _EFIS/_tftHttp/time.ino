@@ -38,7 +38,9 @@ void _TimeSetup(void)
 void _TimeLoop(void)
 {
   if (millis() - timeTick >= 1000)
-  {   
+  {
+    _timeOnString();
+        
     timeSec++;
     if (timeSec >= 60)
     {
@@ -51,7 +53,6 @@ void _TimeLoop(void)
       }
     }
 
-    _timeOnString();
     timeTick = millis();
 
     _FreeRAM();

@@ -82,33 +82,79 @@ void tftScreenMenuTop (void)
   tft.drawLine(XMIN, YMAX/6,   XMAX, YMAX/6,     TFT_GREY);
 }
 
+// Menu
+void tftScreenMenuState(void)
+{
+  for (int i = 0; i < TFT_MENU_NITEM; i++)
+  {
+    if (tftMenuSelection == i)
+      tft.drawString(">", XMAX/9,  TFT_MENU_ITEM1 + i*TFT_MENU_NEXT, 4);
+    else 
+      tft.drawString("   ", XMAX/9,  TFT_MENU_ITEM1 + i*TFT_MENU_NEXT, 4);
+  }
+}
+
 void tftScreenMenu (void)
 {
-  switch (tftScreenState)
+  switch (tftMenuState)
   {
     case 0:
       tftScreenMenuTop();
       tft.setTextColor(TFT_WHITE, TFT_BLACK);
-      tftScreenState = 1;
+      //tftMenuSelection = 0;
+      tftScreenMenuState();
+      
+      tftMenuState = 1;
       break;
 
     case 1:
       // Title
-      tft.drawCentreString("Tittle - Menu 1", XMAX/2, 10, 4);
-
-      tft.drawString("- Item 1", XMAX/6,  55, 4);
-      tft.drawString("- Item 2", XMAX/6,  80, 4);
-      tft.drawString("- Item 3", XMAX/6, 105, 4);
-      tft.drawString("- Item 4", XMAX/6, 130, 4);
-      tft.drawString("- Item 5", XMAX/6, 155, 4);
-      tft.drawString("- Item 6", XMAX/6, 180, 4);
-      tft.drawString("- Item 7", XMAX/6, 205, 4);
-                  
-      tftScreenState = 2;
+      tft.drawCentreString("Tittle - Menu 1", XMAX/2, TFT_MENU_TITLE, 4);
+      for (int i = 0; i < TFT_MENU_NITEM; i++)
+        tft.drawString("Item", XMAX/6,  TFT_MENU_ITEM1 + i*TFT_MENU_NEXT, 4);
+                        
+      tftMenuState = 2;
       break;
 
     case 2:
-      break;  
+
+      if (joystickState == JOYSTICK_ST_UP)
+      {
+        tftMenuSelection++;
+        if (tftMenuSelection == TFT_MENU_NITEM)
+          tftMenuSelection = 0;
+        tftScreenMenuState();
+
+        tftMenuState = 3;
+        tftMenuTick = millis();
+      }
+      else if (joystickState == JOYSTICK_ST_DOWN)
+      {
+        if (tftMenuSelection == 0)
+          tftMenuSelection = (TFT_MENU_NITEM - 1);
+        else
+          tftMenuSelection--;
+
+        tftScreenMenuState();
+
+        tftMenuState = 3;
+        tftMenuTick = millis();
+      }
+      else if (joystickState == JOYSTICK_ST_PUSH)
+      {
+        tftScreenTick = millis();
+        tftScreenState = 0;
+        tftState = TFT_SCREEN1;
+      }
+    
+      break;
+
+    case 3:
+      if (millis() - tftMenuTick < SCREEN_BLIND_TICK)
+        break;
+
+      tftMenuState = 2;
+      break;
   }
 }
 
@@ -119,13 +165,13 @@ void _tftScreen1(void)
     case 0:
       tftScreen2data();
       tft.setTextColor(TFT_WHITE, TFT_BLACK);
-      screenTick = millis();
+      tftScreenUpdateTick = millis();
       tftScreenState = 1;
       break;
 
     case 1:
   
-      if (millis() - screenTick >= SCREEN_UPDATE_TICK)
+      if (millis() - tftScreenUpdateTick >= SCREEN_UPDATE_TICK)
       {
         String sengineRMP;
         String scarbPreasure;
@@ -167,8 +213,28 @@ void _tftScreen1(void)
         //tft.drawCentreString("XXXX", XMAX/2 + 100, (YMAX*2)/3 + 28, 4);
         
         // Tick Update
-        screenTick = millis();
+        tftScreenUpdateTick = millis();
       }
+
+      // Joystick
+      if (millis() - tftScreenTick < SCREEN_BLIND_TICK)
+        break;
+ 
+      if ((joystickState == JOYSTICK_ST_UP) || (joystickState == JOYSTICK_ST_DOWN))
+      {
+        tftScreenTick = millis();
+        tftScreenState = 0;
+        if (joystickState == JOYSTICK_ST_UP)
+        {
+          tftMenuState = 0;
+          tftState = TFT_MENU_INIT;
+        }
+        else
+          tftState = TFT_SCREEN2;
+      }
+      else if (joystickState == JOYSTICK_ST_PUSH)
+        engineRMP = 4000;      
+      
       break;
    }
 }
@@ -180,12 +246,12 @@ void _tftScreen2(void)
     case 0:
       tftScreen2data();
       tft.setTextColor(TFT_WHITE, TFT_BLACK);
-      screenTick = millis();
+      tftScreenUpdateTick = millis();
       tftScreenState = 1;
       break;
         
     case 1:
-      if (millis() - screenTick >= SCREEN_UPDATE_TICK)
+      if (millis() - tftScreenUpdateTick >= SCREEN_UPDATE_TICK)
       {     
         // TOP
         yield();
@@ -201,8 +267,27 @@ void _tftScreen2(void)
         tft.drawCentreString("OUT" + String (PIN_CN12) + ": " + String(boardCN1P2), XMAX/2 + 50, (YMAX*5)/6, 4);
             
         // Tick Update
-        screenTick = millis();
+        tftScreenUpdateTick = millis();
       }
+
+      // Joystick
+      if (millis() - tftScreenTick < SCREEN_BLIND_TICK)
+        break;
+
+      if ((joystickState == JOYSTICK_ST_UP) || (joystickState == JOYSTICK_ST_DOWN))
+      {
+        tftScreenTick = millis();
+        tftScreenState = 0;
+        if (joystickState == JOYSTICK_ST_UP)
+          tftState = TFT_SCREEN1;
+        else
+        {
+          tftMenuState = 0;
+          tftState = TFT_MENU_INIT;
+        }
+      }
+      else if (joystickState == JOYSTICK_ST_PUSH)
+        _TimeSetup();
       break;
   }
 }
@@ -220,6 +305,12 @@ void _mTftSetup(void)
   // Init state
   tftState = TFT_INIT;
   tftTick = millis();
+
+  tftScreenState = 0;
+  tftScreenTick = millis();
+  
+  // Selection
+  tftMenuSelection = 0;
 }
 
 ///////////////////////
@@ -240,54 +331,14 @@ void _mTftLoop(void)
 
     case TFT_MENU_INIT:
       tftScreenMenu();
-
-      if (joystickState == JOYSTICK_ST_PUSH)
-      {
-        tftTick = millis();
-        tftScreenState = 0;
-        tftState = TFT_SCREEN1;
-      }
-
       break;
  
     case TFT_SCREEN1:
       _tftScreen1();
-
-      if (millis() - tftTick < SCREEN_BLIND_TICK)
-        break;
- 
-      if ((joystickState == JOYSTICK_ST_UP) || (joystickState == JOYSTICK_ST_DOWN))
-      {
-        tftTick = millis();
-        tftScreenState = 0;
-        if (joystickState == JOYSTICK_ST_UP)
-          tftState = TFT_MENU_INIT;
-        else
-          tftState = TFT_SCREEN2;
-      }
-      else if (joystickState == JOYSTICK_ST_PUSH)
-        engineRMP = 4000;
-
       break;
  
     case TFT_SCREEN2:
-      _tftScreen2();
-
-      if (millis() - tftTick < SCREEN_BLIND_TICK)
-        break;
-
-      if ((joystickState == JOYSTICK_ST_UP) || (joystickState == JOYSTICK_ST_DOWN))
-      {
-        tftTick = millis();
-        tftScreenState = 0;
-        if (joystickState == JOYSTICK_ST_UP)
-          tftState = TFT_SCREEN1;
-        else
-          tftState = TFT_MENU_INIT;
-      }
-      else if (joystickState == JOYSTICK_ST_PUSH)
-        _TimeSetup();
-        
+      _tftScreen2();       
       break;
   }
 }

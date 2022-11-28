@@ -30,6 +30,8 @@ void _TimeSetup(void)
   timeSec = 0;
   timeMin = 0;
   timeHour = 0;
+
+  _timeOnString();
 }
 
 ////////////////////////

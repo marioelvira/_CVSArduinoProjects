@@ -25,6 +25,13 @@ extern "C" {
 #define TFT_SCREEN1     20
 #define TFT_SCREEN2     30
 
+// TFT Menu
+#define TFT_MENU_TITLE  10
+
+#define TFT_MENU_ITEM1  55
+#define TFT_MENU_NEXT   25
+#define TFT_MENU_NITEM  7
+
 #endif // _MTFT_H_
 
 #ifdef __cplusplus

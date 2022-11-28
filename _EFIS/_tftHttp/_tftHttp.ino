@@ -146,12 +146,19 @@ int   TimeGenerador9P;
 // TFT //
 /////////
 TFT_eSPI tft = TFT_eSPI();
+
 unsigned long tftTick = 0;
 int   tftState;
 
-unsigned long screenTick = 0;
+unsigned long tftScreenUpdateTick = 0;
 
-int   tftScreenState;
+unsigned long tftScreenTick = 0;
+int tftScreenState;
+
+// Menu
+unsigned long tftMenuTick = 0;
+int tftMenuState;
+int tftMenuSelection;
 
 ///////////
 // RS485 //

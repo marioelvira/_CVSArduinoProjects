@@ -1,3 +1,7 @@
+#include "main.h"
+
+#if (_USE_RAM_ == 1)
+
 ////////////////
 // RAM set up //
 ////////////////
@@ -21,3 +25,5 @@ void _FreeRAM(void)
     #endif
   }
 }
+
+#endif

@@ -53,7 +53,7 @@ void _serveMAIN()
   html = html + "</p>";
   html = html + "<div class=\"section\">Configuraci&oacuten</div>";
   html = html + "<p>";
-  //html = html + "  <a href=\"settings.htm\"><input type=\"button\" value=\"Wi-Fi\"></a>";
+  html = html + "  <a href=\"settings.htm\"><input type=\"button\" value=\"Wi-Fi\"></a>";
   html = html + "  <a href=\"timeSettings.htm\"><input type=\"button\" value=\"Config\"></a>";
   //html = html + "  <input type=\"button\" value=\"Reset Timers\" onclick=\"sendOUT(20)\">";
   html = html + "</p>";
@@ -135,18 +135,10 @@ void _serveTimeSETTINGS()
   html = html + "<form method='get' action='setTimeSettings'>";
 
   // Temporizaciones 
-  html = html + "<div class=\"section\"><span>2</span>Temps Generador</div>";
+  html = html + "<div class=\"section\"><span>1</span>Modbus</div>";
   html = html + "<div class=\"inner-wrap\">";
-  
-  html = html + "<label>Tiempo P1 (minutos)<input type=\"text\"  maxlength=\"16\" value=\"" + String(TimeGenerador1P) + "\" name=\"time1\"/></label>";
-  html = html + "<label>Tiempo P2 (minutos)<input type=\"text\"  maxlength=\"16\" value=\"" + String(TimeGenerador2P) + "\" name=\"time2\"/></label>";
-  html = html + "<label>Tiempo P3 (minutos)<input type=\"text\"  maxlength=\"16\" value=\"" + String(TimeGenerador3P) + "\" name=\"time3\"/></label>";
-  html = html + "<label>Tiempo P4 (minutos)<input type=\"text\"  maxlength=\"16\" value=\"" + String(TimeGenerador4P) + "\" name=\"time4\"/></label>";
-  html = html + "<label>Tiempo P5 (minutos)<input type=\"text\"  maxlength=\"16\" value=\"" + String(TimeGenerador5P) + "\" name=\"time5\"/></label>";
-  html = html + "<label>Tiempo P6 (horas)<input type=\"text\"  maxlength=\"16\" value=\"" + String(TimeGenerador6P) + "\" name=\"time6\"/></label>";
-  html = html + "<label>Tiempo P7 (horas)<input type=\"text\"  maxlength=\"16\" value=\"" + String(TimeGenerador7P) + "\" name=\"time7\"/></label>";
-  html = html + "<label>Tiempo P8 (horas)<input type=\"text\"  maxlength=\"16\" value=\"" + String(TimeGenerador8P) + "\" name=\"time8\"/></label>";
-  html = html + "<label>Tiempo P9 (horas)<input type=\"text\"  maxlength=\"16\" value=\"" + String(TimeGenerador9P) + "\" name=\"time9\"/></label>";
+
+  html = html + "<label>Address <input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgMbId) + "\" name=\"cfgMbid\"/></label>";
   
   html = html + "</div>";
   // End
@@ -170,28 +162,12 @@ void _serveTimeSETTINGS()
 void _setTimeSETTINGS()
 {
   String html = "";
-  
-  String rtime1 = httpServer.arg("time1");
-  String rtime2 = httpServer.arg("time2");
-  String rtime3 = httpServer.arg("time3");
-  String rtime4 = httpServer.arg("time4");
-  String rtime5 = httpServer.arg("time5");
-  String rtime6 = httpServer.arg("time6");
-  String rtime7 = httpServer.arg("time7");
-  String rtime8 = httpServer.arg("time8");
-  String rtime9 = httpServer.arg("time9");
 
+  String rcfgMbid  = httpServer.arg("cfgMbid");
+  
   int error = 0;
 
-  if ((rtime1.length() == 0)  ||
-      (rtime2.length() == 0)  ||
-      (rtime3.length() == 0)  ||
-      (rtime4.length() == 0)  ||
-      (rtime5.length() == 0)  ||
-      (rtime6.length() == 0)  ||
-      (rtime7.length() == 0)  ||
-      (rtime8.length() == 0)  ||
-      (rtime9.length() == 0))
+  if ((rcfgMbid.length() == 0))
   {
     error = 1;  // falta un campo...
     #if (_HTTP_SERIAL_DEBUG_ == 1)
@@ -201,41 +177,15 @@ void _setTimeSETTINGS()
 
   // Si no hay error...
   if (error == 0)
-  {   
-    TimeGenerador1P = rtime1.toInt();
-    TimeGenerador2P = rtime2.toInt();
-    TimeGenerador3P = rtime3.toInt();
-    TimeGenerador4P = rtime4.toInt();
-    TimeGenerador5P = rtime5.toInt();
-    TimeGenerador6P = rtime6.toInt();
-    TimeGenerador7P = rtime7.toInt();
-    TimeGenerador8P = rtime8.toInt();
-    TimeGenerador9P = rtime9.toInt();
+  {
+    cfgMbId    = rcfgMbid.toInt();
     
     #if (_HTTP_SERIAL_DEBUG_ == 1)  
-    
-    Serial.print("Time 1P: ");  Serial.print (TimeGenerador1P);  Serial.println(" min");
-    Serial.print("Time 2P: ");  Serial.print (TimeGenerador2P);  Serial.println(" min");
-    Serial.print("Time 3P: ");  Serial.print (TimeGenerador3P);  Serial.println(" min");
-    Serial.print("Time 4P: ");  Serial.print (TimeGenerador4P);  Serial.println(" min");
-    Serial.print("Time 5P: ");  Serial.print (TimeGenerador5P);  Serial.println(" min");
-    Serial.print("Time 6P: ");  Serial.print (TimeGenerador6P);  Serial.println(" hour");
-    Serial.print("Time 7P: ");  Serial.print (TimeGenerador7P);  Serial.println(" hour");
-    Serial.print("Time 8P: ");  Serial.print (TimeGenerador8P);  Serial.println(" hour");
-    Serial.print("Time 9P: ");  Serial.print (TimeGenerador9P);  Serial.println(" hour");
-
+    Serial.print("Modbus Id: ");   Serial.println(cfgMbId);
     #endif   
-    
-    EEPROM.write(EEPROM_ADD_1P_TIMER_GEN,   TimeGenerador1P);
-    EEPROM.write(EEPROM_ADD_2P_TIMER_GEN,   TimeGenerador2P);
-    EEPROM.write(EEPROM_ADD_3P_TIMER_GEN,   TimeGenerador3P);
-    EEPROM.write(EEPROM_ADD_4P_TIMER_GEN,   TimeGenerador4P);
-    EEPROM.write(EEPROM_ADD_5P_TIMER_GEN,   TimeGenerador5P);
-    EEPROM.write(EEPROM_ADD_6P_TIMER_GEN,   TimeGenerador6P);
-    EEPROM.write(EEPROM_ADD_7P_TIMER_GEN,   TimeGenerador7P);
-    EEPROM.write(EEPROM_ADD_8P_TIMER_GEN,   TimeGenerador8P);
-    EEPROM.write(EEPROM_ADD_9P_TIMER_GEN,   TimeGenerador9P);
 
+    EEPROM.write(EEPROM_ADD_MODBUS_ID,     (byte)cfgMbId);
+    
     EEPROM.commit();    //Store data to EEPROM
   }
 
@@ -725,10 +675,12 @@ void _readTEMPS()
   html = html + "<td>" + timeOnString + "</td>";
   html = html + "</tr>";
 
+  #if (_USE_RAM_ == 1)
   html = html + "<tr>";
   html = html + "<td>Free RAM</td>";
   html = html + "<td>" + String(freeRam) + "</td>";
   html = html + "</tr>";
+  #endif
   
   html = html + "</table>";
   

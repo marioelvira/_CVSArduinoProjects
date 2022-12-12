@@ -182,26 +182,10 @@ void _mbReadInput(char address)
     mrs485TxBuffer[0] = (char)address;
     mrs485TxBuffer[1] = (char)MB_FUNC_READ_INPUT_REGISTER;
     mrs485TxBuffer[2] = MB_NREG_CTR*2;
-    
-    mrs485TxBuffer[3] = 0;    // 0 - IRRAD W/m2 (x10)
-    mrs485TxBuffer[4] = 111;  // 0 - IRRAD W/m2 (x10)
-    mrs485TxBuffer[5] = 0x00; // 1 
-    mrs485TxBuffer[6] = 0x00; // 1
-    mrs485TxBuffer[7] = 0x00; // 2 
-    mrs485TxBuffer[8] = 0x00; // 2
-    mrs485TxBuffer[9] = 0;     // 3 - WIND m/S (x10)
-    mrs485TxBuffer[10] = 222;  // 3 - WIND m/S (x10)
-    mrs485TxBuffer[11] = 0x00; // 4
-    mrs485TxBuffer[12] = 0x00; // 4
-    mrs485TxBuffer[13] = 0x00; // 5
-    mrs485TxBuffer[14] = 0x00; // 5
-    mrs485TxBuffer[15] = 0x00; // 6
-    mrs485TxBuffer[16] = 0x00; // 6
-    mrs485TxBuffer[17] = 0;   // 7 - Cell Temp ºC (x10)
-    mrs485TxBuffer[18] = 234; // 7 - Cell Temp ºC (x10)
-    mrs485TxBuffer[19] = 0;   // 8 - Ext Temp ºC (x10)
-    mrs485TxBuffer[20] = 235; // 8 - Ext Temp ºC (x10)
-    
+
+    for (int i = 0; i < MB_NREG_CTR; i++)
+      mrs485TxBuffer[3 + i] = i;
+
     // Num Bytes
     mrs485TxNumBytes = mrs485TxBuffer[2] + 5;
   }

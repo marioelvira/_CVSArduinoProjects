@@ -1,3 +1,4 @@
+#include "main.h"
 
 void _timeOnString(void)
 {
@@ -32,6 +33,10 @@ void _TimeSetup(void)
   timeHour = 0;
 
   _timeOnString();
+
+  #if (_USE_RAM_ == 1)
+  _RAMSetup();
+  #endif
 }
 
 ////////////////////////
@@ -57,7 +62,9 @@ void _TimeLoop(void)
 
     timeTick = millis();
 
+    #if (_USE_RAM_ == 1)
     _FreeRAM();
+    #endif
 
     _LEDTest();
 
@@ -71,12 +78,14 @@ void _TimeLoop(void)
     Serial.print("Time On: ");
     Serial.println(timeOnString);
 
+    #if (_USE_RAM_ == 1)
     Serial.print("Free RAM: ");
     Serial.println(freeRam);
+    #endif
 
-    Serial.printf("OUT(%d): %d\n", PIN_CN12, boardCN1P2); 
+    //Serial.printf("OUT(%d): %d\n", PIN_CN12, boardCN1P2); 
     Serial.printf("IN(%d): %d\n",  PIN_P3P2, boardP3P2);
-    Serial.printf("ANA(%d): ",     PIN_P3P3); Serial.println(sAnalog);
+    Serial.printf("ANA(%d): %d\n", PIN_P3P3, boardP3P3);
     
     Serial.println("<><><><><><><>");
     Serial.println(" ");

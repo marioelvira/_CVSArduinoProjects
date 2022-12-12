@@ -14,7 +14,8 @@ extern "C" {
 ///////////
 // Debug //
 ///////////
-#define _USE_WDE_                  1
+#define _USE_RAM_                  0
+#define _USE_WDE_                  0
 #define _USE_RS485_                1
 #define _USE_MB_                   1
 

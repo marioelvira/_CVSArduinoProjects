@@ -263,8 +263,8 @@ void _tftScreen2(void)
         tft.drawCentreString("ANA" + String (PIN_P3P3) + ": " + sAnalog, XMAX/2 - 75, (YMAX*2)/3, 4);
         tft.drawCentreString("JST: " + String(joystickState), XMAX/2 + 75, (YMAX*2)/3, 4);
             
-        tft.drawCentreString("IN"  + String (PIN_P3P2) + ": " + String(boardP3P2), XMAX/2 - 50, (YMAX*5)/6, 4);    
-        tft.drawCentreString("OUT" + String (PIN_CN12) + ": " + String(boardCN1P2), XMAX/2 + 50, (YMAX*5)/6, 4);
+        tft.drawCentreString("IN"  + String (PIN_P3P2) + ": " + String(boardP3P2), XMAX/2 - 75, (YMAX*5)/6, 4);    
+        //tft.drawCentreString("OUT" + String (PIN_CN12) + ": " + String(boardCN1P2), XMAX/2 + 50, (YMAX*5)/6, 4);
             
         // Tick Update
         tftScreenUpdateTick = millis();

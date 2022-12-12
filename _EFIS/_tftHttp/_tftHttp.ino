@@ -35,7 +35,7 @@ const char* comptime = __TIME__;
 ////////////////////
 // DIO definition //
 ////////////////////
-int   boardCN1P2;
+//int boardCN1P2;
 int   boardP3P2;
 
 int   boardLed1;  // RED
@@ -130,17 +130,7 @@ int batteryAmp;
 ////////////
 // Config //
 ////////////
-int cfgMB1Add;
-
-int   TimeGenerador1P;
-int   TimeGenerador2P;
-int   TimeGenerador3P;
-int   TimeGenerador4P;
-int   TimeGenerador5P;
-int   TimeGenerador6P;
-int   TimeGenerador7P;
-int   TimeGenerador8P;
-int   TimeGenerador9P;
+int cfgMbId;
 
 /////////
 // TFT //
@@ -202,7 +192,9 @@ int mbRetry = 0;
 //////////
 // mRAM //
 //////////
+#if (_USE_RAM_ == 1)
 unsigned long freeRam;
+#endif
 
 ////////
 // WD //
@@ -241,11 +233,11 @@ void _PINSetup(void)
   //-----//
   // OUT //
   //-----//
-  
+  /*
   pinMode(PIN_CN12, OUTPUT);
   digitalWrite(PIN_CN12, PIN_OUT_OFF);
   boardCN1P2 = OUT_OFF;
-  
+  */
   //----//
   // IN //
   //----//
@@ -259,7 +251,7 @@ void setup(void)
 { 
   #if (_SERIAL_DEBUG_ == 1)
   delay(100);  // 100ms
-  Serial.begin(115200);
+  Serial.begin(9600);
   Serial.print("Project: ");
   Serial.println(PROJECT);
   Serial.print("Version: ");
@@ -285,8 +277,6 @@ void setup(void)
 
   // Time Setup
   _TimeSetup();
-  // RAM setup
-  _RAMSetup();
 
   #if (_USE_RS485_ == 1)
   _RS485Setup();
@@ -333,12 +323,12 @@ void _PINLoop()
   //-----//
   // OUT //
   //-----//
-  
+  /*
   if (boardCN1P2 == OUT_OFF)
     digitalWrite(PIN_CN12, PIN_OUT_ON);
   else
     digitalWrite(PIN_CN12, PIN_OUT_OFF); 
-    
+  */
   //----//
   // IN //
   //----//
@@ -348,8 +338,6 @@ void _PINLoop()
   else
     boardP3P2 = IO_ON;
 
-  // Test
-  boardCN1P2 = boardP3P2;
 }
 
 //===========//

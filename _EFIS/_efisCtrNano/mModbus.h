@@ -43,9 +43,9 @@ extern "C" {
 #define MB_FUNC_OTHER_REPORT_SLAVEID          ( 17 )  // 0x11
 #define MB_FUNC_ERROR                         ( 128 )
 
-// Mapa
+// Map
 #define MB_ADD_CTR      0
-#define MB_NREG_CTR     100
+#define MB_NREG_CTR     10
 #define MB_ADD_INS      1000
 #define MB_NREG_INS     2
 #define MB_ADD_OUTS     1010

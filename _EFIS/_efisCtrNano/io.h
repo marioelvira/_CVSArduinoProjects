@@ -9,6 +9,8 @@ extern "C" {
 // IO definition //
 ///////////////////
 
+// Arduino AVR boards -> Arduino Nano
+
 /*                           |--------|
  *                        ---|   USB  |--- 
  *                        |  |--------|  |

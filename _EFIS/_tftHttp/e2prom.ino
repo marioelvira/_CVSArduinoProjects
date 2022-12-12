@@ -80,19 +80,9 @@ void _readCONFIG (void)
       EEPROM.write(EEPROM_ADD_WIFI_PSWD + i, passwordSt[i]);
     #endif
 
-    // Data Data
-    //EEPROM.write(EEPROM_ADD_RESERVA,   EEPROM_VAL_RESERVA);
-       
-    EEPROM.write(EEPROM_ADD_1P_TIMER_GEN,   EEPROM_VAL_1P_TIMER_GEN);
-    EEPROM.write(EEPROM_ADD_2P_TIMER_GEN,   EEPROM_VAL_2P_TIMER_GEN);
-    EEPROM.write(EEPROM_ADD_3P_TIMER_GEN,   EEPROM_VAL_3P_TIMER_GEN);
-    EEPROM.write(EEPROM_ADD_4P_TIMER_GEN,   EEPROM_VAL_4P_TIMER_GEN);
-    EEPROM.write(EEPROM_ADD_5P_TIMER_GEN,   EEPROM_VAL_5P_TIMER_GEN);
-    EEPROM.write(EEPROM_ADD_6P_TIMER_GEN,   EEPROM_VAL_6P_TIMER_GEN);
-    EEPROM.write(EEPROM_ADD_7P_TIMER_GEN,   EEPROM_VAL_7P_TIMER_GEN);
-    EEPROM.write(EEPROM_ADD_8P_TIMER_GEN,   EEPROM_VAL_8P_TIMER_GEN);
-    EEPROM.write(EEPROM_ADD_9P_TIMER_GEN,   EEPROM_VAL_9P_TIMER_GEN);
-    
+    // Data
+    EEPROM.write(EEPROM_ADD_MODBUS_ID,   EEPROM_VAL_MODBUS_ID);
+
     EEPROM.commit();    //Store data to EEPROM
   }
   else
@@ -173,29 +163,13 @@ void _readCONFIG (void)
     Serial.println(password);
     #endif
   }
-  
-  TimeGenerador1P = (int)EEPROM.read(EEPROM_ADD_1P_TIMER_GEN);//*60; // Min
-  TimeGenerador2P = (int)EEPROM.read(EEPROM_ADD_2P_TIMER_GEN);//*60; // Min
-  TimeGenerador3P = (int)EEPROM.read(EEPROM_ADD_3P_TIMER_GEN);//*60; // Min
-  TimeGenerador4P = (int)EEPROM.read(EEPROM_ADD_4P_TIMER_GEN);//*60; // Min
-  TimeGenerador5P = (int)EEPROM.read(EEPROM_ADD_5P_TIMER_GEN);//*60; // Min
-  TimeGenerador6P = (int)EEPROM.read(EEPROM_ADD_6P_TIMER_GEN);//*3600; // Hour
-  TimeGenerador7P = (int)EEPROM.read(EEPROM_ADD_7P_TIMER_GEN);//*3600; // Hour
-  TimeGenerador8P = (int)EEPROM.read(EEPROM_ADD_8P_TIMER_GEN);//*3600; // Hour
-  TimeGenerador9P = (int)EEPROM.read(EEPROM_ADD_9P_TIMER_GEN);//*3600; // Hour
-  
+
+  cfgMbId = (int)EEPROM.read(EEPROM_ADD_MODBUS_ID);
+    
   #if (_EEPROM_SERIAL_DEBUG_ == 1)
-  
-  Serial.print("Time 1P: ");  Serial.print (TimeGenerador1P);  Serial.println(" min");
-  Serial.print("Time 2P: ");  Serial.print (TimeGenerador2P);  Serial.println(" min");
-  Serial.print("Time 3P: ");  Serial.print (TimeGenerador3P);  Serial.println(" min");
-  Serial.print("Time 4P: ");  Serial.print (TimeGenerador4P);  Serial.println(" min");
-  Serial.print("Time 5P: ");  Serial.print (TimeGenerador5P);  Serial.println(" min");
-  Serial.print("Time 6P: ");  Serial.print (TimeGenerador6P);  Serial.println(" hour");
-  Serial.print("Time 7P: ");  Serial.print (TimeGenerador7P);  Serial.println(" hour");
-  Serial.print("Time 8P: ");  Serial.print (TimeGenerador8P);  Serial.println(" hour");
-  Serial.print("Time 9P: ");  Serial.print (TimeGenerador9P);  Serial.println(" hour");
-  
+
+  Serial.print("Modbus ID: ");  Serial.print (cfgMbId);  Serial.println(" ");
+
   #endif 
 }
 

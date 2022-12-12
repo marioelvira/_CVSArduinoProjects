@@ -89,11 +89,11 @@ void _mbReadIns(char address)
   mrs485TxNumBytes = 8;
 
   mrs485TxBuffer[0] = (char)address;
-  mrs485TxBuffer[1] = 0x02;
-  mrs485TxBuffer[2] = 0x00;
-  mrs485TxBuffer[3] = 0x00;
-  mrs485TxBuffer[4] = 0x00;
-  mrs485TxBuffer[5] = 0x08;
+  mrs485TxBuffer[1] = (char)MB_FUNC_READ_INPUT_REGISTER;
+  mrs485TxBuffer[2] = (char)((MB_ADD_INS & 0xFF00)>>8);
+  mrs485TxBuffer[3] = (char)(MB_ADD_INS & 0x00FF);
+  mrs485TxBuffer[4] = (char)((MB_NREG_INS & 0xFF00)>>8);
+  mrs485TxBuffer[5] = (char)(MB_NREG_INS & 0x00FF);
   // Crc
   _mbCRC();
   mrs485TxBuffer[6] = mbCRC[0];
@@ -103,14 +103,12 @@ void _mbReadIns(char address)
   mrs485State = MRS485_INITTX;
 }
 
-// Rx: FF 02 01 01 51 A0
 int _mbAnalyseIns(char address)
 {
   int error = 0;
 
   if ((mrs485RxBuffer[0] == (char)address) &&
-      (mrs485RxBuffer[1] == 0x02) &&
-      (mrs485RxBuffer[2] == 0x01))
+      (mrs485RxBuffer[1] == (char)MB_FUNC_READ_INPUT_REGISTER))
   {
     // check CRC (TODO)
   }
@@ -163,19 +161,17 @@ void _mbUdateIns (void)
     mbIns[7] = IO_OFF;
 }
 
-// Tx: FF 01 00 00 00 08 28 12
-// Rx: FF 01 01 A1 AO
 void _mbReadOuts(char address)
 {
   // Num Bytes
   mrs485TxNumBytes = 8;
 
   mrs485TxBuffer[0] = (char)address;
-  mrs485TxBuffer[1] = 0x01;
-  mrs485TxBuffer[2] = 0x00;
-  mrs485TxBuffer[3] = 0x00;
-  mrs485TxBuffer[4] = 0x00;
-  mrs485TxBuffer[5] = 0x08;
+  mrs485TxBuffer[1] = (char)MB_FUNC_READ_INPUT_REGISTER;
+  mrs485TxBuffer[2] = (char)((MB_ADD_OUTS & 0xFF00)>>8);
+  mrs485TxBuffer[3] = (char)(MB_ADD_OUTS & 0x00FF);
+  mrs485TxBuffer[4] = (char)((MB_NREG_OUTS & 0xFF00)>>8);
+  mrs485TxBuffer[5] = (char)(MB_NREG_OUTS & 0x00FF);
   _mbCRC();
   mrs485TxBuffer[6] = mbCRC[0];
   mrs485TxBuffer[7] = mbCRC[1];
@@ -184,14 +180,12 @@ void _mbReadOuts(char address)
   mrs485State = MRS485_INITTX;
 }
 
-// Rx: FF 02 01 01 51 A0
 int _mbAnalyseOuts(char address)
 {
   int error = 0;
 
   if ((mrs485RxBuffer[0] == (char)address) &&
-      (mrs485RxBuffer[1] == 0x01) &&
-      (mrs485RxBuffer[2] == 0x01))
+      (mrs485RxBuffer[1] == (char)MB_FUNC_READ_INPUT_REGISTER))
   {
     // check CRC (TODO)
   }
@@ -244,10 +238,6 @@ void _mbUdateOuts (void)
     mbROuts[7] = IO_OFF;
 }
 
-// Tx: FF 05 00 01 FF 00 C8 24 - Rele 2 a ON
-// Rx: FF 05 00 01 FF 00 C8 24
-// out: 0 to 7; 8 all relays
-// val: 0 OFF, 1 ON
 void _mbWriteOut (char address, int out, int val)
 {
   // Num Bytes
@@ -271,7 +261,6 @@ void _mbWriteOut (char address, int out, int val)
   mrs485State = MRS485_INITTX;
 }
 
-// Rx: FF 05 00 01 FF 00 C8 24
 int _mbAnalyseOut (char address, int out) //, int val)
 {
   int error = 0;
@@ -325,7 +314,7 @@ void _MBLoop(void)
 
     // Read Ins
     case MB_READINS:
-      _mbReadIns((char)cfgMB1Add);
+      _mbReadIns((char)cfgMbId);
 
       // Analyse Response
       mbTick = millis();
@@ -352,7 +341,7 @@ void _MBLoop(void)
       {
 
         // Analyse response
-        if (_mbAnalyseIns((char)cfgMB1Add) == MB_RX_OK)
+        if (_mbAnalyseIns((char)cfgMbId) == MB_RX_OK)
         {
           _mbUdateIns();
           alarms[AL_ERROR_MB1] = 0;
@@ -373,7 +362,7 @@ void _MBLoop(void)
 
     // Read Outs
     case MB_READOUTS:
-      _mbReadOuts((char)cfgMB1Add);
+      _mbReadOuts((char)cfgMbId);
  
       // Analyse Response
       mbTick = millis();
@@ -396,7 +385,7 @@ void _MBLoop(void)
       if (mrs485State == MRS485_FRAME_RX)
       {
         // Analyse response
-        if (_mbAnalyseOuts((char)cfgMB1Add) == MB_RX_OK)
+        if (_mbAnalyseOuts((char)cfgMbId) == MB_RX_OK)
           _mbUdateOuts();
         else
           mbNError++;
@@ -415,7 +404,7 @@ void _MBLoop(void)
     // Write Out
 	  case MB_WRITEOUT:
       // select board
-      _mbWriteOut((char)cfgMB1Add, mbOutNum, mbOutVal);
+      _mbWriteOut((char)cfgMbId, mbOutNum, mbOutVal);
 
       // Analyse Response
       mbTick = millis();
@@ -452,7 +441,7 @@ void _MBLoop(void)
       if (mrs485State == MRS485_FRAME_RX)
       {
         // Analyse response
-        error = _mbAnalyseOut((char)cfgMB1Add, mbOutNum); //, mbOutVal);
+        error = _mbAnalyseOut((char)cfgMbId, mbOutNum); //, mbOutVal);
 
         // If NO error
         if (error == 0)

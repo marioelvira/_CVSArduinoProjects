@@ -45,7 +45,7 @@ extern "C" {
 
 // Map
 #define MB_ADD_CTR      0
-#define MB_NREG_CTR     10
+#define MB_NREG_CTR     2
 #define MB_ADD_INS      1000
 #define MB_NREG_INS     2
 #define MB_ADD_OUTS     1010

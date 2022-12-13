@@ -10,7 +10,6 @@ void _TimeSetup(void)
   timeHour = 0;
 
   #if (_USE_FREERAM_ == 1)
-  // RAM setup
   _RAMSetup();
   #endif
 }

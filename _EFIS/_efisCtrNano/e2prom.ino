@@ -37,13 +37,18 @@ void _readCONFIG (void)
     Serial.println("Config NOK");
     #endif
   
-    EEPROM.write(EEPROM_ADD_OK,      EEPROM_VAL_OK);
+    EEPROM.write(EEPROM_ADD_OK, EEPROM_VAL_OK);
 
-    // Data Data
+    // Data
     EEPROM.write(EEPROM_ADD_MODBUS_ID,   EEPROM_VAL_MODBUS_ID);
-    for (i = 0; i < ADC_NUMBER; i++)
-      EEPROM.write(EEPROM_ADD_ADCF + i,  EEPROM_VAL_ADCF);
-      
+    EEPROM.write(EEPROM_ADD_ADCF0,       EEPROM_VAL_ADCF0);
+    EEPROM.write(EEPROM_ADD_ADCF1,       EEPROM_VAL_ADCF1);
+    EEPROM.write(EEPROM_ADD_ADCF2,       EEPROM_VAL_ADCF2);
+    EEPROM.write(EEPROM_ADD_ADCF3,       EEPROM_VAL_ADCF3);
+
+    EEPROM.write(EEPROM_ADD_RPM,   EEPROM_VAL_RPM);
+    EEPROM.write(EEPROM_ADD_PRESS, EEPROM_VAL_PRESS);
+
     //EEPROM.commit();    // ESPXX Store data to EEPROM
   }
   else
@@ -54,8 +59,13 @@ void _readCONFIG (void)
   }
 
   cfgMbId = (int)EEPROM.read(EEPROM_ADD_MODBUS_ID);
-  for (i = 0; i < ADC_NUMBER; i++)
-    cfgADCf[i] = (int)EEPROM.read(EEPROM_ADD_ADCF + i);
+  cfgADCf[0] = (int)EEPROM.read(EEPROM_ADD_ADCF0);
+  cfgADCf[1] = (int)EEPROM.read(EEPROM_ADD_ADCF1);
+  cfgADCf[2] = (int)EEPROM.read(EEPROM_ADD_ADCF2);
+  cfgADCf[3] = (int)EEPROM.read(EEPROM_ADD_ADCF3);
+  
+  cfgRpm   = (int)EEPROM.read(EEPROM_ADD_RPM);
+  cfgPres  = (int)EEPROM.read(EEPROM_ADD_PRESS);
 
   #if (_EEPROM_SERIAL_DEBUG_ == 1)
   Serial.print("Modbus ID: ");  Serial.print (cfgMbId);  Serial.println(" ");
@@ -63,6 +73,7 @@ void _readCONFIG (void)
   {
     Serial.print("Filter ADC: "); Serial.println(cfgADCf[i]);
   }
+  
   #endif
 }
 

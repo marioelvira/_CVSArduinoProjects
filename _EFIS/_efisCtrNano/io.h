@@ -10,6 +10,7 @@ extern "C" {
 ///////////////////
 
 // Arduino AVR boards -> Arduino Nano
+// Procesador ATmega328P (Old Bootloader)
 
 /*                           |--------|
  *                        ---|   USB  |--- 

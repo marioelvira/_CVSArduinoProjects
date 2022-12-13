@@ -21,6 +21,9 @@ extern "C" {
 #define _USE_RS485_                1
 #define _USE_MB_                   1
 
+#define _USE_INT0_                 1
+#define _USE_INT1_                 0
+
 #if (_USE_RS485_ == 1)
 #define _SERIAL_DEBUG_             0
 #else

@@ -176,19 +176,22 @@ void _mbReadInput(char address)
   addr  = (int)((mrs485RxBuffer[2] & 0x00FF)<<8)|(mrs485RxBuffer[3] & 0x00FF);
   nregs = (int)((mrs485RxBuffer[4] & 0x00FF)<<8)|(mrs485RxBuffer[5] & 0x00FF);
 
-  // Meteo 
+  // Control 
   if ((addr == MB_ADD_CTR)  && (nregs == MB_NREG_CTR))
   { 
     mrs485TxBuffer[0] = (char)address;
     mrs485TxBuffer[1] = (char)MB_FUNC_READ_INPUT_REGISTER;
     mrs485TxBuffer[2] = MB_NREG_CTR*2;
 
-    for (int i = 0; i < MB_NREG_CTR; i++)
-      mrs485TxBuffer[3 + i] = i;
-
+    mrs485TxBuffer[3]  = (char)((EngineRpm & 0xFF00)>>8);
+    mrs485TxBuffer[4]  = (char)(EngineRpm & 0x00FF);
+    mrs485TxBuffer[5]  = (char)((EnginePres & 0xFF00)>>8);
+    mrs485TxBuffer[6]  = (char)(EnginePres & 0x00FF);
+    
     // Num Bytes
     mrs485TxNumBytes = mrs485TxBuffer[2] + 5;
   }
+  // INs
   else if ((addr == MB_ADD_INS)  && (nregs == MB_NREG_INS))
   { 
     mrs485TxBuffer[0] = (char)address;
@@ -203,6 +206,7 @@ void _mbReadInput(char address)
     // Num Bytes
     mrs485TxNumBytes = mrs485TxBuffer[2] + 5;
   }
+  // OUTs
   else if ((addr == MB_ADD_OUTS)  && (nregs == MB_NREG_OUTS))
   {
     mrs485TxBuffer[0] = (char)address;
@@ -219,6 +223,7 @@ void _mbReadInput(char address)
     // Num Bytes
     mrs485TxNumBytes = mrs485TxBuffer[2] + 5;
   }
+  // ADCs
   else if ((addr == MB_ADD_ADC)  && (nregs == MB_NREG_ADC))
   {
     mrs485TxBuffer[0] = (char)address;
@@ -237,17 +242,29 @@ void _mbReadInput(char address)
     // Num Bytes
     mrs485TxNumBytes = mrs485TxBuffer[2] + 5; 
   }
+  // Pulsos
   else if ((addr == MB_ADD_PULS)  && (nregs == MB_NREG_PULS))
   {
     mrs485TxBuffer[0] = (char)address;
     mrs485TxBuffer[1] = (char)MB_FUNC_READ_INPUT_REGISTER;
     mrs485TxBuffer[2] = MB_NREG_PULS*2;
 
+    #if ( _USE_INT0_  == 1)
     mrs485TxBuffer[3] = (char)((RpmCounterD2 & 0xFF00)>>8);
     mrs485TxBuffer[4] = (char)(RpmCounterD2 & 0x00FF);
+    #else
+    mrs485TxBuffer[3] = 0x00;
+    mrs485TxBuffer[4] = 0x00;
+    #endif
+
+    #if ( _USE_INT1_  == 1)
     mrs485TxBuffer[5] = (char)((RpmCounterD3 & 0xFF00)>>8);
     mrs485TxBuffer[6] = (char)(RpmCounterD3 & 0x00FF);
-
+    #else
+    mrs485TxBuffer[5] = 0x00;
+    mrs485TxBuffer[6] = 0x00;
+    #endif
+    
     // Num Bytes
     mrs485TxNumBytes = mrs485TxBuffer[2] + 5;
   }

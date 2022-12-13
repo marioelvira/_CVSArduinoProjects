@@ -18,19 +18,6 @@
 const char* compdate = __DATE__;
 const char* comptime = __TIME__;
 
-////////////////////
-// DIO definition //
-////////////////////
-int   InStartVal = 0;
-int   InStartVal_ant = 0;
-int   InStartCounter = 0;
-int   InStartState = 0;
-
-int   InEndVal = 0;
-int   InEndVal_ant = 0;
-int   InEndCounter = 0;
-int   InEndState = 0;
-
 ///////////////
 // Board Led //
 ///////////////
@@ -69,29 +56,37 @@ int timeHour = 0;
 /////////////
 unsigned long ControlTick = 0;
 int   ControlState;
+int   EngineRpm;
+int   EnginePres;
 
 ////////////
 // Config //
 ////////////
-int cfgMbId = 0;
+int cfgMbId;
 int cfgADCf[ADC_NUMBER];
+int cfgRpm;
+int cfgPres;
 
 /////////
 // ISR //
 /////////
+#if ( _USE_INT0_  == 1)
 unsigned long   inPulseD2 = 0;
 unsigned long   inPulseAntD2 = 0;
 unsigned long   pulsesD2;
 unsigned long   RpmCounterD2 = 0;
 unsigned long   RpmTickD2 = 0;
 unsigned long   RpmPeriodD2 = 0;
+#endif
 
+#if ( _USE_INT1_  == 1)
 unsigned long   inPulseD3 = 0;
 unsigned long   inPulseAntD3 = 0;
 unsigned long   pulsesD3;
 unsigned long   RpmCounterD3 = 0;
 unsigned long   RpmTickD3 = 0;
 unsigned long   RpmPeriodD3 = 0;
+#endif
 
 ///////////
 // RS485 //

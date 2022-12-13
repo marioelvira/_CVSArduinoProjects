@@ -20,8 +20,7 @@ void _CtrLoop(void)
       break;
 
     case STATE_TEST:  
-      
-      
+            
       ControlTick = millis();
       break;
   }

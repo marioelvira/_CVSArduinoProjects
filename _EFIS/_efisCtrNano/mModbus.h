@@ -55,6 +55,9 @@ extern "C" {
 #define MB_ADD_PULS     1030
 #define MB_NREG_PULS    2
 
+#define MB_ADD_CFG      10000
+#define MB_NREG_CFG     1
+
 extern void _MBCRC(void);
 
 #endif // _MMODBUS_H_

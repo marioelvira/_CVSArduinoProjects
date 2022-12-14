@@ -51,9 +51,14 @@ void _ADCsLoop()
     // No filter
     else
       AdcDig[i] = analogRead(pin);
+
+    if (cfgADCs[i] == 0)
+      AdcVal[i] = (float)AdcDig[i]*((float)cfgADCm[i])/(float)cfgADCp[i] - (float)cfgADCb[i]/1000;
+    else
+      AdcVal[i] = (float)AdcDig[i]*((float)cfgADCm[i])/(float)cfgADCp[i] + (float)cfgADCb[i]/1000; 
   }
 
   // Ctr conversion
-  EnginePres =  (AdcDig[0]*cfgPres)/100;
+  EnginePres =  (int)(AdcVal[0]*cfgPres)/100;
 
 }

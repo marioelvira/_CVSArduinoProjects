@@ -125,6 +125,84 @@ void _mbWriteSingleHolding(char address)
   mrs485State = MRS485_INITTX;
 }
 
+void _mbWriteMultipleHolding(char address)
+{
+  int addr, nregs, value;
+
+  addr  = (int)((mrs485RxBuffer[2] & 0x00FF)<<8)|(mrs485RxBuffer[3] & 0x00FF);
+  nregs = (int)((mrs485RxBuffer[4] & 0x00FF)<<8)|(mrs485RxBuffer[5] & 0x00FF);
+
+  // OUTs 
+  if ((addr == MB_ADD_OUTS) && (nregs == MB_NREG_OUTS))
+  { 
+    value = (int)((mrs485RxBuffer[7] & 0x00FF)<<8)|(mrs485RxBuffer[8] & 0x00FF);
+    if (value == OUT_OFF)
+      OutDig[0] = OUT_OFF;
+    else
+      OutDig[0] = OUT_ON;
+
+    value = (int)((mrs485RxBuffer[9] & 0x00FF)<<8)|(mrs485RxBuffer[10] & 0x00FF);
+    if (value == OUT_OFF)
+      OutDig[1] = OUT_OFF;
+    else
+      OutDig[1] = OUT_ON;
+          
+    value = (int)((mrs485RxBuffer[11] & 0x00FF)<<8)|(mrs485RxBuffer[12] & 0x00FF);
+    if (value == OUT_OFF)
+      OutDig[2] = OUT_OFF;
+    else
+      OutDig[2] = OUT_ON;
+
+    mrs485TxBuffer[0] = (char)address;
+    mrs485TxBuffer[1] = (char)MB_FUNC_WRITE_MULTIPLE_REGISTERS;
+    mrs485TxBuffer[2] = mrs485RxBuffer[2];
+    mrs485TxBuffer[3] = mrs485RxBuffer[3];
+    mrs485TxBuffer[4] = mrs485RxBuffer[4];
+    mrs485TxBuffer[5] = mrs485RxBuffer[5];
+    
+    // Num Bytes
+    mrs485TxNumBytes = 8;
+  }
+  // CFGs 
+  else if ((addr == MB_ADD_CFG) && (nregs == MB_NREG_CFG))
+  {
+    
+    value = (int)((mrs485RxBuffer[7] & 0x00FF)<<8)|(mrs485RxBuffer[8] & 0x00FF);
+    cfgMbId = value;
+
+     // Data
+    EEPROM.write(EEPROM_ADD_MODBUS_ID, (byte)cfgMbId);
+    
+    mrs485TxBuffer[0] = (char)address;
+    mrs485TxBuffer[1] = (char)MB_FUNC_WRITE_MULTIPLE_REGISTERS;
+    mrs485TxBuffer[2] = mrs485RxBuffer[2];
+    mrs485TxBuffer[3] = mrs485RxBuffer[3];
+    mrs485TxBuffer[4] = mrs485RxBuffer[4];
+    mrs485TxBuffer[5] = mrs485RxBuffer[5];
+    
+    // Num Bytes
+    mrs485TxNumBytes = 8;
+  }
+  // Expection
+  else
+  {
+    mrs485TxBuffer[0] = (char)address;
+    mrs485TxBuffer[1] = (char)(MB_FUNC_WRITE_MULTIPLE_REGISTERS | MB_NACK);
+    mrs485TxBuffer[2] = 0x02; // Illegal data address
+
+    // Num Bytes
+    mrs485TxNumBytes = 5;
+  }
+
+  // Crc
+  _mbCRC();
+  mrs485TxBuffer[mrs485TxNumBytes - 2] = mbCRC[0];
+  mrs485TxBuffer[mrs485TxNumBytes - 1] = mbCRC[1];
+  
+  // Init RS485 Transmit
+  mrs485State = MRS485_INITTX;
+}
+
 void _mbReadHolding(char address)
 {
   int addr, nregs;
@@ -132,7 +210,7 @@ void _mbReadHolding(char address)
   addr  = (int)((mrs485RxBuffer[2] & 0x00FF)<<8)|(mrs485RxBuffer[3] & 0x00FF);
   nregs = (int)((mrs485RxBuffer[4] & 0x00FF)<<8)|(mrs485RxBuffer[5] & 0x00FF);
 
-  // Meteo 
+  // OUTs 
   if ((addr == MB_ADD_OUTS) && (nregs == MB_NREG_OUTS))
   {
     mrs485TxBuffer[0] = (char)address;
@@ -146,6 +224,19 @@ void _mbReadHolding(char address)
     mrs485TxBuffer[7] = 0x00;      // 1 
     mrs485TxBuffer[8] = OutDig[2]; // 1
     
+    // Num Bytes
+    mrs485TxNumBytes = mrs485TxBuffer[2] + 5;
+  }
+  // CFGs 
+  else if ((addr == MB_ADD_CFG) && (nregs == MB_NREG_CFG))
+  {
+    mrs485TxBuffer[0] = (char)address;
+    mrs485TxBuffer[1] = (char)MB_FUNC_READ_HOLDING_REGISTER;
+    mrs485TxBuffer[2] = MB_NREG_OUTS*2;
+    
+    mrs485TxBuffer[3] = 0x00;
+    mrs485TxBuffer[4] = (byte)(cfgMbId & 0x00FF);
+ 
     // Num Bytes
     mrs485TxNumBytes = mrs485TxBuffer[2] + 5;
   }
@@ -289,17 +380,29 @@ void _mbReadInput(char address)
 }
 
 void _mbSlaveID(char address)
-{  
-  // Num Bytes
-  mrs485TxNumBytes = 5;
-
+{
   mrs485TxBuffer[0] = (char)address;
-  mrs485TxBuffer[1] = (char)(MB_FUNC_OTHER_REPORT_SLAVEID | MB_NACK);
-  mrs485TxBuffer[2] = 0x01;
+  mrs485TxBuffer[1] = (char)MB_FUNC_OTHER_REPORT_SLAVEID;
+  mrs485TxBuffer[2] = 0x0A; // 10
+
+  mrs485TxBuffer[3] = 0x00;
+  mrs485TxBuffer[4] = 0xFF;
+
+  mrs485TxBuffer[5]  = (char)'E';
+  mrs485TxBuffer[6]  = (char)'F';
+  mrs485TxBuffer[7]  = (char)'I';
+  mrs485TxBuffer[8]  = (char)'S';
+  mrs485TxBuffer[9]  = (char)'N';
+  mrs485TxBuffer[10] = (char)'A';
+  mrs485TxBuffer[11] = (char)'N';
+  mrs485TxBuffer[12] = (char)'O';
+
+  mrs485TxNumBytes = mrs485TxBuffer[2] + 5;
+
   // Crc
   _mbCRC();
-  mrs485TxBuffer[3] = mbCRC[0];
-  mrs485TxBuffer[4] = mbCRC[1];
+  mrs485TxBuffer[13] = mbCRC[0];
+  mrs485TxBuffer[14] = mbCRC[1];
 
   // Init RS485 Transmit
   mrs485State = MRS485_INITTX;
@@ -323,8 +426,9 @@ int _mbN7(void)
       _mbWriteSingleHolding((char)cfgMbId);
 		  break;
 		
-		//case MB_FUNC_WRITE_MULTIPLE_REGISTERS:
-		//	break;
+		case MB_FUNC_WRITE_MULTIPLE_REGISTERS:
+      _mbWriteMultipleHolding((char)cfgMbId);
+		  break;
 		
 		case MB_FUNC_OTHER_REPORT_SLAVEID:
 			_mbSlaveID((char)cfgMbId);

@@ -26,10 +26,11 @@ int   boardLed;
 //////////
 // ADCs //
 //////////
-int   AdcDig[ADC_NUMBER];
-int   AdcPin[ADC_NUMBER];
-int   AdcArray[ADC_NUMBER][ADC_ARRAY_SIZE];
-int   AdcPointer[ADC_NUMBER];
+int    AdcDig[ADC_NUMBER];
+int    AdcPin[ADC_NUMBER];
+int    AdcArray[ADC_NUMBER][ADC_ARRAY_SIZE];
+int    AdcPointer[ADC_NUMBER];
+float  AdcVal[ADC_NUMBER];
 
 //////////
 // OUTs //
@@ -63,7 +64,13 @@ int   EnginePres;
 // Config //
 ////////////
 int cfgMbId;
+// ADCs
+int cfgADCm[ADC_NUMBER];
+int cfgADCb[ADC_NUMBER];
+int cfgADCp[ADC_NUMBER];
+int cfgADCs[ADC_NUMBER];
 int cfgADCf[ADC_NUMBER];
+
 int cfgRpm;
 int cfgPres;
 
@@ -174,7 +181,7 @@ void setup(void)
   
   #if (_SERIAL_DEBUG_ == 1)
   delay(100);  // 100ms
-  Serial.begin(115200);
+  Serial.begin(9600);
   Serial.print("Project: ");
   Serial.println(PROJECT);
   Serial.print("Version: ");

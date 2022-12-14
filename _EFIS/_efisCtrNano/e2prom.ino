@@ -24,7 +24,7 @@ void _ConfigSetup(void)
 void _readCONFIG (void)
 {
   int ok, i;
-  //int eeprom_value_hi, eeprom_value_lo;
+  int eeprom_value_hi, eeprom_value_lo;
   
   //EEPROM.begin(512);  // ESPXX
     
@@ -41,10 +41,66 @@ void _readCONFIG (void)
 
     // Data
     EEPROM.write(EEPROM_ADD_MODBUS_ID,   EEPROM_VAL_MODBUS_ID);
-    EEPROM.write(EEPROM_ADD_ADCF0,       EEPROM_VAL_ADCF0);
-    EEPROM.write(EEPROM_ADD_ADCF1,       EEPROM_VAL_ADCF1);
-    EEPROM.write(EEPROM_ADD_ADCF2,       EEPROM_VAL_ADCF2);
-    EEPROM.write(EEPROM_ADD_ADCF3,       EEPROM_VAL_ADCF3);
+	
+    eeprom_value_lo = EEPROM_VAL_ADC0_M & 0x00FF;
+	  EEPROM.write(EEPROM_ADD_ADC0_M_LO, eeprom_value_lo);
+    eeprom_value_hi = (EEPROM_VAL_ADC0_M & 0xFF00)>>8;
+    EEPROM.write(EEPROM_ADD_ADC0_M_HI, eeprom_value_hi);
+    eeprom_value_lo = EEPROM_VAL_ADC0_B & 0x00FF;
+    EEPROM.write(EEPROM_ADD_ADC0_B_LO, eeprom_value_lo);
+    eeprom_value_hi = (EEPROM_VAL_ADC0_B & 0xFF00)>>8;
+    EEPROM.write(EEPROM_ADD_ADC0_B_HI, eeprom_value_hi);
+    eeprom_value_lo = EEPROM_VAL_ADC0_P & 0x00FF;
+    EEPROM.write(EEPROM_ADD_ADC0_P_LO, eeprom_value_lo);
+    eeprom_value_hi = (EEPROM_VAL_ADC0_P & 0xFF00)>>8;
+    EEPROM.write(EEPROM_ADD_ADC0_P_HI, eeprom_value_hi);
+    EEPROM.write(EEPROM_ADD_ADC0_S,  EEPROM_VAL_ADC0_S);
+    EEPROM.write(EEPROM_ADD_ADC0_F,  EEPROM_VAL_ADC0_F);
+
+	  eeprom_value_lo = EEPROM_VAL_ADC1_M & 0x00FF;
+    EEPROM.write(EEPROM_ADD_ADC1_M_LO, eeprom_value_lo);
+    eeprom_value_hi = (EEPROM_VAL_ADC1_M & 0xFF00)>>8;
+    EEPROM.write(EEPROM_ADD_ADC1_M_HI, eeprom_value_hi);
+    eeprom_value_lo = EEPROM_VAL_ADC1_B & 0x00FF;
+    EEPROM.write(EEPROM_ADD_ADC1_B_LO, eeprom_value_lo);
+    eeprom_value_hi = (EEPROM_VAL_ADC1_B & 0xFF00)>>8;
+    EEPROM.write(EEPROM_ADD_ADC1_B_HI, eeprom_value_hi);
+    eeprom_value_lo = EEPROM_VAL_ADC1_P & 0x00FF;
+    EEPROM.write(EEPROM_ADD_ADC1_P_LO, eeprom_value_lo);
+    eeprom_value_hi = (EEPROM_VAL_ADC1_P & 0xFF00)>>8;
+    EEPROM.write(EEPROM_ADD_ADC1_P_HI, eeprom_value_hi);   
+    EEPROM.write(EEPROM_ADD_ADC1_S,  EEPROM_VAL_ADC1_S);
+    EEPROM.write(EEPROM_ADD_ADC1_F,  EEPROM_VAL_ADC1_F);
+    	
+	  eeprom_value_lo = EEPROM_VAL_ADC2_M & 0x00FF;
+    EEPROM.write(EEPROM_ADD_ADC2_M_LO, eeprom_value_lo);
+    eeprom_value_hi = (EEPROM_VAL_ADC2_M & 0xFF00)>>8;
+    EEPROM.write(EEPROM_ADD_ADC2_M_HI, eeprom_value_hi);
+    eeprom_value_lo = EEPROM_VAL_ADC2_B & 0x00FF;
+    EEPROM.write(EEPROM_ADD_ADC2_B_LO, eeprom_value_lo);
+    eeprom_value_hi = (EEPROM_VAL_ADC2_B & 0xFF00)>>8;
+    EEPROM.write(EEPROM_ADD_ADC2_B_HI, eeprom_value_hi);
+    eeprom_value_lo = EEPROM_VAL_ADC2_P & 0x00FF;
+    EEPROM.write(EEPROM_ADD_ADC2_P_LO, eeprom_value_lo);
+    eeprom_value_hi = (EEPROM_VAL_ADC2_P & 0xFF00)>>8;
+    EEPROM.write(EEPROM_ADD_ADC2_P_HI, eeprom_value_hi);   
+    EEPROM.write(EEPROM_ADD_ADC2_S,  EEPROM_VAL_ADC2_S);
+    EEPROM.write(EEPROM_ADD_ADC2_F,  EEPROM_VAL_ADC2_F);
+	
+	  eeprom_value_lo = EEPROM_VAL_ADC3_M & 0x00FF;
+    EEPROM.write(EEPROM_ADD_ADC3_M_LO, eeprom_value_lo);
+    eeprom_value_hi = (EEPROM_VAL_ADC3_M & 0xFF00)>>8;
+    EEPROM.write(EEPROM_ADD_ADC3_M_HI, eeprom_value_hi);
+    eeprom_value_lo = EEPROM_VAL_ADC3_B & 0x00FF;
+    EEPROM.write(EEPROM_ADD_ADC3_B_LO, eeprom_value_lo);
+    eeprom_value_hi = (EEPROM_VAL_ADC3_B & 0xFF00)>>8;
+    EEPROM.write(EEPROM_ADD_ADC3_B_HI, eeprom_value_hi);
+    eeprom_value_lo = EEPROM_VAL_ADC3_P & 0x00FF;
+    EEPROM.write(EEPROM_ADD_ADC3_P_LO, eeprom_value_lo);
+    eeprom_value_hi = (EEPROM_VAL_ADC3_P & 0xFF00)>>8;
+    EEPROM.write(EEPROM_ADD_ADC3_P_HI, eeprom_value_hi);   
+    EEPROM.write(EEPROM_ADD_ADC3_S,  EEPROM_VAL_ADC3_S);
+    EEPROM.write(EEPROM_ADD_ADC3_F,  EEPROM_VAL_ADC3_F);
 
     EEPROM.write(EEPROM_ADD_RPM,   EEPROM_VAL_RPM);
     EEPROM.write(EEPROM_ADD_PRESS, EEPROM_VAL_PRESS);
@@ -59,21 +115,73 @@ void _readCONFIG (void)
   }
 
   cfgMbId = (int)EEPROM.read(EEPROM_ADD_MODBUS_ID);
-  cfgADCf[0] = (int)EEPROM.read(EEPROM_ADD_ADCF0);
-  cfgADCf[1] = (int)EEPROM.read(EEPROM_ADD_ADCF1);
-  cfgADCf[2] = (int)EEPROM.read(EEPROM_ADD_ADCF2);
-  cfgADCf[3] = (int)EEPROM.read(EEPROM_ADD_ADCF3);
   
+  eeprom_value_hi   = (int)EEPROM.read(EEPROM_ADD_ADC0_M_HI);
+  eeprom_value_lo   = (int)EEPROM.read(EEPROM_ADD_ADC0_M_LO);   
+  cfgADCm[0]        = (int)((eeprom_value_hi & 0x00FF)<<8)|(eeprom_value_lo & 0x00FF);
+  eeprom_value_hi   = (int)EEPROM.read(EEPROM_ADD_ADC0_B_HI);
+  eeprom_value_lo   = (int)EEPROM.read(EEPROM_ADD_ADC0_B_LO);   
+  cfgADCb[0]        = (int)((eeprom_value_hi & 0x00FF)<<8)|(eeprom_value_lo & 0x00FF);
+  eeprom_value_hi   = (int)EEPROM.read(EEPROM_ADD_ADC0_P_HI);
+  eeprom_value_lo   = (int)EEPROM.read(EEPROM_ADD_ADC0_P_LO);
+  cfgADCp[0]        = (int)((eeprom_value_hi & 0x00FF)<<8)|(eeprom_value_lo & 0x00FF); 
+  cfgADCs[0]        = (int)EEPROM.read(EEPROM_ADD_ADC0_S);
+  cfgADCf[0]        = (int)EEPROM.read(EEPROM_ADD_ADC0_F);
+   
+  eeprom_value_hi   = (int)EEPROM.read(EEPROM_ADD_ADC1_M_HI);
+  eeprom_value_lo   = (int)EEPROM.read(EEPROM_ADD_ADC1_M_LO);   
+  cfgADCm[1]        = (int)((eeprom_value_hi & 0x00FF)<<8)|(eeprom_value_lo & 0x00FF);
+  eeprom_value_hi   = (int)EEPROM.read(EEPROM_ADD_ADC1_B_HI);
+  eeprom_value_lo   = (int)EEPROM.read(EEPROM_ADD_ADC1_B_LO);   
+  cfgADCb[1]        = (int)((eeprom_value_hi & 0x00FF)<<8)|(eeprom_value_lo & 0x00FF);
+  eeprom_value_hi   = (int)EEPROM.read(EEPROM_ADD_ADC1_P_HI);
+  eeprom_value_lo   = (int)EEPROM.read(EEPROM_ADD_ADC1_P_LO);   
+  cfgADCp[1]        = (int)((eeprom_value_hi & 0x00FF)<<8)|(eeprom_value_lo & 0x00FF); 
+  cfgADCs[1]        = (int)EEPROM.read(EEPROM_ADD_ADC1_S);
+  cfgADCf[1]        = (int)EEPROM.read(EEPROM_ADD_ADC1_F);
+
+  eeprom_value_hi   = (int)EEPROM.read(EEPROM_ADD_ADC2_M_HI);
+  eeprom_value_lo   = (int)EEPROM.read(EEPROM_ADD_ADC2_M_LO);   
+  cfgADCm[2]        = (int)((eeprom_value_hi & 0x00FF)<<8)|(eeprom_value_lo & 0x00FF);
+  eeprom_value_hi   = (int)EEPROM.read(EEPROM_ADD_ADC2_B_HI);
+  eeprom_value_lo   = (int)EEPROM.read(EEPROM_ADD_ADC2_B_LO);   
+  cfgADCb[2]        = (int)((eeprom_value_hi & 0x00FF)<<8)|(eeprom_value_lo & 0x00FF);
+  eeprom_value_hi   = (int)EEPROM.read(EEPROM_ADD_ADC2_P_HI);
+  eeprom_value_lo   = (int)EEPROM.read(EEPROM_ADD_ADC2_P_LO);   
+  cfgADCp[2]        = (int)((eeprom_value_hi & 0x00FF)<<8)|(eeprom_value_lo & 0x00FF); 
+  cfgADCs[2]        = (int)EEPROM.read(EEPROM_ADD_ADC2_S);
+  cfgADCf[2]        = (int)EEPROM.read(EEPROM_ADD_ADC2_F);
+
+  eeprom_value_hi   = (int)EEPROM.read(EEPROM_ADD_ADC3_M_HI);
+  eeprom_value_lo   = (int)EEPROM.read(EEPROM_ADD_ADC3_M_LO);   
+  cfgADCm[3]        = (int)((eeprom_value_hi & 0x00FF)<<8)|(eeprom_value_lo & 0x00FF);
+  eeprom_value_hi   = (int)EEPROM.read(EEPROM_ADD_ADC3_B_HI);
+  eeprom_value_lo   = (int)EEPROM.read(EEPROM_ADD_ADC3_B_LO);   
+  cfgADCb[3]        = (int)((eeprom_value_hi & 0x00FF)<<8)|(eeprom_value_lo & 0x00FF);
+  eeprom_value_hi   = (int)EEPROM.read(EEPROM_ADD_ADC3_P_HI);
+  eeprom_value_lo   = (int)EEPROM.read(EEPROM_ADD_ADC3_P_LO);   
+  cfgADCp[3]        = (int)((eeprom_value_hi & 0x00FF)<<8)|(eeprom_value_lo & 0x00FF); 
+  cfgADCs[3]        = (int)EEPROM.read(EEPROM_ADD_ADC3_S);
+  cfgADCf[3]        = (int)EEPROM.read(EEPROM_ADD_ADC3_F);
+    
   cfgRpm   = (int)EEPROM.read(EEPROM_ADD_RPM);
   cfgPres  = (int)EEPROM.read(EEPROM_ADD_PRESS);
 
   #if (_EEPROM_SERIAL_DEBUG_ == 1)
-  Serial.print("Modbus ID: ");  Serial.print (cfgMbId);  Serial.println(" ");
+  Serial.print("Modbus ID: ");  Serial.println (cfgMbId);
   for (i = 0; i < ADC_NUMBER; i++)
   {
-    Serial.print("Filter ADC: "); Serial.println(cfgADCf[i]);
+    Serial.print("ADC"); Serial.print(i);
+    Serial.print(" m"); Serial.print(cfgADCm[i]);
+    Serial.print(" b"); Serial.print(cfgADCb[i]);
+    Serial.print(" p"); Serial.print(cfgADCp[i]);
+    Serial.print(" s"); Serial.print(cfgADCs[i]);
+    Serial.print(" f"); Serial.print(cfgADCf[i]);
+    Serial.println(" ");
   }
   
+  Serial.print("RMP: ");    Serial.println (cfgRpm);
+  Serial.print("PRESS: ");  Serial.println (cfgPres);
   #endif
 }
 

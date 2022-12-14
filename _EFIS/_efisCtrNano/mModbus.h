@@ -56,7 +56,7 @@ extern "C" {
 #define MB_NREG_PULS    2
 
 #define MB_ADD_CFG      10000
-#define MB_NREG_CFG     1
+#define MB_NREG_CFG     21
 
 extern void _MBCRC(void);
 

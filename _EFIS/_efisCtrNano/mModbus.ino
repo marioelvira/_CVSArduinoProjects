@@ -166,12 +166,117 @@ void _mbWriteMultipleHolding(char address)
   // CFGs 
   else if ((addr == MB_ADD_CFG) && (nregs == MB_NREG_CFG))
   {
+    int eeprom_value_hi, eeprom_value_lo;
     
-    value = (int)((mrs485RxBuffer[7] & 0x00FF)<<8)|(mrs485RxBuffer[8] & 0x00FF);
+    value =  (int)((mrs485RxBuffer[7] & 0x00FF)<<8)|(mrs485RxBuffer[8] & 0x00FF);
     cfgMbId = value;
+    
+    value =  (int)((mrs485RxBuffer[9] & 0x00FF)<<8)|(mrs485RxBuffer[10] & 0x00FF);
+    cfgADCm[0] = value;
+    value = (int)((mrs485RxBuffer[11] & 0x00FF)<<8)|(mrs485RxBuffer[12] & 0x00FF);
+    cfgADCb[0] = value;
+    value = (int)((mrs485RxBuffer[13] & 0x00FF)<<8)|(mrs485RxBuffer[14] & 0x00FF);
+    cfgADCp[0] = value;
+    value = (int)((mrs485RxBuffer[15] & 0x00FF)<<8)|(mrs485RxBuffer[16] & 0x00FF);
+    cfgADCs[0] = value;
+    value = (int)((mrs485RxBuffer[17] & 0x00FF)<<8)|(mrs485RxBuffer[18] & 0x00FF);
+    cfgADCf[0] = value;
+
+    value = (int)((mrs485RxBuffer[19] & 0x00FF)<<8)|(mrs485RxBuffer[20] & 0x00FF);
+    cfgADCm[1] = value;
+    value = (int)((mrs485RxBuffer[21] & 0x00FF)<<8)|(mrs485RxBuffer[22] & 0x00FF);
+    cfgADCb[1] = value;
+    value = (int)((mrs485RxBuffer[23] & 0x00FF)<<8)|(mrs485RxBuffer[24] & 0x00FF);
+    cfgADCp[1] = value;
+    value = (int)((mrs485RxBuffer[25] & 0x00FF)<<8)|(mrs485RxBuffer[26] & 0x00FF);
+    cfgADCs[1] = value;
+    value = (int)((mrs485RxBuffer[27] & 0x00FF)<<8)|(mrs485RxBuffer[28] & 0x00FF);
+    cfgADCf[1] = value;
+
+    value = (int)((mrs485RxBuffer[29] & 0x00FF)<<8)|(mrs485RxBuffer[30] & 0x00FF);
+    cfgADCm[2] = value;
+    value = (int)((mrs485RxBuffer[31] & 0x00FF)<<8)|(mrs485RxBuffer[32] & 0x00FF);
+    cfgADCb[2] = value;
+    value = (int)((mrs485RxBuffer[33] & 0x00FF)<<8)|(mrs485RxBuffer[34] & 0x00FF);
+    cfgADCp[2] = value;
+    value = (int)((mrs485RxBuffer[35] & 0x00FF)<<8)|(mrs485RxBuffer[36] & 0x00FF);
+    cfgADCs[2] = value;
+    value = (int)((mrs485RxBuffer[37] & 0x00FF)<<8)|(mrs485RxBuffer[38] & 0x00FF);
+    cfgADCf[2] = value; 
+
+    value = (int)((mrs485RxBuffer[39] & 0x00FF)<<8)|(mrs485RxBuffer[40] & 0x00FF);
+    cfgADCm[3] = value;
+    value = (int)((mrs485RxBuffer[41] & 0x00FF)<<8)|(mrs485RxBuffer[42] & 0x00FF);
+    cfgADCb[3] = value;
+    value = (int)((mrs485RxBuffer[43] & 0x00FF)<<8)|(mrs485RxBuffer[44] & 0x00FF);
+    cfgADCp[3] = value;
+    value = (int)((mrs485RxBuffer[45] & 0x00FF)<<8)|(mrs485RxBuffer[46] & 0x00FF);
+    cfgADCs[3] = value;
+    value = (int)((mrs485RxBuffer[47] & 0x00FF)<<8)|(mrs485RxBuffer[48] & 0x00FF);
+    cfgADCf[3] = value; 
 
      // Data
     EEPROM.write(EEPROM_ADD_MODBUS_ID, (byte)cfgMbId);
+
+    eeprom_value_lo =  cfgADCm[0] & 0x00FF;
+    EEPROM.write(EEPROM_ADD_ADC0_M_LO, eeprom_value_lo);
+    eeprom_value_hi = ( cfgADCm[0] & 0xFF00)>>8;
+    EEPROM.write(EEPROM_ADD_ADC0_M_HI, eeprom_value_hi);
+    eeprom_value_lo = cfgADCb[0] & 0x00FF;
+    EEPROM.write(EEPROM_ADD_ADC0_B_LO, eeprom_value_lo);
+    eeprom_value_hi = (cfgADCb[0] & 0xFF00)>>8;
+    EEPROM.write(EEPROM_ADD_ADC0_B_HI, eeprom_value_hi);
+    eeprom_value_lo = cfgADCp[0] & 0x00FF;
+    EEPROM.write(EEPROM_ADD_ADC0_P_LO, eeprom_value_lo);
+    eeprom_value_hi = (cfgADCp[0] & 0xFF00)>>8;
+    EEPROM.write(EEPROM_ADD_ADC0_P_HI, eeprom_value_hi);
+    EEPROM.write(EEPROM_ADD_ADC0_S,  cfgADCs[0]);
+    EEPROM.write(EEPROM_ADD_ADC0_F,  cfgADCf[0]);
+
+    eeprom_value_lo =  cfgADCm[1] & 0x00FF;
+    EEPROM.write(EEPROM_ADD_ADC1_M_LO, eeprom_value_lo);
+    eeprom_value_hi = ( cfgADCm[1] & 0xFF00)>>8;
+    EEPROM.write(EEPROM_ADD_ADC1_M_HI, eeprom_value_hi);
+    eeprom_value_lo = cfgADCb[1] & 0x00FF;
+    EEPROM.write(EEPROM_ADD_ADC1_B_LO, eeprom_value_lo);
+    eeprom_value_hi = (cfgADCb[1] & 0xFF00)>>8;
+    EEPROM.write(EEPROM_ADD_ADC1_B_HI, eeprom_value_hi);
+    eeprom_value_lo = cfgADCp[1] & 0x00FF;
+    EEPROM.write(EEPROM_ADD_ADC1_P_LO, eeprom_value_lo);
+    eeprom_value_hi = (cfgADCp[1] & 0xFF00)>>8;
+    EEPROM.write(EEPROM_ADD_ADC1_P_HI, eeprom_value_hi);
+    EEPROM.write(EEPROM_ADD_ADC1_S,  cfgADCs[1]);
+    EEPROM.write(EEPROM_ADD_ADC1_F,  cfgADCf[1]);
+
+    eeprom_value_lo =  cfgADCm[2] & 0x00FF;
+    EEPROM.write(EEPROM_ADD_ADC2_M_LO, eeprom_value_lo);
+    eeprom_value_hi = ( cfgADCm[2] & 0xFF00)>>8;
+    EEPROM.write(EEPROM_ADD_ADC2_M_HI, eeprom_value_hi);
+    eeprom_value_lo = cfgADCb[2] & 0x00FF;
+    EEPROM.write(EEPROM_ADD_ADC2_B_LO, eeprom_value_lo);
+    eeprom_value_hi = (cfgADCb[2] & 0xFF00)>>8;
+    EEPROM.write(EEPROM_ADD_ADC2_B_HI, eeprom_value_hi);
+    eeprom_value_lo = cfgADCp[2] & 0x00FF;
+    EEPROM.write(EEPROM_ADD_ADC2_P_LO, eeprom_value_lo);
+    eeprom_value_hi = (cfgADCp[2] & 0xFF00)>>8;
+    EEPROM.write(EEPROM_ADD_ADC2_P_HI, eeprom_value_hi);
+    EEPROM.write(EEPROM_ADD_ADC2_S,  cfgADCs[2]);
+    EEPROM.write(EEPROM_ADD_ADC2_F,  cfgADCf[2]);
+
+    eeprom_value_lo =  cfgADCm[3] & 0x00FF;
+    EEPROM.write(EEPROM_ADD_ADC3_M_LO, eeprom_value_lo);
+    eeprom_value_hi = ( cfgADCm[3] & 0xFF00)>>8;
+    EEPROM.write(EEPROM_ADD_ADC3_M_HI, eeprom_value_hi);
+    eeprom_value_lo = cfgADCb[3] & 0x00FF;
+    EEPROM.write(EEPROM_ADD_ADC3_B_LO, eeprom_value_lo);
+    eeprom_value_hi = (cfgADCb[3] & 0xFF00)>>8;
+    EEPROM.write(EEPROM_ADD_ADC3_B_HI, eeprom_value_hi);
+    eeprom_value_lo = cfgADCp[3] & 0x00FF;
+    EEPROM.write(EEPROM_ADD_ADC3_P_LO, eeprom_value_lo);
+    eeprom_value_hi = (cfgADCp[3] & 0xFF00)>>8;
+    EEPROM.write(EEPROM_ADD_ADC3_P_HI, eeprom_value_hi);
+    EEPROM.write(EEPROM_ADD_ADC3_S,  cfgADCs[3]);
+    EEPROM.write(EEPROM_ADD_ADC3_F,  cfgADCf[3]);
     
     mrs485TxBuffer[0] = (char)address;
     mrs485TxBuffer[1] = (char)MB_FUNC_WRITE_MULTIPLE_REGISTERS;
@@ -232,11 +337,55 @@ void _mbReadHolding(char address)
   {
     mrs485TxBuffer[0] = (char)address;
     mrs485TxBuffer[1] = (char)MB_FUNC_READ_HOLDING_REGISTER;
-    mrs485TxBuffer[2] = MB_NREG_OUTS*2;
+    mrs485TxBuffer[2] = MB_NREG_CFG*2;
     
-    mrs485TxBuffer[3] = 0x00;
-    mrs485TxBuffer[4] = (byte)(cfgMbId & 0x00FF);
- 
+    mrs485TxBuffer[3]  = 0x00;
+    mrs485TxBuffer[4]  = (byte)(cfgMbId & 0x00FF);
+
+    mrs485TxBuffer[5]  = (cfgADCm[0] & 0xFF00)>>8;
+    mrs485TxBuffer[6]  =  cfgADCm[0] & 0x00FF;
+    mrs485TxBuffer[7]  = (cfgADCb[0] & 0xFF00)>>8;
+    mrs485TxBuffer[8]  =  cfgADCb[0] & 0x00FF;
+    mrs485TxBuffer[9]  = (cfgADCp[0] & 0xFF00)>>8;
+    mrs485TxBuffer[10] =  cfgADCp[0] & 0x00FF;
+    mrs485TxBuffer[11] = (cfgADCs[0] & 0xFF00)>>8;
+    mrs485TxBuffer[12] =  cfgADCs[0] & 0x00FF;
+    mrs485TxBuffer[13] = (cfgADCf[0] & 0xFF00)>>8;
+    mrs485TxBuffer[14] =  cfgADCf[0] & 0x00FF;
+
+    mrs485TxBuffer[15] = (cfgADCm[1] & 0xFF00)>>8;
+    mrs485TxBuffer[16] =  cfgADCm[1] & 0x00FF;
+    mrs485TxBuffer[17] = (cfgADCb[1] & 0xFF00)>>8;
+    mrs485TxBuffer[18] =  cfgADCb[1] & 0x00FF;
+    mrs485TxBuffer[19] = (cfgADCp[1] & 0xFF00)>>8;
+    mrs485TxBuffer[20] =  cfgADCp[1] & 0x00FF;
+    mrs485TxBuffer[21] = (cfgADCs[1] & 0xFF00)>>8;
+    mrs485TxBuffer[22] =  cfgADCs[1] & 0x00FF;
+    mrs485TxBuffer[23] = (cfgADCf[1] & 0xFF00)>>8;
+    mrs485TxBuffer[24] =  cfgADCf[1] & 0x00FF;
+
+    mrs485TxBuffer[25] = (cfgADCm[2] & 0xFF00)>>8;
+    mrs485TxBuffer[26] =  cfgADCm[2] & 0x00FF;
+    mrs485TxBuffer[27] = (cfgADCb[2] & 0xFF00)>>8;
+    mrs485TxBuffer[28] =  cfgADCb[2] & 0x00FF;
+    mrs485TxBuffer[29] = (cfgADCp[2] & 0xFF00)>>8;
+    mrs485TxBuffer[30] =  cfgADCp[2] & 0x00FF;
+    mrs485TxBuffer[31] = (cfgADCs[2] & 0xFF00)>>8;
+    mrs485TxBuffer[32] =  cfgADCs[2] & 0x00FF;
+    mrs485TxBuffer[33] = (cfgADCf[2] & 0xFF00)>>8;
+    mrs485TxBuffer[34] =  cfgADCf[2] & 0x00FF;
+    
+    mrs485TxBuffer[35] = (cfgADCm[3] & 0xFF00)>>8;
+    mrs485TxBuffer[36] =  cfgADCm[3] & 0x00FF;
+    mrs485TxBuffer[37] = (cfgADCb[3] & 0xFF00)>>8;
+    mrs485TxBuffer[38] =  cfgADCb[3] & 0x00FF;
+    mrs485TxBuffer[39] = (cfgADCp[3] & 0xFF00)>>8;
+    mrs485TxBuffer[40] =  cfgADCp[3] & 0x00FF;
+    mrs485TxBuffer[41] = (cfgADCs[3] & 0xFF00)>>8;
+    mrs485TxBuffer[42] =  cfgADCs[3] & 0x00FF;
+    mrs485TxBuffer[43] = (cfgADCf[3] & 0xFF00)>>8;
+    mrs485TxBuffer[44] =  cfgADCf[3] & 0x00FF;
+     
     // Num Bytes
     mrs485TxNumBytes = mrs485TxBuffer[2] + 5;
   }

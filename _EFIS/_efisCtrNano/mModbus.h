@@ -47,7 +47,7 @@ extern "C" {
 #define MB_ADD_CTR      0
 #define MB_NREG_CTR     2
 #define MB_ADD_INS      1000
-#define MB_NREG_INS     2
+#define MB_NREG_INS     3
 #define MB_ADD_OUTS     1010
 #define MB_NREG_OUTS    3
 #define MB_ADD_ADC      1020
@@ -56,7 +56,7 @@ extern "C" {
 #define MB_NREG_PULS    2
 
 #define MB_ADD_CFG      10000
-#define MB_NREG_CFG     21
+#define MB_NREG_CFG     26
 
 extern void _MBCRC(void);
 

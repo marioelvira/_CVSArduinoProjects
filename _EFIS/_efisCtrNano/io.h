@@ -16,16 +16,16 @@ extern "C" {
  *                        ---|   USB  |--- 
  *                        |  |--------|  |
  *                        |              |
- *        (LED*) SPI-SCK -| D13      D12 |- SPI-MISO        <- IN1
- *                       -| 3V3      D11 |- SPI-MOSI (PWM)  <- IN0
- *                       -| AREF     D10 |- SPI-SS   (PWM)  -> 
- *                   D14 -| A0        D9 |- PWM      (PWM)  -> 
- *                   D15 -| A1        D8 |-                 -> 
- *                   D16 -| A2        D7 |-                 -> OUT0
- *                   D17 -| A3        D6 |- (PWM)           -> OUT1
- *               SDA/D18 -| A4        D5 |- (PWM)           -> OUT2
- *               SCL/D19 -| A5        D4 |-                 -> RS485_RXTX // 0OUT3
- *                   D20 -| A6  [  ]  D3 |- INT1 (PWM)      <- INT1 
+ *        (LED*) SPI-SCK -| D13      D12 |- SPI-MISO
+ *                       -| 3V3      D11 |- SPI-MOSI
+ *                       -| AREF     D10 |- SPI-SS
+ *                   D14 -| A0        D9 |-                 <- IN0
+ *                   D15 -| A1        D8 |-                 <- IN1
+ *                   D16 -| A2        D7 |-                 <- IN2
+ *                   D17 -| A3        D6 |- (PWM)           -> OUT0
+ *               SDA/D18 -| A4        D5 |- (PWM)           -> OUT1
+ *               SCL/D19 -| A5        D4 |-                 -> OUT3
+ *                   D20 -| A6  [  ]  D3 |- INT1 (PWM)      <- INT1
  *                   D21 -| A7  ****  D2 |- INT0            <- INT0
  *                    5V -| 5V       GND |- GND  
  *                 RESET -| RST      RST |-   
@@ -54,20 +54,20 @@ extern "C" {
 //#define PIN_ADC7     A7
 
 // OUTs
-#define OUT_NUMBER      3 //4
+#define OUT_NUMBER      3
 
-#define PIN_OUT0        7
-#define PIN_OUT1        6
-#define PIN_OUT2        5
-//#define PIN_OUT3      4
+#define PIN_OUT0        6
+#define PIN_OUT1        5
+#define PIN_OUT2        4
 
-#define PIN_RS485_RXTX  4
+//#define PIN_RS485_RXTX  XX
 
 // INs
-#define IN_NUMBER       2
+#define IN_NUMBER       3
 
-#define PIN_IN0         11
-#define PIN_IN1         12
+#define PIN_IN0         9
+#define PIN_IN1         8
+#define PIN_IN2         7
 
 // Status OUTs
 #define PIN_OUT_ON        1

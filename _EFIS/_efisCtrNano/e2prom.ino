@@ -102,6 +102,10 @@ void _readCONFIG (void)
     EEPROM.write(EEPROM_ADD_ADC3_S,  EEPROM_VAL_ADC3_S);
     EEPROM.write(EEPROM_ADD_ADC3_F,  EEPROM_VAL_ADC3_F);
 
+    EEPROM.write(EEPROM_ADD_LOGIC_IN0, EEPROM_VAL_LOGIC_IN0);
+    EEPROM.write(EEPROM_ADD_LOGIC_IN1, EEPROM_VAL_LOGIC_IN1);
+    EEPROM.write(EEPROM_ADD_LOGIC_IN2, EEPROM_VAL_LOGIC_IN2);
+
     EEPROM.write(EEPROM_ADD_RPM,   EEPROM_VAL_RPM);
     EEPROM.write(EEPROM_ADD_PRESS, EEPROM_VAL_PRESS);
 
@@ -163,12 +167,17 @@ void _readCONFIG (void)
   cfgADCp[3]        = (int)((eeprom_value_hi & 0x00FF)<<8)|(eeprom_value_lo & 0x00FF); 
   cfgADCs[3]        = (int)EEPROM.read(EEPROM_ADD_ADC3_S);
   cfgADCf[3]        = (int)EEPROM.read(EEPROM_ADD_ADC3_F);
-    
-  cfgRpm   = (int)EEPROM.read(EEPROM_ADD_RPM);
-  cfgPres  = (int)EEPROM.read(EEPROM_ADD_PRESS);
+
+  cfgLogicIns[0]    = (int)EEPROM.read(EEPROM_ADD_LOGIC_IN0);
+  cfgLogicIns[1]    = (int)EEPROM.read(EEPROM_ADD_LOGIC_IN1);
+  cfgLogicIns[2]    = (int)EEPROM.read(EEPROM_ADD_LOGIC_IN2);
+
+  cfgRpm            = (int)EEPROM.read(EEPROM_ADD_RPM);
+  cfgPres           = (int)EEPROM.read(EEPROM_ADD_PRESS);
 
   #if (_EEPROM_SERIAL_DEBUG_ == 1)
   Serial.print("Modbus ID: ");  Serial.println (cfgMbId);
+  
   for (i = 0; i < ADC_NUMBER; i++)
   {
     Serial.print("ADC"); Serial.print(i);
@@ -180,6 +189,12 @@ void _readCONFIG (void)
     Serial.println(" ");
   }
   
+  for (i = 0; i < ADC_NUMBER; i++)
+  {
+    Serial.print("Logic IN"); Serial.print(i);
+    Serial.print(" "); Serial.println (cfgLogicIns[i]);
+  }
+
   Serial.print("RMP: ");    Serial.println (cfgRpm);
   Serial.print("PRESS: ");  Serial.println (cfgPres);
   #endif

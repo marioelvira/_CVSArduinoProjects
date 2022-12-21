@@ -52,13 +52,17 @@ extern "C" {
 #define EEPROM_ADD_ADC3_S          0x20
 #define EEPROM_ADD_ADC3_F          0x21
 
-#define EEPROM_ADD_RPM            0x22
-#define EEPROM_ADD_PRESS          0x23
+#define EEPROM_ADD_LOGIC_IN0       0x22
+#define EEPROM_ADD_LOGIC_IN1       0x23
+#define EEPROM_ADD_LOGIC_IN2       0x24
+
+#define EEPROM_ADD_RPM             0x25
+#define EEPROM_ADD_PRESS           0x26
 
 //#define EEPROM_ADD_MAX          0xFA // 250
 
 // Values
-#define EEPROM_VAL_OK             0xA1
+#define EEPROM_VAL_OK             0xA0
 
 //#define EEPROM_VAL_RESERVA      
 #define EEPROM_VAL_MODBUS_ID      0x01
@@ -86,6 +90,10 @@ extern "C" {
 #define EEPROM_VAL_ADC3_P         10000
 #define EEPROM_VAL_ADC3_S         0     // +/-  1/0
 #define EEPROM_VAL_ADC3_F         0     // si/no 1/0
+
+#define EEPROM_VAL_LOGIC_IN0      0
+#define EEPROM_VAL_LOGIC_IN1      0
+#define EEPROM_VAL_LOGIC_IN2      0
 
 #define EEPROM_VAL_RPM            100
 #define EEPROM_VAL_PRESS          100

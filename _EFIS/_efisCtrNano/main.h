@@ -9,7 +9,7 @@ extern "C" {
 // C:\Users\mario.elvira\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4
 // D:\Datos\Documents\Arduino\libraries
 
-#define PROJECT     "EFIS CTR NANO"
+#define PROJECT     "EFISNANO"  // 8 Chars
 
 ///////////
 // Debug //
@@ -26,8 +26,10 @@ extern "C" {
 
 #if (_USE_RS485_ == 1)
 #define _SERIAL_DEBUG_             0
+#define _USE_RS485_RXTX_           0
 #else
 #define _SERIAL_DEBUG_             1
+#define _USE_RS485_RXTX_           0
 #endif
 
 #if (_SERIAL_DEBUG_ == 1)

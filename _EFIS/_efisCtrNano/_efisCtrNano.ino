@@ -1,6 +1,7 @@
 #include <EEPROM.h>
 
 #include "adcs.h"
+#include "alarm.h"
 #include "ctr.h"
 #include "e2prom.h"
 #include "io.h"
@@ -22,6 +23,11 @@ const char* comptime = __TIME__;
 // Board Led //
 ///////////////
 int   boardLed;
+
+///////////
+// Alarm //
+///////////
+int    alarm[AL_ARRAY_SIZE];
 
 //////////
 // ADCs //
@@ -70,6 +76,8 @@ int cfgADCb[ADC_NUMBER];
 int cfgADCp[ADC_NUMBER];
 int cfgADCs[ADC_NUMBER];
 int cfgADCf[ADC_NUMBER];
+
+int cfgLogicIns[IN_NUMBER];
 
 int cfgRpm;
 int cfgPres;
@@ -154,7 +162,7 @@ void _PINSetup(void)
     OutDig[i] = OUT_OFF;
   }
 
-  #if (_USE_RS485_ == 1)
+  #if (_USE_RS485_RXTX_ == 1)
   pinMode(PIN_RS485_RXTX, OUTPUT);
   digitalWrite(PIN_RS485_RXTX, HIGH);
   OutRS485rxtx = OUT_RS485_RX;
@@ -185,7 +193,8 @@ void setup(void)
   Serial.print("Project: ");
   Serial.println(PROJECT);
   Serial.print("Version: ");
-  Serial.println(compdate);
+  Serial.print(compdate);
+  Serial.println(comptime);
   #endif
 
   // Config setup
@@ -196,6 +205,8 @@ void setup(void)
   _PINSetup();
   _ADCsSetup();
   _INTISRsSetup();
+
+  _ALARMSetup();
 
   // Time Setup
   _TimeSetup();
@@ -241,7 +252,7 @@ void _PINLoop()
       digitalWrite(OutPin[i], PIN_OUT_OFF);
   }
   
-  #if (_USE_RS485_ == 1)
+  #if (_USE_RS485_RXTX_ == 1)
   if (OutRS485rxtx == OUT_RS485_RX)
     digitalWrite(PIN_RS485_RXTX, LOW);
   else
@@ -253,7 +264,7 @@ void _PINLoop()
   //-----//
   for (i = 0; i < IN_NUMBER; i++)
   {
-    if (digitalRead(InPin[i]) == PIN_IN_OFF)
+    if (digitalRead(InPin[i]) == cfgLogicIns [i]/*PIN_IN_OFF*/)
       InDig[i] = IO_OFF;
     else
       InDig[i] = IO_ON;

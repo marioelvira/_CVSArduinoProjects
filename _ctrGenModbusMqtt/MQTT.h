@@ -26,6 +26,7 @@ extern "C" {
 #define TOPIC_SCTR        "sdpelicanos@gmail.com/sctr"
 #define TOPIC_SINS        "sdpelicanos@gmail.com/sins"
 #define TOPIC_TEST        "sdpelicanos@gmail.com/test"
+#define TOPIC_ALARM       "sdpelicanos@gmail.com/alarm"
 
 #define TOPIC_OON         "sdpelicanos@gmail.com/Oon"
 #define TOPIC_OOFF        "sdpelicanos@gmail.com/Ooff"

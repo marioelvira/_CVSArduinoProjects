@@ -76,6 +76,8 @@ void _TimeLoop(void)
 
     _FreeRAM();
 
+    _ALARMLoop();
+
     #if (_USE_WDE_ == 1)
     _WDELoop();
     #endif

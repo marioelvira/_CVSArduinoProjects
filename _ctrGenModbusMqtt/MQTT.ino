@@ -394,7 +394,7 @@ void _MQTTSend(int itopic)
     str = str + "\",\n";
     
     str = str + "\"bI\":\"";
-    str = str + String(ioInA) + String(ioInB) + String(ioInC) + String(ioInD);
+    str = str + String(ioInD) + String(ioInC) + String(ioInB) + String(ioInA);
     str = str + "\",\n";
     
     str = str + "\"mbI1\":\"";
@@ -411,6 +411,16 @@ void _MQTTSend(int itopic)
     str = str + "\"adci\":";
     str = str + String(AdcIn);
     str = str + ",\n";
+  }
+  ///////////
+  // Alarm //
+  ///////////
+  else if (itopic == 3)
+  {
+    str = str + "\"al\":\"0x";
+    str = str + String(alarm[0]) + String(alarm[1]) + String(alarm[2]) + String(alarm[3]);
+    str = str + String(alarm[4]) + String(alarm[5]) + String(alarm[6]) + String(alarm[7]);
+    str = str + "\",\n";
   }
 
   str_len = str.length();

@@ -62,6 +62,9 @@ float  AdcVal;
 ///////////
 // Alarm //
 ///////////
+int    alState;
+int    alSecond;
+int    alNotify;
 int    alarm[AL_ARRAY_SIZE];
 
 ///////////

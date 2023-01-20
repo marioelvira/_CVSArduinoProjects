@@ -31,6 +31,9 @@ void _TimeSetup(void)
   timeHour = 0;
   timeDay = 0;
 
+  // NTP Stop
+  _mNTPSetup();
+  
   // RAM setup
   _RAMSetup();
 }
@@ -62,13 +65,20 @@ void _TimeLoop(void)
           timeDay++;
         }
       }
+      
       // Gen control
       _GenMinLoop();
+
+      // NTP loop
+      _mNTPloop();
     }
 
     // Gen control
     _GenTimeLoop();
 
+    // NTP fake clock
+    _mNTPfakeSec();
+      
     _timeOnString();
     timeTick = millis();
 
@@ -89,27 +99,33 @@ void _TimeLoop(void)
     Serial.print(timeDay); Serial.print("d "); Serial.print(timeOnString);
     Serial.println(" ");
 
+    Serial.print("Tiempo NTP: ");
+    Serial.print(mntpTimeString);
+    Serial.println(" ");
+
     Serial.print("Free RAM: ");
     Serial.println(freeRam);
     
     Serial.print("Indicador LCD: ");
     Serial.print(DisplayIndicador);
     Serial.println(" ");
-    Serial.println("---------------");
     
     Serial.print("Control Status: ");
     Serial.println(ControlState);  
-    Serial.println("---------------");
 
+    Serial.print("Alarm: ");
+    Serial.print("0x"); 
+    Serial.print(alarm[0]); Serial.print(alarm[1]); Serial.print(alarm[2]); Serial.print(alarm[3]);
+    Serial.print(alarm[4]); Serial.print(alarm[5]); Serial.print(alarm[6]); Serial.print(alarm[7]);
+    Serial.println(" ");
+    
     Serial.print("Gen Status: ");
     Serial.print(genMinOn); Serial.println("m ");
     Serial.print(genTimeDay); Serial.print("d "); Serial.print(genTimeOnString);
     Serial.println(" ");
-    Serial.println("---------------");
  
     Serial.print("Wi-Fi Status: ");
-    Serial.println(wifiStatus);  
-    Serial.println("---------------");
+    Serial.println(wifiStatus);
 
     Serial.print("AdcVal: ");
     Serial.println(AdcIn);

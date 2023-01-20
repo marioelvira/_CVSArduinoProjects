@@ -5,15 +5,24 @@ extern "C" {
 #ifndef _ALARM_H_
 #define _ALARM_H_
 
-#define AL_SEC_LOOP       10
-#define AL_NOTIFY_CONT    6
+#define AL_SEC_LOOP       60
+#define AL_NOTIFY_CONT    10
 
 #define AL_ARRAY_SIZE     8
 
-#define AL_ERROR_MB1      0
-#define AL_ERROR_MB2      1
-#define AL_ERROR_GEN      2
-#define AL_ERROR_ADC      3
+#define AL_ERROR0      0
+#define AL_ERROR1      1
+#define AL_ERROR2      2
+#define AL_ERROR3      3
+
+#define AL_ERROR0_STR   "Comunic tarjeta MB1"
+#define AL_ERROR1_STR   "Comunic tarjeta MB1"
+#define AL_ERROR2_STR   "Confirm. Generador"
+#define AL_ERROR3_STR   "Bateria baja"
+#define AL_ERROR4_STR   "Sin definir"
+#define AL_ERROR5_STR   "Sin definir"
+#define AL_ERROR6_STR   "Sin definir"
+#define AL_ERROR7_STR   "Sin definir"
 
 #define STATE_AL_LOOP         0
 #define STATE_AL_ON           1

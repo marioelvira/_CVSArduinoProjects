@@ -1,5 +1,7 @@
 #include <ESP8266WiFi.h>
+#include <WiFiUdp.h>
 #include <ESP8266WebServer.h>
+#include <NTPClient.h>
 #include <PubSubClient.h>
 #include <EEPROM.h>
 
@@ -15,6 +17,7 @@
 #include "wifi.h"
 #include "MQTT.h"
 #include "mModbus.h"
+#include "mNTP.h"
 #include "mRAM.h"
 #include "mRS485.h"
 #include "wde.h"
@@ -148,6 +151,19 @@ int timeHour = 0;
 int timeDay = 0;
 
 int timeTickSec = 0;
+
+//////////
+// mNTP //
+//////////
+String mntpTimeString;
+int mntpSec = 0;
+int mntpMin = 0;
+int mntpHour = 0;
+
+int mntpStatus;
+int mntpUpdated = 0;
+WiFiUDP mNtpUDP;
+NTPClient mNtpClient(mNtpUDP, "pool.ntp.org", 3600);
 
 //////////
 // mRAM //

@@ -1044,10 +1044,12 @@ void _readCTR()
   html = html + "<td>" + "0x" + String(alarm[0]) + String(alarm[1]) + String(alarm[2]) + String(alarm[3]) + String(alarm[4]) + String(alarm[5]) + String(alarm[6]) + String(alarm[7]) + "</td>";
   html = html + "</tr>";
 
+  #if (_USE_MB_ == 1)
   html = html + "<tr>";
   html = html + "<td>Modbus St</td>";
   html = html + "<td>" + String(mbState) + " " + String(mbNError) + " - " +  String(mbNReply) + " - " + String(mbNRetry) + "</td>";
   html = html + "</tr>";
+  #endif // (_USE_MB_ == 1)
   
   html = html + "<tr>";
   html = html + "<td>-----------------</td>";
@@ -1101,11 +1103,13 @@ void _readINS()
   html = html + "<td>" + String(ioInA) + "-" + String(ioInB) + "-" + String(ioInC) + "-" + String(ioInD) + "</td>";
   html = html + "</tr>";
   
+  #if (_USE_MB_ == 1)
   html = html + "<tr>";
   html = html + "<td>Modbus Ins</td>";
   html = html + "<td>" + String(mbIns[0][0]) + "-" + String(mbIns[1][0]) + "-" + String(mbIns[2][0]) + "-" + String(mbIns[3][0]) + "-" + String(mbIns[4][0]) + "-" + String(mbIns[5][0]) + "-" + String(mbIns[6][0]) + "-" + String(mbIns[7][0]) + "</td>";
   html = html + "<td>" + String(mbIns[0][1]) + "-" + String(mbIns[1][1]) + "-" + String(mbIns[2][1]) + "-" + String(mbIns[3][1]) + "-" + String(mbIns[4][1]) + "-" + String(mbIns[5][1]) + "-" + String(mbIns[6][1]) + "-" + String(mbIns[7][1]) + "</td>";
   html = html + "</tr>";
+  #endif // (_USE_MB_ == 1)
  
   html = html + "<tr>";
   html = html + "<td>Adc Dig</td>";
@@ -1132,6 +1136,8 @@ void _readOUTS()
   html = html + "<td>Boards Outs</td>";
   html = html + "<td>" + String(ioOutA) + "-" + String(ioOutB) + "-" + String(ioOutC) + "</td>";
   html = html + "</tr>";
+
+  #if (_USE_MB_ == 1)
   
   html = html + "<tr>";
   html = html + "<td>Modbus Outs</td>";
@@ -1144,6 +1150,8 @@ void _readOUTS()
   html = html + "<td>" + String(mbROuts[0][0]) + "-" + String(mbROuts[1][0]) + "-" + String(mbROuts[2][0]) + "-" + String(mbROuts[3][0]) + "-" + String(mbROuts[4][0]) + "-" + String(mbROuts[5][0]) + "-" + String(mbROuts[6][0]) + "-" + String(mbROuts[7][0]) + "</td>";
   html = html + "<td>" + String(mbROuts[0][1]) + "-" + String(mbROuts[1][1]) + "-" + String(mbROuts[2][1]) + "-" + String(mbROuts[3][1]) + "-" + String(mbROuts[4][1]) + "-" + String(mbROuts[5][1]) + "-" + String(mbROuts[6][1]) + "-" + String(mbROuts[7][1]) + "</td>";
   html = html + "</tr>";
+  
+  #endif // (_USE_MB_ == 1)
   
   html = html + "</table>";
   
@@ -1245,7 +1253,9 @@ void _setOUTS()
         html = "Out C ON";
       }
     }
-  
+
+    #if (_USE_MB_ == 1)
+    
     // Outs
     if ((out_number == "50") || (out_number == "51") || (out_number == "52") || (out_number == "53") ||
         (out_number == "54") || (out_number == "55") || (out_number == "56") || (out_number == "57"))
@@ -1313,6 +1323,8 @@ void _setOUTS()
       
       html = "Outs";
     }
+
+    #endif // (_USE_MB_ == 1)
   }
   else
     html = "NO Outs";

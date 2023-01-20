@@ -393,12 +393,12 @@ void _MBLoop(void)
         // Alarm
         if (mbInNBoard == 0)
         {
-          alarm[AL_ERROR_MB1] = 1;
+          alarm[AL_ERROR0] = 1;
           mbInNBoard = 1;
         }
         else
         {
-          alarm[AL_ERROR_MB2] = 1;
+          alarm[AL_ERROR1] = 1;
           mbInNBoard = 0;
         }
       }
@@ -412,7 +412,7 @@ void _MBLoop(void)
           if (_mbAnalyseIns((char)cfgMB1Add) == MB_RX_OK)
           {
             _mbUdateIns(mbInNBoard);
-            alarm[AL_ERROR_MB1] = 0;
+            alarm[AL_ERROR0] = 0;
           }
           else
             mbNError++;
@@ -426,7 +426,7 @@ void _MBLoop(void)
           if (_mbAnalyseIns((char)cfgMB2Add) == MB_RX_OK)
           {
             _mbUdateIns(mbInNBoard);
-            alarm[AL_ERROR_MB2] = 0;
+            alarm[AL_ERROR1] = 0;
           }
           else
             mbNError++;;

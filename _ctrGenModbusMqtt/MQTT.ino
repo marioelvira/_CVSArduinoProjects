@@ -8,7 +8,7 @@ void mqttDataCallback(char* rtopic, byte* rpayload, unsigned int rlength)
   rpayloadStr[rlength] = 0;
       
   #if (_MQTT_SERIAL_DEBUG_ == 1)
-  Serial.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+  Serial.println("$$$$$$$$$$$$$$$$ RX $$$$$$$$$$$$$$$$$$$$$");
   Serial.print (" Topic :");    Serial.println (rtopic);
   Serial.print (" Payload :");  Serial.println (rpayloadStr);
   Serial.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
@@ -86,6 +86,7 @@ void mqttDataCallback(char* rtopic, byte* rpayload, unsigned int rlength)
     // Auto Mode
     if (controlMode == MODE_AUTO)
     {
+      #if (_USE_MB_ == 1) 
       // MB Board
       if (boardType == 2)
       {
@@ -102,6 +103,7 @@ void mqttDataCallback(char* rtopic, byte* rpayload, unsigned int rlength)
             outO1XState[mbOutNum] = STATE_O1X_OFF;
         }
       }
+      #endif // (_USE_MB_ == 1)
     }
     // Test Mode
     else if (controlMode == MODE_TEST)
@@ -122,6 +124,7 @@ void mqttDataCallback(char* rtopic, byte* rpayload, unsigned int rlength)
         else if ((outNum == 2) && (outVal == OUT_OFF))
           ioOutC = OUT_OFF;    
       }
+      #if (_USE_MB_ == 1)
       else if (boardType == 2) // MB
       {
         if (outNum >= 10)
@@ -142,6 +145,8 @@ void mqttDataCallback(char* rtopic, byte* rpayload, unsigned int rlength)
             mbState = MB_WRITEOUT;
         }
       }
+      #endif // (_USE_MB_ == 1)
+      
     } // (controlMode == MODE_TEST)
   }
 
@@ -238,6 +243,10 @@ void _MQTTSend(int itopic)
     str = str + String(freeRam);
     str = str + ",\n";
     */
+    str = str + "\"tU\":\"";
+    str = str + mntpTimeString;
+    str = str + "\",\n";
+    
     str = str + "\"ip\":\"";
     str = str + String(ipAddress.toString());
     str = str + "\",\n";
@@ -247,9 +256,11 @@ void _MQTTSend(int itopic)
     str = str + String(alarm[4]) + String(alarm[5]) + String(alarm[6]) + String(alarm[7]);
     str = str + "\",\n";
 
+    #if (_USE_MB_ == 1)
     str = str + "\"mer\":\"";
     str = str + String(mbNError) + "-" + String(mbNReply) + "-" + String(mbNRetry);
     str = str + "\",\n";
+    #endif (_USE_MB_ == 1)
   
     str = str + "\"md\":";
     str = str + String(controlMode);
@@ -297,6 +308,8 @@ void _MQTTSend(int itopic)
   ///////////////////
   else if (itopic == 1)
   {
+    #if (_USE_MB_ == 1)
+        
     str = str + "\"i1\":";
     str = str + String(mbIns[0][0]);
     str = str + ",\n";
@@ -360,6 +373,15 @@ void _MQTTSend(int itopic)
     str = str + "\"i18\":";
     str = str + String(mbIns[7][1]);
     str = str + ",\n";
+
+    #else
+    
+    str = str + "\"i1\":";
+    str = str + "0";
+    str = str + ",\n";
+    
+    #endif // (_USE_MB_ == 1)
+        
   }
   //////////
   // Test //
@@ -372,7 +394,13 @@ void _MQTTSend(int itopic)
     str = str + "\"bO\":\"";
     str = str + String(ioOutA) + String(ioOutB) + String(ioOutC);
     str = str + "\",\n";
-  
+
+    str = str + "\"bI\":\"";
+    str = str + String(ioInD) + String(ioInC) + String(ioInB) + String(ioInA);
+    str = str + "\",\n";
+
+    #if (_USE_MB_ == 1)
+    
     str = str + "\"mbO1\":\"";
     str = str + String(mbOuts[0][0]) + String(mbOuts[1][0]) + String(mbOuts[2][0]) + String(mbOuts[3][0]);
     str = str + String(mbOuts[4][0]) + String(mbOuts[5][0]) + String(mbOuts[6][0]) + String(mbOuts[7][0]);
@@ -393,10 +421,6 @@ void _MQTTSend(int itopic)
     str = str + String(mbROuts[4][1]) + String(mbROuts[5][1]) + String(mbROuts[6][1]) + String(mbROuts[7][1]);
     str = str + "\",\n";
     
-    str = str + "\"bI\":\"";
-    str = str + String(ioInD) + String(ioInC) + String(ioInB) + String(ioInA);
-    str = str + "\",\n";
-    
     str = str + "\"mbI1\":\"";
     str = str + String(mbIns[0][0]) + String(mbIns[1][0]) + String(mbIns[2][0]) + String(mbIns[3][0]);
     str = str + String(mbIns[4][0]) + String(mbIns[5][0]) + String(mbIns[6][0]) + String(mbIns[7][0]);
@@ -406,6 +430,8 @@ void _MQTTSend(int itopic)
     str = str + String(mbIns[0][1]) + String(mbIns[1][1]) + String(mbIns[2][1]) + String(mbIns[3][1]);
     str = str + String(mbIns[4][1]) + String(mbIns[5][1]) + String(mbIns[6][1]) + String(mbIns[7][1]);
     str = str + "\",\n";
+
+    #endif // (_USE_MB_ == 1)
 
     // AdcIn
     str = str + "\"adci\":";
@@ -417,10 +443,64 @@ void _MQTTSend(int itopic)
   ///////////
   else if (itopic == 3)
   {
-    str = str + "\"al\":\"0x";
+    str = str + "\"time\":\"";
+    str = str + mntpTimeString;
+    str = str + "\",\n";
+ 
+    str = str + "\"alarm\":\"0x";
     str = str + String(alarm[0]) + String(alarm[1]) + String(alarm[2]) + String(alarm[3]);
     str = str + String(alarm[4]) + String(alarm[5]) + String(alarm[6]) + String(alarm[7]);
     str = str + "\",\n";
+
+    if (alarm[0] == 1)
+    {
+      str = str + "\"bit0\":";
+      str = str + AL_ERROR0_STR;
+      str = str + "\",\n";
+    }
+    if (alarm[1] == 1)
+    {
+      str = str + "\"bit1\":";
+      str = str + AL_ERROR1_STR;
+      str = str + "\",\n";
+    }
+    if (alarm[2] == 1)
+    {
+      str = str + "\"bit2\":";
+      str = str + AL_ERROR2_STR;
+      str = str + "\",\n";
+    }
+    if (alarm[3] == 1)
+    {
+      str = str + "\"bit3\":";
+      str = str + AL_ERROR3_STR;
+      str = str + "\",\n";
+    }
+    if (alarm[4] == 1)
+    {
+      str = str + "\"bit4\":";
+      str = str + AL_ERROR4_STR;
+      str = str + "\",\n";
+    }
+    if (alarm[5] == 1)
+    {
+      str = str + "\"bit5\":";
+      str = str + AL_ERROR5_STR;
+      str = str + "\",\n";
+    }
+    if (alarm[6] == 1)
+    {
+      str = str + "\"bit6\":";
+      str = str + AL_ERROR6_STR;
+      str = str + "\",\n";
+    }
+    if (alarm[7] == 1)
+    {
+      str = str + "\"bit7\":";
+      str = str + AL_ERROR7_STR;
+      str = str + "\",\n";
+    }
+ 
   }
 
   str_len = str.length();
@@ -437,18 +517,22 @@ void _MQTTSend(int itopic)
     str = TOPIC_SINS;
   else if (itopic == 2)
     str = TOPIC_TEST;
+  else if (itopic == 3)
+    str = TOPIC_ALARM;
   else
     str = TOPIC_SCTR;
   
   str_len = str.length() + 1;
   str.toCharArray(stopic, str_len);
 
-  //if(mqttPublish(TOPIC_STATE, (char*)spayload))
   if(mqttPublish((char*)stopic, (char*)spayload))
   {
     #if (_MQTT_SERIAL_DEBUG_ == 1)
     Serial.println("TOPIC_STATE publish was succeeded");
+    Serial.println("$$$$$$$$$$$$$$$$ RX $$$$$$$$$$$$$$$$$$$$$");
+    Serial.println(stopic);
     Serial.println(spayload);
+    Serial.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
     #endif
   } 
 }
@@ -559,10 +643,13 @@ void _MQTTLoop(void)
           break;
         
         mqttTick = millis();
-        
-        mqttClient.loop();
-		    _MQTTSend(mqttPayload);
 
+        if (mqttPayload == 3)  // TEST
+        {
+          mqttClient.loop();
+		      _MQTTSend(mqttPayload);
+        }
+        
 		    mqttPayload++;	
 		    if (mqttPayload > 2)
 		      mqttPayload = 0;

@@ -134,8 +134,8 @@ void _WifiLoop()
         Serial.println(mac[0],HEX);
         #endif
 
-        // Http setup
         _HttpSetup();
+        _mNTPStart();
       
         wifiStatus = WIFI_STATION_CONNECTED;
       }
@@ -146,6 +146,7 @@ void _WifiLoop()
       if (WiFi.status() != WL_CONNECTED)
       {
         _HttpEnd();
+        _mNTPStop();
         
         wifiStatus = WIFI_START_STATION;
       }

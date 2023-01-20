@@ -116,7 +116,7 @@ extern "C" {
 #define EEPROM_VAL_MBADD1         1
 #define EEPROM_VAL_MBADD2         2
 
-#define EEPROM_VAL_ADC_M          320
+#define EEPROM_VAL_ADC_M          350
 #define EEPROM_VAL_ADC_B          0
 #define EEPROM_VAL_ADC_P          10000
 #define EEPROM_VAL_ADC_S          0     // +/-  1/0

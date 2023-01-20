@@ -56,7 +56,7 @@ void _CtrLoop(void)
       OutDisp = OUT_OFF;
 
       // Alarm reset
-      alarm[AL_ERROR_GEN] = 0;
+      alarm[AL_ERROR2] = 0;
     
       TimeControlSec = 0;
       ControlTick = millis();
@@ -91,9 +91,9 @@ void _CtrLoop(void)
       if (TimeControlSec > cfgTimeGenAl)
       { 
         if (InGen == IO_OFF)
-          alarm[AL_ERROR_GEN] = 1;
+          alarm[AL_ERROR2] = 1;
         else
-          alarm[AL_ERROR_GEN] = 0;
+          alarm[AL_ERROR2] = 0;
       }
 
       if (TimeControlSec <= cfgTimeBuzzerOn)
@@ -170,6 +170,8 @@ void ctrIOsLoop(void)
   ioOutA = OutGen;
   ioOutB = OutBomba;
   ioOutC = OutZumb;
+
+  #if (_USE_MB_ == 1)
   
   if (OutA != mbOuts[0][0])
   {  
@@ -217,6 +219,8 @@ void ctrIOsLoop(void)
     if (mbState == MB_STANDBY)
       mbState = MB_WRITEOUT;
   }
+
+  #endif // (_USE_MB_ == 1)
 }
 
 // Ins loop
@@ -428,6 +432,8 @@ void ctrLcdLoop(void) {
 // Outs Time
 void ctrOTimeLoop(void)
 {
+  #if (_USE_MB_ == 1)
+
   int i, minHour;
 
   for (i = 0; i < NUM_O1X_MAX ; i++)
@@ -472,4 +478,6 @@ void ctrOTimeLoop(void)
         break;
 	  }
   }
+  
+  #endif // (_USE_MB_ == 1)
 }

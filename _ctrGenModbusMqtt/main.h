@@ -29,22 +29,27 @@ extern "C" {
 
 #if (_SERIAL_DEBUG_ == 1)
 
+#define _ALARM_SERIAL_DEBUG_       1
 #define _PULS_SERIAL_DEBUG_        1
 #define _EEPROM_SERIAL_DEBUG_      1
 #define _HTTP_SERIAL_DEBUG_        1
 #define _WIFI_SERIAL_DEBUG_        1
 #define _STATUS_SERIAL_DEBUG_      1
 #define _MQTT_SERIAL_DEBUG_        1
+#define _NTP_SERIAL_DEBUG_         1
 #define _FREERAM_SERIAL_DEBUG_     1
 
 #else
 
+#define _ALARM_SERIAL_DEBUG_       0
 #define _PULS_SERIAL_DEBUG_        0
 #define _EEPROM_SERIAL_DEBUG_      0
 #define _HTTP_SERIAL_DEBUG_        0
 #define _WIFI_SERIAL_DEBUG_        0
 #define _STATUS_SERIAL_DEBUG_      0
 #define _MQTT_SERIAL_DEBUG_        0
+#define _NTP_SERIAL_DEBUG_         0
+#define _FREERAM_SERIAL_DEBUG_     0
 
 #endif
 

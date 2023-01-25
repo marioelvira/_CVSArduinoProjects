@@ -69,6 +69,9 @@ int    alState;
 int    alSecond;
 int    alNotify;
 int    alarm[AL_ARRAY_SIZE];
+int    alarmCpy[AL_ARRAY_SIZE];
+
+String alarmStr[AL_ARRAY_SIZE];
 
 ///////////
 // Wi-Fi //
@@ -246,6 +249,8 @@ int mbNRetry = 0;
 int mbRetry = 0;
 
 int mbWhat2read = 0;
+
+int mbInsAlarm[MB_NUM_IOS][MB_NUM_BRS];
 #endif
 #endif
 

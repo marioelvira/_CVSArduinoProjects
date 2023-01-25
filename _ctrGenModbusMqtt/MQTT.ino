@@ -226,6 +226,7 @@ void _MQTTSend(int itopic)
   char    spayload[255];
   String  str;
   int     str_len;
+  int     i;
 
   str = "{\n";
   
@@ -251,10 +252,20 @@ void _MQTTSend(int itopic)
     str = str + String(ipAddress.toString());
     str = str + "\",\n";
     
-    str = str + "\"al\":\"0x";
+    str = str + "\"al\":\"";
     str = str + String(alarm[0]) + String(alarm[1]) + String(alarm[2]) + String(alarm[3]);
     str = str + String(alarm[4]) + String(alarm[5]) + String(alarm[6]) + String(alarm[7]);
     str = str + "\",\n";
+
+    str = str + "\"am1\":\"";
+	  str = str + String(alarm[8]) + String(alarm[9]) + String(alarm[10]) + String(alarm[11]);
+    str = str + String(alarm[12]) + String(alarm[13]) + String(alarm[14]) + String(alarm[15]);
+    str = str + "\",\n";
+	
+	  str = str + "\"am2\":\"";
+	  str = str + String(alarm[16]) + String(alarm[17]) + String(alarm[18]) + String(alarm[19]);
+    str = str + String(alarm[20]) + String(alarm[21]) + String(alarm[22]) + String(alarm[23]);
+	  str = str + "\",\n";
 
     #if (_USE_MB_ == 1)
     str = str + "\"mer\":\"";
@@ -267,7 +278,12 @@ void _MQTTSend(int itopic)
     str = str + ",\n";
 
     str = str + "\"us\":";
-    str = str + String(mqttLastCtr);
+    if (mqttLastCtr == 1)
+      str = str + "ALB";
+    else if (mqttLastCtr == 2)
+      str = str + "MAR";
+    else
+      str = str + "XXX";
     str = str + ",\n";
  
     if (OutGen == OUT_OFF)
@@ -447,60 +463,32 @@ void _MQTTSend(int itopic)
     str = str + mntpTimeString;
     str = str + "\",\n";
  
-    str = str + "\"alarm\":\"0x";
+    str = str + "\"a1\":\"";
     str = str + String(alarm[0]) + String(alarm[1]) + String(alarm[2]) + String(alarm[3]);
     str = str + String(alarm[4]) + String(alarm[5]) + String(alarm[6]) + String(alarm[7]);
     str = str + "\",\n";
 
-    if (alarm[0] == 1)
+    str = str + "\"a2\":\"";
+	  str = str + String(alarm[8]) + String(alarm[9]) + String(alarm[10]) + String(alarm[11]);
+    str = str + String(alarm[12]) + String(alarm[13]) + String(alarm[14]) + String(alarm[15]);
+    str = str + "\",\n";
+	
+	  str = str + "\"a3\":\"";
+	  str = str + String(alarm[16]) + String(alarm[17]) + String(alarm[18]) + String(alarm[19]);
+    str = str + String(alarm[20]) + String(alarm[21]) + String(alarm[22]) + String(alarm[23]);
+	  str = str + "\",\n";
+
+    for (i = 0; i < AL_ARRAY_SIZE; i++)
     {
-      str = str + "\"bit0\":";
-      str = str + AL_ERROR0_STR;
-      str = str + "\",\n";
+      if (alarm[i] == 1)
+      {
+        str = str + "\"bit";
+        str = str + String(i + 1);
+        str = str + "\":\"";
+        str = str + alarmStr[i];
+        str = str + "\",\n";
+      }
     }
-    if (alarm[1] == 1)
-    {
-      str = str + "\"bit1\":";
-      str = str + AL_ERROR1_STR;
-      str = str + "\",\n";
-    }
-    if (alarm[2] == 1)
-    {
-      str = str + "\"bit2\":";
-      str = str + AL_ERROR2_STR;
-      str = str + "\",\n";
-    }
-    if (alarm[3] == 1)
-    {
-      str = str + "\"bit3\":";
-      str = str + AL_ERROR3_STR;
-      str = str + "\",\n";
-    }
-    if (alarm[4] == 1)
-    {
-      str = str + "\"bit4\":";
-      str = str + AL_ERROR4_STR;
-      str = str + "\",\n";
-    }
-    if (alarm[5] == 1)
-    {
-      str = str + "\"bit5\":";
-      str = str + AL_ERROR5_STR;
-      str = str + "\",\n";
-    }
-    if (alarm[6] == 1)
-    {
-      str = str + "\"bit6\":";
-      str = str + AL_ERROR6_STR;
-      str = str + "\",\n";
-    }
-    if (alarm[7] == 1)
-    {
-      str = str + "\"bit7\":";
-      str = str + AL_ERROR7_STR;
-      str = str + "\",\n";
-    }
- 
   }
 
   str_len = str.length();
@@ -644,11 +632,8 @@ void _MQTTLoop(void)
         
         mqttTick = millis();
 
-        if (mqttPayload == 3)  // TEST
-        {
-          mqttClient.loop();
-		      _MQTTSend(mqttPayload);
-        }
+        mqttClient.loop();
+        _MQTTSend(mqttPayload);
         
 		    mqttPayload++;	
 		    if (mqttPayload > 2)

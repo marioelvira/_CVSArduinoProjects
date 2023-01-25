@@ -99,7 +99,7 @@ void _serveMAIN()
   html = html + "  getCTR();";
   html = html + "  getOUTS();";
   html = html + "  getINS();";
-  html = html + "  getTEMPS();";
+  html = html + "  getSTATUS();";
   html = html + "}, 1000);";
   
   html = html + "function getCTR() {";
@@ -135,14 +135,14 @@ void _serveMAIN()
   html = html + "  xhttp.send();";
   html = html + "}";
 
-  html = html + "function getTEMPS() {";
+  html = html + "function getSTATUS() {";
   html = html + "  var xhttp = new XMLHttpRequest();";
   html = html + "  xhttp.onreadystatechange = function() {";
   html = html + "    if (this.readyState == 4 && this.status == 200) {";
   html = html + "      document.getElementById(\"TEMPSid\").innerHTML = this.responseText;";
   html = html + "   }";
   html = html + "  };";
-  html = html + "  xhttp.open(\"GET\", \"readTEMPS\", true);";
+  html = html + "  xhttp.open(\"GET\", \"readSTATUS\", true);";
   html = html + "  xhttp.send();";
   html = html + "}";
   
@@ -1041,9 +1041,17 @@ void _readCTR()
 
   html = html + "<tr>";
   html = html + "<td>Alarmas </td>";
-  html = html + "<td>" + "0x" + String(alarm[0]) + String(alarm[1]) + String(alarm[2]) + String(alarm[3]) + String(alarm[4]) + String(alarm[5]) + String(alarm[6]) + String(alarm[7]) + "</td>";
+  html = html + "<td>" + String(alarm[0]) + String(alarm[1]) + String(alarm[2]) + String(alarm[3]) + String(alarm[4]) + String(alarm[5]) + String(alarm[6]) + String(alarm[7]) + "</td>";
   html = html + "</tr>";
-
+  html = html + "<tr>";
+  html = html + "<td>  </td>";
+  html = html + "<td>" + String(alarm[8]) + String(alarm[9]) + String(alarm[10]) + String(alarm[11]) + String(alarm[12]) + String(alarm[13]) + String(alarm[14]) + String(alarm[15]) + "</td>";
+  html = html + "</tr>";
+  html = html + "<tr>";
+  html = html + "<td> </td>";
+  html = html + "<td>" + String(alarm[16]) + String(alarm[17]) + String(alarm[18]) + String(alarm[19]) + String(alarm[20]) + String(alarm[21]) + String(alarm[22]) + String(alarm[23]) + "</td>";
+  html = html + "</tr>";
+  
   #if (_USE_MB_ == 1)
   html = html + "<tr>";
   html = html + "<td>Modbus St</td>";
@@ -1332,7 +1340,7 @@ void _setOUTS()
   httpServer.send(200, "text/plane", html);
 }
 
-void _readTEMPS()
+void _readSTATUS()
 { 
   String html = "";
 
@@ -1356,6 +1364,11 @@ void _readTEMPS()
   html = html + "<tr>";
   html = html + "<td>MQTT </td>";
   html = html + "<td>" + String(mqttStatus) + "</td>";
+  html = html + "</tr>";
+
+  html = html + "<tr>";
+  html = html + "<td>Alarma </td>";
+  html = html + "<td>" + String(alState) + " " + String(alNotify) + "-" + String(AL_NOTIFY_CONT) + "</td>";
   html = html + "</tr>";
 
   html = html + "</table>";
@@ -1387,7 +1400,7 @@ void _HttpLoop()
       httpServer.on("/setOUTS",          _setOUTS);      
       httpServer.on("/readOUTS",         _readOUTS);
       httpServer.on("/readINS",          _readINS);
-      httpServer.on("/readTEMPS",        _readTEMPS);
+      httpServer.on("/readSTATUS",        _readSTATUS);
       httpServer.on("/networSettings",   _setSETTINGS);
       httpServer.on("/setTimeSettings",  _setTimeSETTINGS);
       httpServer.on("/setCtrSettings",   _setCtrSETTINGS);

@@ -53,6 +53,10 @@ extern "C" {
 
 #define MB_NUM_RETRY      2
 
+#define MB_IN_AL_VAL_0		0
+#define MB_IN_AL_VAL_1		1
+#define MB_IN_AL_DISABLE	2
+
 extern void _MBCRC(void);
 
 #endif // _MMODBUS_H_

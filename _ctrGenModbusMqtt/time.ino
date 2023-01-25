@@ -71,6 +71,11 @@ void _TimeLoop(void)
 
       // NTP loop
       _mNTPloop();
+
+      // Check each minute
+      #if (_USE_MB_ == 1)
+      _mbInsAlarmCheck();
+      #endif
     }
 
     // Gen control
@@ -113,6 +118,9 @@ void _TimeLoop(void)
     Serial.print("Control Status: ");
     Serial.println(ControlState);  
 
+    Serial.print("Alarm Status: ");
+    Serial.print(alState); Serial.print("-"); Serial.println(alNotify);
+    
     Serial.print("Alarm: ");
     Serial.print("0x"); 
     Serial.print(alarm[0]); Serial.print(alarm[1]); Serial.print(alarm[2]); Serial.print(alarm[3]);

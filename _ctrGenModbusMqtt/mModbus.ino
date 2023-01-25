@@ -318,7 +318,44 @@ int _MBOutCheck(void)
 
   return 0;
 }
- 
+
+void _mbInsAlarmInit (void)
+{
+  mbInsAlarm[0][0] = MB_IN_AL_VAL_0;
+  mbInsAlarm[1][0] = MB_IN_AL_VAL_0;
+  mbInsAlarm[2][0] = MB_IN_AL_DISABLE;
+  mbInsAlarm[3][0] = MB_IN_AL_DISABLE;
+  mbInsAlarm[4][0] = MB_IN_AL_DISABLE;
+  mbInsAlarm[5][0] = MB_IN_AL_DISABLE;
+  mbInsAlarm[6][0] = MB_IN_AL_DISABLE;
+  mbInsAlarm[7][0] = MB_IN_AL_DISABLE;
+
+  mbInsAlarm[0][1] = MB_IN_AL_DISABLE;
+  mbInsAlarm[1][1] = MB_IN_AL_DISABLE;
+  mbInsAlarm[2][1] = MB_IN_AL_DISABLE;
+  mbInsAlarm[3][1] = MB_IN_AL_DISABLE;
+  mbInsAlarm[4][1] = MB_IN_AL_DISABLE;
+  mbInsAlarm[5][1] = MB_IN_AL_DISABLE;
+  mbInsAlarm[6][1] = MB_IN_AL_DISABLE;
+  mbInsAlarm[7][1] = MB_IN_AL_DISABLE;
+}
+
+void _mbInsAlarmCheck (void)
+{
+  int i, j;
+
+  for (j = 0; j < MB_NUM_BRS; j++)
+  {
+    for (i = 0; i < MB_NUM_IOS; i++)
+    {
+      if (mbIns[i][j] == mbInsAlarm[i][j])
+        alarm[8*(j + 1) + i] = 1;
+      else
+        alarm[8*(j + 1) + i] = 0;
+    }
+  }
+}
+
 ////////////////////
 // mModbus set up //
 ////////////////////
@@ -340,6 +377,8 @@ void _MBSetup(void)
       mbOuts[i][j] = 0;
     }
   }
+
+  _mbInsAlarmInit();
 }
 
 //////////////////

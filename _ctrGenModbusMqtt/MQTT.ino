@@ -223,7 +223,7 @@ boolean mqttSubscribe(const char* topicToSubscribe)
 void _MQTTSend(int itopic)
 {
   char    stopic[50];
-  char    spayload[255];
+  char    spayload[255];  // If more message not sent
   String  str;
   int     str_len;
   int     i;
@@ -252,21 +252,6 @@ void _MQTTSend(int itopic)
     str = str + String(ipAddress.toString());
     str = str + "\",\n";
     
-    str = str + "\"al\":\"";
-    str = str + String(alarm[0]) + String(alarm[1]) + String(alarm[2]) + String(alarm[3]);
-    str = str + String(alarm[4]) + String(alarm[5]) + String(alarm[6]) + String(alarm[7]);
-    str = str + "\",\n";
-
-    str = str + "\"am1\":\"";
-	  str = str + String(alarm[8]) + String(alarm[9]) + String(alarm[10]) + String(alarm[11]);
-    str = str + String(alarm[12]) + String(alarm[13]) + String(alarm[14]) + String(alarm[15]);
-    str = str + "\",\n";
-	
-	  str = str + "\"am2\":\"";
-	  str = str + String(alarm[16]) + String(alarm[17]) + String(alarm[18]) + String(alarm[19]);
-    str = str + String(alarm[20]) + String(alarm[21]) + String(alarm[22]) + String(alarm[23]);
-	  str = str + "\",\n";
-
     #if (_USE_MB_ == 1)
     str = str + "\"mer\":\"";
     str = str + String(mbNError) + "-" + String(mbNReply) + "-" + String(mbNRetry);
@@ -279,11 +264,11 @@ void _MQTTSend(int itopic)
 
     str = str + "\"us\":";
     if (mqttLastCtr == 1)
-      str = str + "ALB";
+      str = str + "AL";
     else if (mqttLastCtr == 2)
-      str = str + "MAR";
+      str = str + "MA";
     else
-      str = str + "XXX";
+      str = str + "**";
     str = str + ",\n";
  
     if (OutGen == OUT_OFF)
@@ -389,15 +374,23 @@ void _MQTTSend(int itopic)
     str = str + "\"i18\":";
     str = str + String(mbIns[7][1]);
     str = str + ",\n";
-
-    #else
-    
-    str = str + "\"i1\":";
-    str = str + "0";
-    str = str + ",\n";
-    
-    #endif // (_USE_MB_ == 1)
         
+    #endif // (_USE_MB_ == 1)
+
+    str = str + "\"a1\":\"";
+    str = str + String(alarm[0]) + String(alarm[1]) + String(alarm[2]) + String(alarm[3]);
+    str = str + String(alarm[4]) + String(alarm[5]) + String(alarm[6]) + String(alarm[7]);
+    str = str + "\",\n";
+
+    str = str + "\"a2\":\"";
+    str = str + String(alarm[8]) + String(alarm[9]) + String(alarm[10]) + String(alarm[11]);
+    str = str + String(alarm[12]) + String(alarm[13]) + String(alarm[14]) + String(alarm[15]);
+    str = str + "\",\n";
+    
+    str = str + "\"a3\":\"";
+    str = str + String(alarm[16]) + String(alarm[17]) + String(alarm[18]) + String(alarm[19]);
+    str = str + String(alarm[20]) + String(alarm[21]) + String(alarm[22]) + String(alarm[23]);
+    str = str + "\",\n";
   }
   //////////
   // Test //

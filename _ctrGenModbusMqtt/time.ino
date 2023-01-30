@@ -119,18 +119,24 @@ void _TimeLoop(void)
     Serial.println(ControlState);  
 
     Serial.print("Alarm Status: ");
-    Serial.print(alState); Serial.print("-"); Serial.println(alNotify);
+    Serial.print(alState); Serial.print(" "); Serial.println(alNotify); Serial.print("-"); Serial.println(AL_NOTIFY_CONT);
     
     Serial.print("Alarm: ");
-    Serial.print("0x"); 
     Serial.print(alarm[0]); Serial.print(alarm[1]); Serial.print(alarm[2]); Serial.print(alarm[3]);
-    Serial.print(alarm[4]); Serial.print(alarm[5]); Serial.print(alarm[6]); Serial.print(alarm[7]);
+    Serial.print(alarm[4]); Serial.print(alarm[5]); Serial.print(alarm[6]); Serial.println(alarm[7]);
+    Serial.print(alarm[8]); Serial.print(alarm[9]); Serial.print(alarm[10]); Serial.print(alarm[11]);
+    Serial.print(alarm[12]); Serial.print(alarm[13]); Serial.print(alarm[14]); Serial.println(alarm[15]);
+    Serial.print(alarm[16]); Serial.print(alarm[17]); Serial.print(alarm[18]); Serial.print(alarm[19]);
+    Serial.print(alarm[20]); Serial.print(alarm[21]); Serial.print(alarm[22]); Serial.println(alarm[23]);
     Serial.println(" ");
     
     Serial.print("Gen Status: ");
     Serial.print(genMinOn); Serial.println("m ");
     Serial.print(genTimeDay); Serial.print("d "); Serial.print(genTimeOnString);
     Serial.println(" ");
+
+    Serial.print("MQTT Status: ");
+    Serial.print(mqttStatus); Serial.print(" - pl ");Serial.println(mqttPayload);
  
     Serial.print("Wi-Fi Status: ");
     Serial.println(wifiStatus);

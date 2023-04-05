@@ -366,14 +366,14 @@ void _PINLoop()
 
   #if (_SERIAL_DEBUG_ == 0)
   if (digitalRead(PIN_WOPEN) == cfgLogicIns)//PIN_IN_OFF)
-    InWOpen = IO_OFF;
-  else
     InWOpen = IO_ON;
+  else
+    InWOpen = IO_OFF;
 
   if (digitalRead(PIN_WCLOSE) == cfgLogicIns)//PIN_IN_OFF)
-    InWClose = IO_OFF;
-  else
     InWClose = IO_ON;
+  else
+    InWClose = IO_OFF;
   #else
   InWOpen = 0;
   InWClose = 0;

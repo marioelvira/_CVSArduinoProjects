@@ -1,0 +1,6 @@
+U16#0000 Date: year#
+U16#0001 Date: month#
+U16#0002 Date: day#
+U16#0003 Date: hour#
+U16#0004 Date: minute#
+U16#0005 Date: second#

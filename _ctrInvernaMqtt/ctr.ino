@@ -21,8 +21,6 @@ void _CtrSetup(void)
   FanState  = STATE_STANDBY;
   PumpState = STATE_STANDBY;
   IrriState = STATE_STANDBY;
-  Aux1State = STATE_STANDBY;
-  Aux2State = STATE_STANDBY;
 }
 
 ///////////////////////
@@ -230,35 +228,4 @@ void _CtRemOutsLoop(void)
       break;
   }
 
-  // Aux1
-  switch (Aux1State)
-  {
-    case STATE_STANDBY:
-      OutAux1 = OUT_OFF;      
-      Aux1Tick = millis();
-      break;
-
-    case STATE_OUT_ON:
-      OutAux1 = OUT_ON;
-      if (millis() - Aux1Tick >= (cfgAux1Tick*cfgScaleMin*60000))
-        Aux1State = STATE_STANDBY;
-      
-      break;
-  }
-
-  // Aux2
-  switch (Aux2State)
-  {
-    case STATE_STANDBY:
-      OutAux2 = OUT_OFF;      
-      Aux2Tick = millis();
-      break;
-
-    case STATE_OUT_ON:
-      OutAux2 = OUT_ON;
-      if (millis() - Aux2Tick >= (cfgAux2Tick*cfgScaleMin*60000))
-        Aux2State = STATE_STANDBY;
-      
-      break;
-  }
 }

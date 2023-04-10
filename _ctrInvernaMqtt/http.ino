@@ -47,11 +47,9 @@ void _serveMAIN()
   html = html + "  <input type=\"button\" value=\"Open\" onclick=\"sendOUT(10)\">";
   html = html + "  <input type=\"button\" value=\"Close\" onclick=\"sendOUT(11)\">";
   html = html + "  <input type=\"button\" value=\"Fan\" onclick=\"sendOUT(12)\">";
-  html = html + "  <input type=\"button\" value=\"Pump\" onclick=\"sendOUT(13)\">";
   html = html + "</p><p>";
+  html = html + "  <input type=\"button\" value=\"Pump\" onclick=\"sendOUT(13)\">";
   html = html + "  <input type=\"button\" value=\"Irri\" onclick=\"sendOUT(14)\">";
-  html = html + "  <input type=\"button\" value=\"Aux1\" onclick=\"sendOUT(15)\">";
-  html = html + "  <input type=\"button\" value=\"Aux2\" onclick=\"sendOUT(16)\">";
   html = html + "</p>";
   html = html + "<div class=\"section\">Watchdog</div>";
   html = html + "<p>";
@@ -146,8 +144,6 @@ void _serveTimeSETTINGS()
   html = html + "<label>Fan Out (*m)<input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgFanTick) + "\" name=\"timeFAN\"/></label>";
   html = html + "<label>Pump Out (*m)<input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgPumpTick) + "\" name=\"timePUMP\"/></label>";
   html = html + "<label>Irri Out (*m)<input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgIrriTick) + "\" name=\"timeIRRI\"/></label>";
-  html = html + "<label>Aux1 Out (*m)<input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgAux1Tick) + "\" name=\"timeAUX1\"/></label>";
-  html = html + "<label>Aux2 Out (*m)<input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgAux2Tick) + "\" name=\"timeAUX2\"/></label>";
   html = html + "</div>";
 
   html = html + "<div class=\"section\"><span>2</span>Logica</div>";
@@ -201,8 +197,6 @@ void _setTimeSETTINGS()
   String rtimeFAN  = httpServer.arg("timeFAN");
   String rtimePUMP = httpServer.arg("timePUMP");
   String rtimeIRRI = httpServer.arg("timeIRRI");
-  String rtimeAUX1 = httpServer.arg("timeAUX1");
-  String rtimeAUX2 = httpServer.arg("timeAUX2");
   
   String cfgIns    = httpServer.arg("cfgIns");
   String cfgOuts   = httpServer.arg("cfgOuts");
@@ -223,8 +217,6 @@ void _setTimeSETTINGS()
       (rtimeFAN.length() == 0)  ||
       (rtimePUMP.length() == 0) ||
       (rtimeIRRI.length() == 0) ||
-      (rtimeAUX1.length() == 0) ||
-      (rtimeAUX2.length() == 0) ||
       
       (cfgIns.length() == 0)    ||
       (cfgOuts.length() == 0)   ||
@@ -250,8 +242,6 @@ void _setTimeSETTINGS()
     cfgFanTick  = rtimeFAN.toInt();
     cfgPumpTick = rtimePUMP.toInt();
     cfgIrriTick = rtimeIRRI.toInt();
-    cfgAux1Tick = rtimeAUX1.toInt();
-    cfgAux2Tick = rtimeAUX2.toInt();
     
     cfgLogicIns = cfgIns.toInt();
     cfgLogicOuts = cfgOuts.toInt();
@@ -271,8 +261,6 @@ void _setTimeSETTINGS()
     Serial.print("Fan: ");           Serial.print (cfgFanTick);         Serial.println(" * min");
     Serial.print("Pump: ");          Serial.print (cfgPumpTick);        Serial.println(" * min");
     Serial.print("Irri: ");          Serial.print (cfgIrriTick);        Serial.println(" * min");
-    Serial.print("Aux1: ");          Serial.print (cfgAux1Tick);        Serial.println(" * min");
-    Serial.print("Aux2: ");          Serial.print (cfgAux2Tick);        Serial.println(" * min");
     
     Serial.print("cfgLogic Ins: ");  Serial.println(cfgLogicIns);
     Serial.print("cfgLogic Outs: "); Serial.println(cfgLogicOuts);
@@ -295,8 +283,6 @@ void _setTimeSETTINGS()
     EEPROM.write(EEPROM_ADD_FAN_XM,    (byte)cfgFanTick);
     EEPROM.write(EEPROM_ADD_PUMP_XM,   (byte)cfgPumpTick);
     EEPROM.write(EEPROM_ADD_IRRI_XM,   (byte)cfgIrriTick);
-    EEPROM.write(EEPROM_ADD_AUX1_XM,   (byte)cfgAux1Tick);
-    EEPROM.write(EEPROM_ADD_AUX2_XM,   (byte)cfgAux2Tick);
     
     EEPROM.write(EEPROM_ADD_LOGIC_INS,  (byte)cfgLogicIns);
     EEPROM.write(EEPROM_ADD_LOGIC_OUTS, (byte)cfgLogicOuts);
@@ -875,8 +861,6 @@ void _readOUTS()
   html = html + " Fan:"  + String(FanState)  + " : " + String((millis() - FanTick)/1000);
   html = html + " Pump:" + String(PumpState) + " : " + String((millis() - PumpTick)/1000);
   html = html + " Irri:" + String(IrriState) + " : " + String((millis() - IrriTick)/1000);
-  html = html + " Aux1:" + String(Aux1State) + " : " + String((millis() - Aux1Tick)/1000);
-  html = html + " Aux2:" + String(Aux2State) + " : " + String((millis() - Aux2Tick)/1000);
   html = html + "</td>";
   html = html + "</tr>";
 
@@ -922,24 +906,6 @@ void _readOUTS()
   html = html + "<td>Irri</td>";
   if (OutIrri == OUT_ON)
    //html = html + "<td><font style=\"color:green\">ON</font> " + String((millis() - IrriTick)/1000) + "</td>";
-   html = html + "<td><font style=\"color:green\">ON</font></td>";
-  else
-   html = html + "<td><font style=\"color:grey\">OFF</font></td>";
-  html = html + "</tr>";
-
-  html = html + "<tr>";
-  html = html + "<td>Aux1</td>";
-  if (OutAux1 == OUT_ON)
-   //html = html + "<td><font style=\"color:green\">ON</font> " + String((millis() - Aux1Tick)/1000) + "</td>";
-   html = html + "<td><font style=\"color:green\">ON</font></td>";
-  else
-   html = html + "<td><font style=\"color:grey\">OFF</font></td>";
-  html = html + "</tr>";
-
-  html = html + "<tr>";
-  html = html + "<td>Aux2</td>";
-  if (OutAux2 == OUT_ON)
-   //html = html + "<td><font style=\"color:green\">ON</font> " + String((millis() - Aux2Tick)/1000) + "</td>";
    html = html + "<td><font style=\"color:green\">ON</font></td>";
   else
    html = html + "<td><font style=\"color:grey\">OFF</font></td>";
@@ -1095,48 +1061,6 @@ void _setOUTS()
       Serial.println("Irri ON");
       #endif
       html = "Irri ON";
-    }
-  }
-
-  // OutAux1
-  if(out_number == "15")
-  {
-    if (OutAux1 == OUT_ON)
-    {
-      OutAux1 = OUT_OFF;
-      #if (_HTTP_SERIAL_DEBUG_ == 1)
-      Serial.println("Aux1 OFF");
-      #endif
-      html = "Aux1 OFF";
-    }
-    else
-    {
-      OutAux1 = OUT_ON;
-      #if (_HTTP_SERIAL_DEBUG_ == 1)
-      Serial.println("Aux1 ON");
-      #endif
-      html = "Aux1 ON";
-    }
-  }
-
-  // OutAux2
-  if(out_number == "16")
-  {
-    if (OutAux2 == OUT_ON)
-    {
-      OutAux2 = OUT_OFF;
-      #if (_HTTP_SERIAL_DEBUG_ == 1)
-      Serial.println("Aux2 OFF");
-      #endif
-      html = "Aux2 OFF";
-    }
-    else
-    {
-      OutAux2 = OUT_ON;
-      #if (_HTTP_SERIAL_DEBUG_ == 1)
-      Serial.println("Aux2 ON");
-      #endif
-      html = "Aux2 ON";
     }
   }
   

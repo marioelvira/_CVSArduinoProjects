@@ -94,8 +94,6 @@ void _readCONFIG (void)
     EEPROM.write(EEPROM_ADD_FAN_XM,    EEPROM_VAL_FAN_XM);  
     EEPROM.write(EEPROM_ADD_PUMP_XM,   EEPROM_VAL_PUMP_XM);
     EEPROM.write(EEPROM_ADD_IRRI_XM,   EEPROM_VAL_IRRI_XM);
-    EEPROM.write(EEPROM_ADD_AUX1_XM,   EEPROM_VAL_AUX1_XM);
-    EEPROM.write(EEPROM_ADD_AUX2_XM,   EEPROM_VAL_AUX2_XM);
  
     EEPROM.write(EEPROM_ADD_LOGIC_INS,  EEPROM_VAL_LOGIC_INS);
     EEPROM.write(EEPROM_ADD_LOGIC_OUTS, EEPROM_VAL_LOGIC_OUTS);
@@ -211,8 +209,6 @@ void _readCONFIG (void)
   cfgFanTick        = (int)EEPROM.read(EEPROM_ADD_FAN_XM);
   cfgPumpTick       = (int)EEPROM.read(EEPROM_ADD_PUMP_XM);
   cfgIrriTick       = (int)EEPROM.read(EEPROM_ADD_IRRI_XM);
-  cfgAux1Tick       = (int)EEPROM.read(EEPROM_ADD_AUX1_XM);
-  cfgAux2Tick       = (int)EEPROM.read(EEPROM_ADD_AUX2_XM);
   
   cfgLogicIns       = (int)EEPROM.read(EEPROM_ADD_LOGIC_INS);
   cfgLogicOuts      = (int)EEPROM.read(EEPROM_ADD_LOGIC_OUTS);
@@ -232,8 +228,6 @@ void _readCONFIG (void)
   Serial.print("Fan: ");           Serial.print (cfgFanTick);         Serial.println(" * min");
   Serial.print("Pump: ");          Serial.print (cfgPumpTick);        Serial.println(" * min");
   Serial.print("Irri: ");          Serial.print (cfgIrriTick);        Serial.println(" * min");
-  Serial.print("Aux1: ");          Serial.print (cfgAux1Tick);        Serial.println(" * min");
-  Serial.print("Aux2: ");          Serial.print (cfgAux2Tick);        Serial.println(" * min");
 
   Serial.print("Logic Ins: ");     Serial.println(cfgLogicIns);
   Serial.print("Logic Outs: ");    Serial.println(cfgLogicOuts);

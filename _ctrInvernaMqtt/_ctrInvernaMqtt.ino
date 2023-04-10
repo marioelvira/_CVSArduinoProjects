@@ -29,11 +29,9 @@ int   OutFan;
 int   OutClose;
 int   OutOpen;
 int   OutPump;
-int   outLed;
-
 int   OutIrri;
-int   OutAux1;
-int   OutAux2;
+
+int   outLed;
 
 int   InOpen = 0;
 int   InOpen_ant = 0;
@@ -163,10 +161,6 @@ int   PumpState;
 unsigned long PumpTick = 0;
 int   IrriState;
 unsigned long IrriTick = 0;
-int   Aux1State;
-unsigned long Aux1Tick = 0;
-int   Aux2State;
-unsigned long Aux2Tick = 0;
 
 //////////
 // mRAM //
@@ -187,8 +181,6 @@ int     cfgScaleMin;
 int     cfgFanTick;
 int     cfgPumpTick;
 int     cfgIrriTick;
-int     cfgAux1Tick;
-int     cfgAux2Tick;
 
 int     cfgLogicIns;
 int     cfgLogicOuts;
@@ -235,14 +227,6 @@ void _PINSetup(void)
   pinMode(PIN_IRRI, OUTPUT);
   digitalWrite(PIN_IRRI, !cfgLogicOuts);
   OutIrri = OUT_OFF;
-
-  pinMode(PIN_AUX1, OUTPUT);
-  digitalWrite(PIN_AUX1, !cfgLogicOuts);
-  OutAux1 = OUT_OFF;
-
-  pinMode(PIN_AUX2, OUTPUT);
-  digitalWrite(PIN_AUX2, !cfgLogicOuts);
-  OutAux2 = OUT_OFF;
   
   //-----//
   // INS //
@@ -340,16 +324,6 @@ void _PINLoop()
     digitalWrite(PIN_IRRI, PIN_OUT_ON);
   else
     digitalWrite(PIN_IRRI, PIN_OUT_OFF); 
-
-  if (OutAux1 == cfgLogicOuts)
-    digitalWrite(PIN_AUX1, PIN_OUT_ON);
-  else
-    digitalWrite(PIN_AUX1, PIN_OUT_OFF); 
-
-  if (OutAux2 == cfgLogicOuts)
-    digitalWrite(PIN_AUX2, PIN_OUT_ON);
-  else
-    digitalWrite(PIN_AUX2, PIN_OUT_OFF); 
 
   //-----//
   // INS //

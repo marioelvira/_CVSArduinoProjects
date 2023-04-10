@@ -121,79 +121,7 @@ void mqttDataCallback(char* rtopic, byte* rpayload, unsigned int rlength)
       #endif
     }
   }
-  // AUX1
-  else if (rtopicStr.equals(TOPIC_AUX1CTR))
-  {
-    if(rpayloadStr.equals("1"))
-    {
-      if (Aux1State == STATE_STANDBY)
-        Aux1State = STATE_OUT_ON;
-
-      #if (_MQTT_SERIAL_DEBUG_ == 1)
-      Serial.println("TOPIC_AUX1CTR ->> 1");
-      #endif
-    }
-    else
-    {
-      #if (_MQTT_SERIAL_DEBUG_ == 1)
-      Serial.println("TOPIC_AUX1CTR ->> Error");
-      #endif
-    }
-  }
-  else if (rtopicStr.equals(TOPIC_AUX1STBY))
-  {
-    if(rpayloadStr.equals("1"))
-    {
-      Aux1State = STATE_STANDBY;
-    
-      #if (_MQTT_SERIAL_DEBUG_ == 1)
-      Serial.println("TOPIC_AUX1STBY ->> 1");
-      #endif
-    }
-    else
-    {
-      #if (_MQTT_SERIAL_DEBUG_ == 1)
-      Serial.println("TOPIC_AUX1STBY ->> Error");
-      #endif
-    }
-  }
-  // AUX2
-  else if (rtopicStr.equals(TOPIC_AUX2CTR))
-  {
-    if(rpayloadStr.equals("1"))
-    {
-      if (Aux2State == STATE_STANDBY)
-        Aux2State = STATE_OUT_ON;
-
-      #if (_MQTT_SERIAL_DEBUG_ == 1)
-      Serial.println("TOPIC_AUX2CTR ->> 1");
-      #endif
-    }
-    else
-    {
-      #if (_MQTT_SERIAL_DEBUG_ == 1)
-      Serial.println("TOPIC_AUX2CTR ->> Error");
-      #endif
-    }
-  }
-  else if (rtopicStr.equals(TOPIC_AUX2STBY))
-  {
-    if(rpayloadStr.equals("1"))
-    {
-      Aux2State = STATE_STANDBY;
-    
-      #if (_MQTT_SERIAL_DEBUG_ == 1)
-      Serial.println("TOPIC_AUX2STBY ->> 1");
-      #endif
-    }
-    else
-    {
-      #if (_MQTT_SERIAL_DEBUG_ == 1)
-      Serial.println("TOPIC_AUX2STBY ->> Error");
-      #endif
-    }
-  }
-
+  
   // Open
   else if (rtopicStr.equals(TOPIC_OPCTR))
   {
@@ -431,20 +359,6 @@ void _MQTTSend(void)
     str = str + "\"ir\":1";
   str = str + ",\n";
 
-  // aux1State
-  if (Aux1State == STATE_STANDBY)
-    str = str + "\"a1\":0";
-  else
-    str = str + "\"a1\":1";
-  str = str + ",\n";
-
-  // aux2State
-  if (Aux2State == STATE_STANDBY)
-    str = str + "\"a2\":0";
-  else
-    str = str + "\"a2\":1";
-  str = str + ",\n";
-
   // ipAdd
   str = str + "\"ipAdd\":\"";
   str = str + String(ipAddress.toString());
@@ -597,12 +511,6 @@ void _MQTTLoop(void)
             // IRRI
             mqttSubscribe(TOPIC_IRRICTR)   &&
             mqttSubscribe(TOPIC_IRRISTBY)  &&
-            // AUX1
-            mqttSubscribe(TOPIC_AUX1CTR)   &&
-            mqttSubscribe(TOPIC_AUX1STBY)  &&
-            // AUX2
-            mqttSubscribe(TOPIC_AUX2CTR)   &&
-            mqttSubscribe(TOPIC_AUX2STBY)  &&
             // Open
             mqttSubscribe(TOPIC_OPCTR)     &&
             // Close

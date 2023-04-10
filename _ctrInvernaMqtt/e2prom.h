@@ -43,24 +43,22 @@ extern "C" {
 #define EEPROM_ADD_FAN_XM         0x72
 #define EEPROM_ADD_PUMP_XM        0x73
 #define EEPROM_ADD_IRRI_XM        0x74
-#define EEPROM_ADD_AUX1_XM        0x75
-#define EEPROM_ADD_AUX2_XM        0x76
 
-#define EEPROM_ADD_LOGIC_INS      0x77
-#define EEPROM_ADD_LOGIC_OUTS     0x78
+#define EEPROM_ADD_LOGIC_INS      0x75
+#define EEPROM_ADD_LOGIC_OUTS     0x76
 
-#define EEPROM_ADD_ADC_F          0x79
+#define EEPROM_ADD_ADC_F          0x77
 
-#define EEPROM_ADD_TEMP_HI        0x80
-#define EEPROM_ADD_TEMP_LO        0x81
-#define EEPROM_ADD_OPEN_MIN       0x82
-#define EEPROM_ADD_CLOSE_MIN      0x83
-#define EEPROM_ADD_CICLO_MIN      0x84
+#define EEPROM_ADD_TEMP_HI        0x78
+#define EEPROM_ADD_TEMP_LO        0x79
+#define EEPROM_ADD_OPEN_MIN       0x7A
+#define EEPROM_ADD_CLOSE_MIN      0x7B
+#define EEPROM_ADD_CICLO_MIN      0x7C
 
 //#define EEPROM_ADD_MAX          0xFA // 250
 
 // Values
-#define EEPROM_VAL_OK             0xAA
+#define EEPROM_VAL_OK             0xAF
 
 #define EEPROM_VAL_IP_MODE        DHCP_MODE
 #define EEPROM_VAL_IP1            192
@@ -87,15 +85,13 @@ extern "C" {
 #define EEPROM_VAL_FAN_XM         1
 #define EEPROM_VAL_PUMP_XM        1
 #define EEPROM_VAL_IRRI_XM        1
-#define EEPROM_VAL_AUX1_XM        1
-#define EEPROM_VAL_AUX2_XM        1
 
 #define EEPROM_VAL_LOGIC_INS      0
 #define EEPROM_VAL_LOGIC_OUTS     1
 
 #define EEPROM_VAL_ADC_F          0   // si/no 1/0
 
-#define EEPROM_VAL_TEMP_HI        30
+#define EEPROM_VAL_TEMP_HI        25
 #define EEPROM_VAL_TEMP_LO        20
 #define EEPROM_VAL_OPEN_MIN       1
 #define EEPROM_VAL_CLOSE_MIN      1

@@ -23,7 +23,7 @@ void _TimeLoop(void)
   if (millis() - timeTick >= 1000)
   {
     //if (TimeControlSec != 0)
-    //   TimeControlSec--;
+    //  TimeControlSec--;
     
     timeSec++;
     if (timeSec >= 60)
@@ -56,41 +56,10 @@ void _TimeLoop(void)
 
     #if (_STATUS_SERIAL_DEBUG_ == 1)
     
-    int i;
-    
-    Serial.println("<><><><><><><>");
-    Serial.print("Tiempo Encendio: ");
-    Serial.print(timeHour); Serial.print(" : "); Serial.print(timeMin); Serial.print(" : "); Serial.print(timeSec);
-    Serial.println(" ");
-
     #if (_USE_FREERAM_ == 1)
     Serial.print("Free RAM: ");
     Serial.println(freeRam);
     #endif
-    /*
-    Serial.print("Cuenta Atras (Segundos): ");
-    Serial.print(TimeControlSec);
-    Serial.println(" ");
-
-    Serial.print("Cuenta Ticks (ms): ");
-    Serial.print(millis() - ControlTick);
-    Serial.println(" ");
-    
-    Serial.print("Control Status "); Serial.println(ControlState);
-    //if (ControlState == STATE_START)
-    //  Serial.println("  Arrancando...");
-    //else if (ControlState == STATE_XXXX)
-    //  Serial.println("  State XXXXX");
-    //else
-    //  Serial.println("  Rest");
-    */
-    Serial.println("---------------");
-
-    Serial.print("pulsesD3: ");       Serial.println(pulsesD3);
-    Serial.print("RpmPeriodD3: ");    Serial.println(RpmPeriodD3);
-    Serial.print("RpmCounterD3: ");   Serial.println(RpmCounterD3);
-        
-    Serial.println("---------------");
 
     // ADC
     for (i = 0; i< ADC_NUMBER; i++)

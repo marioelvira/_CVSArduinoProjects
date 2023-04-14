@@ -24,7 +24,7 @@ void _ConfigSetup(void)
 void _readCONFIG (void)
 {
   int ok, i;
-  //int eeprom_value_hi, eeprom_value_lo;
+  int eeprom_value_hi, eeprom_value_lo;
   
   //EEPROM.begin(512);  // ESPXX
     
@@ -40,10 +40,25 @@ void _readCONFIG (void)
     EEPROM.write(EEPROM_ADD_OK,      EEPROM_VAL_OK);
 
     // Data Data
-    EEPROM.write(EEPROM_ADD_MODBUS_ID,   EEPROM_VAL_MODBUS_ID);
+    EEPROM.write(EEPROM_ADD_MODBUS_ID,  EEPROM_VAL_MODBUS_ID);
+    EEPROM.write(EEPROM_ADD_LOGIC_INS,  EEPROM_VAL_LOGIC_INS);
+    EEPROM.write(EEPROM_ADD_LOGIC_OUTS, EEPROM_VAL_LOGIC_OUTS);
+
     for (i = 0; i < ADC_NUMBER; i++)
-      EEPROM.write(EEPROM_ADD_ADCF + i,  EEPROM_VAL_ADCF);
+    {
+      eeprom_value_lo = EEPROM_VAL_ADC_M & 0x00FF;
+      EEPROM.write(EEPROM_ADD_ADC_M_LO + i, eeprom_value_lo);
+      eeprom_value_hi = (EEPROM_VAL_ADC_M & 0xFF00)>>8;
+      EEPROM.write(EEPROM_ADD_ADC_M_HI + i, eeprom_value_hi);
       
+      eeprom_value_lo = EEPROM_VAL_ADC_B & 0x00FF;
+      EEPROM.write(EEPROM_ADD_ADC_B_LO + i, eeprom_value_lo);
+      eeprom_value_hi = (EEPROM_VAL_ADC_B & 0xFF00)>>8;
+      EEPROM.write(EEPROM_ADD_ADC_B_HI + i, eeprom_value_hi);
+            
+      EEPROM.write(EEPROM_ADD_ADC_S + i,  EEPROM_VAL_ADC_S);
+    }
+    
     //EEPROM.commit();    // ESPXX Store data to EEPROM
   }
   else
@@ -53,17 +68,37 @@ void _readCONFIG (void)
     #endif
   }
 
-  cfgMbId = (int)EEPROM.read(EEPROM_ADD_MODBUS_ID);
-  for (i = 0; i < ADC_NUMBER; i++)
-    cfgADCf[i] = (int)EEPROM.read(EEPROM_ADD_ADCF + i);
-
-  #if (_EEPROM_SERIAL_DEBUG_ == 1)
-  Serial.print("Modbus ID: ");  Serial.print (cfgMbId);  Serial.println(" ");
+  cfgMbId      = (int)EEPROM.read(EEPROM_ADD_MODBUS_ID);
+  cfgLogicIns  = (int)EEPROM.read(EEPROM_ADD_LOGIC_INS);
+  cfgLogicOuts = (int)EEPROM.read(EEPROM_ADD_LOGIC_OUTS);
+  
   for (i = 0; i < ADC_NUMBER; i++)
   {
-    Serial.print("Filter ADC: "); Serial.println(cfgADCf[i]);
+    eeprom_value_hi   = (int)EEPROM.read(EEPROM_ADD_ADC_M_HI + i);
+    eeprom_value_lo   = (int)EEPROM.read(EEPROM_ADD_ADC_M_LO + i);
+    cfgADCm[i]        = (int)((eeprom_value_hi & 0x00FF)<<8)|(eeprom_value_lo & 0x00FF);
+    
+    eeprom_value_hi   = (int)EEPROM.read(EEPROM_ADD_ADC_B_HI + i);
+    eeprom_value_lo   = (int)EEPROM.read(EEPROM_ADD_ADC_B_LO + i);   
+    cfgADCb[i]        = (int)((eeprom_value_hi & 0x00FF)<<8)|(eeprom_value_lo & 0x00FF);
+        
+    cfgADCs[i]        = (int)EEPROM.read(EEPROM_ADD_ADC_S + i);
+  }
+    
+  #if (_EEPROM_SERIAL_DEBUG_ == 1)
+  Serial.print("Modbus ID: ");   Serial.println (cfgMbId);
+  Serial.print("Logic Ins: ");   Serial.println (cfgLogicIns);
+  Serial.print("Logic Outs: ");  Serial.println (cfgLogicOuts);
+
+  for (i = 0; i < ADC_NUMBER; i++)
+  {
+    Serial.print("ADC m"); Serial.print (i); Serial.print(": "); Serial.print (cfgADCm[i]); Serial.println(" ");
+    Serial.print("ADC b"); Serial.print (i); Serial.print(": "); Serial.print (cfgADCb[i]); Serial.println(" (/1000)");
+    Serial.print("ADC p"); Serial.print (i); Serial.print(": "); Serial.print (cfgADCp[i]); Serial.println(" ");
+    Serial.print("ADC s"); Serial.print (i); Serial.print(": "); Serial.print (cfgADCs[i]); Serial.println(" +/-  1/0");
   }
   #endif
+  
 }
 
 void _ResetEEPROM() {

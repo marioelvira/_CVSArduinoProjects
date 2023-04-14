@@ -5,8 +5,6 @@ extern "C" {
 #ifndef _ADCS_H_
 #define _ADCS_H_
 
-#define ADC_ARRAY_SIZE   5
-
 // Nota: user VREFF para tener toda la 
 // escala de bits del ADC
 

@@ -21,8 +21,8 @@ extern "C" {
  *                   D16 -| A2        D7 |-                 -> OUTC
  *                   D17 -| A3        D6 |- (PWM)           -> OUTB
  *               SDA/D18 -| A4        D5 |- (PWM)           -> OUTA
- *               SCL/D19 -| A5        D4 |-                 <- IN1
- *                   D20 -| A6  [  ]  D3 |- INT1 (PWM)      <- IN0 
+ *               SCL/D19 -| A5        D4 |-                 <- IN1 - IN CLOCK
+ *                   D20 -| A6  [  ]  D3 |- INT1 (PWM)      <- IN0 - PULSADOR
  *                   D21 -| A7  ****  D2 |- INT0            -> OUT RELE
  *                    5V -| 5V       GND |- GND  
  *                 RESET -| RST      RST |-   
@@ -39,12 +39,12 @@ extern "C" {
 #define PIN_LED        13
 
 // ADCs
-#define ADC_NUMBER     4 // MAX 8
+#define ADC_NUMBER     2 // MAX 8
 
 #define PIN_ADC0       A0
 #define PIN_ADC1       A1
-#define PIN_ADC2       A2
-#define PIN_ADC3       A3
+//#define PIN_ADC2     A2
+//#define PIN_ADC3     A3
 
 // OUTs
 #define OUT_NUMBER      9
@@ -81,6 +81,16 @@ extern "C" {
 
 #define OUT_OFF           0
 #define OUT_ON            1
+
+// States and Times
+#define IO_LOOP_TICK      100   // 100ms
+#define NO_PULS           0
+#define SHORT_PULS        5     // x100ms
+#define LONG_PULS         15    // x100ms
+
+#define FLANCO_UP         0
+#define FLANCO_DOWN       1
+#define FLANCO            FLANCO_UP  // FLANCO_DOWN
 
 #endif // _IO_H_
 

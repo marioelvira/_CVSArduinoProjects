@@ -80,35 +80,47 @@ void _mbCRC(void)
   mbCRC[0] = (ucCRCLo & 0xFF);   // lowbyte
 }
 
-void _mbWriteSingleHolding(char address)
+/*
+void _mbWriteSingleHolding(char modbusID)
 {
-  int addr, value, i;
+  int addr, value, i, exception = 0;
 
   addr  = (int)((mrs485RxBuffer[2] & 0x00FF)<<8)|(mrs485RxBuffer[3] & 0x00FF);
   value = (int)((mrs485RxBuffer[4] & 0x00FF)<<8)|(mrs485RxBuffer[5] & 0x00FF);
 
-  if ((addr >= MB_ADD_OUTS) && (addr <= MB_ADD_OUTS + MB_NREG_OUTS))
+  if ((addr >= MB_HR_ADD_OUTS) && (addr <= MB_HR_ADD_OUTS + MB_HR_NREG_OUTS))
   {
-    i = addr - MB_ADD_OUTS;
-    if (value == OUT_OFF)
-      OutDig[i] = OUT_OFF;
+    // Only in MODE_TEST
+    if (ControlMode == MODE_AUTO)
+      exception = 1;
     else
-      OutDig[i] = OUT_ON;
-
-    mrs485TxBuffer[0] = (char)address;
+    {
+      i = addr - MB_HR_ADD_OUTS;
+      if (value == OUT_OFF)
+        OutDig[i] = OUT_OFF;
+      else
+        OutDig[i] = OUT_ON;
+    }
+  }
+  else
+    exception = 1;
+  
+  // NO Expection
+  if (exception == 0)
+  {
+    mrs485TxBuffer[0] = (char)modbusID;
     mrs485TxBuffer[1] = (char)MB_FUNC_WRITE_REGISTER;
     mrs485TxBuffer[2] = mrs485RxBuffer[2];
     mrs485TxBuffer[3] = mrs485RxBuffer[3];
     mrs485TxBuffer[4] = mrs485RxBuffer[4];
     mrs485TxBuffer[5] = mrs485RxBuffer[5];
-    
+      
     // Num Bytes
     mrs485TxNumBytes = 8;
   }
-  // Expection
   else
   {
-    mrs485TxBuffer[0] = (char)address;
+    mrs485TxBuffer[0] = (char)modbusID;
     mrs485TxBuffer[1] = (char)(MB_FUNC_WRITE_REGISTER | MB_NACK);
     mrs485TxBuffer[2] = 0x02; // Illegal data address
 
@@ -124,35 +136,138 @@ void _mbWriteSingleHolding(char address)
   // Init RS485 Transmit
   mrs485State = MRS485_INITTX;
 }
+*/
 
-void _mbReadHolding(char address)
+void _mbWriteMultipleHolding(char modbusID)
 {
-  int addr, nregs;
+  int addr, nregs, value, exception = 0;
 
   addr  = (int)((mrs485RxBuffer[2] & 0x00FF)<<8)|(mrs485RxBuffer[3] & 0x00FF);
   nregs = (int)((mrs485RxBuffer[4] & 0x00FF)<<8)|(mrs485RxBuffer[5] & 0x00FF);
 
-  // Meteo 
-  if ((addr == MB_ADD_OUTS) && (nregs == MB_NREG_OUTS))
+  if ((addr == MB_HR_ADD_CFG) && (nregs == MB_HR_NREG_CFG))
   {
-    mrs485TxBuffer[0] = (char)address;
+    value = (int)((mrs485RxBuffer[7] & 0x00FF)<<8)|(mrs485RxBuffer[8] & 0x00FF);
+    if (value == MODE_AUTO)
+      ControlMode = MODE_AUTO;
+    else
+      ControlMode = MODE_TEST;
+
+    value = (int)((mrs485RxBuffer[9] & 0x00FF)<<8)|(mrs485RxBuffer[10] & 0x00FF);
+    if (value < 250)
+      cfgMbId = value;
+    
+    value  = (int)((mrs485RxBuffer[11] & 0x00FF)<<8)|(mrs485RxBuffer[12] & 0x00FF);
+    if (value == IO_OFF)
+      cfgLogicIns = IO_OFF;
+    else 
+      cfgLogicIns = IO_ON;
+      
+    value = (int)((mrs485RxBuffer[13] & 0x00FF)<<8)|(mrs485RxBuffer[14] & 0x00FF);
+    if (value == OUT_OFF)
+      cfgLogicOuts = OUT_OFF;
+    else 
+      cfgLogicOuts = OUT_ON;
+
+    // Data Data
+    EEPROM.write(EEPROM_ADD_MODBUS_ID,  (byte)cfgMbId);
+    EEPROM.write(EEPROM_ADD_LOGIC_INS,  (byte)cfgLogicIns);
+    EEPROM.write(EEPROM_ADD_LOGIC_OUTS, (byte)cfgLogicOuts);
+  }
+  else if ((addr == MB_HR_ADD_OUTS) && (nregs == MB_HR_NREG_OUTS))
+  {
+    // Only in MODE_TEST
+    if (ControlMode == MODE_AUTO)
+      exception = 1;
+    else
+    {
+      for (int i = 0; i < MB_HR_NREG_OUTS; i++)
+      {
+        value = (int)((mrs485RxBuffer[i*2 + 7] & 0x00FF)<<8)|(mrs485RxBuffer[i*2 + 8] & 0x00FF);
+        if (value == OUT_OFF)
+          OutDig[i] = OUT_OFF;
+        else
+          OutDig[i] = OUT_ON;
+      }
+    }
+  }
+  else
+    exception = 1;
+  
+  // NO Expection
+  if (exception == 0)
+  {
+    mrs485TxBuffer[0] = (char)modbusID;
+    mrs485TxBuffer[1] = (char)MB_FUNC_WRITE_MULTIPLE_REGISTERS;
+    mrs485TxBuffer[2] = mrs485RxBuffer[2];
+    mrs485TxBuffer[3] = mrs485RxBuffer[3];
+    mrs485TxBuffer[4] = mrs485RxBuffer[4];
+    mrs485TxBuffer[5] = mrs485RxBuffer[5];
+      
+    // Num Bytes
+    mrs485TxNumBytes = 8;
+  }
+  else
+  {
+    mrs485TxBuffer[0] = (char)modbusID;
+    mrs485TxBuffer[1] = (char)(MB_FUNC_WRITE_MULTIPLE_REGISTERS | MB_NACK);
+    mrs485TxBuffer[2] = 0x02; // Illegal data address
+
+    // Num Bytes
+    mrs485TxNumBytes = 5;
+  }
+  
+  // Crc
+  _mbCRC();
+  mrs485TxBuffer[mrs485TxNumBytes - 2] = mbCRC[0];
+  mrs485TxBuffer[mrs485TxNumBytes - 1] = mbCRC[1];
+  
+  // Init RS485 Transmit
+  mrs485State = MRS485_INITTX;
+}
+
+void _mbReadHolding(char modbusID)
+{
+  int addr, nregs, exception = 0;
+
+  addr  = (int)((mrs485RxBuffer[2] & 0x00FF)<<8)|(mrs485RxBuffer[3] & 0x00FF);
+  nregs = (int)((mrs485RxBuffer[4] & 0x00FF)<<8)|(mrs485RxBuffer[5] & 0x00FF);
+
+  if ((addr == MB_HR_ADD_CFG) && (nregs == MB_HR_NREG_CFG))
+  {
+    mrs485TxBuffer[3]   = 0x00;
+    mrs485TxBuffer[4]   = ControlMode;
+    mrs485TxBuffer[5]   = 0x00;
+    mrs485TxBuffer[6]   = cfgMbId;
+    mrs485TxBuffer[7]   = 0x00;
+    mrs485TxBuffer[8]   = cfgLogicIns;
+    mrs485TxBuffer[9]   = 0x00;
+    mrs485TxBuffer[10]  = cfgLogicOuts;
+  }
+  else if ((addr == MB_HR_ADD_OUTS) && (nregs == MB_HR_NREG_OUTS))
+  {
+    for (int i = 0; i < MB_HR_NREG_OUTS; i++)
+    {
+      mrs485TxBuffer[i*2 + 3]  = 0x00;
+      mrs485TxBuffer[i*2 + 4]  = OutDig[i];
+    }
+  }
+  else
+    exception = 1;
+
+  // NO Expection
+  if (exception == 0)
+  {
+    mrs485TxBuffer[0] = (char)modbusID;
     mrs485TxBuffer[1] = (char)MB_FUNC_READ_HOLDING_REGISTER;
-    mrs485TxBuffer[2] = MB_NREG_OUTS*2;
-    
-    mrs485TxBuffer[3] = 0x00;      // 0
-    mrs485TxBuffer[4] = OutDig[0]; // 0
-    mrs485TxBuffer[5] = 0x00;      // 1 
-    mrs485TxBuffer[6] = OutDig[1]; // 1
-    mrs485TxBuffer[7] = 0x00;      // 1 
-    mrs485TxBuffer[8] = OutDig[2]; // 1
-    
+    mrs485TxBuffer[2] = nregs*2;
+      
     // Num Bytes
     mrs485TxNumBytes = mrs485TxBuffer[2] + 5;
   }
-  // Expection
   else
   {
-	  mrs485TxBuffer[0] = (char)address;
+	  mrs485TxBuffer[0] = (char)modbusID;
 	  mrs485TxBuffer[1] = (char)(MB_FUNC_READ_HOLDING_REGISTER | MB_NACK);
 	  mrs485TxBuffer[2] = 0x02;	// Illegal data address
 
@@ -169,62 +284,58 @@ void _mbReadHolding(char address)
   mrs485State = MRS485_INITTX;
 }
 
-void _mbReadInput(char address)
+void _mbReadInput(char modbusID)
 {
-  int i, addr, nregs;
+  int i, addr, nregs, exception = 0;
 
   addr  = (int)((mrs485RxBuffer[2] & 0x00FF)<<8)|(mrs485RxBuffer[3] & 0x00FF);
   nregs = (int)((mrs485RxBuffer[4] & 0x00FF)<<8)|(mrs485RxBuffer[5] & 0x00FF);
 
-  if ((addr == MB_ADD_INS) && (nregs == MB_NREG_INS))
+  if ((addr == MB_IR_ADD_ONLINE) && (nregs == MB_IR_NREG_ONLINE))
+  {
+    mrs485TxBuffer[3]  = 0x00;
+    mrs485TxBuffer[4]  = ControlMode;
+  }
+  else if ((addr == MB_IR_ADD_INS) && (nregs == MB_IR_NREG_INS))
   { 
-    mrs485TxBuffer[0] = (char)address;
-    mrs485TxBuffer[1] = (char)MB_FUNC_READ_INPUT_REGISTER;
-    mrs485TxBuffer[2] = MB_NREG_INS*2;
-
-    for (i = 0; i < MB_NREG_INS; i++)
+    for (i = 0; i < MB_IR_NREG_INS; i++)
     {
       mrs485TxBuffer[i*2 + 3]  = 0x00;
       mrs485TxBuffer[i*2 + 4]  = InDig[i];
     }
-    
-    // Num Bytes
-    mrs485TxNumBytes = mrs485TxBuffer[2] + 5;
   }
-  else if ((addr == MB_ADD_OUTS) && (nregs == MB_NREG_OUTS))
+  else if ((addr == MB_IR_ADD_OUTS) && (nregs == MB_IR_NREG_OUTS))
   {
-    mrs485TxBuffer[0] = (char)address;
-    mrs485TxBuffer[1] = (char)MB_FUNC_READ_INPUT_REGISTER;
-    mrs485TxBuffer[2] = MB_NREG_OUTS*2;
-
-    for (i = 0; i < MB_NREG_OUTS; i++)
+    for (i = 0; i < MB_IR_NREG_OUTS; i++)
     {
       mrs485TxBuffer[i*2 + 3]  = 0x00;
       mrs485TxBuffer[i*2 + 4]  = OutDig[i];
     }
-     
-    // Num Bytes
-    mrs485TxNumBytes = mrs485TxBuffer[2] + 5;
   }
-  else if ((addr == MB_ADD_ADCS) && (nregs == MB_NREG_ADCS))
+  else if ((addr == MB_IR_ADD_ADCS) && (nregs == MB_IR_NREG_ADCS))
   {
-    mrs485TxBuffer[0] = (char)address;
-    mrs485TxBuffer[1] = (char)MB_FUNC_READ_INPUT_REGISTER;
-    mrs485TxBuffer[2] = MB_NREG_ADCS*2;
-
-    for (i = 0; i < MB_NREG_ADCS; i++)
+    for (i = 0; i < MB_IR_NREG_ADCS; i++)
     {
       mrs485TxBuffer[i*2 + 3]  = (char)((AdcDig[i] & 0xFF00)>>8);
       mrs485TxBuffer[i*2 + 4]  = (char)(AdcDig[i] & 0x00FF);
     }
-    
-    // Num Bytes
-    mrs485TxNumBytes = mrs485TxBuffer[2] + 5; 
   }
-  // Expection
   else
+    exception = 1;
+
+  // NO Expection
+  if (exception == 0)
   {
-    mrs485TxBuffer[0] = (char)address;
+    mrs485TxBuffer[0] = (char)modbusID;
+    mrs485TxBuffer[1] = (char)MB_FUNC_READ_INPUT_REGISTER;
+    mrs485TxBuffer[2] = nregs*2;
+      
+    // Num Bytes
+    mrs485TxNumBytes = mrs485TxBuffer[2] + 5;
+  }
+  else
+ {
+    mrs485TxBuffer[0] = (char)modbusID;
     mrs485TxBuffer[1] = (char)(MB_FUNC_READ_INPUT_REGISTER | MB_NACK);
     mrs485TxBuffer[2] = 0x02; // Illegal data address
 
@@ -241,12 +352,12 @@ void _mbReadInput(char address)
   mrs485State = MRS485_INITTX;
 }
 
-void _mbSlaveID(char address)
+void _mbSlaveID(char modbusID)
 {  
   // Num Bytes
   mrs485TxNumBytes = 5;
 
-  mrs485TxBuffer[0] = (char)address;
+  mrs485TxBuffer[0] = (char)modbusID;
   mrs485TxBuffer[1] = (char)(MB_FUNC_OTHER_REPORT_SLAVEID | MB_NACK);
   mrs485TxBuffer[2] = 0x01;
   // Crc
@@ -272,12 +383,13 @@ int _mbN7(void)
 			_mbReadInput((char)cfgMbId);
 			break;
 			
-		case MB_FUNC_WRITE_REGISTER:
-      _mbWriteSingleHolding((char)cfgMbId);
-		  break;
+		//case MB_FUNC_WRITE_REGISTER:
+    //  _mbWriteSingleHolding((char)cfgMbId);
+		//  break;
 		
-		//case MB_FUNC_WRITE_MULTIPLE_REGISTERS:
-		//	break;
+		case MB_FUNC_WRITE_MULTIPLE_REGISTERS:
+      _mbWriteMultipleHolding((char)cfgMbId);
+		  break;
 		
 		case MB_FUNC_OTHER_REPORT_SLAVEID:
 			_mbSlaveID((char)cfgMbId);
@@ -291,11 +403,11 @@ int _mbN7(void)
   return error;
 }
 
-int _mbN1(char address)
+int _mbN1(char modbusID)
 {
   int error = 0;
 
-  if (mrs485RxBuffer[0] == (char)address)
+  if (mrs485RxBuffer[0] == (char)modbusID)
   {
     // check CRC (TODO)
   }

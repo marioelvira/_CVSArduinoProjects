@@ -1,9 +1,9 @@
-/*
 ////////////////
 // Ctr set up //
 ////////////////
 void _CtrSetup(void)
 {
+  ControlMode = MODE_AUTO;
   ControlState = STATE_START;
   ControlTick = millis();
 }
@@ -16,14 +16,12 @@ void _CtrLoop(void)
   switch (ControlState)
   {
     case STATE_START:
-      if (millis() - ControlTick >= (TimeOutStart*1000))
-        ControlState = STATE_XXXX;
+      //if (millis() - ControlTick >= (TimeOutStart*1000))
+      //  ControlState = STATE_XXXX;
       break;
 
     case STATE_XXXX:  
-      TimeControlSec = 0;
-      ControlTick = millis();
+      //ControlTick = millis();
       break;
   }
 }
-*/

@@ -43,13 +43,21 @@ extern "C" {
 #define MB_FUNC_OTHER_REPORT_SLAVEID          ( 17 )  // 0x11
 #define MB_FUNC_ERROR                         ( 128 )
 
-// Mapa
-#define MB_ADD_INS      100
-#define MB_NREG_INS     2
-#define MB_ADD_OUTS     110
-#define MB_NREG_OUTS    9
-#define MB_ADD_ADCS     120
-#define MB_NREG_ADCS    4
+// Input Registers
+#define MB_IR_ADD_ONLINE   0
+#define MB_IR_NREG_ONLINE  1
+#define MB_IR_ADD_INS      100
+#define MB_IR_NREG_INS     2
+#define MB_IR_ADD_OUTS     110
+#define MB_IR_NREG_OUTS    9
+#define MB_IR_ADD_ADCS     120
+#define MB_IR_NREG_ADCS    2
+
+// Holding Registers
+#define MB_HR_ADD_CFG      0
+#define MB_HR_NREG_CFG     4
+#define MB_HR_ADD_OUTS     110
+#define MB_HR_NREG_OUTS    9
 
 extern void _MBCRC(void);
 

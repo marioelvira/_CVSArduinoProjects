@@ -20,16 +20,11 @@ const char* FW_Version = FW_VERSION;
 ////////////////////
 // DIO definition //
 ////////////////////
-int   InStartVal = 0;
-int   InStartVal_ant = 0;
-int   InStartCounter = 0;
-int   InStartState = 0;
-/*
-int   InEndVal = 0;
-int   InEndVal_ant = 0;
-int   InEndCounter = 0;
-int   InEndState = 0;
-*/
+int   InPuls = 0;
+int   InPuls_ant = 0;
+int   InPulsCounter = 0;
+int   InPulsState = 0;
+
 ///////////////
 // Board Led //
 ///////////////
@@ -40,8 +35,12 @@ int   boardLed;
 //////////
 int   AdcDig[ADC_NUMBER];
 int   AdcPin[ADC_NUMBER];
-int   AdcArray[ADC_NUMBER][ADC_ARRAY_SIZE];
-int   AdcPointer[ADC_NUMBER];
+int   AdcVal[ADC_NUMBER];
+
+/////////////
+// IO Tick //
+/////////////
+unsigned long ioTick = 0;
 
 //////////
 // OUTs //
@@ -66,15 +65,21 @@ int timeHour = 0;
 /////////////
 // Control //
 /////////////
-//unsigned long ControlTick = 0;
-//int   ControlState;
+int   ControlMode;
+unsigned long ControlTick = 0;
+int     ControlState;
 //int   TimeControlSec;
 
 ////////////
 // Config //
 ////////////
 int cfgMbId = 0;
-int cfgADCf[ADC_NUMBER];
+int cfgLogicIns;
+int cfgLogicOuts;
+
+int cfgADCm[ADC_NUMBER];
+int cfgADCb[ADC_NUMBER];
+int cfgADCs[ADC_NUMBER];
 
 ///////////
 // RS485 //
@@ -247,12 +252,10 @@ void _PINLoop()
 void loop()
 {
   _PINLoop();
-  //_IOLoop();
+  _IOLoop();
 
-  //if (controlMode == MODE_AUTO)
-  // _OUTSLoop();
-
-  //_CtrLoop();
+  if (ControlMode == MODE_AUTO)
+    _CtrLoop();
 
   _TimeLoop();
 

@@ -1,0 +1,4 @@
+U16#0000 Mode#0->Auto 1->Test
+U16#0001 Modbus ID#
+U16#0002 IN Logic#
+U16#0003 OUTs Logic#

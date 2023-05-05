@@ -19,17 +19,20 @@ extern "C" {
 #define EEPROM_ADD_LOGIC_OUTS     0x03
 
 #define EEPROM_ADD_ADC            0x04
-#define EEPROM_ADD_ADC_M_LO       EEPROM_ADD_ADC    
+#define EEPROM_ADD_ADC_M_LO       EEPROM_ADD_ADC
 #define EEPROM_ADD_ADC_M_HI       EEPROM_ADD_ADC + 1
 #define EEPROM_ADD_ADC_B_LO       EEPROM_ADD_ADC + 2
 #define EEPROM_ADD_ADC_B_HI       EEPROM_ADD_ADC + 3
 #define EEPROM_ADD_ADC_S          EEPROM_ADD_ADC + 4
-#define EEPROM_ADD_ADC_TRIG       EEPROM_ADD_ADC + 5
+#define EEPROM_ADD_ADC_T_LO       EEPROM_ADD_ADC + 5
+#define EEPROM_ADD_ADC_T_HI       EEPROM_ADD_ADC + 6
+
+#define EEPROM_ADC_SIZE           7
 
 //#define EEPROM_ADD_MAX          0xFA // 250
 
 // Values
-#define EEPROM_VAL_OK             0xAA
+#define EEPROM_VAL_OK             0xA1
 
 //#define EEPROM_VAL_RESERVA      
 #define EEPROM_VAL_MODBUS_ID      0x01

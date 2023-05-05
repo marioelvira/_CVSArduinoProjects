@@ -81,6 +81,8 @@ int cfgADCm[ADC_NUMBER];
 int cfgADCb[ADC_NUMBER];
 int cfgADCs[ADC_NUMBER];
 
+int cfgADCt[ADC_NUMBER];
+
 ///////////
 // RS485 //
 ///////////

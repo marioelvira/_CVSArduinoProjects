@@ -47,16 +47,22 @@ void _readCONFIG (void)
     for (i = 0; i < ADC_NUMBER; i++)
     {
       eeprom_value_lo = EEPROM_VAL_ADC_M & 0x00FF;
-      EEPROM.write(EEPROM_ADD_ADC_M_LO + i, eeprom_value_lo);
+      EEPROM.write(EEPROM_ADD_ADC_M_LO + i*EEPROM_ADC_SIZE, eeprom_value_lo);
       eeprom_value_hi = (EEPROM_VAL_ADC_M & 0xFF00)>>8;
-      EEPROM.write(EEPROM_ADD_ADC_M_HI + i, eeprom_value_hi);
+      EEPROM.write(EEPROM_ADD_ADC_M_HI + i*EEPROM_ADC_SIZE, eeprom_value_hi);
       
       eeprom_value_lo = EEPROM_VAL_ADC_B & 0x00FF;
-      EEPROM.write(EEPROM_ADD_ADC_B_LO + i, eeprom_value_lo);
+      EEPROM.write(EEPROM_ADD_ADC_B_LO + i*EEPROM_ADC_SIZE, eeprom_value_lo);
       eeprom_value_hi = (EEPROM_VAL_ADC_B & 0xFF00)>>8;
-      EEPROM.write(EEPROM_ADD_ADC_B_HI + i, eeprom_value_hi);
-            
-      EEPROM.write(EEPROM_ADD_ADC_S + i,  EEPROM_VAL_ADC_S);
+      EEPROM.write(EEPROM_ADD_ADC_B_HI + i*EEPROM_ADC_SIZE, eeprom_value_hi);
+ 
+      EEPROM.write(EEPROM_ADD_ADC_S + i*EEPROM_ADC_SIZE,  EEPROM_VAL_ADC_S);
+
+      eeprom_value_lo = EEPROM_VAL_ADC_T & 0x00FF;
+      EEPROM.write(EEPROM_ADD_ADC_T_LO + i*EEPROM_ADC_SIZE, eeprom_value_lo);
+      eeprom_value_hi = (EEPROM_VAL_ADC_T & 0xFF00)>>8;
+      EEPROM.write(EEPROM_ADD_ADC_T_HI + i*EEPROM_ADC_SIZE, eeprom_value_hi);
+      
     }
     
     //EEPROM.commit();    // ESPXX Store data to EEPROM
@@ -74,17 +80,21 @@ void _readCONFIG (void)
   
   for (i = 0; i < ADC_NUMBER; i++)
   {
-    eeprom_value_hi   = (int)EEPROM.read(EEPROM_ADD_ADC_M_HI + i);
-    eeprom_value_lo   = (int)EEPROM.read(EEPROM_ADD_ADC_M_LO + i);
+    eeprom_value_hi   = (int)EEPROM.read(EEPROM_ADD_ADC_M_HI + i*EEPROM_ADC_SIZE);
+    eeprom_value_lo   = (int)EEPROM.read(EEPROM_ADD_ADC_M_LO + i*EEPROM_ADC_SIZE);
     cfgADCm[i]        = (int)((eeprom_value_hi & 0x00FF)<<8)|(eeprom_value_lo & 0x00FF);
     
-    eeprom_value_hi   = (int)EEPROM.read(EEPROM_ADD_ADC_B_HI + i);
-    eeprom_value_lo   = (int)EEPROM.read(EEPROM_ADD_ADC_B_LO + i);   
+    eeprom_value_hi   = (int)EEPROM.read(EEPROM_ADD_ADC_B_HI + i*EEPROM_ADC_SIZE);
+    eeprom_value_lo   = (int)EEPROM.read(EEPROM_ADD_ADC_B_LO + i*EEPROM_ADC_SIZE);   
     cfgADCb[i]        = (int)((eeprom_value_hi & 0x00FF)<<8)|(eeprom_value_lo & 0x00FF);
         
-    cfgADCs[i]        = (int)EEPROM.read(EEPROM_ADD_ADC_S + i);
+    cfgADCs[i]        = (int)EEPROM.read(EEPROM_ADD_ADC_S + i*EEPROM_ADC_SIZE);
+
+    eeprom_value_hi   = (int)EEPROM.read(EEPROM_ADD_ADC_T_HI + i*EEPROM_ADC_SIZE);
+    eeprom_value_lo   = (int)EEPROM.read(EEPROM_ADD_ADC_T_LO + i*EEPROM_ADC_SIZE);   
+    cfgADCt[i]        = (int)((eeprom_value_hi & 0x00FF)<<8)|(eeprom_value_lo & 0x00FF);
   }
-    
+
   #if (_EEPROM_SERIAL_DEBUG_ == 1)
   Serial.print("Modbus ID: ");   Serial.println (cfgMbId);
   Serial.print("Logic Ins: ");   Serial.println (cfgLogicIns);
@@ -92,10 +102,11 @@ void _readCONFIG (void)
 
   for (i = 0; i < ADC_NUMBER; i++)
   {
-    Serial.print("ADC m"); Serial.print (i); Serial.print(": "); Serial.print (cfgADCm[i]); Serial.println(" ");
-    Serial.print("ADC b"); Serial.print (i); Serial.print(": "); Serial.print (cfgADCb[i]); Serial.println(" (/1000)");
-    Serial.print("ADC p"); Serial.print (i); Serial.print(": "); Serial.print (cfgADCp[i]); Serial.println(" ");
-    Serial.print("ADC s"); Serial.print (i); Serial.print(": "); Serial.print (cfgADCs[i]); Serial.println(" +/-  1/0");
+    Serial.print("ADC m");    Serial.print (i); Serial.print(": "); Serial.print (cfgADCm[i]); Serial.println(" ");
+    Serial.print("ADC b");    Serial.print (i); Serial.print(": "); Serial.print (cfgADCb[i]); Serial.println(" (/1000)");
+    Serial.print("ADC p");    Serial.print (i); Serial.print(": "); Serial.print (cfgADCp[i]); Serial.println(" ");
+    Serial.print("ADC s");    Serial.print (i); Serial.print(": "); Serial.print (cfgADCs[i]); Serial.println(" +/-  1/0");
+    Serial.print("ADC trig"); Serial.print (i); Serial.print(": "); Serial.print (cfgADCb[i]); Serial.println(" (/1000)");
   }
   #endif
   

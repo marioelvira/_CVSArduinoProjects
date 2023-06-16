@@ -9,6 +9,8 @@ void _TimeSetup(void)
   timeMin = 0;
   timeHour = 0;
 
+  ctrDisplaySec = 0;
+
   #if (_USE_FREERAM_ == 1)
   // RAM setup
   _RAMSetup();
@@ -22,8 +24,8 @@ void _TimeLoop(void)
 {
   if (millis() - timeTick >= 1000)
   {
-    //if (TimeControlSec != 0)
-    //  TimeControlSec--;
+    if (ctrDisplaySec != 0)
+      ctrDisplaySec--;
     
     timeSec++;
     if (timeSec >= 60)
@@ -55,6 +57,8 @@ void _TimeLoop(void)
       boardLed = OUT_OFF;
 
     #if (_STATUS_SERIAL_DEBUG_ == 1)
+    
+    int i;
     
     #if (_USE_FREERAM_ == 1)
     Serial.print("Free RAM: ");

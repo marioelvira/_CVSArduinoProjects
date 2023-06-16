@@ -23,7 +23,7 @@ void _ConfigSetup(void)
 
 void _readCONFIG (void)
 {
-  int ok, i;
+  int ok, i = 0;
   int eeprom_value_hi, eeprom_value_lo;
   
   //EEPROM.begin(512);  // ESPXX
@@ -104,9 +104,8 @@ void _readCONFIG (void)
   {
     Serial.print("ADC m");    Serial.print (i); Serial.print(": "); Serial.print (cfgADCm[i]); Serial.println(" ");
     Serial.print("ADC b");    Serial.print (i); Serial.print(": "); Serial.print (cfgADCb[i]); Serial.println(" (/1000)");
-    Serial.print("ADC p");    Serial.print (i); Serial.print(": "); Serial.print (cfgADCp[i]); Serial.println(" ");
     Serial.print("ADC s");    Serial.print (i); Serial.print(": "); Serial.print (cfgADCs[i]); Serial.println(" +/-  1/0");
-    Serial.print("ADC trig"); Serial.print (i); Serial.print(": "); Serial.print (cfgADCb[i]); Serial.println(" (/1000)");
+    Serial.print("ADC trig"); Serial.print (i); Serial.print(": "); Serial.print (cfgADCt[i]); Serial.println(" (/1000)");
   }
   #endif
   

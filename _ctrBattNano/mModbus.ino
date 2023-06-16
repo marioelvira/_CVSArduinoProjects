@@ -150,9 +150,9 @@ void _mbWriteMultipleHolding(char modbusID)
   {
     value = (int)((mrs485RxBuffer[7] & 0x00FF)<<8)|(mrs485RxBuffer[8] & 0x00FF);
     if (value == MODE_AUTO)
-      ControlMode = MODE_AUTO;
+      ctrMode = MODE_AUTO;
     else
-      ControlMode = MODE_TEST;
+      ctrMode = MODE_TEST;
 
     value = (int)((mrs485RxBuffer[9] & 0x00FF)<<8)|(mrs485RxBuffer[10] & 0x00FF);
     if (value < 250)
@@ -188,27 +188,27 @@ void _mbWriteMultipleHolding(char modbusID)
     for (int i = 0; i < ADC_NUMBER; i++)
     {
       eeprom_value_lo = cfgADCm[i] & 0x00FF;
-      EEPROM.write(EEPROM_ADD_ADC_M_LO + i, eeprom_value_lo);
+      EEPROM.write(EEPROM_ADD_ADC_M_LO + i*EEPROM_ADC_SIZE, eeprom_value_lo);
       eeprom_value_hi = (cfgADCm[i] & 0xFF00)>>8;
-      EEPROM.write(EEPROM_ADD_ADC_M_HI + i, eeprom_value_hi);
+      EEPROM.write(EEPROM_ADD_ADC_M_HI + i*EEPROM_ADC_SIZE, eeprom_value_hi);
       
       eeprom_value_lo = cfgADCb[i] & 0x00FF;
-      EEPROM.write(EEPROM_ADD_ADC_B_LO + i, eeprom_value_lo);
+      EEPROM.write(EEPROM_ADD_ADC_B_LO + i*EEPROM_ADC_SIZE, eeprom_value_lo);
       eeprom_value_hi = (cfgADCb[i] & 0xFF00)>>8;
-      EEPROM.write(EEPROM_ADD_ADC_B_HI + i, eeprom_value_hi);
+      EEPROM.write(EEPROM_ADD_ADC_B_HI + i*EEPROM_ADC_SIZE, eeprom_value_hi);
             
-      EEPROM.write(EEPROM_ADD_ADC_S + i,  cfgADCs[i]);
+      EEPROM.write(EEPROM_ADD_ADC_S + i*EEPROM_ADC_SIZE,  cfgADCs[i]);
 
-      eeprom_value_lo = cfgADCb[i] & 0x00FF;
-      EEPROM.write(EEPROM_ADD_ADC_T_LO + i, eeprom_value_lo);
-      eeprom_value_hi = (cfgADCb[i] & 0xFF00)>>8;
-      EEPROM.write(EEPROM_ADD_ADC_T_HI + i, eeprom_value_hi);
+      eeprom_value_lo = cfgADCt[i] & 0x00FF;
+      EEPROM.write(EEPROM_ADD_ADC_T_LO + i*EEPROM_ADC_SIZE, eeprom_value_lo);
+      eeprom_value_hi = (cfgADCt[i] & 0xFF00)>>8;
+      EEPROM.write(EEPROM_ADD_ADC_T_HI + i*EEPROM_ADC_SIZE, eeprom_value_hi);
     }
   }
   else if ((addr == MB_HR_ADD_OUTS) && (nregs == MB_HR_NREG_OUTS))
   {
     // Only in MODE_TEST
-    if (ControlMode == MODE_AUTO)
+    if (ctrMode == MODE_AUTO)
       exception = 1;
     else
     {
@@ -267,7 +267,7 @@ void _mbReadHolding(char modbusID)
   if ((addr == MB_HR_ADD_CFG) && (nregs == MB_HR_NREG_CFG))
   {
     mrs485TxBuffer[3]   = 0x00;
-    mrs485TxBuffer[4]   = ControlMode;
+    mrs485TxBuffer[4]   = ctrMode;
     mrs485TxBuffer[5]   = 0x00;
     mrs485TxBuffer[6]   = cfgMbId;
     mrs485TxBuffer[7]   = 0x00;
@@ -343,7 +343,7 @@ void _mbReadInput(char modbusID)
   if ((addr == MB_IR_ADD_ONLINE) && (nregs == MB_IR_NREG_ONLINE))
   {
     mrs485TxBuffer[3]  = 0x00;
-    mrs485TxBuffer[4]  = ControlMode;
+    mrs485TxBuffer[4]  = ctrMode;
   }
   else if ((addr == MB_IR_ADD_INS) && (nregs == MB_IR_NREG_INS))
   { 

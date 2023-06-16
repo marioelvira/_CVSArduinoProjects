@@ -17,14 +17,6 @@
 /////////////
 const char* FW_Version = FW_VERSION;
 
-////////////////////
-// DIO definition //
-////////////////////
-int   InPuls = 0;
-int   InPuls_ant = 0;
-int   InPulsCounter = 0;
-int   InPulsState = 0;
-
 ///////////////
 // Board Led //
 ///////////////
@@ -65,10 +57,17 @@ int timeHour = 0;
 /////////////
 // Control //
 /////////////
-int   ControlMode;
-unsigned long ControlTick = 0;
-int     ControlState;
-//int   TimeControlSec;
+int   ctrMode;
+
+int   ctrInClock;
+int   ctrOutRele = 0;
+int   ctrDisplay;
+int   ctrDisplaySec;
+
+int   inPuls = 0;
+int   inPuls_ant = 0;
+int   inPulsCounter = 0;
+int   inPulsState = 0;
 
 ////////////
 // Config //
@@ -145,8 +144,8 @@ void _PINSetup(void)
   #if (_USE_RS485_RXTX_ == 1)
   pinMode(PIN_RS485_RXTX, OUTPUT);
   digitalWrite(PIN_RS485_RXTX, HIGH);
-  #endif
   OutRS485rxtx = OUT_RS485_RX;
+  #endif
 
   //-----//
   // INS //
@@ -169,7 +168,7 @@ void setup(void)
   
   #if (_SERIAL_DEBUG_ == 1)
   delay(100);  // 100ms
-  Serial.begin(115200);
+  Serial.begin(9600);
   
   Serial.print("Project: ");
   Serial.println(PROJECT);
@@ -254,10 +253,12 @@ void _PINLoop()
 void loop()
 {
   _PINLoop();
-  _IOLoop();
 
-  if (ControlMode == MODE_AUTO)
+  if (ctrMode == MODE_AUTO)
+  {
+    _IOLoop();  
     _CtrLoop();
+  }
 
   _TimeLoop();
 

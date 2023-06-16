@@ -38,8 +38,16 @@ extern "C" {
 
 
 // Estados principales...
-#define STATE_START       0
-#define STATE_XXXX        1
+//#define STATE_START           0
+//#define STATE_XXXX            1
+
+#define IN_CLOCK_INVERTER_DIS   0
+#define IN_CLOCK_INVERTER_EN    1
+
+#define OUT_RELE_INVERTER_OFF   0
+#define OUT_RELE_INVERTER_ON    1
+
+#define X_3600  3600
 
 #endif // _CTR_H_
 

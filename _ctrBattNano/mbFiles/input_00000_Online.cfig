@@ -1,1 +1,7 @@
-U16#0000 Mode#
+I16#0000 ADC0#
+I16#0001 ADC1#
+U16#0002 Mode#0->AUTO; 1->TEST
+U16#0003 Clock IN - Inversor#0->Disabled; 1->Enabled
+U16#0004 Puls IN#
+U16#0005 Rele Out - Inversor#0->OFF; 1->ON
+U16#0006 Display#

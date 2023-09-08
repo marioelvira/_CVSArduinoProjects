@@ -342,8 +342,21 @@ void _mbReadInput(char modbusID)
 
   if ((addr == MB_IR_ADD_ONLINE) && (nregs == MB_IR_NREG_ONLINE))
   {
-    mrs485TxBuffer[3]  = 0x00;
-    mrs485TxBuffer[4]  = ctrMode;
+
+    mrs485TxBuffer[3]  = (char)((AdcVal[0] & 0xFF00)>>8);
+    mrs485TxBuffer[4]  = (char)(AdcVal[0] & 0x00FF);
+    mrs485TxBuffer[5]  = (char)((AdcVal[1] & 0xFF00)>>8);
+    mrs485TxBuffer[6]  = (char)(AdcVal[1] & 0x00FF);
+    mrs485TxBuffer[7]  = 0x00;
+    mrs485TxBuffer[8]  = ctrMode;
+    mrs485TxBuffer[9]  = 0x00;
+    mrs485TxBuffer[10] = ctrInClock;
+    mrs485TxBuffer[11] = 0x00;
+    mrs485TxBuffer[12] = inPulsState;
+    mrs485TxBuffer[13] = 0x00;
+    mrs485TxBuffer[14] = ctrOutRele;
+    mrs485TxBuffer[15] = 0x00;
+    mrs485TxBuffer[16] = ctrDisplay;        
   }
   else if ((addr == MB_IR_ADD_INS) && (nregs == MB_IR_NREG_INS))
   { 
@@ -404,15 +417,46 @@ void _mbReadInput(char modbusID)
 void _mbSlaveID(char modbusID)
 {  
   // Num Bytes
-  mrs485TxNumBytes = 5;
+  mrs485TxNumBytes = 30;
 
   mrs485TxBuffer[0] = (char)modbusID;
-  mrs485TxBuffer[1] = (char)(MB_FUNC_OTHER_REPORT_SLAVEID | MB_NACK);
-  mrs485TxBuffer[2] = 0x01;
+  mrs485TxBuffer[1] = (char)MB_FUNC_OTHER_REPORT_SLAVEID;
+
+  mrs485TxBuffer[2] = (char)(mrs485TxNumBytes - 6);
+
+  mrs485TxBuffer[3] = 0x00;
+  mrs485TxBuffer[4] = 0xFF;
+
+  // 12 bytes
+  mrs485TxBuffer[5] = '0';  //SN_VER0;
+  mrs485TxBuffer[6] = '0';  //SN_VER1;
+  mrs485TxBuffer[7] = '0';  //SN_VER2;
+  mrs485TxBuffer[8] = '0';  //SN_VER3;
+  mrs485TxBuffer[9] = '0';  //SN_VER4;
+  mrs485TxBuffer[10] = '0'; //SN_VER5;
+  mrs485TxBuffer[11] = '0'; //SN_VER6;
+  mrs485TxBuffer[12] = '0'; //SN_VER7;
+  mrs485TxBuffer[13] = '0'; //SN_VER8;
+  mrs485TxBuffer[14] = '0'; //SN_VER9;
+  mrs485TxBuffer[15] = '0'; //SN_VER10;
+  mrs485TxBuffer[16] = '0'; //SN_VER11;
+  
+  // 10 bytes
+  mrs485TxBuffer[17] = FW_Version[0]; //FW_VER0;
+  mrs485TxBuffer[18] = FW_Version[1]; //FW_VER1;
+  mrs485TxBuffer[19] = FW_Version[1]; //FW_VER2;
+  mrs485TxBuffer[20] = FW_Version[2]; //FW_VER3;
+  mrs485TxBuffer[21] = FW_Version[3]; //FW_VER4;
+  mrs485TxBuffer[23] = '0'; //FW_VER5;
+  mrs485TxBuffer[24] = '0'; //FW_VER6;
+  mrs485TxBuffer[25] = '0'; //FW_VER7;
+  mrs485TxBuffer[26] = '0'; //FW_VER8;
+  mrs485TxBuffer[27] = '0'; //FW_VER9;
+  
   // Crc
   _mbCRC();
-  mrs485TxBuffer[3] = mbCRC[0];
-  mrs485TxBuffer[4] = mbCRC[1];
+  mrs485TxBuffer[28] = mbCRC[0];
+  mrs485TxBuffer[29] = mbCRC[1];
 
   // Init RS485 Transmit
   mrs485State = MRS485_INITTX;

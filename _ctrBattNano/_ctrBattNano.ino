@@ -195,7 +195,7 @@ void setup(void)
   #endif
 
   // Ctr setup
-  //_CtrSetup();
+  _CtrSetup();
 
   #if (_USE_WDE_ == 1)
   _WDESetup();

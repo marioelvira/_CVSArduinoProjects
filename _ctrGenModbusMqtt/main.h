@@ -8,6 +8,9 @@ extern "C" {
 // Libs
 // C:\Users\mario.elvira\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4
 // D:\Datos\Documents\Arduino\libraries
+
+// Board: ESP8266 Boards -> NodeMCU 1.0 (ESP-12E Module)
+
 #define PROJECT     "REM MBMQTT+"
 
 ///////////

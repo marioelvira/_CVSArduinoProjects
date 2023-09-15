@@ -356,7 +356,10 @@ void _mbReadInput(char modbusID)
     mrs485TxBuffer[13] = 0x00;
     mrs485TxBuffer[14] = ctrOutRele;
     mrs485TxBuffer[15] = 0x00;
-    mrs485TxBuffer[16] = ctrDisplay;        
+    mrs485TxBuffer[16] = ctrDisplay;
+    mrs485TxBuffer[17]  = (char)((ctrDisplaySec & 0xFF00)>>8);
+    mrs485TxBuffer[18]  = (char)(ctrDisplaySec & 0x00FF);
+    
   }
   else if ((addr == MB_IR_ADD_INS) && (nregs == MB_IR_NREG_INS))
   { 

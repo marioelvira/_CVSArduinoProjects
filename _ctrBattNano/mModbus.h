@@ -45,7 +45,7 @@ extern "C" {
 
 // Input Registers
 #define MB_IR_ADD_ONLINE   0
-#define MB_IR_NREG_ONLINE  7
+#define MB_IR_NREG_ONLINE  8
 #define MB_IR_ADD_INS      100
 #define MB_IR_NREG_INS     2
 #define MB_IR_ADD_OUTS     110

@@ -56,7 +56,7 @@ void _CtrLoop(void)
       OutDisp = OUT_OFF;
 
       // Alarm reset
-      alarm[AL_ERROR2] = 0;
+      alarm[AL_ERROR3] = 0;
     
       TimeControlSec = 0;
       ControlTick = millis();
@@ -91,9 +91,9 @@ void _CtrLoop(void)
       if (TimeControlSec > cfgTimeGenAl)
       { 
         if (InGen == IO_OFF)
-          alarm[AL_ERROR2] = 1;
+          alarm[AL_ERROR3] = 1;
         else
-          alarm[AL_ERROR2] = 0;
+          alarm[AL_ERROR3] = 0;
       }
 
       if (TimeControlSec <= cfgTimeBuzzerOn)
@@ -170,6 +170,12 @@ void ctrIOsLoop(void)
   ioOutA = OutGen;
   ioOutB = OutBomba;
   ioOutC = OutZumb;
+
+  if (InGen == IO_OFF)
+    alarm[AL_ERROR2] = 0;
+  else
+    alarm[AL_ERROR2] = 1;
+
 
   #if (_USE_MB_ == 1)
   
@@ -275,6 +281,7 @@ void ctrInsLoop(void)
   // Almacenamos el valor anterior...
   InStartVal_ant  = InStartVal;
   InEndVal_ant  = InEndVal;
+
 }
 
 // Puls loop

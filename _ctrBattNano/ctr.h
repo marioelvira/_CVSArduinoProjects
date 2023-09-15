@@ -47,7 +47,7 @@ extern "C" {
 #define OUT_RELE_INVERTER_OFF   0
 #define OUT_RELE_INVERTER_ON    1
 
-#define X_3600  3600
+#define X_3600  30 // 3600
 
 #endif // _CTR_H_
 

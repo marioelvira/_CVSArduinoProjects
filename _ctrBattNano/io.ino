@@ -21,6 +21,9 @@ void _IOSetup()
   InPin[1] = PIN_IN1;
 
   ioTick = millis();
+
+  inPulsState = IN_PULS_STANDBY;
+  inPulsType = IN_PULS_STANDBY;
 }
 
 //////////////////////
@@ -31,28 +34,71 @@ void _IOLoop()
   if (millis() - ioTick >= IO_LOOP_TICK)
   {
     inPuls = InDig[0];
-    
-    if (inPuls_ant == inPuls)
-      inPulsCounter++;
-    else
+
+    switch (inPulsState)
     {
-      // Si detectamos un flanco ...
-      if (inPuls_ant == FLANCO)
-      {
-        if (inPulsCounter > LONG_PULS)
-          inPulsState = LONG_PULS;
-        else if (inPulsCounter > SHORT_PULS)
-          inPulsState = SHORT_PULS;
-      }
-  
-      inPulsCounter = 0;
+      case IN_PULS_STANDBY:
+        // Hay flanco?
+        if ((inPuls_ant == IN_DOWN) && (inPuls == IN_UP))
+        {
+          inPulsState = IN_PULS_FLANCO;
+          inPulsCounter = 0;
+        }
+        break;
+
+      case IN_PULS_FLANCO:
+        if (inPuls_ant == inPuls)
+        {
+          inPulsCounter++;
+
+          if (inPulsCounter > TOOLONG_PULS)
+          {
+            inPulsType = TOOLONG_PULS;
+            inPulsState = IN_PULS_CTR;
+            #if (_PULS_SERIAL_DEBUG_ == 1)
+            Serial.println("-----------> TOO LONG PULSE");
+            #endif
+          }
+        }
+        else
+        {
+          if (inPulsCounter >= LONG_PULS)
+          {
+            inPulsType = LONG_PULS;
+            #if (_PULS_SERIAL_DEBUG_ == 1)
+            Serial.println("-----------> LONG PULSE");
+            #endif
+          }
+          else /*if (inPulsCounter >= SHORT_PULS)*/
+          {
+            inPulsType = SHORT_PULS;
+            #if (_PULS_SERIAL_DEBUG_ == 1)
+            Serial.println("-----------> SHORT PULSE");
+            #endif
+          }
+          /*
+          else
+          {
+            inPulsType = TOOSHORT_PULS;
+            #if (_PULS_SERIAL_DEBUG_ == 1)
+            Serial.println("-----------> TOOSHORT PULSE");
+            #endif
+          }
+          */
+          inPulsState = IN_PULS_CTR;
+        }
+
+        break;
+
+      case IN_PULS_CTR:
+        _ctrPuls();
+        inPulsType  = NO_PULS;
+        inPulsState = IN_PULS_STANDBY;
+        break;
     }
 
-    _ctrPuls();
-
-    inPulsState  = NO_PULS;
     inPuls_ant  = inPuls;
-  }
 
-  ioTick = millis();
+    ioTick = millis();
+  }
 }

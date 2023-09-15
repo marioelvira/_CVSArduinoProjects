@@ -262,6 +262,10 @@ void _MQTTSend(int itopic)
     str = str + String(controlMode);
     str = str + ",\n";
 
+    str = str + "\"cSt\":";
+    str = str + String(ControlState);
+    str = str + ",\n";
+
     str = str + "\"us\":";
     if (mqttLastCtr == 1)
       str = str + "AL";

@@ -12,12 +12,12 @@ void _CtrSetup(void)
 
 void _ctrPuls(void)
 {
-  if (inPulsState == LONG_PULS)
+  if (inPulsType == LONG_PULS)
   {
     ctrDisplay = 0;
     ctrDisplaySec = 0;
   }
-  else if (inPulsState == SHORT_PULS)
+  else if (inPulsType == SHORT_PULS)
   {
     ctrDisplay++;
     if (ctrDisplay >= 9)

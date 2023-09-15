@@ -67,7 +67,8 @@ int   ctrDisplaySec;
 int   inPuls = 0;
 int   inPuls_ant = 0;
 int   inPulsCounter = 0;
-int   inPulsState = 0;
+int   inPulsType = 0;
+int   inPulsState;
 
 ////////////
 // Config //
@@ -254,7 +255,7 @@ void loop()
 {
   _PINLoop();
 
-  if (ctrMode == MODE_AUTO)
+  //if (ctrMode == MODE_AUTO)
   {
     _IOLoop();  
     _CtrLoop();

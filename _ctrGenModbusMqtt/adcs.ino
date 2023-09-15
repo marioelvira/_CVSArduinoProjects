@@ -49,15 +49,15 @@ void _ADCLoop()
   if (cfgADCf & 0x02)
   {
     if (AdcVal > adcAl)
-      alarm[AL_ERROR3] = 1;
+      alarm[AL_ERROR4] = 1;
     else
-      alarm[AL_ERROR3] = 0;
+      alarm[AL_ERROR4] = 0;
   }
   else
   {
     if (AdcVal < adcAl)
-      alarm[AL_ERROR3] = 1;
+      alarm[AL_ERROR4] = 1;
     else
-      alarm[AL_ERROR3] = 0;    
+      alarm[AL_ERROR4] = 0;    
   }
 }

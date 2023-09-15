@@ -85,12 +85,18 @@ extern "C" {
 // States and Times
 #define IO_LOOP_TICK      100   // 100ms
 #define NO_PULS           0
-#define SHORT_PULS        5     // x100ms
-#define LONG_PULS         15    // x100ms
 
-#define FLANCO_UP         0
-#define FLANCO_DOWN       1
-#define FLANCO            FLANCO_UP  // FLANCO_DOWN
+#define TOOLONG_PULS      50    // x100ms
+#define LONG_PULS         20    // x100ms
+#define SHORT_PULS        1     // x100ms
+//#define TOOSHORT_PULS   0     // x100ms
+
+#define IN_UP             1
+#define IN_DOWN           0
+
+#define IN_PULS_STANDBY  0
+#define IN_PULS_FLANCO   1
+#define IN_PULS_CTR      2
 
 #endif // _IO_H_
 

@@ -12,6 +12,8 @@
 #include "mRS485.h"
 #include "wde.h"
 
+#include "EmonLib.h"
+
 /////////////
 // Version //
 /////////////
@@ -28,6 +30,11 @@ int   boardLed;
 int   AdcDig[ADC_NUMBER];
 int   AdcPin[ADC_NUMBER];
 int   AdcVal[ADC_NUMBER];
+unsigned long AdcTick[ADC_NUMBER];
+
+EnergyMonitor AdcEmon;
+double        AdcIrms = 0;
+int           AdcIrmsInt = 0;
 
 /////////////
 // IO Tick //
@@ -255,13 +262,14 @@ void loop()
 {
   _PINLoop();
 
-  //if (ctrMode == MODE_AUTO)
+  if (ctrMode == MODE_AUTO)
   {
     _IOLoop();  
     _CtrLoop();
   }
 
   _TimeLoop();
+  _ADCsLoop();
 
   #if (_USE_RS485_ == 1)
   _RS485Loop();

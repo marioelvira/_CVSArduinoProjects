@@ -23,7 +23,7 @@ void _ConfigSetup(void)
 
 void _readCONFIG (void)
 {
-  int ok, i = 0;
+  int ok;
   int eeprom_value_hi, eeprom_value_lo;
   
   //EEPROM.begin(512);  // ESPXX
@@ -44,27 +44,42 @@ void _readCONFIG (void)
     EEPROM.write(EEPROM_ADD_LOGIC_INS,  EEPROM_VAL_LOGIC_INS);
     EEPROM.write(EEPROM_ADD_LOGIC_OUTS, EEPROM_VAL_LOGIC_OUTS);
 
-    for (i = 0; i < ADC_NUMBER; i++)
-    {
-      eeprom_value_lo = EEPROM_VAL_ADC_M & 0x00FF;
-      EEPROM.write(EEPROM_ADD_ADC_M_LO + i*EEPROM_ADC_SIZE, eeprom_value_lo);
-      eeprom_value_hi = (EEPROM_VAL_ADC_M & 0xFF00)>>8;
-      EEPROM.write(EEPROM_ADD_ADC_M_HI + i*EEPROM_ADC_SIZE, eeprom_value_hi);
-      
-      eeprom_value_lo = EEPROM_VAL_ADC_B & 0x00FF;
-      EEPROM.write(EEPROM_ADD_ADC_B_LO + i*EEPROM_ADC_SIZE, eeprom_value_lo);
-      eeprom_value_hi = (EEPROM_VAL_ADC_B & 0xFF00)>>8;
-      EEPROM.write(EEPROM_ADD_ADC_B_HI + i*EEPROM_ADC_SIZE, eeprom_value_hi);
- 
-      EEPROM.write(EEPROM_ADD_ADC_S + i*EEPROM_ADC_SIZE,  EEPROM_VAL_ADC_S);
+    // ADC 0
+    eeprom_value_lo = EEPROM_VAL_ADC0_M & 0x00FF;
+    EEPROM.write(EEPROM_ADD_ADC0_M_LO, eeprom_value_lo);
+    eeprom_value_hi = (EEPROM_VAL_ADC0_M & 0xFF00)>>8;
+    EEPROM.write(EEPROM_ADD_ADC0_M_HI, eeprom_value_hi);
 
-      eeprom_value_lo = EEPROM_VAL_ADC_T & 0x00FF;
-      EEPROM.write(EEPROM_ADD_ADC_T_LO + i*EEPROM_ADC_SIZE, eeprom_value_lo);
-      eeprom_value_hi = (EEPROM_VAL_ADC_T & 0xFF00)>>8;
-      EEPROM.write(EEPROM_ADD_ADC_T_HI + i*EEPROM_ADC_SIZE, eeprom_value_hi);
+    eeprom_value_lo = EEPROM_VAL_ADC0_B & 0x00FF;
+    EEPROM.write(EEPROM_ADD_ADC0_B_LO, eeprom_value_lo);
+    eeprom_value_hi = (EEPROM_VAL_ADC0_B & 0xFF00)>>8;
+    EEPROM.write(EEPROM_ADD_ADC0_B_HI, eeprom_value_hi);
+
+    EEPROM.write(EEPROM_ADD_ADC0_S, EEPROM_VAL_ADC0_S);
+
+    eeprom_value_lo = EEPROM_VAL_ADC0_T & 0x00FF;
+    EEPROM.write(EEPROM_ADD_ADC0_T_LO, eeprom_value_lo);
+    eeprom_value_hi = (EEPROM_VAL_ADC0_T & 0xFF00)>>8;
+    EEPROM.write(EEPROM_ADD_ADC0_T_HI, eeprom_value_hi);
+
+    // ADC 1
+    eeprom_value_lo = EEPROM_VAL_ADC1_M & 0x00FF;
+    EEPROM.write(EEPROM_ADD_ADC1_M_LO, eeprom_value_lo);
+    eeprom_value_hi = (EEPROM_VAL_ADC1_M & 0xFF00)>>8;
+    EEPROM.write(EEPROM_ADD_ADC1_M_HI, eeprom_value_hi);
       
-    }
-    
+    eeprom_value_lo = EEPROM_VAL_ADC1_B & 0x00FF;
+    EEPROM.write(EEPROM_ADD_ADC1_B_LO, eeprom_value_lo);
+    eeprom_value_hi = (EEPROM_VAL_ADC1_B & 0xFF00)>>8;
+    EEPROM.write(EEPROM_ADD_ADC1_B_HI, eeprom_value_hi);
+ 
+    EEPROM.write(EEPROM_ADD_ADC1_S,  EEPROM_VAL_ADC1_S);
+
+    eeprom_value_lo = EEPROM_VAL_ADC1_T & 0x00FF;
+    EEPROM.write(EEPROM_ADD_ADC1_T_LO, eeprom_value_lo);
+    eeprom_value_hi = (EEPROM_VAL_ADC1_T & 0xFF00)>>8;
+    EEPROM.write(EEPROM_ADD_ADC1_T_HI, eeprom_value_hi);
+
     //EEPROM.commit();    // ESPXX Store data to EEPROM
   }
   else
@@ -78,22 +93,36 @@ void _readCONFIG (void)
   cfgLogicIns  = (int)EEPROM.read(EEPROM_ADD_LOGIC_INS);
   cfgLogicOuts = (int)EEPROM.read(EEPROM_ADD_LOGIC_OUTS);
   
-  for (i = 0; i < ADC_NUMBER; i++)
-  {
-    eeprom_value_hi   = (int)EEPROM.read(EEPROM_ADD_ADC_M_HI + i*EEPROM_ADC_SIZE);
-    eeprom_value_lo   = (int)EEPROM.read(EEPROM_ADD_ADC_M_LO + i*EEPROM_ADC_SIZE);
-    cfgADCm[i]        = (int)((eeprom_value_hi & 0x00FF)<<8)|(eeprom_value_lo & 0x00FF);
+  // ADC 0
+  eeprom_value_hi   = (int)EEPROM.read(EEPROM_ADD_ADC0_M_HI);
+  eeprom_value_lo   = (int)EEPROM.read(EEPROM_ADD_ADC0_M_LO);
+  cfgADCm[0]        = (int)((eeprom_value_hi & 0x00FF)<<8)|(eeprom_value_lo & 0x00FF);
     
-    eeprom_value_hi   = (int)EEPROM.read(EEPROM_ADD_ADC_B_HI + i*EEPROM_ADC_SIZE);
-    eeprom_value_lo   = (int)EEPROM.read(EEPROM_ADD_ADC_B_LO + i*EEPROM_ADC_SIZE);   
-    cfgADCb[i]        = (int)((eeprom_value_hi & 0x00FF)<<8)|(eeprom_value_lo & 0x00FF);
+  eeprom_value_hi   = (int)EEPROM.read(EEPROM_ADD_ADC0_B_HI);
+  eeprom_value_lo   = (int)EEPROM.read(EEPROM_ADD_ADC0_B_LO);
+  cfgADCb[0]        = (int)((eeprom_value_hi & 0x00FF)<<8)|(eeprom_value_lo & 0x00FF);
         
-    cfgADCs[i]        = (int)EEPROM.read(EEPROM_ADD_ADC_S + i*EEPROM_ADC_SIZE);
+  cfgADCs[0]        = (int)EEPROM.read(EEPROM_ADD_ADC0_S);
 
-    eeprom_value_hi   = (int)EEPROM.read(EEPROM_ADD_ADC_T_HI + i*EEPROM_ADC_SIZE);
-    eeprom_value_lo   = (int)EEPROM.read(EEPROM_ADD_ADC_T_LO + i*EEPROM_ADC_SIZE);   
-    cfgADCt[i]        = (int)((eeprom_value_hi & 0x00FF)<<8)|(eeprom_value_lo & 0x00FF);
-  }
+  eeprom_value_hi   = (int)EEPROM.read(EEPROM_ADD_ADC0_T_HI);
+  eeprom_value_lo   = (int)EEPROM.read(EEPROM_ADD_ADC0_T_LO);
+  cfgADCt[0]        = (int)((eeprom_value_hi & 0x00FF)<<8)|(eeprom_value_lo & 0x00FF);
+
+  // ADC 1
+  eeprom_value_hi   = (int)EEPROM.read(EEPROM_ADD_ADC1_M_HI);
+  eeprom_value_lo   = (int)EEPROM.read(EEPROM_ADD_ADC1_M_LO);
+  cfgADCm[1]        = (int)((eeprom_value_hi & 0x00FF)<<8)|(eeprom_value_lo & 0x00FF);
+    
+  eeprom_value_hi   = (int)EEPROM.read(EEPROM_ADD_ADC1_B_HI);
+  eeprom_value_lo   = (int)EEPROM.read(EEPROM_ADD_ADC1_B_LO);
+  cfgADCb[1]        = (int)((eeprom_value_hi & 0x00FF)<<8)|(eeprom_value_lo & 0x00FF);
+        
+  cfgADCs[1]        = (int)EEPROM.read(EEPROM_ADD_ADC1_S);
+
+  eeprom_value_hi   = (int)EEPROM.read(EEPROM_ADD_ADC1_T_HI);
+  eeprom_value_lo   = (int)EEPROM.read(EEPROM_ADD_ADC1_T_LO);
+  cfgADCt[1]        = (int)((eeprom_value_hi & 0x00FF)<<8)|(eeprom_value_lo & 0x00FF);
+
 
   #if (_EEPROM_SERIAL_DEBUG_ == 1)
   Serial.print("Modbus ID: ");   Serial.println (cfgMbId);

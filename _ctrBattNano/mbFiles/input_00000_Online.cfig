@@ -1,5 +1,5 @@
-I16#0000 ADC0#
-I16#0001 ADC1#
+I16#0000 ADC0 - Consumo#mA
+I16#0001 ADC1 - Tension#V
 U16#0002 Mode#0->AUTO; 1->TEST
 U16#0003 Clock IN - Inversor#0->Disabled; 1->Enabled
 U16#0004 Puls IN#

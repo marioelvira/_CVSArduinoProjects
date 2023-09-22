@@ -41,7 +41,7 @@ void _TimeLoop(void)
     
     timeTick = millis();
 
-    _ADCsLoop();
+    //_ADCsLoop();
 
     #if (_USE_FREERAM_ == 1)
     _FreeRAM();

@@ -18,7 +18,7 @@ extern "C" {
 #define AL_ERROR5      5
 
 #define AL_ERROR0_STR   "Com tarj MB1"
-#define AL_ERROR1_STR   "Com tarj MB1"
+#define AL_ERROR1_STR   "Com tarj MB2"
 #define AL_ERROR2_STR   "GEN encendido"
 #define AL_ERROR3_STR   "GEN error"
 #define AL_ERROR4_STR   "Bateria baja"

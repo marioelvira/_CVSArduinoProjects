@@ -1035,6 +1035,11 @@ void _readCTR()
   html = html + "</tr>";
 
   html = html + "<tr>";
+  html = html + "<td>Sec cdown</td>";
+  html = html + "<td>" + String(TimeControlSec) + "</td>";
+  html = html + "</tr>";
+
+  html = html + "<tr>";
   html = html + "<td>Mins ON</td>";
   html = html + "<td>" + String(genMinOn) + "</td>";
   html = html + "</tr>";

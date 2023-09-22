@@ -64,16 +64,16 @@ extern "C" {
 // INs
 #define IN_NUMBER       2
 
-#define PIN_IN0         3
-#define PIN_IN1         4
+#define PIN_IN0         4
+#define PIN_IN1         3
 
 // Status OUTs
 #define PIN_OUT_ON        1
 #define PIN_OUT_OFF       0
 
 // Status Pull-up INs
-#define PIN_IN_OFF        0   
-#define PIN_IN_ON         1
+#define PIN_IN_OFF        1
+#define PIN_IN_ON         0
 
 // IO definition
 #define IO_OFF            0
@@ -86,13 +86,13 @@ extern "C" {
 #define IO_LOOP_TICK      100   // 100ms
 #define NO_PULS           0
 
-#define TOOLONG_PULS      50    // x100ms
-#define LONG_PULS         20    // x100ms
+#define TOOLONG_PULS      100   // x100ms
+#define LONG_PULS         10    // x100ms
 #define SHORT_PULS        1     // x100ms
 //#define TOOSHORT_PULS   0     // x100ms
 
-#define IN_UP             1
-#define IN_DOWN           0
+#define IN_UP             1//0
+#define IN_DOWN           0//1
 
 #define IN_PULS_STANDBY  0
 #define IN_PULS_FLANCO   1

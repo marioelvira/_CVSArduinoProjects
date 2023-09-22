@@ -261,9 +261,26 @@ void _MQTTSend(int itopic)
     str = str + "\"md\":";
     str = str + String(controlMode);
     str = str + ",\n";
-
+    /*
     str = str + "\"cSt\":";
     str = str + String(ControlState);
+    str = str + ",\n";
+    */
+    str = str + "\"cSt\":";
+    if (ControlState == 1)
+      str = str + "START";
+    else if (ControlState == 2)
+      str = str + "GEN ON";
+    else if (ControlState == 3)
+      str = str + "ZUMB";
+    else if (ControlState == 4)
+      str = str + "GEN OFF";
+    else
+      str = str + "REPOSO";
+    str = str + ",\n";
+
+    str = str + "\"cSec\":";
+    str = str + String(TimeControlSec);
     str = str + ",\n";
 
     str = str + "\"us\":";

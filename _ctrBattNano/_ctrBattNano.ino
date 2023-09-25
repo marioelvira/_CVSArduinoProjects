@@ -84,11 +84,17 @@ int cfgMbId = 0;
 int cfgLogicIns;
 int cfgLogicOuts;
 
-int cfgADCm[ADC_NUMBER];
-int cfgADCb[ADC_NUMBER];
-int cfgADCs[ADC_NUMBER];
+int cfgADC0EmonR;
+int cfgADC0EmonS;
+int cfgADC0EmonO;
+int cfgADC0Emonts;
+int cfgADC0Emont;
 
-int cfgADCt[ADC_NUMBER];
+int cfgADC1m;
+int cfgADC1b;
+int cfgADC1s;
+int cfgADC1ts;
+int cfgADC1t;
 
 ///////////
 // RS485 //

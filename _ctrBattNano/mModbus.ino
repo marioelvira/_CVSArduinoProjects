@@ -170,15 +170,17 @@ void _mbWriteMultipleHolding(char modbusID)
     else 
       cfgLogicOuts = OUT_ON;
 
-    cfgADCm[0] = (int)((mrs485RxBuffer[15] & 0x00FF)<<8)|(mrs485RxBuffer[16] & 0x00FF);
-    cfgADCb[0] = (int)((mrs485RxBuffer[17] & 0x00FF)<<8)|(mrs485RxBuffer[18] & 0x00FF);
-    cfgADCs[0] = (int)(mrs485RxBuffer[20] & 0x00FF);
-    cfgADCt[0] = (int)((mrs485RxBuffer[21] & 0x00FF)<<8)|(mrs485RxBuffer[22] & 0x00FF);
+    cfgADC0EmonR  = (int)((mrs485RxBuffer[15] & 0x00FF)<<8)|(mrs485RxBuffer[16] & 0x00FF);
+    cfgADC0EmonS  = (int)((mrs485RxBuffer[17] & 0x00FF)<<8)|(mrs485RxBuffer[18] & 0x00FF);
+    cfgADC0EmonO  = (int)((mrs485RxBuffer[19] & 0x00FF)<<8)|(mrs485RxBuffer[20] & 0x00FF);
+    cfgADC0Emonts = (int)(mrs485RxBuffer[22] & 0x00FF);
+    cfgADC0Emont  = (int)((mrs485RxBuffer[23] & 0x00FF)<<8)|(mrs485RxBuffer[24] & 0x00FF);
     
-    cfgADCm[1] = (int)((mrs485RxBuffer[23] & 0x00FF)<<8)|(mrs485RxBuffer[24] & 0x00FF);
-    cfgADCb[1] = (int)((mrs485RxBuffer[25] & 0x00FF)<<8)|(mrs485RxBuffer[26] & 0x00FF);
-    cfgADCs[1] = (int)(mrs485RxBuffer[28] & 0x00FF);
-    cfgADCt[1] = (int)((mrs485RxBuffer[29] & 0x00FF)<<8)|(mrs485RxBuffer[30] & 0x00FF);
+    cfgADC1m  = (int)((mrs485RxBuffer[25] & 0x00FF)<<8)|(mrs485RxBuffer[26] & 0x00FF);
+    cfgADC1b  = (int)((mrs485RxBuffer[27] & 0x00FF)<<8)|(mrs485RxBuffer[28] & 0x00FF);
+    cfgADC1s  = (int)(mrs485RxBuffer[30] & 0x00FF);
+    cfgADC1ts = (int)(mrs485RxBuffer[32] & 0x00FF);
+    cfgADC1t  = (int)((mrs485RxBuffer[33] & 0x00FF)<<8)|(mrs485RxBuffer[34] & 0x00FF);
  
     // Data Data
     EEPROM.write(EEPROM_ADD_MODBUS_ID,  (byte)cfgMbId);
@@ -186,39 +188,40 @@ void _mbWriteMultipleHolding(char modbusID)
     EEPROM.write(EEPROM_ADD_LOGIC_OUTS, (byte)cfgLogicOuts);
 
     // ADC 0
-    eeprom_value_lo = cfgADCm[0] & 0x00FF;
-    EEPROM.write(EEPROM_ADD_ADC0_M_LO, eeprom_value_lo);
-    eeprom_value_hi = (cfgADCm[0] & 0xFF00)>>8;
-    EEPROM.write(EEPROM_ADD_ADC0_M_HI, eeprom_value_hi);
+    eeprom_value_lo = cfgADC0EmonR & 0x00FF;
+    EEPROM.write(EEPROM_ADD_ADC0_EMON_R_LO, eeprom_value_lo);
+    eeprom_value_hi = (cfgADC0EmonR & 0xFF00)>>8;
+    EEPROM.write(EEPROM_ADD_ADC0_EMON_R_HI, eeprom_value_hi);
+    eeprom_value_lo = cfgADC0EmonS & 0x00FF;
+    EEPROM.write(EEPROM_ADD_ADC0_EMON_S_LO, eeprom_value_lo);
+    eeprom_value_hi = (cfgADC0EmonS & 0xFF00)>>8;
+    EEPROM.write(EEPROM_ADD_ADC0_EMON_S_HI, eeprom_value_hi);
+    eeprom_value_lo = cfgADC0EmonO & 0x00FF;
+    EEPROM.write(EEPROM_ADD_ADC0_EMON_O_LO, eeprom_value_lo);
+    eeprom_value_hi = (cfgADC0EmonO & 0xFF00)>>8;
+    EEPROM.write(EEPROM_ADD_ADC0_EMON_O_HI, eeprom_value_hi);
 
-    eeprom_value_lo = cfgADCb[0] & 0x00FF;
-    EEPROM.write(EEPROM_ADD_ADC0_B_LO, eeprom_value_lo);
-    eeprom_value_hi = (cfgADCb[0] & 0xFF00)>>8;
-    EEPROM.write(EEPROM_ADD_ADC0_B_HI, eeprom_value_hi);
-
-    EEPROM.write(EEPROM_ADD_ADC0_S, cfgADCs[0]);
-
-    eeprom_value_lo = cfgADCt[0] & 0x00FF;
-    EEPROM.write(EEPROM_ADD_ADC1_T_LO, eeprom_value_lo);
-    eeprom_value_hi = (cfgADCt[0] & 0xFF00)>>8;
-    EEPROM.write(EEPROM_ADD_ADC1_T_HI, eeprom_value_hi);
+    EEPROM.write(EEPROM_ADD_ADC0_EMON_TS, cfgADC0Emonts);
+    eeprom_value_lo = cfgADC0Emont & 0x00FF;
+    EEPROM.write(EEPROM_ADD_ADC0_EMON_T_LO, eeprom_value_lo);
+    eeprom_value_hi = (cfgADC0Emont & 0xFF00)>>8;
+    EEPROM.write(EEPROM_ADD_ADC0_EMON_T_HI, eeprom_value_hi);
 
     // ADC 1
-    eeprom_value_lo = cfgADCm[1] & 0x00FF;
+    eeprom_value_lo = cfgADC1m & 0x00FF;
     EEPROM.write(EEPROM_ADD_ADC1_M_LO, eeprom_value_lo);
-    eeprom_value_hi = (cfgADCm[1] & 0xFF00)>>8;
+    eeprom_value_hi = (cfgADC1m & 0xFF00)>>8;
     EEPROM.write(EEPROM_ADD_ADC1_M_HI, eeprom_value_hi);
-      
-    eeprom_value_lo = cfgADCb[1] & 0x00FF;
+    eeprom_value_lo = cfgADC1b & 0x00FF;
     EEPROM.write(EEPROM_ADD_ADC1_B_LO, eeprom_value_lo);
-    eeprom_value_hi = (cfgADCb[1] & 0xFF00)>>8;
+    eeprom_value_hi = (cfgADC1b & 0xFF00)>>8;
     EEPROM.write(EEPROM_ADD_ADC1_B_HI, eeprom_value_hi);
- 
-    EEPROM.write(EEPROM_ADD_ADC1_S,  cfgADCs[1]);
+    EEPROM.write(EEPROM_ADD_ADC1_S,  cfgADC1s);
 
-    eeprom_value_lo = cfgADCt[1] & 0x00FF;
+    EEPROM.write(EEPROM_ADD_ADC1_TS,  cfgADC1ts);
+    eeprom_value_lo = cfgADC1t & 0x00FF;
     EEPROM.write(EEPROM_ADD_ADC1_T_LO, eeprom_value_lo);
-    eeprom_value_hi = (cfgADCt[1] & 0xFF00)>>8;
+    eeprom_value_hi = (cfgADC1t & 0xFF00)>>8;
     EEPROM.write(EEPROM_ADD_ADC1_T_HI, eeprom_value_hi);
 
   }
@@ -291,24 +294,32 @@ void _mbReadHolding(char modbusID)
     mrs485TxBuffer[8]   = cfgLogicIns;
     mrs485TxBuffer[9]   = 0x00;
     mrs485TxBuffer[10]  = cfgLogicOuts;
-    
-    mrs485TxBuffer[11]  = (cfgADCm[0] & 0xFF00)>>8;
-    mrs485TxBuffer[12]  = cfgADCm[0] & 0x00FF;
-    mrs485TxBuffer[13]  = (cfgADCb[0] & 0xFF00)>>8;
-    mrs485TxBuffer[14]  = cfgADCb[0] & 0x00FF;
-    mrs485TxBuffer[15]  = 0x00;
-    mrs485TxBuffer[16]  = cfgADCs[0];
-    mrs485TxBuffer[17]  = (cfgADCt[0] & 0xFF00)>>8;
-    mrs485TxBuffer[18]  = cfgADCt[0] & 0x00FF;
-     
-    mrs485TxBuffer[19]  = (cfgADCm[1] & 0xFF00)>>8;
-    mrs485TxBuffer[20]  = cfgADCm[1] & 0x00FF;
-    mrs485TxBuffer[21]  = (cfgADCb[1] & 0xFF00)>>8;
-    mrs485TxBuffer[22]  = cfgADCb[1] & 0x00FF;
-    mrs485TxBuffer[23]  = 0x00;
-    mrs485TxBuffer[24]  = cfgADCs[1];
-    mrs485TxBuffer[25]  = (cfgADCt[1] & 0xFF00)>>8;
-    mrs485TxBuffer[26]  = cfgADCt[1] & 0x00FF;
+
+    // ADC0
+    mrs485TxBuffer[11]  = (cfgADC0EmonR & 0xFF00)>>8;
+    mrs485TxBuffer[12]  = cfgADC0EmonR & 0x00FF;
+    mrs485TxBuffer[13]  = (cfgADC0EmonS & 0xFF00)>>8;
+    mrs485TxBuffer[14]  = cfgADC0EmonS & 0x00FF;
+    mrs485TxBuffer[15]  = (cfgADC0EmonO & 0xFF00)>>8;
+    mrs485TxBuffer[16]  = cfgADC0EmonO & 0x00FF;
+
+    mrs485TxBuffer[17]  = 0x00;
+    mrs485TxBuffer[18]  = cfgADC0Emonts;
+    mrs485TxBuffer[19]  = (cfgADC0Emont & 0xFF00)>>8;
+    mrs485TxBuffer[20]  = cfgADC0Emont & 0x00FF;
+  
+    // ADC1
+    mrs485TxBuffer[21]  = (cfgADC1m & 0xFF00)>>8;
+    mrs485TxBuffer[22]  = cfgADC1m & 0x00FF;
+    mrs485TxBuffer[23]  = (cfgADC1b & 0xFF00)>>8;
+    mrs485TxBuffer[24]  = cfgADC1b & 0x00FF;
+    mrs485TxBuffer[25]  = 0x00;
+    mrs485TxBuffer[26]  = cfgADC1s;
+
+    mrs485TxBuffer[27]  = 0x00;
+    mrs485TxBuffer[28]  = cfgADC1ts;
+    mrs485TxBuffer[29]  = (cfgADC1t & 0xFF00)>>8;
+    mrs485TxBuffer[30]  = cfgADC1t & 0x00FF;
   }
   else if ((addr == MB_HR_ADD_OUTS) && (nregs == MB_HR_NREG_OUTS))
   {
@@ -359,9 +370,6 @@ void _mbReadInput(char modbusID)
 
   if ((addr == MB_IR_ADD_ONLINE) && (nregs == MB_IR_NREG_ONLINE))
   {
-
-    //mrs485TxBuffer[3]  = (char)((AdcVal[0] & 0xFF00)>>8);
-    //mrs485TxBuffer[4]  = (char)(AdcVal[0] & 0x00FF);
     mrs485TxBuffer[3]  = (char)((AdcIrmsInt & 0xFF00)>>8);
     mrs485TxBuffer[4]  = (char)(AdcIrmsInt & 0x00FF);
     mrs485TxBuffer[5]  = (char)((AdcVal[1] & 0xFF00)>>8);

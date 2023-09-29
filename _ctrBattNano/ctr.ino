@@ -8,6 +8,14 @@ void _CtrSetup(void)
   ctrDisplay = 0;
 
   ctrMode = MODE_AUTO;
+
+  crtIrmsState = CTR_INV_STANDBY;
+  crtIrmstick = millis();
+
+  crtVdcState = CTR_INV_STANDBY;
+  crtVdctick = millis();
+
+  crtDisplayState = CTR_INV_STANDBY;
 }
 
 void _ctrPuls(void)
@@ -23,7 +31,7 @@ void _ctrPuls(void)
     if (ctrDisplay >= 9)
       ctrDisplay = 9;
 
-    ctrDisplaySec = ctrDisplay*X_3600;
+    ctrDisplaySec = ctrDisplay*cfgNTimeSecs /*X_3600*/;
   }
 }
 
@@ -42,7 +50,7 @@ void _ctrLcdLoop(void) {
     OutDig[6] = OUT_OFF;
     OutDig[7] = OUT_OFF;
   }
-  else if (ctrDisplaySec > 9*X_3600)
+  else if (ctrDisplaySec > 9*cfgNTimeSecs /*X_3600*/)
   {
     ctrDisplay = 10;  // a-b-c-d-f-g-dp
     OutDig[0] = OUT_ON;
@@ -54,7 +62,7 @@ void _ctrLcdLoop(void) {
     OutDig[6] = OUT_ON;
     OutDig[7] = OUT_ON;
   }
-  else if (ctrDisplaySec > 8*X_3600)
+  else if (ctrDisplaySec > 8*cfgNTimeSecs /*X_3600*/)
   {
     ctrDisplay = 9; // a-b-c-d-f-g
     OutDig[0] = OUT_ON;
@@ -66,7 +74,7 @@ void _ctrLcdLoop(void) {
     OutDig[6] = OUT_ON;
     OutDig[7] = OUT_OFF;
   }
-  else if (ctrDisplaySec > 7*X_3600)
+  else if (ctrDisplaySec > 7*cfgNTimeSecs /*X_3600*/)
   {
     ctrDisplay = 8; // a-b-c-d-e-f-g
     OutDig[0] = OUT_ON;
@@ -78,7 +86,7 @@ void _ctrLcdLoop(void) {
     OutDig[6] = OUT_ON;
     OutDig[7] = OUT_OFF;
   }
-  else if (ctrDisplaySec > 6*X_3600)
+  else if (ctrDisplaySec > 6*cfgNTimeSecs /*X_3600*/)
   {
     ctrDisplay = 7; // a-b-c
     OutDig[0] = OUT_ON;
@@ -90,7 +98,7 @@ void _ctrLcdLoop(void) {
     OutDig[6] = OUT_OFF;
     OutDig[7] = OUT_OFF;
   }
-  else if (ctrDisplaySec > 5*X_3600)
+  else if (ctrDisplaySec > 5*cfgNTimeSecs /*X_3600*/)
   {
     ctrDisplay = 6; // a-c-d-e-f-g
     OutDig[0] = OUT_ON;
@@ -102,7 +110,7 @@ void _ctrLcdLoop(void) {
     OutDig[6] = OUT_ON;
     OutDig[7] = OUT_OFF;
   }
-  else if (ctrDisplaySec > 4*X_3600)
+  else if (ctrDisplaySec > 4*cfgNTimeSecs /*X_3600*/)
   {
     ctrDisplay = 5; // a-c-d-f-g
     OutDig[0] = OUT_ON;
@@ -114,7 +122,7 @@ void _ctrLcdLoop(void) {
     OutDig[6] = OUT_ON;
     OutDig[7] = OUT_OFF;
   }
-  else if (ctrDisplaySec > 3*X_3600)
+  else if (ctrDisplaySec > 3*cfgNTimeSecs /*X_3600*/)
   {
     ctrDisplay = 4; // b-c-f-g
     OutDig[0] = OUT_OFF;
@@ -126,7 +134,7 @@ void _ctrLcdLoop(void) {
     OutDig[6] = OUT_ON;
     OutDig[7] = OUT_OFF;
   }
-  else if (ctrDisplaySec > 2*X_3600)
+  else if (ctrDisplaySec > 2*cfgNTimeSecs /*X_3600*/)
   {
     ctrDisplay = 3; // a-b-c-d-g
     OutDig[0] = OUT_ON;
@@ -138,7 +146,7 @@ void _ctrLcdLoop(void) {
     OutDig[6] = OUT_ON;
     OutDig[7] = OUT_OFF;
   }
-  else if (ctrDisplaySec > 1*X_3600)
+  else if (ctrDisplaySec > 1*cfgNTimeSecs /*X_3600*/)
   {
     ctrDisplay = 2; // a-b-d-e-g
     OutDig[0] = OUT_ON;
@@ -170,8 +178,16 @@ void _ctrLcdLoop(void) {
 ///////////////////////
 void _CtrLoop(void)
 {
-  // In Clock
+  // Read Clock in
   ctrInClock = InDig[1];
+  // Display control
+  _ctrDisplay();
+  // Irms control
+  _ctrIrms();
+  // Vdc control
+  _ctrVdc();
+  // LCD control
+  _ctrLcdLoop();
 
   // Inverter disabled
   if (ctrInClock == IN_CLOCK_INVERTER_DIS)
@@ -179,19 +195,79 @@ void _CtrLoop(void)
   // Inverter enabled
   else
   {
-    // if Display on count down
-    if (ctrDisplay != 0)
-      ctrOutRele = OUT_RELE_INVERTER_OFF;
+    if ((crtIrmsState == CTR_INV_STANDBY) && (crtVdcState == CTR_INV_STANDBY) && (crtDisplayState == CTR_INV_STANDBY))
+     ctrOutRele = OUT_RELE_INVERTER_ON;
     else
-    {
-      // TODO
-      // Current control
-      // Voltage control
-      ctrOutRele = OUT_RELE_INVERTER_ON;
-    }
+     ctrOutRele = OUT_RELE_INVERTER_OFF;
   }
 
-  _ctrLcdLoop();
   // Out relé update
   OutDig[8] = ctrOutRele;
+}
+
+void _ctrIrms(void)
+{
+  switch (crtIrmsState)
+  {
+    case CTR_INV_STANDBY:
+      // Check 
+      if (AdcIrmsInt > cfgADCEmonL)
+        crtIrmsState = CTR_INV_OFF;
+
+      crtIrmstick = millis();
+      break;
+
+    case CTR_INV_OFF:
+      // Hysteresis 
+      if (millis() - crtIrmstick < (cfgADCEmonSec*1000))
+        break;
+
+      // Check 
+      if (AdcIrmsInt <= cfgADCEmonL)
+        crtIrmsState = CTR_INV_STANDBY;  
+
+      break;
+  }
+}
+
+void _ctrVdc(void)
+{
+  switch (crtVdcState)
+  {
+    case CTR_INV_STANDBY:
+      // Check 
+      if (AdcVdc < cfgADCVdcL1)
+        crtVdcState = CTR_INV_OFF;
+
+      crtVdctick = millis();
+      break;
+
+    case CTR_INV_OFF:
+      // Hysteresis 
+      if (millis() - crtVdctick < (cfgADCVdcSec*1000))
+        break;
+
+      // Check 
+      if (AdcVdc >= cfgADCVdcL2)
+       crtVdcState = CTR_INV_STANDBY;  
+
+      break;
+  }
+}
+
+void _ctrDisplay(void)
+{
+  switch (crtDisplayState)
+  {
+    case CTR_INV_STANDBY:
+      if (ctrDisplay != 0)
+        crtDisplayState = CTR_INV_OFF;
+      break;
+
+    case CTR_INV_OFF:
+      if (ctrDisplay == 0)
+        crtDisplayState = CTR_INV_STANDBY;  
+
+      break;
+  }
 }

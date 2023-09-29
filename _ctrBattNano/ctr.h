@@ -25,21 +25,23 @@ extern "C" {
   Si Display != 0 -> Relé abierto (NO permite funcionamiento al Inversor) y nos quedamos ahí.
   Si Display == 0 -> Cerrar Relé y ...
   
-  Control en Corriente (A0: 1024 -> 5A)
-  ----------------------------------------
-    Si Consumo en A0 > 0,54V -> señal en A0 es mayor -> Relé abierto (NO permite funcionamiento al Inversor) y nos quedamos ahí
+  Control en Corriente 
+  --------------------
+    Si Consumo > XXXX mA -> Relé abierto (NO permite funcionamiento al Inversor) y nos quedamos ahí
     Sino ->  Esperamos un tiempo T1 hasta volver a arrancar (aplicamos otras lógicas)
 
-  Control por tensión (A1: 1024 -> 25V)
-  -------------------------------------
+  Control por tensión
+  -------------------
     Si Tensión < 10,5 V -> Relé abierto (NO permite funcionamiento al Inversor) y nos quedamos ahí
     Sino -> Esparamos hasta que la tensión llegue a las 14 V -> Relé cerrado (permite funcionamiento al Inversor)
 */
 
 
 // Estados principales...
-//#define STATE_START           0
-//#define STATE_XXXX            1
+#define CTR_INV_STANDBY         0
+#define CTR_INV_OFF             1
+
+#define CTR_TICK_HIST           10000 // 10s
 
 #define IN_CLOCK_INVERTER_DIS   0
 #define IN_CLOCK_INVERTER_EN    1
@@ -47,7 +49,7 @@ extern "C" {
 #define OUT_RELE_INVERTER_OFF   0
 #define OUT_RELE_INVERTER_ON    1
 
-#define X_3600  30 // 3600
+//#define X_3600    3600
 
 #endif // _CTR_H_
 

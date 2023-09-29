@@ -22,8 +22,11 @@ void _ADCsSetup()
   //AdcPin[6] = PIN_ADC6;
   //AdcPin[7] = PIN_ADC7;
 
+  // Vdc
+  AdcVdc = EEPROM_VAL_ADC_VDC_L1;
+
   // Emon
-  AdcEmon.current(AdcPin[0], cfgADC0EmonR); // ADC_EMON_RATIO
+  AdcEmon.current(AdcPin[0], cfgADCEmonR); // ADC_EMON_RATIO
   AdcIrms = 0;
   AdcIrmsInt = 0;
 }
@@ -38,8 +41,8 @@ void _ADCsLoop()
   {
     AdcDig[0] = analogRead(AdcPin[0]);
 
-    AdcIrms = AdcEmon.calcIrms(cfgADC0EmonS); // ADC_EMON_SAMPLES
-    AdcIrmsInt = (int)(AdcIrms*1000) + cfgADC0EmonO;
+    AdcIrms = AdcEmon.calcIrms(cfgADCEmonS); // ADC_EMON_SAMPLES
+    AdcIrmsInt = (int)(AdcIrms*1000) + cfgADCEmonO;
 
     AdcTick[0] = millis();
   }
@@ -49,10 +52,7 @@ void _ADCsLoop()
   {
     AdcDig[1] = analogRead(AdcPin[1]);
 
-    if (cfgADC1s == 0)
-      AdcVal[1] = (float)AdcDig[1]*((float)cfgADC1m)/(float)10000 - (float)cfgADC1b/1000;
-    else
-      AdcVal[1] = (float)AdcDig[1]*((float)cfgADC1m)/(float)10000 + (float)cfgADC1b/1000;
+    AdcVdc = (float)AdcDig[1]*((float)cfgADCm)/(float)10000 + (float)cfgADCb/1000;
 
     AdcTick[1] = millis();
   }

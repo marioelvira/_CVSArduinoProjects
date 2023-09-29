@@ -29,8 +29,9 @@ int   boardLed;
 //////////
 int   AdcDig[ADC_NUMBER];
 int   AdcPin[ADC_NUMBER];
-int   AdcVal[ADC_NUMBER];
 unsigned long AdcTick[ADC_NUMBER];
+
+int           AdcVdc = 0;
 
 EnergyMonitor AdcEmon;
 double        AdcIrms = 0;
@@ -77,24 +78,33 @@ int   inPulsCounter = 0;
 int   inPulsType = 0;
 int   inPulsState;
 
+int             crtIrmsState;
+unsigned long   crtIrmstick;
+
+int             crtVdcState;
+unsigned long   crtVdctick;
+
+int             crtDisplayState;
+
 ////////////
 // Config //
 ////////////
 int cfgMbId = 0;
 int cfgLogicIns;
 int cfgLogicOuts;
+int cfgNTimeSecs;
 
-int cfgADC0EmonR;
-int cfgADC0EmonS;
-int cfgADC0EmonO;
-int cfgADC0Emonts;
-int cfgADC0Emont;
+int cfgADCEmonR;
+int cfgADCEmonS;
+int cfgADCEmonO;
+int cfgADCEmonL;
+int cfgADCEmonSec;
 
-int cfgADC1m;
-int cfgADC1b;
-int cfgADC1s;
-int cfgADC1ts;
-int cfgADC1t;
+int cfgADCm;
+int cfgADCb;
+int cfgADCVdcL1;
+int cfgADCVdcL2;
+int cfgADCVdcSec;
 
 ///////////
 // RS485 //

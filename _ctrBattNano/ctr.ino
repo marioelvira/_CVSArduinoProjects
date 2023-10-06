@@ -244,7 +244,7 @@ void _ctrVdc(void)
 
     case CTR_INV_OFF:
       // Hysteresis 
-      if (millis() - crtVdctick < (cfgADCVdcSec*1000))
+      if (millis() - crtVdctick < ((unsigned long)cfgADCVdcSec*1000))
         break;
 
       // Check 

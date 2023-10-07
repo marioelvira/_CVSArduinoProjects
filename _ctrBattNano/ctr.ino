@@ -219,7 +219,7 @@ void _ctrIrms(void)
 
     case CTR_INV_OFF:
       // Hysteresis 
-      if (millis() - crtIrmstick < (cfgADCEmonSec*1000))
+      if (millis() - crtIrmstick < (((unsigned long)cfgADCEmonSec)*1000))
         break;
 
       // Check 
@@ -244,7 +244,7 @@ void _ctrVdc(void)
 
     case CTR_INV_OFF:
       // Hysteresis 
-      if (millis() - crtVdctick < ((unsigned long)cfgADCVdcSec*1000))
+      if (millis() - crtVdctick < (((unsigned long)cfgADCVdcSec)*1000))
         break;
 
       // Check 

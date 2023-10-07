@@ -46,7 +46,7 @@ extern "C" {
 //#define EEPROM_ADD_MAX             0xFA // 250
 
 // Values
-#define EEPROM_VAL_OK                 0xAF
+#define EEPROM_VAL_OK                 0xAB
   
 #define EEPROM_VAL_MODBUS_ID          0x01
 #define EEPROM_VAL_LOGIC_INS          1

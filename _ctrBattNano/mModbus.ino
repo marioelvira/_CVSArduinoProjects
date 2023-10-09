@@ -178,7 +178,7 @@ void _mbWriteMultipleHolding(char modbusID)
     cfgADCEmonS   = (int)((mrs485RxBuffer[19] & 0x00FF)<<8)|(mrs485RxBuffer[20] & 0x00FF);
     cfgADCEmonO   = (int)((mrs485RxBuffer[21] & 0x00FF)<<8)|(mrs485RxBuffer[22] & 0x00FF);
     cfgADCEmonL   = (int)((mrs485RxBuffer[23] & 0x00FF)<<8)|(mrs485RxBuffer[24] & 0x00FF);
-    cfgADCEmonSec = (int) (mrs485RxBuffer[26] & 0x00FF);
+    cfgADCEmonSec = (int)((mrs485RxBuffer[25] & 0x00FF)<<8)|(mrs485RxBuffer[26] & 0x00FF);
     
     cfgADCm       = (int)((mrs485RxBuffer[27] & 0x00FF)<<8)|(mrs485RxBuffer[28] & 0x00FF);
     cfgADCb       = (int)((mrs485RxBuffer[29] & 0x00FF)<<8)|(mrs485RxBuffer[30] & 0x00FF);
@@ -271,8 +271,8 @@ void _mbReadHolding(char modbusID)
 
     mrs485TxBuffer[19]  = (cfgADCEmonL & 0xFF00)>>8;
     mrs485TxBuffer[20]  = cfgADCEmonL & 0x00FF;
-    mrs485TxBuffer[21]  = 0x00;
-    mrs485TxBuffer[22]  = cfgADCEmonSec;
+    mrs485TxBuffer[21]  = (cfgADCEmonSec & 0xFF00)>>8;
+    mrs485TxBuffer[22]  = cfgADCEmonSec & 0x00FF;
   
     // ADC1
     mrs485TxBuffer[23]  = (cfgADCm & 0xFF00)>>8;

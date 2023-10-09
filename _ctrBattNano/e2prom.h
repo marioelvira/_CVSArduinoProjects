@@ -46,7 +46,7 @@ extern "C" {
 //#define EEPROM_ADD_MAX             0xFA // 250
 
 // Values
-#define EEPROM_VAL_OK                 0xAB
+#define EEPROM_VAL_OK                 0xAE
   
 #define EEPROM_VAL_MODBUS_ID          0x01
 #define EEPROM_VAL_LOGIC_INS          1
@@ -57,7 +57,7 @@ extern "C" {
 #define EEPROM_VAL_ADC_EMON_S         1480   // Samples
 #define EEPROM_VAL_ADC_EMON_O         -200   // Offset mA
 #define EEPROM_VAL_ADC_EMON_L         2170   // 2170 mA -> 500W
-#define EEPROM_VAL_ADC_EMON_SEC       60     // 60 sec
+#define EEPROM_VAL_ADC_EMON_SEC       600    // 10 min
 
 #define EEPROM_VAL_ADC_VDC_M          2900   // 29V
 #define EEPROM_VAL_ADC_VDC_B          0

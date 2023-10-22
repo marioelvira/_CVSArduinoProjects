@@ -473,10 +473,30 @@ void _MQTTSend(int itopic)
   ///////////
   else if (itopic == 3)
   {
+
+    int balarm = 0;
+
     str = str + "\"time\":\"";
     str = str + mntpTimeString;
     str = str + "\",\n";
- 
+
+    for (i = 0; i < AL_ARRAY_SIZE; i++)
+    {
+      if (alarm[i] == 1)
+      {
+        str = str + "\"bit";
+        str = str + String(i + 1);
+        str = str + "\":\"";
+        str = str + alarmStr[i];
+        str = str + "\",\n";
+
+        balarm = 1;
+      }
+    }
+
+    if (balarm == 0)
+      str = str + "\"status\":\"Todo OK\",\n";
+
     str = str + "\"a1\":\"";
     str = str + String(alarm[0]) + String(alarm[1]) + String(alarm[2]) + String(alarm[3]);
     str = str + String(alarm[4]) + String(alarm[5]) + String(alarm[6]) + String(alarm[7]);
@@ -492,17 +512,6 @@ void _MQTTSend(int itopic)
     str = str + String(alarm[20]) + String(alarm[21]) + String(alarm[22]) + String(alarm[23]);
 	  str = str + "\",\n";
 
-    for (i = 0; i < AL_ARRAY_SIZE; i++)
-    {
-      if (alarm[i] == 1)
-      {
-        str = str + "\"bit";
-        str = str + String(i + 1);
-        str = str + "\":\"";
-        str = str + alarmStr[i];
-        str = str + "\",\n";
-      }
-    }
   }
 
   str_len = str.length();

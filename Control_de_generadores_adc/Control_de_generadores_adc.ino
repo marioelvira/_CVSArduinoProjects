@@ -2,6 +2,7 @@
   Control de Generadores para Campo de Vuelo Sesma.
   Creado  06/12/2015
   Modif   21/01/2018
+  Modif   09/12/2023
 
   Tabla de Verdad
   ---------------
@@ -64,12 +65,12 @@
 #define STATE3_TIEMPO_0_1   150     // 150x10ms
 #define STATE3_TIEMPO_1_2   150     // 150x10ms
 
-#define A0_TIEMPO             200     // 200x10ms = 2 segundos
-#define A1_TIEMPO             200     // 200x10ms = 2 segundos
-#define STATE2_FORCED_TIEMPO  1000    //18000   // 18000x10ms = 3minutos
+#define A0_TIEMPO             1 // 200     // 4x500ms = 2 segundos
+#define A1_TIEMPO             1 // 200     // 4x500ms = 2 segundos
+#define STATE2_FORCED_TIEMPO  1000   // 18000x10ms = 3minutos
 
 #define A0_LEVEL              600     // 1024 -> 5V así 600 -> 5V*600/1024 = 2,9V
-#define A1_LEVEL              600     // 1024 -> 5V así 600 -> 5V*600/1024 = 2,9V
+#define A1_LEVEL              500     // 1024 -> 5V así 500 -> 5V*500/1024 = 2,44V
 
 // Estados Generales
 #define STATE1        1
@@ -109,18 +110,20 @@ int   LedDuration = 0;
 int   LedPulsos = 0;
 
 // Variables para leer la entradas analogicas
-#define ANA_ARRAY_SIZE  20 //10
-int     AnaInPointer = 0;
+//#define ANA_ARRAY_SIZE  10 //10
+//int     AnaInPointer = 0;
 
 int   AnaIn0Value = 0;
-int   AnaIn0Array[ANA_ARRAY_SIZE];
+//int   AnaIn0Array[ANA_ARRAY_SIZE];
 int   AnaIn1Value = 0;
-int   AnaIn1Array[ANA_ARRAY_SIZE];
+//int   AnaIn1Array[ANA_ARRAY_SIZE];
 
 int   A0_Counter = 0;
 int   A1_Counter = 0;
+int   F_Counter = 0;
+int   AINs_Counter = 0;
 
-boolean ForcedState2 = false;
+int ForcedState2 = 0;
 
 // Dedug...
 #define SERIAL_DEBUG  1
@@ -195,6 +198,7 @@ void _InitAnalogInputs() {
   AnaIn0Value = 0;
   AnaIn1Value = 0;
 
+  /*
   for (int i = 0; i < ANA_ARRAY_SIZE; i++)
   {
     AnaIn0Array[i] = 0;
@@ -202,6 +206,7 @@ void _InitAnalogInputs() {
   }
 
   AnaInPointer = 0;
+  */
 }
 
 /////////////////////////////////////////////
@@ -214,7 +219,8 @@ void loop() {
   _ReadInputs();
 
   // Leemos las entradas del ADC.
-  _ReadAnalogInputs();
+  if (AINs_Counter == 50)
+    _ReadAnalogInputs();
 
   // Chequeo del estado general.
   _GeneralState();
@@ -277,6 +283,7 @@ void _ReadInputs() {
 //////////////////////////////////////
 void _ReadAnalogInputs() {
 
+  /*
   int aIn0Acc = 0;
   int aIn1Acc = 0;
 
@@ -293,17 +300,23 @@ void _ReadAnalogInputs() {
   {
     aIn0Acc = aIn0Acc + AnaIn0Array[i];
     aIn1Acc = aIn1Acc + AnaIn1Array[i];
+    //delay(50);
   }
   
   AnaIn0Value = aIn0Acc/ANA_ARRAY_SIZE;
   AnaIn1Value = aIn1Acc/ANA_ARRAY_SIZE;
+  */
+
+  AnaIn0Value = analogRead(ANA_IN0);
+  AnaIn1Value = analogRead(ANA_IN1);
   
   #if (SERIAL_DEBUG == 1)
-  if (DebugCounter == SERIAL_DEBUG_TIMER)
+  //if (DebugCounter == SERIAL_DEBUG_TIMER)
   {
     Serial.println(" ");
-    Serial.print("AIN0: "); Serial.println(AnaIn0Value);
-    Serial.print("AIN1: "); Serial.println(AnaIn1Value);
+    Serial.print("AIN0 - Luces:     "); Serial.print(AnaIn0Value); Serial.print("    Cont: "); Serial.println(A0_Counter);
+    Serial.print("AIN1 - Enchufes:  "); Serial.print(AnaIn1Value); Serial.print("    Cont: "); Serial.println(A1_Counter);
+    Serial.println(" ");
   }
   #endif
   
@@ -315,30 +328,37 @@ void _ReadAnalogInputs() {
 void _GeneralState () {
 
   // Si NO estamos en estado forzado...
-  if (ForcedState2 == false)
+  if (ForcedState2 == 0)
   {    
     // Chequemos las entradas...
     if ((In1Status == LOW) && (In2Status == LOW))
     {
       GeneralState = STATE1;
   
-      // Lectura del A0, si estmos a menos del nivel resetemos...
-      if (AnaIn0Value < A0_LEVEL)
-        A0_Counter = 0;
-
-      // Lectura del A1, si estmos a menos del nivel resetemos...
-      if (AnaIn1Value < A1_LEVEL)
-        A1_Counter = 0;
-
-      // Comprobamos el tiempo...
-      if ((A0_Counter > A0_TIEMPO) || (A1_Counter > A1_TIEMPO))
+      if (AINs_Counter == 50)
       {
-        GeneralState = STATE2;
-        ForcedState2 = true;
-        A0_Counter = 0;
-        A1_Counter = 0;
+        A0_Counter++;
+        A1_Counter++;
+
+        // Lectura del A0, si estmos a menos del nivel resetemos...
+        if (AnaIn0Value < A0_LEVEL)
+          A0_Counter = 0;
+
+        // Lectura del A1, si estmos a menos del nivel resetemos...
+        if (AnaIn1Value < A1_LEVEL)
+          A1_Counter = 0;
+
+        // Comprobamos el tiempo...
+        if ((A0_Counter > A0_TIEMPO) || (A1_Counter > A1_TIEMPO))
+        {
+          GeneralState = STATE2;
+          ForcedState2 = 1;
+          A0_Counter = 0;
+          A1_Counter = 0;
+          F_Counter = 0;
+        }
       }
-  
+
     }
     else if ((In1Status == HIGH))
     {
@@ -354,9 +374,9 @@ void _GeneralState () {
     
     GeneralState = STATE2;
 
-    if (A0_Counter > STATE2_FORCED_TIEMPO)
+    if (F_Counter > STATE2_FORCED_TIEMPO)
     {
-      ForcedState2 = false;
+      ForcedState2 = 0;
       A0_Counter = 0;
       A1_Counter = 0;
     }
@@ -379,8 +399,11 @@ void _GeneralState () {
   GeneralState_ant = GeneralState;
   StateCounter++; // Incrementamos el contador...
 
-  A0_Counter++;
-  A1_Counter++;
+  AINs_Counter++;
+  if (AINs_Counter > 51)
+    AINs_Counter = 0;
+
+  F_Counter++;
 
   if (GeneralState == STATE1)
     _State1();
@@ -392,23 +415,18 @@ void _GeneralState () {
   #if (SERIAL_DEBUG == 1)
   if (DebugCounter == SERIAL_DEBUG_TIMER)
   {
-    Serial.println("Out1  Out2  Out3  Out4  Out5");
-    Serial.println("-----------------------------");
+    Serial.println("In1  In 2 | Out1  Out2  Out3  Out4  Out5");
+    Serial.println("----------|-----------------------------");
     Serial.print("  ");
+    Serial.print(In1Status); Serial.print("     ");
+    Serial.print(In2Status); Serial.print("     ");
     Serial.print(Out1); Serial.print("     ");
     Serial.print(Out2); Serial.print("     ");
     Serial.print(Out3); Serial.print("     ");
     Serial.print(Out4); Serial.print("     ");
     Serial.print(Out5); Serial.print("   - Estado ");
-    Serial.print(GeneralState);
-    Serial.print (" / "); Serial.print(StateCounter);
-    
-    if (ForcedState2 == true)
-    {
-        Serial.print  (" Forzado ");
-        Serial.println(A0_Counter);
-    }
-
+    Serial.print(GeneralState);  Serial.print (" / "); Serial.println(StateCounter);
+    Serial.print (" F "); Serial.print(ForcedState2); Serial.print (" / "); Serial.print(F_Counter);
     Serial.println(" ");
   }
   #endif

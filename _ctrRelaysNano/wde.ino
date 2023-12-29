@@ -2,13 +2,16 @@
 
 #if (_USE_WDE_ == 1)
 
-///////////////////////
-// WDE state machine //
-///////////////////////
+#include <avr/wdt.h>
+
+///////////////
+// WDE setup //
+///////////////
 void _WDESetup()
 {
   wdeForceReset = 0;
-  ESP.wdtEnable(WTE_TIMEOUT);
+  wdt_disable();
+  wdt_enable(WDTO_4S);
 }
 
 ///////////////////////
@@ -16,7 +19,7 @@ void _WDESetup()
 ///////////////////////
 void _WDELoop()
 {
-  ESP.wdtFeed();
+  wdt_reset();
   if (wdeForceReset == 1)
     while(1);
 }

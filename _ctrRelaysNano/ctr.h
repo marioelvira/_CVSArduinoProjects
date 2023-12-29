@@ -40,6 +40,7 @@ extern "C" {
 #define IRMS_STATE0       0
 #define IRMS_STATE1       1
 #define IRMS_STATE2       2
+#define IRMS_STATE3       3
 
 // Tiempos
 #define STATE0_0_1_TICKS    1500      // 1.5s

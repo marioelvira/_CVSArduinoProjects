@@ -132,69 +132,69 @@ void _ram2eepromCONFIG (void)
   EEPROM.write(EEPROM_ADD_LOGIC_OUTS, (byte)cfgLogicOuts);
 
   // ADC 0
-  eeprom_value_lo = cfgC0ADCEmonR & 0x00FF;
+  eeprom_value_lo = cfgEmonR[0] & 0x00FF;
   EEPROM.write(EEPROM_ADD_C0ADC_EMON_R_LO, eeprom_value_lo);
-  eeprom_value_hi = (cfgC0ADCEmonR & 0xFF00)>>8;
+  eeprom_value_hi = (cfgEmonR[0] & 0xFF00)>>8;
   EEPROM.write(EEPROM_ADD_C0ADC_EMON_R_HI, eeprom_value_hi);
-  eeprom_value_lo = cfgC0ADCEmonS & 0x00FF;
+  eeprom_value_lo = cfgEmonS[0] & 0x00FF;
   EEPROM.write(EEPROM_ADD_C0ADC_EMON_S_LO, eeprom_value_lo);
-  eeprom_value_hi = (cfgC0ADCEmonS & 0xFF00)>>8;
+  eeprom_value_hi = (cfgEmonS[0] & 0xFF00)>>8;
   EEPROM.write(EEPROM_ADD_C0ADC_EMON_S_HI, eeprom_value_hi);
-  eeprom_value_lo = cfgC0ADCEmonO & 0x00FF;
+  eeprom_value_lo = cfgEmonO[0] & 0x00FF;
   EEPROM.write(EEPROM_ADD_C0ADC_EMON_O_LO, eeprom_value_lo);
-  eeprom_value_hi = (cfgC0ADCEmonO & 0xFF00)>>8;
+  eeprom_value_hi = (cfgEmonO[0] & 0xFF00)>>8;
   EEPROM.write(EEPROM_ADD_C0ADC_EMON_O_HI, eeprom_value_hi);
 
-  eeprom_value_lo = cfgC0ADCEmonL & 0x00FF;
+  eeprom_value_lo = cfgEmonL[0] & 0x00FF;
   EEPROM.write(EEPROM_ADD_C0ADC_EMON_L_LO, eeprom_value_lo);
-  eeprom_value_hi = (cfgC0ADCEmonL & 0xFF00)>>8;
+  eeprom_value_hi = (cfgEmonL[0] & 0xFF00)>>8;
   EEPROM.write(EEPROM_ADD_C0ADC_EMON_L_HI, eeprom_value_hi);
-  eeprom_value_lo = cfgC0ADCEmonSec & 0x00FF;
+  eeprom_value_lo = cfgEmonSec[0] & 0x00FF;
   EEPROM.write(EEPROM_ADD_C0ADC_EMON_SEC_LO, eeprom_value_lo);
-  eeprom_value_hi = (cfgC0ADCEmonSec & 0xFF00)>>8;
+  eeprom_value_hi = (cfgEmonSec[0] & 0xFF00)>>8;
   EEPROM.write(EEPROM_ADD_C0ADC_EMON_SEC_HI, eeprom_value_hi);
 
   // ADC 1
-  eeprom_value_lo = cfgC1ADCEmonR & 0x00FF;
+  eeprom_value_lo = cfgEmonR[1] & 0x00FF;
   EEPROM.write(EEPROM_ADD_C1ADC_EMON_R_LO, eeprom_value_lo);
-  eeprom_value_hi = (cfgC1ADCEmonR & 0xFF00)>>8;
+  eeprom_value_hi = (cfgEmonR[1] & 0xFF00)>>8;
   EEPROM.write(EEPROM_ADD_C1ADC_EMON_R_HI, eeprom_value_hi);
-  eeprom_value_lo = cfgC1ADCEmonS & 0x00FF;
+  eeprom_value_lo = cfgEmonS[1] & 0x00FF;
   EEPROM.write(EEPROM_ADD_C1ADC_EMON_S_LO, eeprom_value_lo);
-  eeprom_value_hi = (cfgC1ADCEmonS & 0xFF00)>>8;
+  eeprom_value_hi = (cfgEmonS[1] & 0xFF00)>>8;
   EEPROM.write(EEPROM_ADD_C1ADC_EMON_S_HI, eeprom_value_hi);
-  eeprom_value_lo = cfgC1ADCEmonO & 0x00FF;
+  eeprom_value_lo = cfgEmonO[1] & 0x00FF;
   EEPROM.write(EEPROM_ADD_C1ADC_EMON_O_LO, eeprom_value_lo);
-  eeprom_value_hi = (cfgC1ADCEmonO & 0xFF00)>>8;
+  eeprom_value_hi = (cfgEmonO[1] & 0xFF00)>>8;
   EEPROM.write(EEPROM_ADD_C1ADC_EMON_O_HI, eeprom_value_hi);
 
-  eeprom_value_lo = cfgC1ADCEmonL & 0x00FF;
+  eeprom_value_lo = cfgEmonL[1] & 0x00FF;
   EEPROM.write(EEPROM_ADD_C1ADC_EMON_L_LO, eeprom_value_lo);
-  eeprom_value_hi = (cfgC1ADCEmonL & 0xFF00)>>8;
+  eeprom_value_hi = (cfgEmonL[1] & 0xFF00)>>8;
   EEPROM.write(EEPROM_ADD_C1ADC_EMON_L_HI, eeprom_value_hi);
-  eeprom_value_lo = cfgC1ADCEmonSec & 0x00FF;
+  eeprom_value_lo = cfgEmonSec[1] & 0x00FF;
   EEPROM.write(EEPROM_ADD_C1ADC_EMON_SEC_LO, eeprom_value_lo);
-  eeprom_value_hi = (cfgC1ADCEmonSec & 0xFF00)>>8;
+  eeprom_value_hi = (cfgEmonSec[1] & 0xFF00)>>8;
   EEPROM.write(EEPROM_ADD_C1ADC_EMON_SEC_HI, eeprom_value_hi);
 
   // ADC 2
-  eeprom_value_lo = cfgV0ADCm & 0x00FF;
+  eeprom_value_lo = cfgVADCm[0] & 0x00FF;
   EEPROM.write(EEPROM_ADD_V0ADC_VDC_M_LO, eeprom_value_lo);
-  eeprom_value_hi = (cfgV0ADCm & 0xFF00)>>8;
+  eeprom_value_hi = (cfgVADCm[0] & 0xFF00)>>8;
   EEPROM.write(EEPROM_ADD_V0ADC_VDC_M_HI, eeprom_value_hi);
-  eeprom_value_lo = cfgV0ADCb & 0x00FF;
+  eeprom_value_lo = cfgVADCb[0] & 0x00FF;
   EEPROM.write(EEPROM_ADD_V0ADC_VDC_B_LO, eeprom_value_lo);
-  eeprom_value_hi = (cfgV0ADCb & 0xFF00)>>8;
+  eeprom_value_hi = (cfgVADCb[0] & 0xFF00)>>8;
   EEPROM.write(EEPROM_ADD_V0ADC_VDC_B_HI, eeprom_value_hi);
 
   // ADC 3
-  eeprom_value_lo = cfgV1ADCm & 0x00FF;
+  eeprom_value_lo = cfgVADCm[1] & 0x00FF;
   EEPROM.write(EEPROM_ADD_V1ADC_VDC_M_LO, eeprom_value_lo);
-  eeprom_value_hi = (cfgV1ADCm & 0xFF00)>>8;
+  eeprom_value_hi = (cfgVADCm[1] & 0xFF00)>>8;
   EEPROM.write(EEPROM_ADD_V1ADC_VDC_M_HI, eeprom_value_hi);
-  eeprom_value_lo = cfgV1ADCb & 0x00FF;
+  eeprom_value_lo = cfgVADCb[1] & 0x00FF;
   EEPROM.write(EEPROM_ADD_V1ADC_VDC_B_LO, eeprom_value_lo);
-  eeprom_value_hi = (cfgV1ADCb & 0xFF00)>>8;
+  eeprom_value_hi = (cfgVADCb[1] & 0xFF00)>>8;
   EEPROM.write(EEPROM_ADD_V1ADC_VDC_B_HI, eeprom_value_hi);
 }
 
@@ -210,77 +210,77 @@ void _eeprom2ramCONFIG (void)
   // ADC 0
   eeprom_value_hi   = (int)EEPROM.read(EEPROM_ADD_C0ADC_EMON_R_HI);
   eeprom_value_lo   = (int)EEPROM.read(EEPROM_ADD_C0ADC_EMON_R_LO);
-  cfgC0ADCEmonR       = (int)((eeprom_value_hi & 0x00FF)<<8)|(eeprom_value_lo & 0x00FF);
+  cfgEmonR[0]       = (int)((eeprom_value_hi & 0x00FF)<<8)|(eeprom_value_lo & 0x00FF);
   eeprom_value_hi   = (int)EEPROM.read(EEPROM_ADD_C0ADC_EMON_S_HI);
   eeprom_value_lo   = (int)EEPROM.read(EEPROM_ADD_C0ADC_EMON_S_LO);
-  cfgC0ADCEmonS       = (int)((eeprom_value_hi & 0x00FF)<<8)|(eeprom_value_lo & 0x00FF);
+  cfgEmonS[0]       = (int)((eeprom_value_hi & 0x00FF)<<8)|(eeprom_value_lo & 0x00FF);
   eeprom_value_hi   = (int)EEPROM.read(EEPROM_ADD_C0ADC_EMON_O_HI);
   eeprom_value_lo   = (int)EEPROM.read(EEPROM_ADD_C0ADC_EMON_O_LO);
-  cfgC0ADCEmonO       = (int)((eeprom_value_hi & 0x00FF)<<8)|(eeprom_value_lo & 0x00FF);
+  cfgEmonO[0]       = (int)((eeprom_value_hi & 0x00FF)<<8)|(eeprom_value_lo & 0x00FF);
 
   eeprom_value_hi   = (int)EEPROM.read(EEPROM_ADD_C0ADC_EMON_L_HI);
   eeprom_value_lo   = (int)EEPROM.read(EEPROM_ADD_C0ADC_EMON_L_LO);
-  cfgC0ADCEmonL       = (int)((eeprom_value_hi & 0x00FF)<<8)|(eeprom_value_lo & 0x00FF);
+  cfgEmonL[0]       = (int)((eeprom_value_hi & 0x00FF)<<8)|(eeprom_value_lo & 0x00FF);
   eeprom_value_hi   = (int)EEPROM.read(EEPROM_ADD_C0ADC_EMON_SEC_HI);
   eeprom_value_lo   = (int)EEPROM.read(EEPROM_ADD_C0ADC_EMON_SEC_LO);
-  cfgC0ADCEmonSec     = (int)((eeprom_value_hi & 0x00FF)<<8)|(eeprom_value_lo & 0x00FF);
+  cfgEmonSec[0]     = (int)((eeprom_value_hi & 0x00FF)<<8)|(eeprom_value_lo & 0x00FF);
 
   // ADC 1
   eeprom_value_hi   = (int)EEPROM.read(EEPROM_ADD_C1ADC_EMON_R_HI);
   eeprom_value_lo   = (int)EEPROM.read(EEPROM_ADD_C1ADC_EMON_R_LO);
-  cfgC1ADCEmonR       = (int)((eeprom_value_hi & 0x00FF)<<8)|(eeprom_value_lo & 0x00FF);
+  cfgEmonR[1]       = (int)((eeprom_value_hi & 0x00FF)<<8)|(eeprom_value_lo & 0x00FF);
   eeprom_value_hi   = (int)EEPROM.read(EEPROM_ADD_C1ADC_EMON_S_HI);
   eeprom_value_lo   = (int)EEPROM.read(EEPROM_ADD_C1ADC_EMON_S_LO);
-  cfgC1ADCEmonS       = (int)((eeprom_value_hi & 0x00FF)<<8)|(eeprom_value_lo & 0x00FF);
+  cfgEmonS[1]       = (int)((eeprom_value_hi & 0x00FF)<<8)|(eeprom_value_lo & 0x00FF);
   eeprom_value_hi   = (int)EEPROM.read(EEPROM_ADD_C1ADC_EMON_O_HI);
   eeprom_value_lo   = (int)EEPROM.read(EEPROM_ADD_C1ADC_EMON_O_LO);
-  cfgC1ADCEmonO       = (int)((eeprom_value_hi & 0x00FF)<<8)|(eeprom_value_lo & 0x00FF);
+  cfgEmonO[1]       = (int)((eeprom_value_hi & 0x00FF)<<8)|(eeprom_value_lo & 0x00FF);
 
   eeprom_value_hi   = (int)EEPROM.read(EEPROM_ADD_C1ADC_EMON_L_HI);
   eeprom_value_lo   = (int)EEPROM.read(EEPROM_ADD_C1ADC_EMON_L_LO);
-  cfgC1ADCEmonL       = (int)((eeprom_value_hi & 0x00FF)<<8)|(eeprom_value_lo & 0x00FF);
+  cfgEmonL[1]       = (int)((eeprom_value_hi & 0x00FF)<<8)|(eeprom_value_lo & 0x00FF);
   eeprom_value_hi   = (int)EEPROM.read(EEPROM_ADD_C1ADC_EMON_SEC_HI);
   eeprom_value_lo   = (int)EEPROM.read(EEPROM_ADD_C1ADC_EMON_SEC_LO);
-  cfgC1ADCEmonSec     = (int)((eeprom_value_hi & 0x00FF)<<8)|(eeprom_value_lo & 0x00FF);
+  cfgEmonSec[1]     = (int)((eeprom_value_hi & 0x00FF)<<8)|(eeprom_value_lo & 0x00FF);
 
   // ADC 2
   eeprom_value_hi   = (int)EEPROM.read(EEPROM_ADD_V0ADC_VDC_M_HI);
   eeprom_value_lo   = (int)EEPROM.read(EEPROM_ADD_V0ADC_VDC_M_LO);
-  cfgV0ADCm         = (int)((eeprom_value_hi & 0x00FF)<<8)|(eeprom_value_lo & 0x00FF);
+  cfgVADCm[0]       = (int)((eeprom_value_hi & 0x00FF)<<8)|(eeprom_value_lo & 0x00FF);
   eeprom_value_hi   = (int)EEPROM.read(EEPROM_ADD_V0ADC_VDC_B_HI);
   eeprom_value_lo   = (int)EEPROM.read(EEPROM_ADD_V0ADC_VDC_B_LO);
-  cfgV0ADCb         = (int)((eeprom_value_hi & 0x00FF)<<8)|(eeprom_value_lo & 0x00FF);
+  cfgVADCb[0]       = (int)((eeprom_value_hi & 0x00FF)<<8)|(eeprom_value_lo & 0x00FF);
 
   // ADC 3
   eeprom_value_hi   = (int)EEPROM.read(EEPROM_ADD_V1ADC_VDC_M_HI);
   eeprom_value_lo   = (int)EEPROM.read(EEPROM_ADD_V1ADC_VDC_M_LO);
-  cfgV1ADCm         = (int)((eeprom_value_hi & 0x00FF)<<8)|(eeprom_value_lo & 0x00FF);
+  cfgVADCm[1]       = (int)((eeprom_value_hi & 0x00FF)<<8)|(eeprom_value_lo & 0x00FF);
   eeprom_value_hi   = (int)EEPROM.read(EEPROM_ADD_V1ADC_VDC_B_HI);
   eeprom_value_lo   = (int)EEPROM.read(EEPROM_ADD_V1ADC_VDC_B_LO);
-  cfgV1ADCb         = (int)((eeprom_value_hi & 0x00FF)<<8)|(eeprom_value_lo & 0x00FF);
+  cfgVADCb[1]       = (int)((eeprom_value_hi & 0x00FF)<<8)|(eeprom_value_lo & 0x00FF);
 
   #if (_EEPROM_SERIAL_DEBUG_ == 1)
   Serial.print("Modbus ID: ");  Serial.println (cfgMbId);
   Serial.print("Logic Ins: ");  Serial.println (cfgLogicIns);
   Serial.print("Logic Outs: "); Serial.println (cfgLogicOuts);
 
-  Serial.print("C0 Irms Ratio");   Serial.print(": "); Serial.print (cfgC0ADCEmonR);  Serial.println(" ");
-  Serial.print("C0 Irms Samples"); Serial.print(": "); Serial.print (cfgC0ADCEmonS);  Serial.println(" ");
-  Serial.print("C0 Irms Samples"); Serial.print(": "); Serial.print (cfgC0ADCEmonO);  Serial.println(" mA");
-  Serial.print("C0 Irms Limit");   Serial.print(": "); Serial.print (cfgC0ADCEmonL);  Serial.println(" ");
-  Serial.print("C0 Irms Hys Sec"); Serial.print(": "); Serial.print (cfgC0ADCEmonLS); Serial.println(" sec");
+  Serial.print("C0 Irms Ratio");   Serial.print(": "); Serial.print (cfgEmonR[0]);  Serial.println(" ");
+  Serial.print("C0 Irms Samples"); Serial.print(": "); Serial.print (cfgEmonS[0]);  Serial.println(" ");
+  Serial.print("C0 Irms Samples"); Serial.print(": "); Serial.print (cfgEmonO[0]);  Serial.println(" mA");
+  Serial.print("C0 Irms Limit");   Serial.print(": "); Serial.print (cfgEmonL[0]);  Serial.println(" ");
+  Serial.print("C0 Irms Hys Sec"); Serial.print(": "); Serial.print (cfgEmonLSec[0]); Serial.println(" sec");
 
-  Serial.print("C1 Irms Ratio");   Serial.print(": "); Serial.print (cfgC1ADCEmonR);  Serial.println(" ");
-  Serial.print("C1 Irms Samples"); Serial.print(": "); Serial.print (cfgC1ADCEmonS);  Serial.println(" ");
-  Serial.print("C1 Irms Samples"); Serial.print(": "); Serial.print (cfgC1ADCEmonO);  Serial.println(" mA");
-  Serial.print("C1 Irms Limit");   Serial.print(": "); Serial.print (cfgC1ADCEmonL);  Serial.println(" ");
-  Serial.print("C1 Irms Hys Sec"); Serial.print(": "); Serial.print (cfgC1ADCEmonLS); Serial.println(" sec");
+  Serial.print("C1 Irms Ratio");   Serial.print(": "); Serial.print (cfgEmonR[1]);  Serial.println(" ");
+  Serial.print("C1 Irms Samples"); Serial.print(": "); Serial.print (cfgEmonS[1]);  Serial.println(" ");
+  Serial.print("C1 Irms Samples"); Serial.print(": "); Serial.print (cfgEmonO[1]);  Serial.println(" mA");
+  Serial.print("C1 Irms Limit");   Serial.print(": "); Serial.print (cfgEmonL[1]);  Serial.println(" ");
+  Serial.print("C1 Irms Hys Sec"); Serial.print(": "); Serial.print (cfgEmonLSec[1]); Serial.println(" sec");
 
-  Serial.print("V0 Vdc recta m");  Serial.print(": "); Serial.print (cfgV0ADCm);  Serial.println(" ");
-  Serial.print("V0 Vdc recta b");  Serial.print(": "); Serial.print (cfgv0ADCb);  Serial.println(" (/1000)");
+  Serial.print("V0 Vdc recta m");  Serial.print(": "); Serial.print (cfgVADCm[0]);  Serial.println(" ");
+  Serial.print("V0 Vdc recta b");  Serial.print(": "); Serial.print (cfgvADCb[0]);  Serial.println(" (/1000)");
   
-  Serial.print("V1 Vdc recta m");  Serial.print(": "); Serial.print (cfgV1ADCm);  Serial.println(" ");
-  Serial.print("V1 Vdc recta b");  Serial.print(": "); Serial.print (cfgv1ADCb);  Serial.println(" (/1000)");
+  Serial.print("V1 Vdc recta m");  Serial.print(": "); Serial.print (cfgVADCm[1]);  Serial.println(" ");
+  Serial.print("V1 Vdc recta b");  Serial.print(": "); Serial.print (cfgvADCb[1]);  Serial.println(" (/1000)");
   #endif
 }
 

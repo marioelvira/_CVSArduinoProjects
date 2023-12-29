@@ -13,11 +13,11 @@ extern "C" {
  *                        ---|   USB  |--- 
  *                        |  |--------|  |
  *                        |              |
- *          ETH -SPI-SCK -| D13      D12 |- SPI-MISO -ETH
- *                       -| 3V3      D11 |- SPI-MOSI - ETH
- *                       -| AREF     D10 |- SPI-SS - ETH
- *             CURRENT 1 -| A0        D9 |- -> IN1
- *             CURRENT 2 -| A1        D8 |- -> IN0
+ *                   LED -| D13      D12 |- SPI-MISO
+ *                       -| 3V3      D11 |- SPI-MOSI
+ *                       -| AREF     D10 |- SPI-SS
+ *             CURRENT 1 -| A0        D9 |- <- IN1
+ *             CURRENT 2 -| A1        D8 |- <- IN0
  *                    V1 -| A2        D7 |- -> OUTF (AUX)
  *                    V2 -| A3        D6 |- -> OUTE 5
  *                 AAUX1 -| A4        D5 |- -> OUTD 4

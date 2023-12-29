@@ -7,12 +7,11 @@
 #include "e2prom.h"
 #include "io.h"
 #include "main.h"
+#include "measures.h"
 #include "mModbus.h"
 #include "mRAM.h"
 #include "mRS485.h"
 #include "wde.h"
-
-#include "EmonLib.h"
 
 /////////////
 // Version //
@@ -33,16 +32,19 @@ int   AdcDig[ADC_NUMBER];
 int   AdcPin[ADC_NUMBER];
 unsigned long AdcTick[ADC_NUMBER];
 
-EnergyMonitor C0AdcEmon;
-double        C0AdcIrms = 0;
-int           C0AdcIrmsInt = 0;
+///////////
+// mEMON //
+///////////
+int     emonState[EMON_NUMBER];
+int     emonSumI[EMON_NUMBER];
+int     emonSamples[EMON_NUMBER];
+double  emonIRMS[EMON_NUMBER];
+int     Irms[EMON_NUMBER];
 
-EnergyMonitor C1AdcEmon;
-double        C1AdcIrms = 0;
-int           C1AdcIrmsInt = 0;
-
-int           V0AdcVdc = 0;
-int           V1AdcVdc = 0;
+/////////
+// Vdc //
+/////////
+int     Vdc[VDC_NUMBER];
 
 /////////////
 // IO Tick //
@@ -73,13 +75,16 @@ int timeHour = 0;
 // Control //
 /////////////
 int   ctrMode;
+
 int   ctrInState;
 int   ctrInState_ant;
 int   ctrOutState;
 
 unsigned long ctrOutTick = 0;
 
-int   crtCIrmsState[IRMS_NUMBER];
+int           crtCIrmsState[IRMS_NUMBER];
+unsigned long ctrCIrmsTick[IRMS_NUMBER];
+int           ctrForceState[IRMS_NUMBER];
 
 ////////////
 // Config //
@@ -88,23 +93,14 @@ int cfgMbId = 0;
 int cfgLogicIns;
 int cfgLogicOuts;
 
-int cfgC0ADCEmonR;
-int cfgC0ADCEmonS;
-int cfgC0ADCEmonO;
-int cfgC0ADCEmonL;
-int cfgC0ADCEmonSec;
+int cfgEmonR[EMON_NUMBER];
+int cfgEmonS[EMON_NUMBER];
+int cfgEmonO[EMON_NUMBER];
+int cfgEmonL[EMON_NUMBER];
+int cfgEmonSec[EMON_NUMBER];
 
-int cfgC1ADCEmonR;
-int cfgC1ADCEmonS;
-int cfgC1ADCEmonO;
-int cfgC1ADCEmonL;
-int cfgC1ADCEmonSec;
-
-int cfgV0ADCm;
-int cfgV0ADCb;
-
-int cfgV1ADCm;
-int cfgV1ADCb;
+int cfgVADCm[VDC_NUMBER];
+int cfgVADCb[VDC_NUMBER];
 
 ///////////
 // RS485 //

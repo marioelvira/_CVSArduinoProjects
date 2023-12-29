@@ -170,22 +170,22 @@ void _mbWriteMultipleHolding(char modbusID)
     else 
       cfgLogicOuts = OUT_ON;
 
-    cfgC0ADCEmonR   = (int)((mrs485RxBuffer[15] & 0x00FF)<<8)|(mrs485RxBuffer[16] & 0x00FF);
-    cfgC0ADCEmonS   = (int)((mrs485RxBuffer[17] & 0x00FF)<<8)|(mrs485RxBuffer[18] & 0x00FF);
-    cfgC0ADCEmonO   = (int)((mrs485RxBuffer[19] & 0x00FF)<<8)|(mrs485RxBuffer[20] & 0x00FF);
-    cfgC0ADCEmonL   = (int)((mrs485RxBuffer[21] & 0x00FF)<<8)|(mrs485RxBuffer[22] & 0x00FF);
-    cfgC0ADCEmonSec = (int)((mrs485RxBuffer[23] & 0x00FF)<<8)|(mrs485RxBuffer[24] & 0x00FF);
+    cfgEmonR[0]   = (int)((mrs485RxBuffer[15] & 0x00FF)<<8)|(mrs485RxBuffer[16] & 0x00FF);
+    cfgEmonS[0]   = (int)((mrs485RxBuffer[17] & 0x00FF)<<8)|(mrs485RxBuffer[18] & 0x00FF);
+    cfgEmonO[0]   = (int)((mrs485RxBuffer[19] & 0x00FF)<<8)|(mrs485RxBuffer[20] & 0x00FF);
+    cfgEmonL[0]   = (int)((mrs485RxBuffer[21] & 0x00FF)<<8)|(mrs485RxBuffer[22] & 0x00FF);
+    cfgEmonSec[0] = (int)((mrs485RxBuffer[23] & 0x00FF)<<8)|(mrs485RxBuffer[24] & 0x00FF);
 
-    cfgC1ADCEmonR   = (int)((mrs485RxBuffer[25] & 0x00FF)<<8)|(mrs485RxBuffer[26] & 0x00FF);
-    cfgC1ADCEmonS   = (int)((mrs485RxBuffer[27] & 0x00FF)<<8)|(mrs485RxBuffer[28] & 0x00FF);
-    cfgC1ADCEmonO   = (int)((mrs485RxBuffer[29] & 0x00FF)<<8)|(mrs485RxBuffer[30] & 0x00FF);
-    cfgC1ADCEmonL   = (int)((mrs485RxBuffer[31] & 0x00FF)<<8)|(mrs485RxBuffer[32] & 0x00FF);
-    cfgC1ADCEmonSec = (int)((mrs485RxBuffer[33] & 0x00FF)<<8)|(mrs485RxBuffer[34] & 0x00FF);
+    cfgEmonR[1]   = (int)((mrs485RxBuffer[25] & 0x00FF)<<8)|(mrs485RxBuffer[26] & 0x00FF);
+    cfgEmonS[1]   = (int)((mrs485RxBuffer[27] & 0x00FF)<<8)|(mrs485RxBuffer[28] & 0x00FF);
+    cfgEmonO[1]   = (int)((mrs485RxBuffer[29] & 0x00FF)<<8)|(mrs485RxBuffer[30] & 0x00FF);
+    cfgEmonL[1]   = (int)((mrs485RxBuffer[31] & 0x00FF)<<8)|(mrs485RxBuffer[32] & 0x00FF);
+    cfgEmonSec[1] = (int)((mrs485RxBuffer[33] & 0x00FF)<<8)|(mrs485RxBuffer[34] & 0x00FF);
 
-    cfgV0ADCm       = (int)((mrs485RxBuffer[35] & 0x00FF)<<8)|(mrs485RxBuffer[36] & 0x00FF);
-    cfgV0ADCb       = (int)((mrs485RxBuffer[37] & 0x00FF)<<8)|(mrs485RxBuffer[38] & 0x00FF);
-    cfgV1ADCm       = (int)((mrs485RxBuffer[39] & 0x00FF)<<8)|(mrs485RxBuffer[40] & 0x00FF);
-    cfgV1ADCb       = (int)((mrs485RxBuffer[41] & 0x00FF)<<8)|(mrs485RxBuffer[42] & 0x00FF);
+    cfgVADCm[0]   = (int)((mrs485RxBuffer[35] & 0x00FF)<<8)|(mrs485RxBuffer[36] & 0x00FF);
+    cfgVADCb[0]   = (int)((mrs485RxBuffer[37] & 0x00FF)<<8)|(mrs485RxBuffer[38] & 0x00FF);
+    cfgVADCm[1]   = (int)((mrs485RxBuffer[39] & 0x00FF)<<8)|(mrs485RxBuffer[40] & 0x00FF);
+    cfgVADCb[1]   = (int)((mrs485RxBuffer[41] & 0x00FF)<<8)|(mrs485RxBuffer[42] & 0x00FF);
 
     _ram2eepromCONFIG();
 
@@ -207,6 +207,16 @@ void _mbWriteMultipleHolding(char modbusID)
       }
     }
   }
+  #if (_USE_WDE_ == 1)
+  else if ((addr == MB_HR_ADD_RESET) && (nregs == MB_HR_NREG_RESET))
+  {
+    value = (int)((mrs485RxBuffer[7] & 0x00FF)<<8)|(mrs485RxBuffer[8] & 0x00FF);
+    if (value == 0)
+      wdeForceReset = 0;
+    else
+      wdeForceReset = 1;
+  }
+  #endif
   else
     exception = 1;
   
@@ -261,42 +271,42 @@ void _mbReadHolding(char modbusID)
     mrs485TxBuffer[10]  = cfgLogicOuts;
 
     // ADC0
-    mrs485TxBuffer[11]  = (cfgC0ADCEmonR & 0xFF00)>>8;
-    mrs485TxBuffer[12]  = cfgC0ADCEmonR & 0x00FF;
-    mrs485TxBuffer[13]  = (cfgC0ADCEmonS & 0xFF00)>>8;
-    mrs485TxBuffer[14]  = cfgC0ADCEmonS & 0x00FF;
-    mrs485TxBuffer[15]  = (cfgC0ADCEmonO & 0xFF00)>>8;
-    mrs485TxBuffer[16]  = cfgC0ADCEmonO & 0x00FF;
+    mrs485TxBuffer[11]  = (cfgEmonR[0] & 0xFF00)>>8;
+    mrs485TxBuffer[12]  = cfgEmonR[0] & 0x00FF;
+    mrs485TxBuffer[13]  = (cfgEmonS[0] & 0xFF00)>>8;
+    mrs485TxBuffer[14]  = cfgEmonS[0] & 0x00FF;
+    mrs485TxBuffer[15]  = (cfgEmonO[0] & 0xFF00)>>8;
+    mrs485TxBuffer[16]  = cfgEmonO[0] & 0x00FF;
 
-    mrs485TxBuffer[17]  = (cfgC0ADCEmonL & 0xFF00)>>8;
-    mrs485TxBuffer[18]  = cfgC0ADCEmonL & 0x00FF;
-    mrs485TxBuffer[19]  = (cfgC0ADCEmonSec & 0xFF00)>>8;
-    mrs485TxBuffer[20]  = cfgC0ADCEmonSec & 0x00FF;
+    mrs485TxBuffer[17]  = (cfgEmonL[0] & 0xFF00)>>8;
+    mrs485TxBuffer[18]  = cfgEmonL[0] & 0x00FF;
+    mrs485TxBuffer[19]  = (cfgEmonSec[0] & 0xFF00)>>8;
+    mrs485TxBuffer[20]  = cfgEmonSec[0] & 0x00FF;
   
     // ADC1
-    mrs485TxBuffer[21]  = (cfgC1ADCEmonR & 0xFF00)>>8;
-    mrs485TxBuffer[22]  = cfgC1ADCEmonR & 0x00FF;
-    mrs485TxBuffer[23]  = (cfgC1ADCEmonS & 0xFF00)>>8;
-    mrs485TxBuffer[24]  = cfgC1ADCEmonS & 0x00FF;
-    mrs485TxBuffer[25]  = (cfgC1ADCEmonO & 0xFF00)>>8;
-    mrs485TxBuffer[26]  = cfgC1ADCEmonO & 0x00FF;
+    mrs485TxBuffer[21]  = (cfgEmonR[1] & 0xFF00)>>8;
+    mrs485TxBuffer[22]  = cfgEmonR[1] & 0x00FF;
+    mrs485TxBuffer[23]  = (cfgEmonS[1] & 0xFF00)>>8;
+    mrs485TxBuffer[24]  = cfgEmonS[1] & 0x00FF;
+    mrs485TxBuffer[25]  = (cfgEmonO[1] & 0xFF00)>>8;
+    mrs485TxBuffer[26]  = cfgEmonO[1] & 0x00FF;
 
-    mrs485TxBuffer[27]  = (cfgC1ADCEmonL & 0xFF00)>>8;
-    mrs485TxBuffer[28]  = cfgC1ADCEmonL & 0x00FF;
-    mrs485TxBuffer[29]  = (cfgC1ADCEmonSec & 0xFF00)>>8;
-    mrs485TxBuffer[30]  = cfgC1ADCEmonSec & 0x00FF;
+    mrs485TxBuffer[27]  = (cfgEmonL[1] & 0xFF00)>>8;
+    mrs485TxBuffer[28]  = cfgEmonL[1] & 0x00FF;
+    mrs485TxBuffer[29]  = (cfgEmonSec[1] & 0xFF00)>>8;
+    mrs485TxBuffer[30]  = cfgEmonSec[1] & 0x00FF;
   
     // ADC3
-    mrs485TxBuffer[31]  = (cfgV0ADCm & 0xFF00)>>8;
-    mrs485TxBuffer[32]  = cfgV0ADCm & 0x00FF;
-    mrs485TxBuffer[33]  = (cfgV0ADCb & 0xFF00)>>8;
-    mrs485TxBuffer[34]  = cfgV0ADCb & 0x00FF;
+    mrs485TxBuffer[31]  = (cfgVADCm[0] & 0xFF00)>>8;
+    mrs485TxBuffer[32]  = cfgVADCm[0] & 0x00FF;
+    mrs485TxBuffer[33]  = (cfgVADCb[0] & 0xFF00)>>8;
+    mrs485TxBuffer[34]  = cfgVADCb[0] & 0x00FF;
 
     // ADC4
-    mrs485TxBuffer[35]  = (cfgV1ADCm & 0xFF00)>>8;
-    mrs485TxBuffer[36]  = cfgV1ADCm & 0x00FF;
-    mrs485TxBuffer[37]  = (cfgV1ADCb & 0xFF00)>>8;
-    mrs485TxBuffer[38]  = cfgV1ADCb & 0x00FF;
+    mrs485TxBuffer[35]  = (cfgVADCm[1] & 0xFF00)>>8;
+    mrs485TxBuffer[36]  = cfgVADCm[1] & 0x00FF;
+    mrs485TxBuffer[37]  = (cfgVADCb[1] & 0xFF00)>>8;
+    mrs485TxBuffer[38]  = cfgVADCb[1] & 0x00FF;
 
   }
   else if ((addr == MB_HR_ADD_OUTS) && (nregs == MB_HR_NREG_OUTS))
@@ -307,6 +317,13 @@ void _mbReadHolding(char modbusID)
       mrs485TxBuffer[i*2 + 4]  = OutDig[i];
     }
   }
+  #if (_USE_WDE_ == 1)
+  else if ((addr == MB_HR_ADD_RESET) && (nregs == MB_HR_NREG_RESET))
+  {
+    mrs485TxBuffer[3]   = 0x00;
+    mrs485TxBuffer[4]   = wdeForceReset;
+  }
+  #endif
   else
     exception = 1;
 
@@ -350,24 +367,30 @@ void _mbReadInput(char modbusID)
   {
     mrs485TxBuffer[3]  = 0x00;
     mrs485TxBuffer[4]  = ctrMode;
-    mrs485TxBuffer[5]  = (char)((C0AdcIrmsInt & 0xFF00)>>8);
-    mrs485TxBuffer[6]  = (char)(C0AdcIrmsInt & 0x00FF);
-    mrs485TxBuffer[7]  = (char)((C1AdcIrmsInt & 0xFF00)>>8);
-    mrs485TxBuffer[8]  = (char)(C1AdcIrmsInt & 0x00FF);
-    mrs485TxBuffer[9]  = (char)((V0AdcVdc & 0xFF00)>>8);
-    mrs485TxBuffer[10] = (char)(V0AdcVdc & 0x00FF);
-    mrs485TxBuffer[11] = (char)((V1AdcVdc & 0xFF00)>>8);
-    mrs485TxBuffer[12] = (char)(V1AdcVdc & 0x00FF);
+    mrs485TxBuffer[5]  = (char)((Irms[0] & 0xFF00)>>8);
+    mrs485TxBuffer[6]  = (char)(Irms[0] & 0x00FF);
+    mrs485TxBuffer[7]  = (char)((Irms[1] & 0xFF00)>>8);
+    mrs485TxBuffer[8]  = (char)(Irms[1] & 0x00FF);
+    mrs485TxBuffer[9]  = (char)((Vdc[0] & 0xFF00)>>8);
+    mrs485TxBuffer[10] = (char)(Vdc[0] & 0x00FF);
+    mrs485TxBuffer[11] = (char)((Vdc[1] & 0xFF00)>>8);
+    mrs485TxBuffer[12] = (char)(Vdc[1] & 0x00FF);
     mrs485TxBuffer[13] = 0x00;
-    mrs485TxBuffer[14] = 0x00;
+    mrs485TxBuffer[14] = InPin[0];
     mrs485TxBuffer[15] = 0x00;
-    mrs485TxBuffer[16] = 0x00;
+    mrs485TxBuffer[16] = InPin[1];
     mrs485TxBuffer[17] = 0x00;
-    mrs485TxBuffer[18] = 0x00;
+    mrs485TxBuffer[18] = OutPin[0];
     mrs485TxBuffer[19] = 0x00;
-    mrs485TxBuffer[20] = 0x00;
+    mrs485TxBuffer[20] = OutPin[1];
     mrs485TxBuffer[21] = 0x00;
-    mrs485TxBuffer[22] = 0x00;
+    mrs485TxBuffer[22] = OutPin[2];
+    mrs485TxBuffer[23] = 0x00;
+    mrs485TxBuffer[24] = OutPin[3];
+    mrs485TxBuffer[25] = 0x00;
+    mrs485TxBuffer[26] = OutPin[4];
+    mrs485TxBuffer[27] = 0x00;
+    mrs485TxBuffer[28] = OutPin[5];
   }
   else if ((addr == MB_IR_ADD_INS) && (nregs == MB_IR_NREG_INS))
   { 

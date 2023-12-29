@@ -21,7 +21,7 @@ extern "C" {
 #define _USE_FREERAM_              0
 #define _USE_RS485_                1
 #define _USE_MB_                   1
-#define _USE_LED_                  0
+#define _USE_LED_                  1
 
 #if (_USE_RS485_ == 1)
 #define _SERIAL_DEBUG_             0

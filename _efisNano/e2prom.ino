@@ -45,6 +45,8 @@ void _readCONFIG (void)
     EEPROM.write(EEPROM_ADD_LOGIC_OUTS, EEPROM_VAL_LOGIC_OUTS);
 
     // ADC 0
+    EEPROM.write(EEPROM_ADD_C0ADC_TYPE, EEPROM_VAL_C0ADC_TYPE);
+
     eeprom_value_lo = EEPROM_VAL_C0ADC_EMON_R & 0x00FF;
     EEPROM.write(EEPROM_ADD_C0ADC_EMON_R_LO, eeprom_value_lo);
     eeprom_value_hi = (EEPROM_VAL_C0ADC_EMON_R & 0xFF00)>>8;
@@ -58,6 +60,15 @@ void _readCONFIG (void)
     eeprom_value_hi = (EEPROM_VAL_C0ADC_EMON_O & 0xFF00)>>8;
     EEPROM.write(EEPROM_ADD_C0ADC_EMON_O_HI, eeprom_value_hi);
 
+    eeprom_value_lo = EEPROM_VAL_C0ADC_IDC_M & 0x00FF;
+    EEPROM.write(EEPROM_ADD_C0ADC_IDC_M_LO, eeprom_value_lo);
+    eeprom_value_hi = (EEPROM_VAL_C0ADC_IDC_M & 0xFF00)>>8;
+    EEPROM.write(EEPROM_ADD_C0ADC_IDC_M_HI, eeprom_value_hi);
+    eeprom_value_lo = EEPROM_VAL_C0ADC_IDC_B & 0x00FF;
+    EEPROM.write(EEPROM_ADD_C0ADC_IDC_B_LO, eeprom_value_lo);
+    eeprom_value_hi = (EEPROM_VAL_C0ADC_IDC_B & 0xFF00)>>8;
+    EEPROM.write(EEPROM_ADD_C0ADC_IDC_B_HI, eeprom_value_hi);
+
     eeprom_value_lo = EEPROM_VAL_C0ADC_EMON_L & 0x00FF;
     EEPROM.write(EEPROM_ADD_C0ADC_EMON_L_LO, eeprom_value_lo);
     eeprom_value_hi = (EEPROM_VAL_C0ADC_EMON_L & 0xFF00)>>8;
@@ -68,6 +79,7 @@ void _readCONFIG (void)
     EEPROM.write(EEPROM_ADD_C0ADC_EMON_SEC_HI, eeprom_value_hi);
 
     // ADC 1
+    EEPROM.write(EEPROM_ADD_C1ADC_TYPE, EEPROM_VAL_C1ADC_TYPE);
     eeprom_value_lo = EEPROM_VAL_C1ADC_EMON_R & 0x00FF;
     EEPROM.write(EEPROM_ADD_C1ADC_EMON_R_LO, eeprom_value_lo);
     eeprom_value_hi = (EEPROM_VAL_C1ADC_EMON_R & 0xFF00)>>8;
@@ -80,6 +92,15 @@ void _readCONFIG (void)
     EEPROM.write(EEPROM_ADD_C1ADC_EMON_O_LO, eeprom_value_lo);
     eeprom_value_hi = (EEPROM_VAL_C1ADC_EMON_O & 0xFF00)>>8;
     EEPROM.write(EEPROM_ADD_C1ADC_EMON_O_HI, eeprom_value_hi);
+
+    eeprom_value_lo = EEPROM_VAL_C1ADC_IDC_M & 0x00FF;
+    EEPROM.write(EEPROM_ADD_C1ADC_IDC_M_LO, eeprom_value_lo);
+    eeprom_value_hi = (EEPROM_VAL_C1ADC_IDC_M & 0xFF00)>>8;
+    EEPROM.write(EEPROM_ADD_C1ADC_IDC_M_HI, eeprom_value_hi);
+    eeprom_value_lo = EEPROM_VAL_C1ADC_IDC_B & 0x00FF;
+    EEPROM.write(EEPROM_ADD_C1ADC_IDC_B_LO, eeprom_value_lo);
+    eeprom_value_hi = (EEPROM_VAL_C1ADC_IDC_B & 0xFF00)>>8;
+    EEPROM.write(EEPROM_ADD_C1ADC_IDC_B_HI, eeprom_value_hi);
 
     eeprom_value_lo = EEPROM_VAL_C1ADC_EMON_L & 0x00FF;
     EEPROM.write(EEPROM_ADD_C1ADC_EMON_L_LO, eeprom_value_lo);
@@ -132,6 +153,8 @@ void _ram2eepromCONFIG (void)
   EEPROM.write(EEPROM_ADD_LOGIC_OUTS, (byte)cfgLogicOuts);
 
   // ADC 0
+  EEPROM.write(EEPROM_ADD_C0ADC_TYPE,  (byte)cfgEmonType[0]);
+
   eeprom_value_lo = cfgEmonR[0] & 0x00FF;
   EEPROM.write(EEPROM_ADD_C0ADC_EMON_R_LO, eeprom_value_lo);
   eeprom_value_hi = (cfgEmonR[0] & 0xFF00)>>8;
@@ -145,6 +168,15 @@ void _ram2eepromCONFIG (void)
   eeprom_value_hi = (cfgEmonO[0] & 0xFF00)>>8;
   EEPROM.write(EEPROM_ADD_C0ADC_EMON_O_HI, eeprom_value_hi);
 
+  eeprom_value_lo = cfgEmonIDCm[0] & 0x00FF;
+  EEPROM.write(EEPROM_ADD_C0ADC_IDC_M_LO, eeprom_value_lo);
+  eeprom_value_hi = (cfgEmonIDCm[0] & 0xFF00)>>8;
+  EEPROM.write(EEPROM_ADD_C0ADC_IDC_M_HI, eeprom_value_hi);
+  eeprom_value_lo = cfgEmonIDCb[0] & 0x00FF;
+  EEPROM.write(EEPROM_ADD_C0ADC_IDC_B_LO, eeprom_value_lo);
+  eeprom_value_hi = (cfgEmonIDCb[0] & 0xFF00)>>8;
+  EEPROM.write(EEPROM_ADD_C0ADC_IDC_B_HI, eeprom_value_hi);
+
   eeprom_value_lo = cfgEmonL[0] & 0x00FF;
   EEPROM.write(EEPROM_ADD_C0ADC_EMON_L_LO, eeprom_value_lo);
   eeprom_value_hi = (cfgEmonL[0] & 0xFF00)>>8;
@@ -155,6 +187,8 @@ void _ram2eepromCONFIG (void)
   EEPROM.write(EEPROM_ADD_C0ADC_EMON_SEC_HI, eeprom_value_hi);
 
   // ADC 1
+  EEPROM.write(EEPROM_ADD_C1ADC_TYPE,  (byte)cfgEmonType[1]);
+
   eeprom_value_lo = cfgEmonR[1] & 0x00FF;
   EEPROM.write(EEPROM_ADD_C1ADC_EMON_R_LO, eeprom_value_lo);
   eeprom_value_hi = (cfgEmonR[1] & 0xFF00)>>8;
@@ -167,6 +201,15 @@ void _ram2eepromCONFIG (void)
   EEPROM.write(EEPROM_ADD_C1ADC_EMON_O_LO, eeprom_value_lo);
   eeprom_value_hi = (cfgEmonO[1] & 0xFF00)>>8;
   EEPROM.write(EEPROM_ADD_C1ADC_EMON_O_HI, eeprom_value_hi);
+
+  eeprom_value_lo = cfgEmonIDCm[1] & 0x00FF;
+  EEPROM.write(EEPROM_ADD_C1ADC_IDC_M_LO, eeprom_value_lo);
+  eeprom_value_hi = (cfgEmonIDCm[1] & 0xFF00)>>8;
+  EEPROM.write(EEPROM_ADD_C1ADC_IDC_M_HI, eeprom_value_hi);
+  eeprom_value_lo = cfgEmonIDCb[1] & 0x00FF;
+  EEPROM.write(EEPROM_ADD_C1ADC_IDC_B_LO, eeprom_value_lo);
+  eeprom_value_hi = (cfgEmonIDCb[1] & 0xFF00)>>8;
+  EEPROM.write(EEPROM_ADD_C1ADC_IDC_B_HI, eeprom_value_hi);
 
   eeprom_value_lo = cfgEmonL[1] & 0x00FF;
   EEPROM.write(EEPROM_ADD_C1ADC_EMON_L_LO, eeprom_value_lo);
@@ -208,6 +251,8 @@ void _eeprom2ramCONFIG (void)
   cfgLogicOuts      = (int)EEPROM.read(EEPROM_ADD_LOGIC_OUTS); 
   
   // ADC 0
+  cfgEmonType[0]    = (int)EEPROM.read(EEPROM_ADD_C0ADC_TYPE);
+
   eeprom_value_hi   = (int)EEPROM.read(EEPROM_ADD_C0ADC_EMON_R_HI);
   eeprom_value_lo   = (int)EEPROM.read(EEPROM_ADD_C0ADC_EMON_R_LO);
   cfgEmonR[0]       = (int)((eeprom_value_hi & 0x00FF)<<8)|(eeprom_value_lo & 0x00FF);
@@ -218,6 +263,13 @@ void _eeprom2ramCONFIG (void)
   eeprom_value_lo   = (int)EEPROM.read(EEPROM_ADD_C0ADC_EMON_O_LO);
   cfgEmonO[0]       = (int)((eeprom_value_hi & 0x00FF)<<8)|(eeprom_value_lo & 0x00FF);
 
+  eeprom_value_hi   = (int)EEPROM.read(EEPROM_ADD_C0ADC_IDC_M_HI);
+  eeprom_value_lo   = (int)EEPROM.read(EEPROM_ADD_C0ADC_IDC_M_LO);
+  cfgEmonIDCm[0]    = (int)((eeprom_value_hi & 0x00FF)<<8)|(eeprom_value_lo & 0x00FF);
+  eeprom_value_hi   = (int)EEPROM.read(EEPROM_ADD_C0ADC_IDC_B_HI);
+  eeprom_value_lo   = (int)EEPROM.read(EEPROM_ADD_C0ADC_IDC_B_LO);
+  cfgEmonIDCb[0]    = (int)((eeprom_value_hi & 0x00FF)<<8)|(eeprom_value_lo & 0x00FF);
+
   eeprom_value_hi   = (int)EEPROM.read(EEPROM_ADD_C0ADC_EMON_L_HI);
   eeprom_value_lo   = (int)EEPROM.read(EEPROM_ADD_C0ADC_EMON_L_LO);
   cfgEmonL[0]       = (int)((eeprom_value_hi & 0x00FF)<<8)|(eeprom_value_lo & 0x00FF);
@@ -226,6 +278,8 @@ void _eeprom2ramCONFIG (void)
   cfgEmonSec[0]     = (int)((eeprom_value_hi & 0x00FF)<<8)|(eeprom_value_lo & 0x00FF);
 
   // ADC 1
+  cfgEmonType[1]    = (int)EEPROM.read(EEPROM_ADD_C1ADC_TYPE);
+
   eeprom_value_hi   = (int)EEPROM.read(EEPROM_ADD_C1ADC_EMON_R_HI);
   eeprom_value_lo   = (int)EEPROM.read(EEPROM_ADD_C1ADC_EMON_R_LO);
   cfgEmonR[1]       = (int)((eeprom_value_hi & 0x00FF)<<8)|(eeprom_value_lo & 0x00FF);
@@ -235,6 +289,13 @@ void _eeprom2ramCONFIG (void)
   eeprom_value_hi   = (int)EEPROM.read(EEPROM_ADD_C1ADC_EMON_O_HI);
   eeprom_value_lo   = (int)EEPROM.read(EEPROM_ADD_C1ADC_EMON_O_LO);
   cfgEmonO[1]       = (int)((eeprom_value_hi & 0x00FF)<<8)|(eeprom_value_lo & 0x00FF);
+
+  eeprom_value_hi   = (int)EEPROM.read(EEPROM_ADD_C1ADC_IDC_M_HI);
+  eeprom_value_lo   = (int)EEPROM.read(EEPROM_ADD_C1ADC_IDC_M_LO);
+  cfgEmonIDCm[1]    = (int)((eeprom_value_hi & 0x00FF)<<8)|(eeprom_value_lo & 0x00FF);
+  eeprom_value_hi   = (int)EEPROM.read(EEPROM_ADD_C1ADC_IDC_B_HI);
+  eeprom_value_lo   = (int)EEPROM.read(EEPROM_ADD_C1ADC_IDC_B_LO);
+  cfgEmonIDCb[1]    = (int)((eeprom_value_hi & 0x00FF)<<8)|(eeprom_value_lo & 0x00FF);
 
   eeprom_value_hi   = (int)EEPROM.read(EEPROM_ADD_C1ADC_EMON_L_HI);
   eeprom_value_lo   = (int)EEPROM.read(EEPROM_ADD_C1ADC_EMON_L_LO);
@@ -264,15 +325,27 @@ void _eeprom2ramCONFIG (void)
   Serial.print("Logic Ins: ");  Serial.println (cfgLogicIns);
   Serial.print("Logic Outs: "); Serial.println (cfgLogicOuts);
 
+  Serial.print("C0 I Type");   Serial.print(": "); Serial.print (cfgEmonType[0]);  Serial.println(" ");
+
   Serial.print("C0 Irms Ratio");   Serial.print(": "); Serial.print (cfgEmonR[0]);  Serial.println(" ");
   Serial.print("C0 Irms Samples"); Serial.print(": "); Serial.print (cfgEmonS[0]);  Serial.println(" ");
   Serial.print("C0 Irms Samples"); Serial.print(": "); Serial.print (cfgEmonO[0]);  Serial.println(" mA");
+
+  Serial.print("C0 Vdc recta m");  Serial.print(": "); Serial.print (cfgEmonVDCm[0]);  Serial.println(" ");
+  Serial.print("C0 Vdc recta b");  Serial.print(": "); Serial.print (cfgEmonVDCb[0]);  Serial.println(" (/1000)");
+
   Serial.print("C0 Irms Limit");   Serial.print(": "); Serial.print (cfgEmonL[0]);  Serial.println(" ");
   Serial.print("C0 Irms Hys Sec"); Serial.print(": "); Serial.print (cfgEmonLSec[0]); Serial.println(" sec");
+
+  Serial.print("C1 I Type");   Serial.print(": "); Serial.print (cfgEmonType[1]);  Serial.println(" ");
 
   Serial.print("C1 Irms Ratio");   Serial.print(": "); Serial.print (cfgEmonR[1]);  Serial.println(" ");
   Serial.print("C1 Irms Samples"); Serial.print(": "); Serial.print (cfgEmonS[1]);  Serial.println(" ");
   Serial.print("C1 Irms Samples"); Serial.print(": "); Serial.print (cfgEmonO[1]);  Serial.println(" mA");
+  
+  Serial.print("C1 Vdc recta m");  Serial.print(": "); Serial.print (cfgEmonVDCm[1]);  Serial.println(" ");
+  Serial.print("C1 Vdc recta b");  Serial.print(": "); Serial.print (cfgEmonVDCb[1]);  Serial.println(" (/1000)");
+
   Serial.print("C1 Irms Limit");   Serial.print(": "); Serial.print (cfgEmonL[1]);  Serial.println(" ");
   Serial.print("C1 Irms Hys Sec"); Serial.print(": "); Serial.print (cfgEmonLSec[1]); Serial.println(" sec");
 

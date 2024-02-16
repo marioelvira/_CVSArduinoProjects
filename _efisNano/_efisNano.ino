@@ -13,8 +13,6 @@
 #include "mRS485.h"
 #include "wde.h"
 
-#include "EmonLib.h"
-
 /////////////
 // Version //
 /////////////
@@ -37,13 +35,10 @@ unsigned long AdcTick[ADC_NUMBER];
 ///////////
 // mEMON //
 ///////////
-EnergyMonitor AdcEmon[EMON_NUMBER];
-
 int     emonState[EMON_NUMBER];
-//int     emonSumI[EMON_NUMBER];
-//int     emonSamples[EMON_NUMBER];
-double  emonIRMS[EMON_NUMBER];
-int     Irms[EMON_NUMBER];
+int     emonSumI[EMON_NUMBER];
+int     emonSamples[EMON_NUMBER];
+int     Is[EMON_NUMBER];
 
 /////////
 // Vdc //
@@ -87,11 +82,14 @@ int cfgMbId = 0;
 int cfgLogicIns;
 int cfgLogicOuts;
 
+int cfgEmonType[EMON_NUMBER];
 int cfgEmonR[EMON_NUMBER];
 int cfgEmonS[EMON_NUMBER];
 int cfgEmonO[EMON_NUMBER];
 int cfgEmonL[EMON_NUMBER];
 int cfgEmonSec[EMON_NUMBER];
+int cfgEmonIDCm[EMON_NUMBER];
+int cfgEmonIDCb[EMON_NUMBER];
 
 int cfgVADCm[VDC_NUMBER];
 int cfgVADCb[VDC_NUMBER];

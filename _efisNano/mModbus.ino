@@ -169,23 +169,30 @@ void _mbWriteMultipleHolding(char modbusID)
       cfgLogicOuts = OUT_OFF;
     else 
       cfgLogicOuts = OUT_ON;
+   
+    cfgEmonType[0] = (int)((mrs485RxBuffer[15] & 0x00FF)<<8)|(mrs485RxBuffer[16] & 0x00FF);
+    cfgEmonR[0]    = (int)((mrs485RxBuffer[17] & 0x00FF)<<8)|(mrs485RxBuffer[18] & 0x00FF);
+    cfgEmonS[0]    = (int)((mrs485RxBuffer[19] & 0x00FF)<<8)|(mrs485RxBuffer[20] & 0x00FF);
+    cfgEmonO[0]    = (int)((mrs485RxBuffer[21] & 0x00FF)<<8)|(mrs485RxBuffer[22] & 0x00FF);
+    cfgEmonIDCm[0] = (int)((mrs485RxBuffer[23] & 0x00FF)<<8)|(mrs485RxBuffer[24] & 0x00FF);
+    cfgEmonIDCb[0] = (int)((mrs485RxBuffer[25] & 0x00FF)<<8)|(mrs485RxBuffer[26] & 0x00FF);
+    cfgEmonL[0]    = (int)((mrs485RxBuffer[27] & 0x00FF)<<8)|(mrs485RxBuffer[28] & 0x00FF);
+    cfgEmonSec[0]  = (int)((mrs485RxBuffer[29] & 0x00FF)<<8)|(mrs485RxBuffer[30] & 0x00FF);
 
-    cfgEmonR[0]   = (int)((mrs485RxBuffer[15] & 0x00FF)<<8)|(mrs485RxBuffer[16] & 0x00FF);
-    cfgEmonS[0]   = (int)((mrs485RxBuffer[17] & 0x00FF)<<8)|(mrs485RxBuffer[18] & 0x00FF);
-    cfgEmonO[0]   = (int)((mrs485RxBuffer[19] & 0x00FF)<<8)|(mrs485RxBuffer[20] & 0x00FF);
-    cfgEmonL[0]   = (int)((mrs485RxBuffer[21] & 0x00FF)<<8)|(mrs485RxBuffer[22] & 0x00FF);
-    cfgEmonSec[0] = (int)((mrs485RxBuffer[23] & 0x00FF)<<8)|(mrs485RxBuffer[24] & 0x00FF);
+    cfgEmonType[1] = (int)((mrs485RxBuffer[31] & 0x00FF)<<8)|(mrs485RxBuffer[32] & 0x00FF);
+    cfgEmonR[1]    = (int)((mrs485RxBuffer[33] & 0x00FF)<<8)|(mrs485RxBuffer[34] & 0x00FF);
+    cfgEmonS[1]    = (int)((mrs485RxBuffer[35] & 0x00FF)<<8)|(mrs485RxBuffer[36] & 0x00FF);
+    cfgEmonO[1]    = (int)((mrs485RxBuffer[37] & 0x00FF)<<8)|(mrs485RxBuffer[38] & 0x00FF);
+    cfgEmonIDCm[1] = (int)((mrs485RxBuffer[39] & 0x00FF)<<8)|(mrs485RxBuffer[40] & 0x00FF);
+    cfgEmonIDCb[1] = (int)((mrs485RxBuffer[41] & 0x00FF)<<8)|(mrs485RxBuffer[42] & 0x00FF);
+    cfgEmonL[1]    = (int)((mrs485RxBuffer[43] & 0x00FF)<<8)|(mrs485RxBuffer[44] & 0x00FF);
+    cfgEmonSec[1]  = (int)((mrs485RxBuffer[45] & 0x00FF)<<8)|(mrs485RxBuffer[46] & 0x00FF);
 
-    cfgEmonR[1]   = (int)((mrs485RxBuffer[25] & 0x00FF)<<8)|(mrs485RxBuffer[26] & 0x00FF);
-    cfgEmonS[1]   = (int)((mrs485RxBuffer[27] & 0x00FF)<<8)|(mrs485RxBuffer[28] & 0x00FF);
-    cfgEmonO[1]   = (int)((mrs485RxBuffer[29] & 0x00FF)<<8)|(mrs485RxBuffer[30] & 0x00FF);
-    cfgEmonL[1]   = (int)((mrs485RxBuffer[31] & 0x00FF)<<8)|(mrs485RxBuffer[32] & 0x00FF);
-    cfgEmonSec[1] = (int)((mrs485RxBuffer[33] & 0x00FF)<<8)|(mrs485RxBuffer[34] & 0x00FF);
-
-    cfgVADCm[0]   = (int)((mrs485RxBuffer[35] & 0x00FF)<<8)|(mrs485RxBuffer[36] & 0x00FF);
-    cfgVADCb[0]   = (int)((mrs485RxBuffer[37] & 0x00FF)<<8)|(mrs485RxBuffer[38] & 0x00FF);
-    cfgVADCm[1]   = (int)((mrs485RxBuffer[39] & 0x00FF)<<8)|(mrs485RxBuffer[40] & 0x00FF);
-    cfgVADCb[1]   = (int)((mrs485RxBuffer[41] & 0x00FF)<<8)|(mrs485RxBuffer[42] & 0x00FF);
+    cfgVADCm[0]    = (int)((mrs485RxBuffer[47] & 0x00FF)<<8)|(mrs485RxBuffer[48] & 0x00FF);
+    cfgVADCb[0]    = (int)((mrs485RxBuffer[49] & 0x00FF)<<8)|(mrs485RxBuffer[50] & 0x00FF);
+    
+    cfgVADCm[1]    = (int)((mrs485RxBuffer[51] & 0x00FF)<<8)|(mrs485RxBuffer[52] & 0x00FF);
+    cfgVADCb[1]    = (int)((mrs485RxBuffer[53] & 0x00FF)<<8)|(mrs485RxBuffer[54] & 0x00FF);
 
     _ram2eepromCONFIG();
 
@@ -271,42 +278,58 @@ void _mbReadHolding(char modbusID)
     mrs485TxBuffer[10]  = cfgLogicOuts;
 
     // ADC0
-    mrs485TxBuffer[11]  = (cfgEmonR[0] & 0xFF00)>>8;
-    mrs485TxBuffer[12]  = cfgEmonR[0] & 0x00FF;
-    mrs485TxBuffer[13]  = (cfgEmonS[0] & 0xFF00)>>8;
-    mrs485TxBuffer[14]  = cfgEmonS[0] & 0x00FF;
-    mrs485TxBuffer[15]  = (cfgEmonO[0] & 0xFF00)>>8;
-    mrs485TxBuffer[16]  = cfgEmonO[0] & 0x00FF;
+    mrs485TxBuffer[11]   = 0x00;
+    mrs485TxBuffer[12]  = cfgEmonType[0];
 
-    mrs485TxBuffer[17]  = (cfgEmonL[0] & 0xFF00)>>8;
-    mrs485TxBuffer[18]  = cfgEmonL[0] & 0x00FF;
-    mrs485TxBuffer[19]  = (cfgEmonSec[0] & 0xFF00)>>8;
-    mrs485TxBuffer[20]  = cfgEmonSec[0] & 0x00FF;
+    mrs485TxBuffer[13]  = (cfgEmonR[0] & 0xFF00)>>8;
+    mrs485TxBuffer[14]  = cfgEmonR[0] & 0x00FF;
+    mrs485TxBuffer[15]  = (cfgEmonS[0] & 0xFF00)>>8;
+    mrs485TxBuffer[16]  = cfgEmonS[0] & 0x00FF;
+    mrs485TxBuffer[17]  = (cfgEmonO[0] & 0xFF00)>>8;
+    mrs485TxBuffer[18]  = cfgEmonO[0] & 0x00FF;
+
+    mrs485TxBuffer[19]  = (cfgEmonIDCm[0] & 0xFF00)>>8;
+    mrs485TxBuffer[20]  = cfgEmonIDCm[0] & 0x00FF;
+    mrs485TxBuffer[21]  = (cfgEmonIDCb[0] & 0xFF00)>>8;
+    mrs485TxBuffer[22]  = cfgEmonIDCb[0] & 0x00FF;
+
+    mrs485TxBuffer[23]  = (cfgEmonL[0] & 0xFF00)>>8;
+    mrs485TxBuffer[24]  = cfgEmonL[0] & 0x00FF;
+    mrs485TxBuffer[25]  = (cfgEmonSec[0] & 0xFF00)>>8;
+    mrs485TxBuffer[26]  = cfgEmonSec[0] & 0x00FF;
   
     // ADC1
-    mrs485TxBuffer[21]  = (cfgEmonR[1] & 0xFF00)>>8;
-    mrs485TxBuffer[22]  = cfgEmonR[1] & 0x00FF;
-    mrs485TxBuffer[23]  = (cfgEmonS[1] & 0xFF00)>>8;
-    mrs485TxBuffer[24]  = cfgEmonS[1] & 0x00FF;
-    mrs485TxBuffer[25]  = (cfgEmonO[1] & 0xFF00)>>8;
-    mrs485TxBuffer[26]  = cfgEmonO[1] & 0x00FF;
+    mrs485TxBuffer[27]   = 0x00;
+    mrs485TxBuffer[28]  = cfgEmonType[1];
 
-    mrs485TxBuffer[27]  = (cfgEmonL[1] & 0xFF00)>>8;
-    mrs485TxBuffer[28]  = cfgEmonL[1] & 0x00FF;
-    mrs485TxBuffer[29]  = (cfgEmonSec[1] & 0xFF00)>>8;
-    mrs485TxBuffer[30]  = cfgEmonSec[1] & 0x00FF;
+    mrs485TxBuffer[29]  = (cfgEmonR[1] & 0xFF00)>>8;
+    mrs485TxBuffer[30]  = cfgEmonR[1] & 0x00FF;
+    mrs485TxBuffer[31]  = (cfgEmonS[1] & 0xFF00)>>8;
+    mrs485TxBuffer[32]  = cfgEmonS[1] & 0x00FF;
+    mrs485TxBuffer[33]  = (cfgEmonO[1] & 0xFF00)>>8;
+    mrs485TxBuffer[34]  = cfgEmonO[1] & 0x00FF;
+
+    mrs485TxBuffer[35]  = (cfgEmonIDCm[1] & 0xFF00)>>8;
+    mrs485TxBuffer[36]  = cfgEmonIDCm[1] & 0x00FF;
+    mrs485TxBuffer[37]  = (cfgEmonIDCb[1] & 0xFF00)>>8;
+    mrs485TxBuffer[38]  = cfgEmonIDCb[1] & 0x00FF;
+
+    mrs485TxBuffer[39]  = (cfgEmonL[1] & 0xFF00)>>8;
+    mrs485TxBuffer[40]  = cfgEmonL[1] & 0x00FF;
+    mrs485TxBuffer[41]  = (cfgEmonSec[1] & 0xFF00)>>8;
+    mrs485TxBuffer[42]  = cfgEmonSec[1] & 0x00FF;
   
     // ADC3
-    mrs485TxBuffer[31]  = (cfgVADCm[0] & 0xFF00)>>8;
-    mrs485TxBuffer[32]  = cfgVADCm[0] & 0x00FF;
-    mrs485TxBuffer[33]  = (cfgVADCb[0] & 0xFF00)>>8;
-    mrs485TxBuffer[34]  = cfgVADCb[0] & 0x00FF;
+    mrs485TxBuffer[43]  = (cfgVADCm[0] & 0xFF00)>>8;
+    mrs485TxBuffer[44]  = cfgVADCm[0] & 0x00FF;
+    mrs485TxBuffer[45]  = (cfgVADCb[0] & 0xFF00)>>8;
+    mrs485TxBuffer[46]  = cfgVADCb[0] & 0x00FF;
 
     // ADC4
-    mrs485TxBuffer[35]  = (cfgVADCm[1] & 0xFF00)>>8;
-    mrs485TxBuffer[36]  = cfgVADCm[1] & 0x00FF;
-    mrs485TxBuffer[37]  = (cfgVADCb[1] & 0xFF00)>>8;
-    mrs485TxBuffer[38]  = cfgVADCb[1] & 0x00FF;
+    mrs485TxBuffer[47]  = (cfgVADCm[1] & 0xFF00)>>8;
+    mrs485TxBuffer[48]  = cfgVADCm[1] & 0x00FF;
+    mrs485TxBuffer[49]  = (cfgVADCb[1] & 0xFF00)>>8;
+    mrs485TxBuffer[50]  = cfgVADCb[1] & 0x00FF;
 
   }
   else if ((addr == MB_HR_ADD_OUTS) && (nregs == MB_HR_NREG_OUTS))
@@ -367,10 +390,10 @@ void _mbReadInput(char modbusID)
   {
     mrs485TxBuffer[3]  = 0x00;
     mrs485TxBuffer[4]  = ctrMode;
-    mrs485TxBuffer[5]  = (char)((Irms[0] & 0xFF00)>>8);
-    mrs485TxBuffer[6]  = (char)(Irms[0] & 0x00FF);
-    mrs485TxBuffer[7]  = (char)((Irms[1] & 0xFF00)>>8);
-    mrs485TxBuffer[8]  = (char)(Irms[1] & 0x00FF);
+    mrs485TxBuffer[5]  = (char)((Is[0] & 0xFF00)>>8);
+    mrs485TxBuffer[6]  = (char)(Is[0] & 0x00FF);
+    mrs485TxBuffer[7]  = (char)((Is[1] & 0xFF00)>>8);
+    mrs485TxBuffer[8]  = (char)(Is[1] & 0x00FF);
     mrs485TxBuffer[9]  = (char)((Vdc[0] & 0xFF00)>>8);
     mrs485TxBuffer[10] = (char)(Vdc[0] & 0x00FF);
     mrs485TxBuffer[11] = (char)((Vdc[1] & 0xFF00)>>8);

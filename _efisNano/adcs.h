@@ -10,10 +10,9 @@ extern "C" {
 
 #define ADC_TICK            1000
 #define VDC_NUMBER          2
-#define ADC_SUPPLY_VOLTAGE  3300
 
-#define ADC_BITS      10
-#define ADC_COUNTS    (1<<ADC_BITS)
+//#define ADC_BITS      10
+//#define ADC_COUNTS    (1<<ADC_BITS)
 
 #define ADC_EMON_OFFSET     0
 #define ADC_VDC_OFFSET      2

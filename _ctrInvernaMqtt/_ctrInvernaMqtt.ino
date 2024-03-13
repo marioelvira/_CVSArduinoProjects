@@ -162,6 +162,8 @@ unsigned long PumpTick = 0;
 int   IrriState;
 unsigned long IrriTick = 0;
 
+int fanTempState;
+
 //////////
 // mRAM //
 //////////
@@ -192,6 +194,9 @@ int     cfgTempLo;
 int     cfgTimeOpenMin;
 int     cfgTimeCloseMin;
 int     cfgTimeCicloMin;
+
+int     cfgFanTempHi;
+int     cfgFanTempLo;
 
 ///////////////
 // PIN steup //

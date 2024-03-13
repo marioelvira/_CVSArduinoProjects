@@ -106,6 +106,9 @@ void _readCONFIG (void)
     EEPROM.write(EEPROM_ADD_CLOSE_MIN,  EEPROM_VAL_CLOSE_MIN);
     EEPROM.write(EEPROM_ADD_CICLO_MIN,  EEPROM_VAL_CICLO_MIN);
 
+    EEPROM.write(EEPROM_ADD_FAN_TEMP_HI,    EEPROM_VAL_FAN_TEMP_HI);
+    EEPROM.write(EEPROM_ADD_FAN_TEMP_LO,    EEPROM_VAL_FAN_TEMP_LO);
+
     //EEPROM.write(EEPROM_ADD_DEBUG,    EEPROM_VAL_DEBUG);
     
     EEPROM.commit();    //Store data to EEPROM
@@ -221,6 +224,9 @@ void _readCONFIG (void)
   cfgTimeCloseMin   = (int)EEPROM.read(EEPROM_ADD_CLOSE_MIN);
   cfgTimeCicloMin   = (int)EEPROM.read(EEPROM_ADD_CICLO_MIN);
 
+  cfgFanTempHi      = (int)EEPROM.read(EEPROM_ADD_FAN_TEMP_HI);
+  cfgFanTempLo      = (int)EEPROM.read(EEPROM_ADD_FAN_TEMP_LO);
+
   //DebugVal        = (int)EEPROM.read(EEPROM_ADD_DEBUG);
   
   #if (_EEPROM_SERIAL_DEBUG_ == 1)
@@ -242,6 +248,9 @@ void _readCONFIG (void)
   Serial.print("cfgTimeCloseMin: "); Serial.print (cfgTimeCloseMin);  Serial.println(" min");
   Serial.print("cfgTimeCicloMin: "); Serial.print (cfgTimeCicloMin);  Serial.println(" min");
   
+  Serial.print("cfgFanTempHi: ");    Serial.print (cfgFanTempHi);     Serial.println(" ºC");
+  Serial.print("cfgFanTempLo: ");    Serial.print (cfgFanTempLo);     Serial.println(" ºC");
+
   //Serial.print("Debug: ");       Serial.print (DebugVal);           Serial.println(" ---");
   #endif
 }

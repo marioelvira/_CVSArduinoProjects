@@ -44,12 +44,12 @@ void _serveMAIN()
   html = html + "<p>";
   html = html + "  <input type=\"button\" value=\"Cambiar Modo\" onclick=\"sendOUT(0)\">";
   html = html + "</p><p>";
-  html = html + "  <input type=\"button\" value=\"Open\" onclick=\"sendOUT(10)\">";
-  html = html + "  <input type=\"button\" value=\"Close\" onclick=\"sendOUT(11)\">";
-  html = html + "  <input type=\"button\" value=\"Fan\" onclick=\"sendOUT(12)\">";
+  html = html + "  <input type=\"button\" value=\"Abrir\" onclick=\"sendOUT(10)\">";
+  html = html + "  <input type=\"button\" value=\"Cerrar\" onclick=\"sendOUT(11)\">";
+  html = html + "  <input type=\"button\" value=\"Ventilador\" onclick=\"sendOUT(12)\">";
   html = html + "</p><p>";
-  html = html + "  <input type=\"button\" value=\"Pump\" onclick=\"sendOUT(13)\">";
-  html = html + "  <input type=\"button\" value=\"Irri\" onclick=\"sendOUT(14)\">";
+  html = html + "  <input type=\"button\" value=\"Bomba\" onclick=\"sendOUT(13)\">";
+  html = html + "  <input type=\"button\" value=\"Irrigacion\" onclick=\"sendOUT(14)\">";
   html = html + "</p>";
   html = html + "<div class=\"section\">Watchdog</div>";
   html = html + "<p>";
@@ -59,7 +59,7 @@ void _serveMAIN()
   html = html + "<p>";
   html = html + "  <a href=\"settings.htm\"><input type=\"button\" value=\"Red\"></a>";
   html = html + "  <a href=\"timeSettings.htm\"><input type=\"button\" value=\"Config\"></a>";
-  html = html + "  <input type=\"button\" value=\"Restore\" onclick=\"sendOUT(20)\">";
+  html = html + "  <input type=\"button\" value=\"Restauracion\" onclick=\"sendOUT(20)\">";
   html = html + "</p>";
   html = html + "</div>";
 
@@ -157,13 +157,19 @@ void _serveTimeSETTINGS()
   html = html + "<label>NTC filtro (si/no 1/0)<input type=\"text\"  maxlength=\"16\" value=\"" + String((int)cfgADCf) + "\" name=\"rADCf\"/></label>";
   html = html + "</div>";
 
-  html = html + "<div class=\"section\"><span>4</span>Control</div>";
+  html = html + "<div class=\"section\"><span>4</span>Ventana Control</div>";
   html = html + "<div class=\"inner-wrap\">";
   html = html + "<label>Temp Alta (ºC)<input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgTempHi) + "\" name=\"tempHi\"/></label>";
   html = html + "<label>Temp Baja (ºC)<input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgTempLo) + "\" name=\"tempLo\"/></label>";
-  html = html + "<label>Apertura (m)<input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgTimeOpenMin) + "\" name=\"timeOpenMin\"/></label>";
-  html = html + "<label>Cierre (m)<input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgTimeCloseMin) + "\" name=\"timeCloseMin\"/></label>";
-  html = html + "<label>Ciclo (m)<input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgTimeCicloMin) + "\" name=\"timeCicloMin\"/></label>";
+  html = html + "<label>Apertura (min)<input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgTimeOpenMin) + "\" name=\"timeOpenMin\"/></label>";
+  html = html + "<label>Cierre (min)<input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgTimeCloseMin) + "\" name=\"timeCloseMin\"/></label>";
+  html = html + "<label>Ciclo (min)<input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgTimeCicloMin) + "\" name=\"timeCicloMin\"/></label>";
+  html = html + "</div>";
+
+  html = html + "<div class=\"section\"><span>5</span>Ventilador Control</div>";
+  html = html + "<div class=\"inner-wrap\">";
+  html = html + "<label>Vent Temp Alta (ºC) - 0 deshabilitado<input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgFanTempHi) + "\" name=\"fanTempHi\"/></label>";
+  html = html + "<label>Vent Temp Baja (ºC) - 0 deshabilitado<input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgFanTempLo) + "\" name=\"fanTempLo\"/></label>";
   html = html + "</div>";
   /*
   html = html + "<div class=\"section\"><span>5</span>Debug</div>";
@@ -209,6 +215,9 @@ void _setTimeSETTINGS()
   String rTimeCloseMin = httpServer.arg("timeCloseMin");
   String rTimeCicloMin = httpServer.arg("timeCicloMin");
   
+  String rFanTempHi    = httpServer.arg("fanTempHi");
+  String rFanTempLo    = httpServer.arg("fanTempLo");
+
   //String rdebugVal = httpServer.arg("tdebugVal");
   
   int error = 0;
@@ -227,7 +236,10 @@ void _setTimeSETTINGS()
       (rTempLo.length() == 0)       ||
       (rTimeOpenMin.length() == 0)  ||
       (rTimeCloseMin.length() == 0) ||
-      (rTimeCicloMin.length() == 0))
+      (rTimeCicloMin.length() == 0) ||
+      
+      (rFanTempHi.length() == 0)    ||
+      (rFanTempLo.length() == 0))
   {
     error = 1;  // falta un campo...
     #if (_HTTP_SERIAL_DEBUG_ == 1)
@@ -254,6 +266,9 @@ void _setTimeSETTINGS()
     cfgTimeCloseMin = rTimeCloseMin.toInt();
     cfgTimeCicloMin = rTimeCicloMin.toInt();
 
+    cfgFanTempHi = rFanTempHi.toInt();
+    cfgFanTempLo = rFanTempLo.toInt();
+
     //DebugVal = rdebugVal.toInt();
     
     #if (_HTTP_SERIAL_DEBUG_ == 1)
@@ -274,7 +289,10 @@ void _setTimeSETTINGS()
     Serial.print("cfgTimeOpenMin: ");  Serial.print (cfgTimeOpenMin);   Serial.println(" min");
     Serial.print("cfgTimeCloseMin: "); Serial.print (cfgTimeCloseMin);  Serial.println(" min");
     Serial.print("cfgTimeCicloMin: "); Serial.print (cfgTimeCicloMin);  Serial.println(" min");
-  
+
+    Serial.print("cfgFanTempHi: ");    Serial.print (cfgFanTempHi);     Serial.println(" ºC");
+    Serial.print("cfgFanTempLo: ");    Serial.print (cfgFanTempLo);     Serial.println(" ºC");
+
     //Serial.print("Debug: ");       Serial.print (DebugVal);           Serial.println(" ---");
     #endif   
 
@@ -295,6 +313,9 @@ void _setTimeSETTINGS()
     EEPROM.write(EEPROM_ADD_CLOSE_MIN,  (byte)cfgTimeCloseMin);
     EEPROM.write(EEPROM_ADD_CICLO_MIN,  (byte)cfgTimeCicloMin);
    
+    EEPROM.write(EEPROM_ADD_FAN_TEMP_HI,  (byte)cfgFanTempHi);
+    EEPROM.write(EEPROM_ADD_FAN_TEMP_LO,  (byte)cfgFanTempLo);
+
     //EEPROM.write(EEPROM_ADD_DEBUG,      (byte)DebugVal);
 
     EEPROM.commit();    //Store data to EEPROM
@@ -903,7 +924,7 @@ void _readOUTS()
   html = html + "</tr>";
 
   html = html + "<tr>";
-  html = html + "<td>Irri</td>";
+  html = html + "<td>Irrigacion</td>";
   if (OutIrri == OUT_ON)
    //html = html + "<td><font style=\"color:green\">ON</font> " + String((millis() - IrriTick)/1000) + "</td>";
    html = html + "<td><font style=\"color:green\">ON</font></td>";

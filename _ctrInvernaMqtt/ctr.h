@@ -20,6 +20,9 @@ extern "C" {
 #define STATE_WCLOSING        1
 #define STATE_WOPENING        2
 
+#define STATE_TFOFF           0
+#define STATE_TFON            1
+
 #define CLOSE_WINDOW          1
 #define WAIT_TO_NCLOSE        0
 

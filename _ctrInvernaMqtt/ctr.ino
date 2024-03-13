@@ -13,6 +13,8 @@ void _CtrSetup(void)
   openLoopState = OPEN_WINDOW;
   openLoopTick = millis();
 
+  fanTempState = STATE_TFOFF;
+
   // Reset outs
   OutClose = OUT_OFF;
   OutOpen = OUT_OFF;
@@ -47,7 +49,7 @@ void _CtrLoop(void)
       }
 
       // Permitimos control
-      _IOPulsLoop();  
+      _IOPulsLoop();
       _CtrWindowLoop();
       break;
       
@@ -86,6 +88,9 @@ void _CtrLoop(void)
       }    
       break;    
   }
+
+  // Control Ventilador
+  _CtrFanLoop();
 
   // Control Remoto por MQTT
   _CtRemOutsLoop();
@@ -177,6 +182,26 @@ void _CtrWindowLoop(void)
   }
 }
 
+void _CtrFanLoop(void)
+{
+  if ((cfgFanTempHi != 0) && (cfgFanTempLo != 0))
+  {
+    switch (fanTempState)
+    {
+      case STATE_TFOFF:
+        OutFan = OUT_OFF;
+        if (NtcIn >= cfgFanTempHi)
+          fanTempState = STATE_TFON;
+        break;
+
+      case STATE_TFON:
+        OutFan = OUT_ON;
+        if (NtcIn <= cfgFanTempLo)
+          fanTempState = STATE_TFOFF;
+        break;
+    }
+  }
+}
 
 void _CtRemOutsLoop(void)
 {
@@ -192,7 +217,7 @@ void _CtRemOutsLoop(void)
       OutFan = OUT_ON;
       if (millis() - FanTick >= (cfgFanTick*cfgScaleMin*60000))
         FanState = STATE_STANDBY;      
-      
+        
       break;
   }
 
@@ -227,5 +252,4 @@ void _CtRemOutsLoop(void)
       
       break;
   }
-
 }

@@ -18,12 +18,21 @@ void mqttDataCallback(char* rtopic, byte* rpayload, unsigned int rlength)
   {
     if(rpayloadStr.equals("1"))
     {
-      if (FanState == STATE_STANDBY)
-        FanState = STATE_OUT_ON;
+      if ((cfgFanTempHi == 0) && (cfgFanTempLo == 0))
+      {
+        if (FanState == STATE_STANDBY)
+          FanState = STATE_OUT_ON;
 
-      #if (_MQTT_SERIAL_DEBUG_ == 1)
-      Serial.println("TOPIC_FANCTR ->> 1");
-      #endif
+        #if (_MQTT_SERIAL_DEBUG_ == 1)
+        Serial.println("TOPIC_FANCTR ->> 1");
+        #endif
+      }
+      else
+      {
+        #if (_MQTT_SERIAL_DEBUG_ == 1)
+        Serial.println("NOT POSSIBLE");
+        #endif
+      }
     }
     else
     {
@@ -34,13 +43,22 @@ void mqttDataCallback(char* rtopic, byte* rpayload, unsigned int rlength)
   }
   else if (rtopicStr.equals(TOPIC_FANSTBY))
   {
-    if(rpayloadStr.equals("1"))
+    if ((cfgFanTempHi == 0) && (cfgFanTempLo == 0))
     {
-      FanState = STATE_STANDBY;
+      if(rpayloadStr.equals("1"))
+      {
+        FanState = STATE_STANDBY;
     
-      #if (_MQTT_SERIAL_DEBUG_ == 1)
-      Serial.println("TOPIC_FANSTBY ->> 1");
-      #endif
+        #if (_MQTT_SERIAL_DEBUG_ == 1)
+        Serial.println("TOPIC_FANSTBY ->> 1");
+        #endif
+      }
+       else
+      {
+        #if (_MQTT_SERIAL_DEBUG_ == 1)
+        Serial.println("TOPIC_FANCTR ->> Error");
+        #endif
+      }   
     }
     else
     {

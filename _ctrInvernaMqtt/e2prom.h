@@ -54,11 +54,13 @@ extern "C" {
 #define EEPROM_ADD_OPEN_MIN       0x7A
 #define EEPROM_ADD_CLOSE_MIN      0x7B
 #define EEPROM_ADD_CICLO_MIN      0x7C
+#define EEPROM_ADD_FAN_TEMP_HI    0x7D
+#define EEPROM_ADD_FAN_TEMP_LO    0x7E
 
 //#define EEPROM_ADD_MAX          0xFA // 250
 
 // Values
-#define EEPROM_VAL_OK             0xAF
+#define EEPROM_VAL_OK             0xAA
 
 #define EEPROM_VAL_IP_MODE        DHCP_MODE
 #define EEPROM_VAL_IP1            192
@@ -96,6 +98,9 @@ extern "C" {
 #define EEPROM_VAL_OPEN_MIN       1
 #define EEPROM_VAL_CLOSE_MIN      1
 #define EEPROM_VAL_CICLO_MIN      8
+#define EEPROM_VAL_FAN_TEMP_HI    30
+#define EEPROM_VAL_FAN_TEMP_LO    25
+
 
 //#define EEPROM_VAL_DEBUG        0
 

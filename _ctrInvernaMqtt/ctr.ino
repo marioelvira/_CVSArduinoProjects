@@ -205,22 +205,26 @@ void _CtrFanLoop(void)
 
 void _CtRemOutsLoop(void)
 {
-  // Fan
-  switch (FanState)
-  {
-    case STATE_STANDBY:
-      OutFan = OUT_OFF;      
-      FanTick = millis();
-      break;
 
-    case STATE_OUT_ON:
-      OutFan = OUT_ON;
-      if (millis() - FanTick >= (cfgFanTick*cfgScaleMin*60000))
-        FanState = STATE_STANDBY;      
-        
-      break;
+  if ((cfgFanTempHi == 0) && (cfgFanTempLo == 0))
+  { 
+    // Fan
+    switch (FanState)
+    {
+      case STATE_STANDBY:
+        OutFan = OUT_OFF;      
+        FanTick = millis();
+        break;
+
+      case STATE_OUT_ON:
+        OutFan = OUT_ON;
+        if (millis() - FanTick >= (cfgFanTick*cfgScaleMin*60000))
+          FanState = STATE_STANDBY;      
+          
+        break;
+    }
   }
-
+  
   // Pump
   switch (PumpState)
   {

@@ -59,6 +59,9 @@ extern "C" {
 #define IO_ON             1
 #define IO_OFF            0
 
+#define IOW_ON            0
+#define IOW_OFF           1
+
 #define OUT_OFF           0
 #define OUT_ON            1
 

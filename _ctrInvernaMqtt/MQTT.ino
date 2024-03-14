@@ -315,14 +315,14 @@ void _MQTTSend(void)
   str = str + ",\n";
   
   // FC WClose
-  if (InWClose == IO_OFF)
+  if (InWClose == IOW_OFF /*IO_OFF*/)
     str = str + "\"fcC\":0";
   else
     str = str + "\"fcC\":1";
   str = str + ",\n";
   
   // FC WOpen
-  if (InWOpen == IO_OFF)
+  if (InWOpen == IOW_OFF /*IO_OFF*/)
     str = str + "\"fcO\":0";
   else
     str = str + "\"fcO\":1";

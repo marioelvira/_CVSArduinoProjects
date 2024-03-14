@@ -148,8 +148,8 @@ void _serveTimeSETTINGS()
 
   html = html + "<div class=\"section\"><span>2</span>Logica</div>";
   html = html + "<div class=\"inner-wrap\">";
-  html = html + "<label> Salidas ON <input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgLogicIns) + "\" name=\"cfgIns\"/></label>";
-  html = html + "<label> Entradas ON <input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgLogicOuts) + "\" name=\"cfgOuts\"/></label>";
+  html = html + "<label> Entradas ON <input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgLogicIns) + "\" name=\"cfgIns\"/></label>";
+  html = html + "<label> Salidas ON <input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgLogicOuts) + "\" name=\"cfgOuts\"/></label>";
   html = html + "</div>";
 
   html = html + "<div class=\"section\"><span>3</span>NTC</div>";
@@ -779,7 +779,7 @@ void _readINS()
 
   html = html + "<tr>";
   html = html + "<td>Ventana Cerrada</td>";
-  if (InWClose == IO_OFF)
+  if (InWClose == IOW_OFF /*IO_OFF*/)
     html = html + "<td><font style=\"color:grey\">OFF</font></td>";
   else
     html = html + "<td><font style=\"color:green\">ON</font></td>";
@@ -787,7 +787,7 @@ void _readINS()
 
   html = html + "<tr>";
   html = html + "<td>Ventana Abierta</td>";
-  if (InWOpen == IO_OFF)
+  if (InWOpen == IOW_OFF /*IO_OFF*/)
     html = html + "<td><font style=\"color:grey\">OFF</font></td>";
   else
     html = html + "<td><font style=\"color:green\">ON</font></td>";
@@ -860,6 +860,11 @@ void _readOUTS()
     html = html + "<td><font style=\"color:blue\">Abriendo</font></td>";
   else
     html = html + "<td><font style=\"color:grey\">OFF</font></td>";
+  html = html + "</tr>";
+
+  html = html + "<tr>";
+  html = html + "<td>Ventilador Estado </td>";
+  html = html + "<td>" + String(fanTempState) + "</td>";
   html = html + "</tr>";
 
   html = html + "<tr>";

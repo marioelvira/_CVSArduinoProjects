@@ -1,0 +1,15 @@
+
+////////////////
+// Ctr set up //
+////////////////
+void _CtrSetup(void)
+{
+  controlMode = MODE_AUTO;
+}
+
+///////////////////////
+// Ctr state machine //
+///////////////////////
+void _CtrLoop(void)
+{
+}

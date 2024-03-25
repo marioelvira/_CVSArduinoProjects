@@ -47,10 +47,13 @@ void _serveMAIN()
   html = html + "<div class=\"section\"><span>4</span>Salidas</div>";
   html = html + "<p class=\"sansserif\" id=\"OUTSid\">...</p>";
   
-  html = html + "<div class=\"section\"><span>5</span>ADCs</div>";
+  html = html + "<div class=\"section\"><span>5</span>Interrups</div>";
+  html = html + "<p class=\"sansserif\" id=\"INTSid\">...</p>";
+
+  html = html + "<div class=\"section\"><span>6</span>ADCs</div>";
   html = html + "<p class=\"sansserif\" id=\"ADCSid\">...</p>";
 
-  html = html + "<div class=\"section\"><span>6</span>Control</div>";
+  html = html + "<div class=\"section\"><span>7</span>Control</div>";
   html = html + "<p>";
   html = html + "  <input type=\"button\" value=\"Cambiar Modo\" onclick=\"sendOUT(0)\">";
   html = html + "</p><p>";
@@ -82,6 +85,7 @@ void _serveMAIN()
   html = html + "setInterval(function() {";
   html = html + "  getOUTS();";
   html = html + "  getINS();";
+  html = html + "  getINTS();";
   html = html + "  getADCS();";
   html = html + "  getSTATUS();";
   html = html + "}, 1000);";
@@ -105,6 +109,17 @@ void _serveMAIN()
   html = html + "   }";
   html = html + "  };";
   html = html + "  xhttp.open(\"GET\", \"readINS\", true);";
+  html = html + "  xhttp.send();";
+  html = html + "}";
+
+  html = html + "function getINTS() {";
+  html = html + "  var xhttp = new XMLHttpRequest();";
+  html = html + "  xhttp.onreadystatechange = function() {";
+  html = html + "    if (this.readyState == 4 && this.status == 200) {";
+  html = html + "      document.getElementById(\"INTSid\").innerHTML = this.responseText;";
+  html = html + "   }";
+  html = html + "  };";
+  html = html + "  xhttp.open(\"GET\", \"readINTS\", true);";
   html = html + "  xhttp.send();";
   html = html + "}";
 
@@ -628,6 +643,27 @@ void _readINS()
   httpServer.send(200, "text/plane", html);
 }
 
+void _readINTS()
+{ 
+  String html = "";
+
+  html = "<table style=\"width:100%\">";
+
+  html = html + "<tr>";
+  html = html + "<td>Int D2</td>";
+  html = html + "<td>" + String(pulsesD2) + "</td>";
+  html = html + "</tr>";
+  
+  html = html + "<tr>";
+  html = html + "<td>Int D3</td>";
+  html = html + "<td>" + String(pulsesD3) + "</td>";
+  html = html + "</tr>";
+  
+  html = html + "</table>";
+  
+  httpServer.send(200, "text/plane", html);
+}
+
 void _readADCS()
 { 
   String html = "";
@@ -837,6 +873,7 @@ void _HttpLoop()
       httpServer.on("/setOUTS",          _setOUTS);      
       httpServer.on("/readOUTS",         _readOUTS);
       httpServer.on("/readINS",          _readINS);
+      httpServer.on("/readINTS",         _readINTS);
       httpServer.on("/readADCS",         _readADCS);
       httpServer.on("/readSTATUS",       _readSTATUS);
       httpServer.on("/setNetSettings",   _setNetSETTINGS);

@@ -159,6 +159,112 @@ void _ModbusTcpLoop()
 
 void _mbWriteMultipleHolding()
 {
+  int addr, nregs, value, exception = 0;
+
+  addr  = (int)word(modbusTcpByteArray[MB_TCP_REGS_ADD], modbusTcpByteArray[MB_TCP_REGS_ADD + 1]);
+  nregs = (int)word(modbusTcpByteArray[MB_TCP_REGS_NUM], modbusTcpByteArray[MB_TCP_REGS_NUM + 1]);
+
+  #if (_MBTCP_SERIAL_DEBUG_ == 1)
+  Serial.print(F("addr: "));
+  Serial.print(addr);
+  Serial.print(F(", nregs: "));
+  Serial.println(nregs);
+  #endif
+
+  if ((addr == MB_HR_ADD_CFG) && (nregs == MB_HR_NREG_CFG))
+  {
+    value = (int)((modbusTcpByteArray[13] & 0x00FF)<<8)|(modbusTcpByteArray[14] & 0x00FF);
+    if (value == MODE_AUTO)
+      ctrMode = MODE_AUTO;
+    else
+      ctrMode = MODE_TEST;
+    
+    value  = (int)((modbusTcpByteArray[15] & 0x00FF)<<8)|(modbusTcpByteArray[16] & 0x00FF);
+    if (value == IN_OFF)
+      cfgLogicIns = IN_OFF;
+    else 
+      cfgLogicIns = IN_ON;
+      
+    value = (int)((modbusTcpByteArray[17] & 0x00FF)<<8)|(modbusTcpByteArray[18] & 0x00FF);
+    if (value == OUT_OFF)
+      cfgLogicOuts = OUT_OFF;
+    else 
+      cfgLogicOuts = OUT_ON;
+
+    cfgIType[0] = (int)((modbusTcpByteArray[19] & 0x00FF)<<8)|(modbusTcpByteArray[20] & 0x00FF);
+    cfgIACr[0]  = (int)((modbusTcpByteArray[21] & 0x00FF)<<8)|(modbusTcpByteArray[22] & 0x00FF);
+    cfgIACs[0]  = (int)((modbusTcpByteArray[23] & 0x00FF)<<8)|(modbusTcpByteArray[24] & 0x00FF);
+    cfgIACo[0]  = (int)((modbusTcpByteArray[25] & 0x00FF)<<8)|(modbusTcpByteArray[26] & 0x00FF);
+    cfgIDCm[0]  = (int)((modbusTcpByteArray[27] & 0x00FF)<<8)|(modbusTcpByteArray[28] & 0x00FF);
+    cfgIDCb[0]  = (int)((modbusTcpByteArray[29] & 0x00FF)<<8)|(modbusTcpByteArray[30] & 0x00FF);
+    cfgIlim[0]  = (int)((modbusTcpByteArray[31] & 0x00FF)<<8)|(modbusTcpByteArray[32] & 0x00FF);
+    cfgIsec[0]  = (int)((modbusTcpByteArray[33] & 0x00FF)<<8)|(modbusTcpByteArray[34] & 0x00FF);
+      
+    cfgIType[1] = (int)((modbusTcpByteArray[35] & 0x00FF)<<8)|(modbusTcpByteArray[36] & 0x00FF);
+    cfgIACr[1]  = (int)((modbusTcpByteArray[37] & 0x00FF)<<8)|(modbusTcpByteArray[38] & 0x00FF);
+    cfgIACs[1]  = (int)((modbusTcpByteArray[39] & 0x00FF)<<8)|(modbusTcpByteArray[40] & 0x00FF);
+    cfgIACo[1]  = (int)((modbusTcpByteArray[41] & 0x00FF)<<8)|(modbusTcpByteArray[42] & 0x00FF);
+    cfgIDCm[1]  = (int)((modbusTcpByteArray[43] & 0x00FF)<<8)|(modbusTcpByteArray[44] & 0x00FF);
+    cfgIDCb[1]  = (int)((modbusTcpByteArray[45] & 0x00FF)<<8)|(modbusTcpByteArray[46] & 0x00FF);
+    cfgIlim[1]  = (int)((modbusTcpByteArray[47] & 0x00FF)<<8)|(modbusTcpByteArray[48] & 0x00FF);
+    cfgIsec[1]  = (int)((modbusTcpByteArray[49] & 0x00FF)<<8)|(modbusTcpByteArray[50] & 0x00FF);
+
+    cfgVDCm[0]  = (int)((modbusTcpByteArray[51] & 0x00FF)<<8)|(modbusTcpByteArray[52] & 0x00FF);
+    cfgVDCb[0]  = (int)((modbusTcpByteArray[53] & 0x00FF)<<8)|(modbusTcpByteArray[54] & 0x00FF);
+
+    cfgVDCm[1]  = (int)((modbusTcpByteArray[55] & 0x00FF)<<8)|(modbusTcpByteArray[56] & 0x00FF);
+    cfgVDCb[1]  = (int)((modbusTcpByteArray[57] & 0x00FF)<<8)|(modbusTcpByteArray[58] & 0x00FF);
+
+    _ram2eepromCONFIG();
+  }
+  else if ((addr == MB_HR_ADD_OUTS) && (nregs == MB_HR_NREG_OUTS))
+  {
+    // Only in MODE_TEST
+    if (ctrMode == MODE_AUTO)
+      exception = 1;
+    else
+    {
+      for (int i = 0; i < MB_HR_NREG_OUTS; i++)
+      {
+        value = (int)((modbusTcpByteArray[i*2 + 13] & 0x00FF)<<8)|(modbusTcpByteArray[i*2 + 14] & 0x00FF);
+        if (value == OUT_OFF)
+          OutDig[i] = OUT_OFF;
+        else
+          OutDig[i] = OUT_ON;
+      }
+    }
+  }
+  else
+    exception = 1;
+
+  if (exception == 0)
+  {
+    // modbusTcpByteArray[MB_TCP_TID]         00
+    // modbusTcpByteArray[MB_TCP_TID + 1]     01
+    // modbusTcpByteArray[MB_TCP_PID]         02
+    // modbusTcpByteArray[MB_TCP_PID + 1]     03
+    modbusTcpByteArray[MB_TCP_LEN]     = ((nregs + 3) & 0xFF00)>>8;
+    modbusTcpByteArray[MB_TCP_LEN + 1] = (nregs + 3) & 0x00FF;
+    // modbusTcpByteArray[MB_TCP_UID]         06
+    modbusTcpByteArray[MB_TCP_FUNC]         = (char)MB_FUNC_WRITE_MULTIPLE_REGISTERS;
+    modbusTcpByteArray[MB_TCP_REGS_ADD]     = (addr & 0xFF00)>>8;
+    modbusTcpByteArray[MB_TCP_REGS_ADD + 1] = addr & 0x00FF;
+    modbusTcpByteArray[MB_TCP_REGS_NUM]     = (nregs & 0xFF00)>>8;
+    modbusTcpByteArray[MB_TCP_REGS_NUM + 1] = nregs & 0x00FF;
+
+    // Num Bytes
+    mbResponseLength = 12;
+  }
+  else
+  {
+	  modbusTcpByteArray[MB_TCP_FUNC] = (char)(MB_FUNC_WRITE_MULTIPLE_REGISTERS | MB_NACK);
+    modbusTcpByteArray[MB_TCP_NBYTES] = MB_EC_ILLEGAL_DATA_ADDRESS;
+
+    // Num Bytes
+    mbResponseLength = 9;
+  }
+
+  modbusTcpStatus = MODBUSTCP_ON_TX;
 }
 
 void _mbReadHolding()
@@ -177,6 +283,66 @@ void _mbReadHolding()
 
   if ((addr == MB_HR_ADD_CFG) && (nregs == MB_HR_NREG_CFG))
   {
+    modbusTcpByteArray[MB_TCP_REGS]       = 0x00;
+    modbusTcpByteArray[MB_TCP_REGS + 1]   = ctrMode;
+    modbusTcpByteArray[MB_TCP_REGS + 2]   = 0x00;
+    modbusTcpByteArray[MB_TCP_REGS + 3]   = cfgLogicIns;
+    modbusTcpByteArray[MB_TCP_REGS + 4]   = 0x00;
+    modbusTcpByteArray[MB_TCP_REGS + 5]   = cfgLogicOuts;
+
+    // ADC0
+    modbusTcpByteArray[MB_TCP_REGS + 6]   = 0x00;
+    modbusTcpByteArray[MB_TCP_REGS + 7]   = cfgIType[0];
+
+    modbusTcpByteArray[MB_TCP_REGS + 8]   = (cfgIACr[0] & 0xFF00)>>8;
+    modbusTcpByteArray[MB_TCP_REGS + 9]   = cfgIACr[0] & 0x00FF;
+    modbusTcpByteArray[MB_TCP_REGS + 10]  = (cfgIACs[0] & 0xFF00)>>8;
+    modbusTcpByteArray[MB_TCP_REGS + 11]  = cfgIACs[0] & 0x00FF;
+    modbusTcpByteArray[MB_TCP_REGS + 12]  = (cfgIACo[0] & 0xFF00)>>8;
+    modbusTcpByteArray[MB_TCP_REGS + 13]  = cfgIACo[0] & 0x00FF;
+
+    modbusTcpByteArray[MB_TCP_REGS + 14]  = (cfgIDCm[0] & 0xFF00)>>8;
+    modbusTcpByteArray[MB_TCP_REGS + 15]  = cfgIDCm[0] & 0x00FF;
+    modbusTcpByteArray[MB_TCP_REGS + 16]  = (cfgIDCb[0] & 0xFF00)>>8;
+    modbusTcpByteArray[MB_TCP_REGS + 17]  = cfgIDCb[0] & 0x00FF;
+
+    modbusTcpByteArray[MB_TCP_REGS + 18]  = (cfgIlim[0] & 0xFF00)>>8;
+    modbusTcpByteArray[MB_TCP_REGS + 19]  = cfgIlim[0] & 0x00FF;
+    modbusTcpByteArray[MB_TCP_REGS + 20]  = (cfgIsec[0] & 0xFF00)>>8;
+    modbusTcpByteArray[MB_TCP_REGS + 21]  = cfgIsec[0] & 0x00FF;
+
+    // ADC1
+    modbusTcpByteArray[MB_TCP_REGS + 22]  = 0x00;
+    modbusTcpByteArray[MB_TCP_REGS + 23]  = cfgIType[1];
+
+    modbusTcpByteArray[MB_TCP_REGS + 24]  = (cfgIACr[1] & 0xFF00)>>8;
+    modbusTcpByteArray[MB_TCP_REGS + 25]  = cfgIACr[1] & 0x00FF;
+    modbusTcpByteArray[MB_TCP_REGS + 26]  = (cfgIACs[1] & 0xFF00)>>8;
+    modbusTcpByteArray[MB_TCP_REGS + 27]  = cfgIACs[1] & 0x00FF;
+    modbusTcpByteArray[MB_TCP_REGS + 28]  = (cfgIACo[1] & 0xFF00)>>8;
+    modbusTcpByteArray[MB_TCP_REGS + 29]  = cfgIACo[1] & 0x00FF;
+
+    modbusTcpByteArray[MB_TCP_REGS + 30]  = (cfgIDCm[1] & 0xFF00)>>8;
+    modbusTcpByteArray[MB_TCP_REGS + 31]  = cfgIDCm[1] & 0x00FF;
+    modbusTcpByteArray[MB_TCP_REGS + 32]  = (cfgIDCb[1] & 0xFF00)>>8;
+    modbusTcpByteArray[MB_TCP_REGS + 33]  = cfgIDCb[1] & 0x00FF;
+
+    modbusTcpByteArray[MB_TCP_REGS + 34]  = (cfgIlim[1] & 0xFF00)>>8;
+    modbusTcpByteArray[MB_TCP_REGS + 35]  = cfgIlim[1] & 0x00FF;
+    modbusTcpByteArray[MB_TCP_REGS + 36]  = (cfgIsec[1] & 0xFF00)>>8;
+    modbusTcpByteArray[MB_TCP_REGS + 37]  = cfgIsec[1] & 0x00FF;
+  
+    // ADC3
+    modbusTcpByteArray[MB_TCP_REGS + 38]  = (cfgVDCm[0] & 0xFF00)>>8;
+    modbusTcpByteArray[MB_TCP_REGS + 39]  = cfgVDCm[0] & 0x00FF;
+    modbusTcpByteArray[MB_TCP_REGS + 40]  = (cfgVDCb[0] & 0xFF00)>>8;
+    modbusTcpByteArray[MB_TCP_REGS + 41]  = cfgVDCb[0] & 0x00FF;
+
+    // ADC4
+    modbusTcpByteArray[MB_TCP_REGS + 42]  = (cfgVDCm[1] & 0xFF00)>>8;
+    modbusTcpByteArray[MB_TCP_REGS + 43]  = cfgVDCm[1] & 0x00FF;
+    modbusTcpByteArray[MB_TCP_REGS + 44]  = (cfgVDCb[1] & 0xFF00)>>8;
+    modbusTcpByteArray[MB_TCP_REGS + 45]  = cfgVDCb[1] & 0x00FF;
   }
   else if ((addr == MB_HR_ADD_OUTS) && (nregs == MB_HR_NREG_OUTS))
   {

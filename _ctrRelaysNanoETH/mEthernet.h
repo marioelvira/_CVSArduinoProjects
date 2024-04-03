@@ -5,6 +5,8 @@ extern "C" {
 #ifndef _METH_H_
 #define _METH_H_
 
+// https://www.simplymodbus.ca/index.html
+
 #include "main.h"
 
 //////////////

@@ -29,6 +29,14 @@ void _ADCsSetup()
 ////////////////////////
 void _ADCsLoop()
 {
-  _IrmsLoop();
-  _VdcLoop();
+  if (millis() - AdcTick[0] >= ADC_TICK)
+  {
+    for (int i = 0; i < ADC_NUMBER; i++)
+      AdcDig[i] = analogRead(AdcPin[i]);
+    
+    AdcTick[0] = millis();
+  }
+
+  //_IrmsLoop();
+  //_VdcLoop();
 }

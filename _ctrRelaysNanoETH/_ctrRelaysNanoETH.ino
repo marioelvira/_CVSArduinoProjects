@@ -30,11 +30,11 @@ unsigned long AdcTick[ADC_NUMBER];
 ///////////
 // mEMON //
 ///////////
-int     emonState[EMON_NUMBER];
-int     emonSumI[EMON_NUMBER];
-int     emonSamples[EMON_NUMBER];
-double  emonIRMS[EMON_NUMBER];
-int     Irms[EMON_NUMBER];
+int     emonState[I_NUMBER];
+int     emonSumI[I_NUMBER];
+int     emonSamples[I_NUMBER];
+double  emonIRMS[I_NUMBER];
+int     Irms[I_NUMBER];
 
 /////////
 // Vdc //
@@ -88,27 +88,22 @@ int   crtCIrmsState[IRMS_NUMBER];
 ////////////
 // Config //
 ////////////
-int cfgMbId = 0;
 int cfgLogicIns;
 int cfgLogicOuts;
 
-int cfgC0ADCEmonR;
-int cfgC0ADCEmonS;
-int cfgC0ADCEmonO;
-int cfgC0ADCEmonL;
-int cfgC0ADCEmonSec;
+int cfgIType[I_NUMBER];
+int cfgIACr[I_NUMBER];
+int cfgIACs[I_NUMBER];
+int cfgIACo[I_NUMBER];
 
-int cfgC1ADCEmonR;
-int cfgC1ADCEmonS;
-int cfgC1ADCEmonO;
-int cfgC1ADCEmonL;
-int cfgC1ADCEmonSec;
+int cfgIDCm[I_NUMBER];
+int cfgIDCb[I_NUMBER];
 
-int cfgV0ADCm;
-int cfgV0ADCb;
+int cfgIlim[I_NUMBER];
+int cfgIsec[I_NUMBER];
 
-int cfgV1ADCm;
-int cfgV1ADCb;
+int cfgVDCm[VDC_NUMBER];
+int cfgVDCb[VDC_NUMBER];
 
 #if (_USE_ETHERNET_ == 1)
 int cfgModbusPORT = 502;

@@ -7,11 +7,11 @@ extern "C" {
 
 #include "main.h"
 
-#define EMON_NUMBER   2
+#define I_NUMBER      2
 
-#define EMON_INIT     0
-#define EMON_READ     1
-#define EMON_RESULT   2
+#define I_INIT     0
+#define I_READ     1
+#define I_RESULT   2
 
 #endif // _MEMON_H_
 

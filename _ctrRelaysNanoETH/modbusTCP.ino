@@ -217,6 +217,24 @@ void _mbWriteMultipleHolding()
 
     _ram2eepromCONFIG();
   }
+  else if ((addr == MB_HR_ADD_IP) && (nregs == MB_HR_NREG_IP))
+  {
+    ipMode  = (int)((modbusTcpByteArray[13] & 0x00FF)<<8)|(modbusTcpByteArray[14] & 0x00FF);
+    ipAddress[0] = (int)((modbusTcpByteArray[15] & 0x00FF)<<8)|(modbusTcpByteArray[16] & 0x00FF);
+    ipAddress[1] = (int)((modbusTcpByteArray[17] & 0x00FF)<<8)|(modbusTcpByteArray[18] & 0x00FF);
+    ipAddress[2] = (int)((modbusTcpByteArray[19] & 0x00FF)<<8)|(modbusTcpByteArray[20] & 0x00FF);
+    ipAddress[3] = (int)((modbusTcpByteArray[21] & 0x00FF)<<8)|(modbusTcpByteArray[22] & 0x00FF);
+    gateWay[0]   = (int)((modbusTcpByteArray[23] & 0x00FF)<<8)|(modbusTcpByteArray[24] & 0x00FF);
+    gateWay[1]   = (int)((modbusTcpByteArray[25] & 0x00FF)<<8)|(modbusTcpByteArray[26] & 0x00FF);
+    gateWay[2]   = (int)((modbusTcpByteArray[27] & 0x00FF)<<8)|(modbusTcpByteArray[28] & 0x00FF);
+    gateWay[3]   = (int)((modbusTcpByteArray[29] & 0x00FF)<<8)|(modbusTcpByteArray[30] & 0x00FF);
+    netMask[0]   = (int)((modbusTcpByteArray[31] & 0x00FF)<<8)|(modbusTcpByteArray[32] & 0x00FF);
+    netMask[1]   = (int)((modbusTcpByteArray[33] & 0x00FF)<<8)|(modbusTcpByteArray[34] & 0x00FF);
+    netMask[2]   = (int)((modbusTcpByteArray[35] & 0x00FF)<<8)|(modbusTcpByteArray[36] & 0x00FF);
+    netMask[3]   = (int)((modbusTcpByteArray[37] & 0x00FF)<<8)|(modbusTcpByteArray[38] & 0x00FF);
+
+    _ram2eepromCONFIG();
+  }
   else if ((addr == MB_HR_ADD_OUTS) && (nregs == MB_HR_NREG_OUTS))
   {
     // Only in MODE_TEST
@@ -343,6 +361,35 @@ void _mbReadHolding()
     modbusTcpByteArray[MB_TCP_REGS + 43]  = cfgVDCm[1] & 0x00FF;
     modbusTcpByteArray[MB_TCP_REGS + 44]  = (cfgVDCb[1] & 0xFF00)>>8;
     modbusTcpByteArray[MB_TCP_REGS + 45]  = cfgVDCb[1] & 0x00FF;
+  }
+  else if ((addr == MB_HR_ADD_IP) && (nregs == MB_HR_NREG_IP))
+  {
+    modbusTcpByteArray[MB_TCP_REGS]       = 0x00;
+    modbusTcpByteArray[MB_TCP_REGS + 1]   = ipMode;
+    modbusTcpByteArray[MB_TCP_REGS + 2]   = 0x00;
+    modbusTcpByteArray[MB_TCP_REGS + 3]   = ipAddress[0];
+    modbusTcpByteArray[MB_TCP_REGS + 4]   = 0x00;
+    modbusTcpByteArray[MB_TCP_REGS + 5]   = ipAddress[1];
+    modbusTcpByteArray[MB_TCP_REGS + 6]   = 0x00;
+    modbusTcpByteArray[MB_TCP_REGS + 7]   = ipAddress[2];
+    modbusTcpByteArray[MB_TCP_REGS + 8]   = 0x00;
+    modbusTcpByteArray[MB_TCP_REGS + 9]   = ipAddress[3];
+    modbusTcpByteArray[MB_TCP_REGS + 10]  = 0x00;
+    modbusTcpByteArray[MB_TCP_REGS + 11]  = gateWay[0];
+    modbusTcpByteArray[MB_TCP_REGS + 12]  = 0x00;
+    modbusTcpByteArray[MB_TCP_REGS + 13]  = gateWay[1];
+    modbusTcpByteArray[MB_TCP_REGS + 14]  = 0x00;
+    modbusTcpByteArray[MB_TCP_REGS + 15]  = gateWay[2];
+    modbusTcpByteArray[MB_TCP_REGS + 16]  = 0x00;
+    modbusTcpByteArray[MB_TCP_REGS + 17]  = gateWay[3];
+    modbusTcpByteArray[MB_TCP_REGS + 18]  = 0x00;
+    modbusTcpByteArray[MB_TCP_REGS + 19]  = netMask[0];
+    modbusTcpByteArray[MB_TCP_REGS + 20]  = 0x00;
+    modbusTcpByteArray[MB_TCP_REGS + 21]  = netMask[1];
+    modbusTcpByteArray[MB_TCP_REGS + 22]  = 0x00;
+    modbusTcpByteArray[MB_TCP_REGS + 23]  = netMask[2];
+    modbusTcpByteArray[MB_TCP_REGS + 24]  = 0x00;
+    modbusTcpByteArray[MB_TCP_REGS + 25]  = netMask[3];
   }
   else if ((addr == MB_HR_ADD_OUTS) && (nregs == MB_HR_NREG_OUTS))
   {

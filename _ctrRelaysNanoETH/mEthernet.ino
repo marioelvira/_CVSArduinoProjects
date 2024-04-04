@@ -8,8 +8,6 @@
 void _ETHSetup(void)
 {
   ethStatus = ETH_START;
-  ipMode = FIXIP_MODE; 
-  // ipMode = DHCP_MODE;
 }
 
 /////////////////////////
@@ -27,7 +25,8 @@ void _ETHLoop()
         #if (_ETH_SERIAL_DEBUG_ == 1)
         Serial.println("Ethernet DHCP Start");
         #endif
-        status = Ethernet.begin(myMAC);
+        Ethernet.init(PIN_SPI_CS); // Set the CS pin
+        status = Ethernet.begin(macAddress);
       }
       else
       {
@@ -35,7 +34,7 @@ void _ETHLoop()
         Serial.println("Ethernet FIX IP Start");
         #endif
         Ethernet.init(PIN_SPI_CS); // Set the CS pin
-        Ethernet.begin(myMAC, myIP, myDNS, myGW, myMASK);
+        Ethernet.begin(macAddress, ipAddress, dnsAddress, gateWay, netMask);
         status = 1;
       }
 

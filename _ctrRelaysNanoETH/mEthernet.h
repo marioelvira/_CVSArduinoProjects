@@ -10,9 +10,14 @@ extern "C" {
 #include "main.h"
 
 //////////////
+// IP Modes //
+//////////////
+#define DHCP_MODE       0
+#define FIXIP_MODE      1
+
+//////////////
 // Ethernet //
 //////////////
-
 #define ETH_START       0
 #define ETH_OK          1
 #define ETH_ERROR	      2

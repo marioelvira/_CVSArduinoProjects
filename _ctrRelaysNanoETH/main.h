@@ -31,7 +31,7 @@ extern "C" {
 #define _EEPROM_SERIAL_DEBUG_      1
 #define _STATUS_SERIAL_DEBUG_      0
 #define _ETH_SERIAL_DEBUG_         1
-#define _MBTCP_SERIAL_DEBUG_       1
+#define _MBTCP_SERIAL_DEBUG_       0
 #endif
 
 #endif // _MAIN_H_

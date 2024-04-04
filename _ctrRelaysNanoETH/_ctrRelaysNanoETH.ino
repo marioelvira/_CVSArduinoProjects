@@ -85,6 +85,28 @@ unsigned long ctrOutTick = 0;
 
 int   crtCIrmsState[IRMS_NUMBER];
 
+//////////
+// MQTT //
+//////////
+/*
+const char* brokerUrlSt = MQTT_BROKER;
+char brokerUrl[MQTT_URL_MAX];
+int brokerPort;
+const char* brokerUserSt = MQTT_USERNAME;
+char brokerUser[MQTT_USER_MAX];
+//const char* brokerPswdSt = MQTT_PASSWORD;
+char brokerPswd[MQTT_PSWD_MAX];
+
+WiFiClient wifiClient;
+PubSubClient mqttClient(wifiClient);
+
+String mqttClientId = "mbMQTT-" + String(ESP.getChipId());
+
+int mqttStatus;
+unsigned long mqttTick = 0;
+int mqttPayload;
+*/
+
 ////////////
 // Config //
 ////////////
@@ -131,11 +153,11 @@ int  mbResponseLength;
 #if (_USE_ETHERNET_ == 1)
 int       ipMode;
 
-uint8_t myMAC[6]  = { 0xF8, 0xDC, 0x7A, 0x45, 0xAD, 0xC5 };
-uint8_t myIP[4]   = {172,19,1,200};
-uint8_t myMASK[4] = {255,255,255,0};
-uint8_t myDNS[4]  = {172,19,1,8};
-uint8_t myGW[4]   = {172,19,1,8};
+uint8_t macAddress[6] = { 0xF8, 0xDC, 0x7A, 0x45, 0xAD, 0xC5 };
+uint8_t ipAddress[4]  = {172,19,1,200};
+uint8_t gateWay[4]    = {172,19,1,8};
+uint8_t netMask[4]    = {255,255,255,0};
+uint8_t dnsAddress[4] = {8,8,8,8};
 
 int ethStatus;
 unsigned long   ethTick;

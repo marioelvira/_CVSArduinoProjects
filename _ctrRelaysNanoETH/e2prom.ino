@@ -39,7 +39,22 @@ void _readCONFIG (void)
   
     EEPROM.write(EEPROM_ADD_OK, EEPROM_VAL_OK);
 
-    // Data Data
+    // IP Mode
+    EEPROM.write(EEPROM_ADD_IP_MODE, EEPROM_VAL_IP_MODE);
+    EEPROM.write(EEPROM_ADD_IP1,     EEPROM_VAL_IP1);
+    EEPROM.write(EEPROM_ADD_IP2,     EEPROM_VAL_IP2);
+    EEPROM.write(EEPROM_ADD_IP3,     EEPROM_VAL_IP3);
+    EEPROM.write(EEPROM_ADD_IP4,     EEPROM_VAL_IP4);
+    EEPROM.write(EEPROM_ADD_MASK1,   EEPROM_VAL_MASK1);
+    EEPROM.write(EEPROM_ADD_MASK2,   EEPROM_VAL_MASK2);
+    EEPROM.write(EEPROM_ADD_MASK3,   EEPROM_VAL_MASK3);
+    EEPROM.write(EEPROM_ADD_MASK4,   EEPROM_VAL_MASK4);
+    EEPROM.write(EEPROM_ADD_GATE1,   EEPROM_VAL_GATE1);
+    EEPROM.write(EEPROM_ADD_GATE2,   EEPROM_VAL_GATE2);
+    EEPROM.write(EEPROM_ADD_GATE3,   EEPROM_VAL_GATE3);
+    EEPROM.write(EEPROM_ADD_GATE4,   EEPROM_VAL_GATE4);
+
+    // Logic
     EEPROM.write(EEPROM_ADD_LOGIC_INS,  EEPROM_VAL_LOGIC_INS);
     EEPROM.write(EEPROM_ADD_LOGIC_OUTS, EEPROM_VAL_LOGIC_OUTS);
 
@@ -146,6 +161,21 @@ void _ram2eepromCONFIG (void)
 {
   int eeprom_value_hi, eeprom_value_lo;
 
+  // IP Mode
+  EEPROM.write(EEPROM_ADD_IP_MODE, (byte)ipMode);
+  EEPROM.write(EEPROM_ADD_IP1,     (byte)ipAddress[0]);
+  EEPROM.write(EEPROM_ADD_IP2,     (byte)ipAddress[1]);
+  EEPROM.write(EEPROM_ADD_IP3,     (byte)ipAddress[2]);
+  EEPROM.write(EEPROM_ADD_IP4,     (byte)ipAddress[3]);
+  EEPROM.write(EEPROM_ADD_MASK1,   (byte)gateWay[0]);
+  EEPROM.write(EEPROM_ADD_MASK2,   (byte)gateWay[1]);
+  EEPROM.write(EEPROM_ADD_MASK3,   (byte)gateWay[2]);
+  EEPROM.write(EEPROM_ADD_MASK4,   (byte)gateWay[3]);
+  EEPROM.write(EEPROM_ADD_GATE1,   (byte)netMask[0]);
+  EEPROM.write(EEPROM_ADD_GATE2,   (byte)netMask[1]);
+  EEPROM.write(EEPROM_ADD_GATE3,   (byte)netMask[2]);
+  EEPROM.write(EEPROM_ADD_GATE4,   (byte)netMask[3]);
+
   // Data Data
   EEPROM.write(EEPROM_ADD_LOGIC_INS,  (byte)cfgLogicIns);
   EEPROM.write(EEPROM_ADD_LOGIC_OUTS, (byte)cfgLogicOuts);
@@ -242,6 +272,47 @@ void _ram2eepromCONFIG (void)
 void _eeprom2ramCONFIG (void)
 {
   int eeprom_value_hi, eeprom_value_lo;
+
+  // IP Mode
+  ipMode = EEPROM.read(EEPROM_ADD_IP_MODE);
+  
+  #if (_EEPROM_SERIAL_DEBUG_ == 1)
+  if (ipMode == FIXIP_MODE)
+    Serial.println("IP Mode: FIX IP");
+  else
+    Serial.println("IP Mode: DHCP");
+  #endif
+  
+  if (ipMode == FIXIP_MODE)
+  {
+    // Ip Address
+    ipAddress[0] = EEPROM.read(EEPROM_ADD_IP1);
+    ipAddress[1] = EEPROM.read(EEPROM_ADD_IP2);
+    ipAddress[2] = EEPROM.read(EEPROM_ADD_IP3);
+    ipAddress[3] = EEPROM.read(EEPROM_ADD_IP4);
+    
+    // Mask
+    netMask[0] = EEPROM.read(EEPROM_ADD_MASK1);
+    netMask[1] = EEPROM.read(EEPROM_ADD_MASK2);
+    netMask[2] = EEPROM.read(EEPROM_ADD_MASK3);
+    netMask[3] = EEPROM.read(EEPROM_ADD_MASK4);
+
+    // Gateway
+    gateWay[0] = EEPROM.read(EEPROM_ADD_GATE1);
+    gateWay[1] = EEPROM.read(EEPROM_ADD_GATE2);
+    gateWay[2] = EEPROM.read(EEPROM_ADD_GATE3);
+    gateWay[3] = EEPROM.read(EEPROM_ADD_GATE4);
+  }
+
+  #if (_EEPROM_SERIAL_DEBUG_ == 1)
+  Serial.print("IP: ");
+  Serial.print(ipAddress[0]); Serial.print(".");Serial.print(ipAddress[1]); Serial.print(".");Serial.print(ipAddress[2]); Serial.print(".");Serial.print(ipAddress[3]);
+  Serial.print(" Mask: ");
+  Serial.print(netMask[0]); Serial.print(".");Serial.print(netMask[1]); Serial.print(".");Serial.print(netMask[2]); Serial.print(".");Serial.print(netMask[3]);
+  Serial.print(" Gateway: ");
+  Serial.print(gateWay[0]); Serial.print(".");Serial.print(gateWay[1]); Serial.print(".");Serial.print(gateWay[2]); Serial.print(".");Serial.print(gateWay[3]);
+  Serial.println();
+  #endif
 
   cfgLogicIns       = (int)EEPROM.read(EEPROM_ADD_LOGIC_INS);
   cfgLogicOuts      = (int)EEPROM.read(EEPROM_ADD_LOGIC_OUTS); 

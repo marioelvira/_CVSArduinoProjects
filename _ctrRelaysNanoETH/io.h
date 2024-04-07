@@ -37,7 +37,6 @@ extern "C" {
 
 // LED
 #define PIN_LED        13
-#define IRMS_NUMBER    2
 
 // ADCs
 #define ADC_NUMBER     4 // MAX 8

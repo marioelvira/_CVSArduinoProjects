@@ -1,90 +1,73 @@
 #include "main.h"
 #include "adcs.h"
 
-/////////
-// Iac //
-/////////
+//////////
+// Irms //
+//////////
 void _IrmsSetup()
 {
-  for (int i = 0; i < I_NUMBER; i++)
-    emonState[i] = I_INIT;
+  for (int i = 0; i < IRMS_NUMBER; i++)
+  {
+    IrmsRead[i].begin(IrmsVoltRange, IRMS_WINDOW, ADC_10BIT, BLR_ON, CNT_SCAN);
+    IrmsRead[i].start();
+  
+    IrmsuTick[i] = micros() + IRMS_UTICK + (IRMS_UTICK>>2)*i;
+    IrmsCont[i] = 0;
+    Irms[i] = 0;
+  }
 }
 
-/*
 void _IrmsLoop()
 {
-  double offsetI, filteredI, sqI, sumI;
-  int    adcDig;
-  offsetI = ADC_COUNTS>>1;
+  int adcDig;
 
-  for (int i = 0; i < I_NUMBER; i++)
+  for (int i = 0; i < IRMS_NUMBER; i++)
   {
-    switch (emonState[i])
+    if (micros() - IrmsuTick[i] >= IRMS_UTICK)
     {
-      case I_INIT:
-        emonSumI[i] = 0;
-        emonSamples[i] = 0;
+      AdcDig[i + ADC_EMON_OFFSET] = analogRead(AdcPin[i + ADC_EMON_OFFSET]);
+      adcDig = AdcDig[i + ADC_EMON_OFFSET];
 
-        emonState[i] = I_READ;
-        break;
+      IrmsRead[i].update(adcDig);
+      IrmsuTick[i] = micros();
 
-      case I_READ:
-        AdcDig[i + ADC_EMON_OFFSET] = analogRead(AdcPin[i + ADC_EMON_OFFSET]);
-        adcDig = AdcDig[i + ADC_EMON_OFFSET];
-
-        // Digital low pass filter extracts the 2.5 V or 1.65 V dc offset,
-        //  then subtract this - signal is now centered on 0 counts.
-        offsetI = (offsetI + (adcDig - offsetI)/1024);
-        filteredI = adcDig - offsetI;
-
-        // Root-mean-square method current
-        // 1) square current values
-        sqI = filteredI * filteredI;
-        // 2) sum
-        emonSumI[i] += sqI;
-
-        emonSamples[i]++;
-        if (emonSamples[i] > cfgEmonS[i])
-          emonState[i] = I_RESULT;
-        break;
-
-      case I_RESULT:
-        double I_RATIO = double(cfgEmonR[i]) *((ADC_SUPPLY_VOLTAGE/1000.0) / (ADC_COUNTS));
-        emonIRMS[i] = I_RATIO * sqrt(emonSumI[i] / cfgEmonS[i]);
-        Irms[i] = (int)(emonIRMS[i]*1000) + cfgEmonO[i];
-
-        emonState[i] = I_INIT;
-        break;
+      IrmsCont[i]++;
+      if (IrmsCont[i] > IRMS_CONT)
+      {
+        IrmsRead[i].publish();
+        Irms[i] = (int)(IrmsRead[i].rmsVal*1000);
+        IrmsCont[i] = 0;
+      }
     }
   }
 }
-*/
 
 /////////
 // Vdc //
 /////////
-void _VdcSetup ()
+void _VdcSetup()
 {
   for (int i = 0; i < VDC_NUMBER; i++)
+  {
+    VdcTick[i] = millis() + VDC_MTICK + (VDC_MTICK>>2)*i;
     Vdc[i] = 0;
+  }
 }
 
-/*
-void _VdcLoop ()
+void _VdcLoop()
 {
   int  adcDig;
 
   for (int i = 0; i < VDC_NUMBER; i++)
   {
-    if (millis() - AdcTick[i + ADC_VDC_OFFSET] >= ADC_TICK)
+    if (millis() - VdcTick[i] >= VDC_MTICK)
     {
       AdcDig[i + ADC_VDC_OFFSET] = analogRead(AdcPin[i + ADC_VDC_OFFSET]);
       adcDig = AdcDig[i + ADC_VDC_OFFSET];
 
-      Vdc[i] = (float)adcDig*((float)cfgVADCm[i])/(float)10000 + (float)cfgVADCb[i]/1000;
+      Vdc[i] = (float)adcDig*((float)cfgVDCm[i])/(float)10000 + (float)cfgVDCb[i]/1000;
 
-      AdcTick[i + ADC_VDC_OFFSET] = millis();
+      VdcTick[i] = millis();
     }
   }
 }
-*/

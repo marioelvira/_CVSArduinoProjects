@@ -5,10 +5,7 @@
 void _ADCsSetup()
 {
   for (int i = 0; i < ADC_NUMBER; i++)
-  {
     AdcDig[i] = 0;
-    AdcTick[i] = millis() + i*(ADC_TICK/ADC_NUMBER);
-  }
 
   // No bigger than ADC_NUMBER
   AdcPin[0] = PIN_ADC0;
@@ -29,6 +26,7 @@ void _ADCsSetup()
 ////////////////////////
 void _ADCsLoop()
 {
+  /*
   if (millis() - AdcTick[0] >= ADC_TICK)
   {
     for (int i = 0; i < ADC_NUMBER; i++)
@@ -36,7 +34,7 @@ void _ADCsLoop()
     
     AdcTick[0] = millis();
   }
-
-  //_IrmsLoop();
-  //_VdcLoop();
+  */
+  _IrmsLoop();
+  _VdcLoop();
 }

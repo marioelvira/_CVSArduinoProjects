@@ -1,5 +1,6 @@
 #include <EEPROM.h>
 #include <UIPEthernet.h>
+#include <TrueRMS.h>
 
 #include "__ver.h"
 
@@ -25,21 +26,22 @@ const char* FW_Version = FW_VERSION;
 //////////
 int   AdcDig[ADC_NUMBER];
 int   AdcPin[ADC_NUMBER];
-unsigned long AdcTick[ADC_NUMBER];
 
-///////////
-// mEMON //
-///////////
-int     emonState[I_NUMBER];
-int     emonSumI[I_NUMBER];
-int     emonSamples[I_NUMBER];
-double  emonIRMS[I_NUMBER];
-int     Irms[I_NUMBER];
+//////////
+// Irms //
+//////////
+Rms           IrmsRead[IRMS_NUMBER];
+float         IrmsVoltRange = 5.00;
+
+unsigned long IrmsuTick[IRMS_NUMBER];
+int           IrmsCont[IRMS_NUMBER];
+int           Irms[IRMS_NUMBER];
 
 /////////
 // Vdc //
 /////////
-int     Vdc[VDC_NUMBER];
+unsigned long VdcTick[VDC_NUMBER];
+int           Vdc[VDC_NUMBER];
 
 ///////////////
 // Board Led //
@@ -85,44 +87,22 @@ unsigned long ctrOutTick = 0;
 
 int   crtCIrmsState[IRMS_NUMBER];
 
-//////////
-// MQTT //
-//////////
-/*
-const char* brokerUrlSt = MQTT_BROKER;
-char brokerUrl[MQTT_URL_MAX];
-int brokerPort;
-const char* brokerUserSt = MQTT_USERNAME;
-char brokerUser[MQTT_USER_MAX];
-//const char* brokerPswdSt = MQTT_PASSWORD;
-char brokerPswd[MQTT_PSWD_MAX];
-
-WiFiClient wifiClient;
-PubSubClient mqttClient(wifiClient);
-
-String mqttClientId = "mbMQTT-" + String(ESP.getChipId());
-
-int mqttStatus;
-unsigned long mqttTick = 0;
-int mqttPayload;
-*/
-
 ////////////
 // Config //
 ////////////
 int cfgLogicIns;
 int cfgLogicOuts;
 
-int cfgIType[I_NUMBER];
-int cfgIACr[I_NUMBER];
-int cfgIACs[I_NUMBER];
-int cfgIACo[I_NUMBER];
+int cfgIType[IRMS_NUMBER];
+int cfgIACr[IRMS_NUMBER];
+int cfgIACs[IRMS_NUMBER];
+int cfgIACo[IRMS_NUMBER];
 
-int cfgIDCm[I_NUMBER];
-int cfgIDCb[I_NUMBER];
+int cfgIDCm[IRMS_NUMBER];
+int cfgIDCb[IRMS_NUMBER];
 
-int cfgIlim[I_NUMBER];
-int cfgIsec[I_NUMBER];
+int cfgIlim[IRMS_NUMBER];
+int cfgIsec[IRMS_NUMBER];
 
 int cfgVDCm[VDC_NUMBER];
 int cfgVDCb[VDC_NUMBER];
@@ -153,7 +133,7 @@ int  mbResponseLength;
 #if (_USE_ETHERNET_ == 1)
 int       ipMode;
 
-uint8_t macAddress[6] = { 0xF8, 0xDC, 0x7A, 0x45, 0xAD, 0xC5 };
+uint8_t macAddress[6] = {0xF8, 0xDC, 0x7A, 0x45, 0xAD, 0xC5};
 uint8_t ipAddress[4]  = {172,19,1,200};
 uint8_t gateWay[4]    = {172,19,1,8};
 uint8_t netMask[4]    = {255,255,255,0};

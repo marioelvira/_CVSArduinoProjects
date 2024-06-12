@@ -3,6 +3,7 @@
   Creado  06/12/2015
   Modif   21/01/2018
   Modif   09/12/2023
+  Modif   11/05/2024
 
   Tabla de Verdad
   ---------------
@@ -69,8 +70,8 @@
 #define A1_TIEMPO             1 // 200     // 4x500ms = 2 segundos
 #define STATE2_FORCED_TIEMPO  1000   // 18000x10ms = 3minutos
 
-#define A0_LEVEL              600     // 1024 -> 5V así 600 -> 5V*600/1024 = 2,9V
-#define A1_LEVEL              500     // 1024 -> 5V así 500 -> 5V*500/1024 = 2,44V
+#define A0_LEVEL              800   // 600    // 1024 -> 5V así 600 -> 5V*600/1024 = 2,9V
+#define A1_LEVEL              800   //500     // 1024 -> 5V así 500 -> 5V*500/1024 = 2,44V
 
 // Estados Generales
 #define STATE1        1

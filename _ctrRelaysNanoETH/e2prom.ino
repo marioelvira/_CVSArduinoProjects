@@ -161,6 +161,7 @@ void _ram2eepromCONFIG (void)
 {
   int eeprom_value_hi, eeprom_value_lo;
 
+  #if (_USE_ETHERNET_ == 1)
   // IP Mode
   EEPROM.write(EEPROM_ADD_IP_MODE, (byte)ipMode);
   EEPROM.write(EEPROM_ADD_IP1,     (byte)ipAddress[0]);
@@ -175,6 +176,7 @@ void _ram2eepromCONFIG (void)
   EEPROM.write(EEPROM_ADD_GATE2,   (byte)netMask[1]);
   EEPROM.write(EEPROM_ADD_GATE3,   (byte)netMask[2]);
   EEPROM.write(EEPROM_ADD_GATE4,   (byte)netMask[3]);
+  #endif
 
   // Data Data
   EEPROM.write(EEPROM_ADD_LOGIC_INS,  (byte)cfgLogicIns);
@@ -273,6 +275,7 @@ void _eeprom2ramCONFIG (void)
 {
   int eeprom_value_hi, eeprom_value_lo;
 
+  #if (_USE_ETHERNET_ == 1)
   // IP Mode
   ipMode = EEPROM.read(EEPROM_ADD_IP_MODE);
   
@@ -313,6 +316,8 @@ void _eeprom2ramCONFIG (void)
   Serial.print(gateWay[0]); Serial.print(".");Serial.print(gateWay[1]); Serial.print(".");Serial.print(gateWay[2]); Serial.print(".");Serial.print(gateWay[3]);
   Serial.println();
   #endif
+
+  #endif // _USE_ETHERNET_
 
   cfgLogicIns       = (int)EEPROM.read(EEPROM_ADD_LOGIC_INS);
   cfgLogicOuts      = (int)EEPROM.read(EEPROM_ADD_LOGIC_OUTS); 

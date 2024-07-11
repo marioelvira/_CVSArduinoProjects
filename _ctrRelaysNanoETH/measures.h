@@ -12,10 +12,13 @@ extern "C" {
 #define ADC_VDC_OFFSET      2
 
 // Irms
-#define IRMS_NUMBER     2
-#define IRMS_UTICK      1000    // 1.0ms
-#define IRMS_WINDOW     40      // Rms window of 40 samples, means 2 periods @50Hz
-#define IRMS_CONT       1000    // 1s
+#define IRMS_NUMBER         2
+#define IRMS_FREQ_HZ        50
+
+#define ADC_IRMS_RATIO      5 // 5A -> 1V
+#define ADC_BITS            10
+#define ADC_COUNTS          (1<<ADC_BITS)
+#define ADC_SUPPLY_VOLTAGE  5000
 
 // Vdc
 #define VDC_NUMBER      2

@@ -25,11 +25,11 @@ extern "C" {
 #define _USE_MBTCP_                1
 #endif
 
-#define _SERIAL_DEBUG_             1
+#define _SERIAL_DEBUG_             0
 
 #if (_SERIAL_DEBUG_ == 1)
 #define _EEPROM_SERIAL_DEBUG_      1
-#define _STATUS_SERIAL_DEBUG_      0
+#define _STATUS_SERIAL_DEBUG_      1
 #define _ETH_SERIAL_DEBUG_         1
 #define _MBTCP_SERIAL_DEBUG_       0
 #endif

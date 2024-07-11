@@ -83,12 +83,30 @@ void _TimeLoop(void)
     // INs
     for (i = 0; i< IN_NUMBER; i++)
     {
-      Serial.print(" IN");
+      Serial.print("IN");
       Serial.print(i);
       Serial.print(": ");
       Serial.println(InDig[i]);
     }
     
+    // IRMs
+    for (i = 0; i< IRMS_NUMBER; i++)
+    {
+      Serial.print("IRMS");
+      Serial.print(i);
+      Serial.print(": ");
+      Serial.println(Irms[i]);
+    }
+
+    // VDCs
+    for (i = 0; i< VDC_NUMBER; i++)
+    {
+      Serial.print("VDC");
+      Serial.print(i);
+      Serial.print(": ");
+      Serial.println(Vdc[i]);
+    }
+
     Serial.println("<><><><><><><>");
     Serial.println(" ");
 

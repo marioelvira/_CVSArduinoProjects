@@ -1,6 +1,5 @@
 #include <EEPROM.h>
 #include <UIPEthernet.h>
-#include <TrueRMS.h>
 
 #include "__ver.h"
 
@@ -30,12 +29,20 @@ int   AdcPin[ADC_NUMBER];
 //////////
 // Irms //
 //////////
-Rms           IrmsRead[IRMS_NUMBER];
-float         IrmsVoltRange = 5.00;
+const double  nCyclesToMeasure = 5;   // 1
+const int     nSamplesPerCycle = 25; // 300
+const int     numSamples = nSamplesPerCycle * nCyclesToMeasure;
+const int     samplePeriod = ((1 / IRMS_FREQ_HZ) * nCyclesToMeasure * 1000000) / numSamples;
+double        Isamples[numSamples];
+int           nSamples = 0;
+double        Ioffset;
+double        Iratio;
 
 unsigned long IrmsuTick[IRMS_NUMBER];
 int           IrmsCont[IRMS_NUMBER];
+
 int           Irms[IRMS_NUMBER];
+unsigned long IrmsTick[IRMS_NUMBER];
 
 /////////
 // Vdc //

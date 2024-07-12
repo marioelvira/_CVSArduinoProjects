@@ -15,7 +15,9 @@ extern "C" {
 #define IRMS_NUMBER         2
 #define IRMS_FREQ_HZ        50
 
-#define ADC_IRMS_RATIO      5 // 5A -> 1V
+#define ADC_IRMS_RATIO_0    5 // 5A -> 1V
+#define ADC_IRMS_RATIO_1    15 // 5A -> 1V
+
 #define ADC_BITS            10
 #define ADC_COUNTS          (1<<ADC_BITS)
 #define ADC_SUPPLY_VOLTAGE  5000

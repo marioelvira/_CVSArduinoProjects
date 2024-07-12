@@ -33,10 +33,10 @@ const double  nCyclesToMeasure = 5;   // 1
 const int     nSamplesPerCycle = 25; // 300
 const int     numSamples = nSamplesPerCycle * nCyclesToMeasure;
 const int     samplePeriod = ((1 / IRMS_FREQ_HZ) * nCyclesToMeasure * 1000000) / numSamples;
-double        Isamples[numSamples];
-int           nSamples = 0;
+double        Isamples[numSamples][IRMS_NUMBER];
+int           nSamples[IRMS_NUMBER];
 double        Ioffset;
-double        Iratio;
+double        Iratio[IRMS_NUMBER];
 
 unsigned long IrmsuTick[IRMS_NUMBER];
 int           IrmsCont[IRMS_NUMBER];
@@ -102,7 +102,6 @@ int cfgLogicOuts;
 
 int cfgIType[IRMS_NUMBER];
 int cfgIACr[IRMS_NUMBER];
-int cfgIACs[IRMS_NUMBER];
 int cfgIACo[IRMS_NUMBER];
 
 int cfgIDCm[IRMS_NUMBER];

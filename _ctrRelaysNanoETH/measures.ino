@@ -8,11 +8,12 @@
 void _IrmsSetup()
 {
   Ioffset = ADC_COUNTS>>1;
-  Iratio = ADC_IRMS_RATIO *((ADC_SUPPLY_VOLTAGE/1000.0)/(ADC_COUNTS));
-  nSamples = 0;
 
   for (int i = 0; i < IRMS_NUMBER; i++)
   { 
+    nSamples[i] = 0;
+    Iratio[i] = cfgIACr[i] *((ADC_SUPPLY_VOLTAGE/1000.0)/(ADC_COUNTS));
+
     IrmsuTick[i] = micros() + samplePeriod + (samplePeriod>>2)*i;
     IrmsCont[i] = 0;
 
@@ -23,11 +24,11 @@ void _IrmsSetup()
 
 void _IrmsLoop()
 {
-  int adcDig, i;
-  i = 0;
+  int adcDig, i, j;
+  double add, sqr;
 
-  //for (i = 0; i < IRMS_NUMBER; i++)
-  //{
+  for (i = 0; i < IRMS_NUMBER; i++)
+  {
     if (micros() - IrmsuTick[i] >= samplePeriod)
     {
       AdcDig[i + ADC_EMON_OFFSET] = analogRead(AdcPin[i + ADC_EMON_OFFSET]);
@@ -36,28 +37,25 @@ void _IrmsLoop()
       // Digital low pass filter extracts the 1.65 V dc offset,
       // then subtract this - signal is now centered on 0 counts.
       Ioffset = (Ioffset + (adcDig - Ioffset)/1024);
-      Isamples[nSamples] = (double)adcDig - Ioffset;
-      nSamples++;
+      Isamples[nSamples[i]][i] = (double)adcDig - Ioffset;
+      nSamples[i]++;
 
       IrmsuTick[i] = micros();
 
-      if (nSamples >= numSamples)
+      if (nSamples[i] >= numSamples)
       {
-        Irms[i] = Iratio * 1000 * _ismSquareAdd(Isamples, nSamples);
-        nSamples = 0;
+        add = 0;
+
+        for (int j = 0; j < numSamples; j++)
+          add += Isamples[j][i] * Isamples[j][i];
+  
+        sqr = sqrt(add / double(numSamples));
+
+        Irms[i] = Iratio[i] * 1000 * sqr;
+        nSamples[i] = 0;
       }
     }
-  //}
-}
-
-double _ismSquareAdd(double arr[], int length)
-{
-  double add = 0;
-
-  for (int i = 0; i < length; i++)
-    add += arr[i] * arr[i];
-  
-  return sqrt(add / double(length));
+  }
 }
 
 /////////

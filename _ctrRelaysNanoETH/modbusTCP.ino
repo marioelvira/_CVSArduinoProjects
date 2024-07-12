@@ -193,27 +193,25 @@ void _mbWriteMultipleHolding()
 
     cfgIType[0] = (int)((modbusTcpByteArray[19] & 0x00FF)<<8)|(modbusTcpByteArray[20] & 0x00FF);
     cfgIACr[0]  = (int)((modbusTcpByteArray[21] & 0x00FF)<<8)|(modbusTcpByteArray[22] & 0x00FF);
-    cfgIACs[0]  = (int)((modbusTcpByteArray[23] & 0x00FF)<<8)|(modbusTcpByteArray[24] & 0x00FF);
-    cfgIACo[0]  = (int)((modbusTcpByteArray[25] & 0x00FF)<<8)|(modbusTcpByteArray[26] & 0x00FF);
-    cfgIDCm[0]  = (int)((modbusTcpByteArray[27] & 0x00FF)<<8)|(modbusTcpByteArray[28] & 0x00FF);
-    cfgIDCb[0]  = (int)((modbusTcpByteArray[29] & 0x00FF)<<8)|(modbusTcpByteArray[30] & 0x00FF);
-    cfgIlim[0]  = (int)((modbusTcpByteArray[31] & 0x00FF)<<8)|(modbusTcpByteArray[32] & 0x00FF);
-    cfgIsec[0]  = (int)((modbusTcpByteArray[33] & 0x00FF)<<8)|(modbusTcpByteArray[34] & 0x00FF);
+    cfgIACo[0]  = (int)((modbusTcpByteArray[23] & 0x00FF)<<8)|(modbusTcpByteArray[24] & 0x00FF);
+    cfgIDCm[0]  = (int)((modbusTcpByteArray[25] & 0x00FF)<<8)|(modbusTcpByteArray[26] & 0x00FF);
+    cfgIDCb[0]  = (int)((modbusTcpByteArray[27] & 0x00FF)<<8)|(modbusTcpByteArray[28] & 0x00FF);
+    cfgIlim[0]  = (int)((modbusTcpByteArray[29] & 0x00FF)<<8)|(modbusTcpByteArray[30] & 0x00FF);
+    cfgIsec[0]  = (int)((modbusTcpByteArray[31] & 0x00FF)<<8)|(modbusTcpByteArray[32] & 0x00FF);
       
-    cfgIType[1] = (int)((modbusTcpByteArray[35] & 0x00FF)<<8)|(modbusTcpByteArray[36] & 0x00FF);
-    cfgIACr[1]  = (int)((modbusTcpByteArray[37] & 0x00FF)<<8)|(modbusTcpByteArray[38] & 0x00FF);
-    cfgIACs[1]  = (int)((modbusTcpByteArray[39] & 0x00FF)<<8)|(modbusTcpByteArray[40] & 0x00FF);
-    cfgIACo[1]  = (int)((modbusTcpByteArray[41] & 0x00FF)<<8)|(modbusTcpByteArray[42] & 0x00FF);
-    cfgIDCm[1]  = (int)((modbusTcpByteArray[43] & 0x00FF)<<8)|(modbusTcpByteArray[44] & 0x00FF);
-    cfgIDCb[1]  = (int)((modbusTcpByteArray[45] & 0x00FF)<<8)|(modbusTcpByteArray[46] & 0x00FF);
-    cfgIlim[1]  = (int)((modbusTcpByteArray[47] & 0x00FF)<<8)|(modbusTcpByteArray[48] & 0x00FF);
-    cfgIsec[1]  = (int)((modbusTcpByteArray[49] & 0x00FF)<<8)|(modbusTcpByteArray[50] & 0x00FF);
+    cfgIType[1] = (int)((modbusTcpByteArray[33] & 0x00FF)<<8)|(modbusTcpByteArray[34] & 0x00FF);
+    cfgIACr[1]  = (int)((modbusTcpByteArray[35] & 0x00FF)<<8)|(modbusTcpByteArray[36] & 0x00FF);
+    cfgIACo[1]  = (int)((modbusTcpByteArray[37] & 0x00FF)<<8)|(modbusTcpByteArray[38] & 0x00FF);
+    cfgIDCm[1]  = (int)((modbusTcpByteArray[39] & 0x00FF)<<8)|(modbusTcpByteArray[40] & 0x00FF);
+    cfgIDCb[1]  = (int)((modbusTcpByteArray[41] & 0x00FF)<<8)|(modbusTcpByteArray[42] & 0x00FF);
+    cfgIlim[1]  = (int)((modbusTcpByteArray[43] & 0x00FF)<<8)|(modbusTcpByteArray[44] & 0x00FF);
+    cfgIsec[1]  = (int)((modbusTcpByteArray[45] & 0x00FF)<<8)|(modbusTcpByteArray[46] & 0x00FF);
 
-    cfgVDCm[0]  = (int)((modbusTcpByteArray[51] & 0x00FF)<<8)|(modbusTcpByteArray[52] & 0x00FF);
-    cfgVDCb[0]  = (int)((modbusTcpByteArray[53] & 0x00FF)<<8)|(modbusTcpByteArray[54] & 0x00FF);
+    cfgVDCm[0]  = (int)((modbusTcpByteArray[47] & 0x00FF)<<8)|(modbusTcpByteArray[48] & 0x00FF);
+    cfgVDCb[0]  = (int)((modbusTcpByteArray[49] & 0x00FF)<<8)|(modbusTcpByteArray[50] & 0x00FF);
 
-    cfgVDCm[1]  = (int)((modbusTcpByteArray[55] & 0x00FF)<<8)|(modbusTcpByteArray[56] & 0x00FF);
-    cfgVDCb[1]  = (int)((modbusTcpByteArray[57] & 0x00FF)<<8)|(modbusTcpByteArray[58] & 0x00FF);
+    cfgVDCm[1]  = (int)((modbusTcpByteArray[51] & 0x00FF)<<8)|(modbusTcpByteArray[52] & 0x00FF);
+    cfgVDCb[1]  = (int)((modbusTcpByteArray[53] & 0x00FF)<<8)|(modbusTcpByteArray[54] & 0x00FF);
 
     _ram2eepromCONFIG();
   }
@@ -314,53 +312,49 @@ void _mbReadHolding()
 
     modbusTcpByteArray[MB_TCP_REGS + 8]   = (cfgIACr[0] & 0xFF00)>>8;
     modbusTcpByteArray[MB_TCP_REGS + 9]   = cfgIACr[0] & 0x00FF;
-    modbusTcpByteArray[MB_TCP_REGS + 10]  = (cfgIACs[0] & 0xFF00)>>8;
-    modbusTcpByteArray[MB_TCP_REGS + 11]  = cfgIACs[0] & 0x00FF;
-    modbusTcpByteArray[MB_TCP_REGS + 12]  = (cfgIACo[0] & 0xFF00)>>8;
-    modbusTcpByteArray[MB_TCP_REGS + 13]  = cfgIACo[0] & 0x00FF;
+    modbusTcpByteArray[MB_TCP_REGS + 10]  = (cfgIACo[0] & 0xFF00)>>8;
+    modbusTcpByteArray[MB_TCP_REGS + 11]  = cfgIACo[0] & 0x00FF;
 
-    modbusTcpByteArray[MB_TCP_REGS + 14]  = (cfgIDCm[0] & 0xFF00)>>8;
-    modbusTcpByteArray[MB_TCP_REGS + 15]  = cfgIDCm[0] & 0x00FF;
-    modbusTcpByteArray[MB_TCP_REGS + 16]  = (cfgIDCb[0] & 0xFF00)>>8;
-    modbusTcpByteArray[MB_TCP_REGS + 17]  = cfgIDCb[0] & 0x00FF;
+    modbusTcpByteArray[MB_TCP_REGS + 12]  = (cfgIDCm[0] & 0xFF00)>>8;
+    modbusTcpByteArray[MB_TCP_REGS + 13]  = cfgIDCm[0] & 0x00FF;
+    modbusTcpByteArray[MB_TCP_REGS + 14]  = (cfgIDCb[0] & 0xFF00)>>8;
+    modbusTcpByteArray[MB_TCP_REGS + 15]  = cfgIDCb[0] & 0x00FF;
 
-    modbusTcpByteArray[MB_TCP_REGS + 18]  = (cfgIlim[0] & 0xFF00)>>8;
-    modbusTcpByteArray[MB_TCP_REGS + 19]  = cfgIlim[0] & 0x00FF;
-    modbusTcpByteArray[MB_TCP_REGS + 20]  = (cfgIsec[0] & 0xFF00)>>8;
-    modbusTcpByteArray[MB_TCP_REGS + 21]  = cfgIsec[0] & 0x00FF;
+    modbusTcpByteArray[MB_TCP_REGS + 16]  = (cfgIlim[0] & 0xFF00)>>8;
+    modbusTcpByteArray[MB_TCP_REGS + 17]  = cfgIlim[0] & 0x00FF;
+    modbusTcpByteArray[MB_TCP_REGS + 18]  = (cfgIsec[0] & 0xFF00)>>8;
+    modbusTcpByteArray[MB_TCP_REGS + 19]  = cfgIsec[0] & 0x00FF;
 
     // ADC1
-    modbusTcpByteArray[MB_TCP_REGS + 22]  = 0x00;
-    modbusTcpByteArray[MB_TCP_REGS + 23]  = cfgIType[1];
+    modbusTcpByteArray[MB_TCP_REGS + 20]  = 0x00;
+    modbusTcpByteArray[MB_TCP_REGS + 21]  = cfgIType[1];
 
-    modbusTcpByteArray[MB_TCP_REGS + 24]  = (cfgIACr[1] & 0xFF00)>>8;
-    modbusTcpByteArray[MB_TCP_REGS + 25]  = cfgIACr[1] & 0x00FF;
-    modbusTcpByteArray[MB_TCP_REGS + 26]  = (cfgIACs[1] & 0xFF00)>>8;
-    modbusTcpByteArray[MB_TCP_REGS + 27]  = cfgIACs[1] & 0x00FF;
-    modbusTcpByteArray[MB_TCP_REGS + 28]  = (cfgIACo[1] & 0xFF00)>>8;
-    modbusTcpByteArray[MB_TCP_REGS + 29]  = cfgIACo[1] & 0x00FF;
+    modbusTcpByteArray[MB_TCP_REGS + 22]  = (cfgIACr[1] & 0xFF00)>>8;
+    modbusTcpByteArray[MB_TCP_REGS + 23]  = cfgIACr[1] & 0x00FF;
+    modbusTcpByteArray[MB_TCP_REGS + 24]  = (cfgIACo[1] & 0xFF00)>>8;
+    modbusTcpByteArray[MB_TCP_REGS + 25]  = cfgIACo[1] & 0x00FF;
 
-    modbusTcpByteArray[MB_TCP_REGS + 30]  = (cfgIDCm[1] & 0xFF00)>>8;
-    modbusTcpByteArray[MB_TCP_REGS + 31]  = cfgIDCm[1] & 0x00FF;
-    modbusTcpByteArray[MB_TCP_REGS + 32]  = (cfgIDCb[1] & 0xFF00)>>8;
-    modbusTcpByteArray[MB_TCP_REGS + 33]  = cfgIDCb[1] & 0x00FF;
+    modbusTcpByteArray[MB_TCP_REGS + 26]  = (cfgIDCm[1] & 0xFF00)>>8;
+    modbusTcpByteArray[MB_TCP_REGS + 27]  = cfgIDCm[1] & 0x00FF;
+    modbusTcpByteArray[MB_TCP_REGS + 28]  = (cfgIDCb[1] & 0xFF00)>>8;
+    modbusTcpByteArray[MB_TCP_REGS + 29]  = cfgIDCb[1] & 0x00FF;
 
-    modbusTcpByteArray[MB_TCP_REGS + 34]  = (cfgIlim[1] & 0xFF00)>>8;
-    modbusTcpByteArray[MB_TCP_REGS + 35]  = cfgIlim[1] & 0x00FF;
-    modbusTcpByteArray[MB_TCP_REGS + 36]  = (cfgIsec[1] & 0xFF00)>>8;
-    modbusTcpByteArray[MB_TCP_REGS + 37]  = cfgIsec[1] & 0x00FF;
+    modbusTcpByteArray[MB_TCP_REGS + 30]  = (cfgIlim[1] & 0xFF00)>>8;
+    modbusTcpByteArray[MB_TCP_REGS + 31]  = cfgIlim[1] & 0x00FF;
+    modbusTcpByteArray[MB_TCP_REGS + 32]  = (cfgIsec[1] & 0xFF00)>>8;
+    modbusTcpByteArray[MB_TCP_REGS + 33]  = cfgIsec[1] & 0x00FF;
   
     // ADC3
-    modbusTcpByteArray[MB_TCP_REGS + 38]  = (cfgVDCm[0] & 0xFF00)>>8;
-    modbusTcpByteArray[MB_TCP_REGS + 39]  = cfgVDCm[0] & 0x00FF;
-    modbusTcpByteArray[MB_TCP_REGS + 40]  = (cfgVDCb[0] & 0xFF00)>>8;
-    modbusTcpByteArray[MB_TCP_REGS + 41]  = cfgVDCb[0] & 0x00FF;
+    modbusTcpByteArray[MB_TCP_REGS + 34]  = (cfgVDCm[0] & 0xFF00)>>8;
+    modbusTcpByteArray[MB_TCP_REGS + 35]  = cfgVDCm[0] & 0x00FF;
+    modbusTcpByteArray[MB_TCP_REGS + 36]  = (cfgVDCb[0] & 0xFF00)>>8;
+    modbusTcpByteArray[MB_TCP_REGS + 37]  = cfgVDCb[0] & 0x00FF;
 
     // ADC4
-    modbusTcpByteArray[MB_TCP_REGS + 42]  = (cfgVDCm[1] & 0xFF00)>>8;
-    modbusTcpByteArray[MB_TCP_REGS + 43]  = cfgVDCm[1] & 0x00FF;
-    modbusTcpByteArray[MB_TCP_REGS + 44]  = (cfgVDCb[1] & 0xFF00)>>8;
-    modbusTcpByteArray[MB_TCP_REGS + 45]  = cfgVDCb[1] & 0x00FF;
+    modbusTcpByteArray[MB_TCP_REGS + 38]  = (cfgVDCm[1] & 0xFF00)>>8;
+    modbusTcpByteArray[MB_TCP_REGS + 39]  = cfgVDCm[1] & 0x00FF;
+    modbusTcpByteArray[MB_TCP_REGS + 40]  = (cfgVDCb[1] & 0xFF00)>>8;
+    modbusTcpByteArray[MB_TCP_REGS + 41]  = cfgVDCb[1] & 0x00FF;
   }
   else if ((addr == MB_HR_ADD_IP) && (nregs == MB_HR_NREG_IP))
   {

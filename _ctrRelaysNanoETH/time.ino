@@ -5,6 +5,7 @@
 void _TimeSetup(void)
 {
   timeTick = millis();
+  timeSecTick = 0;
   timeSec = 0;
   timeMin = 0;
   timeHour = 0;
@@ -21,7 +22,9 @@ void _TimeSetup(void)
 void _TimeLoop(void)
 {
   if (millis() - timeTick >= 1000)
-  {   
+  { 
+    timeSecTick++;
+    
     timeSec++;
     if (timeSec >= 60)
     {

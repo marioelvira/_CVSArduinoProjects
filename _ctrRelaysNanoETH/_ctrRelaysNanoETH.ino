@@ -78,6 +78,7 @@ int   InDig[IN_NUMBER];
 // Time //
 //////////
 unsigned long timeTick = 0;
+unsigned long timeSecTick = 0;
 int timeSec = 0;
 int timeMin = 0;
 int timeHour = 0;
@@ -92,7 +93,9 @@ int   ctrOutState;
 
 unsigned long ctrOutTick = 0;
 
-int   crtCIrmsState[IRMS_NUMBER];
+int   crtCIrmsState;
+unsigned long ctrCIrmsTick = 0;
+unsigned long ctrCIrmsSec = 0;
 
 ////////////
 // Config //

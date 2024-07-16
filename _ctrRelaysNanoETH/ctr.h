@@ -14,18 +14,15 @@ extern "C" {
 
   In1 In2 |   OutA 1  OutB 2  OutC 3  OutD 4  OutE 5
   --------------------------------------------------
-  0   0   |   1       1       0       0       0   Estado 0
-  1   0   |   0       0       1       1       0   Estado 1
-  1   1   |   0       0       1       1       0   Estado 1
-  0   1   |   0       0       0       1       1   Estado 2
+  0   0   |   1       1       0       0       0   IN_STATE0
+  1   0   |   0       0       1       1       0   IN_STATE1
+  1   1   |   0       0       1       1       0   IN_STATE1
+  0   1   |   0       0       0       1       1   IN_STATE2
  
 
-  Cambio de Estado 1 a Estado 2 si:
-    In1 > 0,3V mas de 3 segundos
-    o 
-    In2 > 0,115 mas de 3 segundos
-
-  Permanece en Estado 2 durante 3 minutos
+  Control por consumo:
+    Si, estamos en IN_STATE0, y el consumo en AIN0 > X amps o AIN1 > X amps durante mas de 3 segundos
+    vamos al IN_STATE1 y permanecemos durante 3 minutos.
 */
 
 // Estados Generales
@@ -48,6 +45,9 @@ extern "C" {
 #define STATE1_1_2_TICKS    1500      // 1.5s
 #define STATE2_0_1_TICKS    1500      // 1.5s
 #define STATE2_1_2_TICKS    1500      // 1.5s
+
+#define IRMS_STATE1_TICKS   3000      // 3s
+#define IRMS_STATE2_SECS    180       // 3min
 
 //#define X_3600    3600
 

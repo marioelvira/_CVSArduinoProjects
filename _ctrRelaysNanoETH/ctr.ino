@@ -11,8 +11,7 @@ void _CtrSetup(void)
   ctrInState_ant = ctrInState;
   ctrOutTick = millis();
 
-  crtCIrmsState[0] = IRMS_STATE0;
-  crtCIrmsState[1] = IRMS_STATE0;
+  crtCIrmsState = IRMS_STATE0;
 }
 
 ///////////////////////
@@ -46,18 +45,38 @@ void _CtrLoop(void)
 
 void _ctrADCCurret() {
 
-  for (int i = 0; i < IRMS_NUMBER; i++)
+  switch (crtCIrmsState)
   {
-    switch (crtCIrmsState[i])
-    {
-      case IRMS_STATE0:
-        break;
-      case IRMS_STATE1:
-        break;
-      case IRMS_STATE2:
-        break;
-    }
+    case IRMS_STATE0:
+      if ((InDig[0] == IN_OFF) && (InDig[1] == IN_OFF))
+      {
+        if ((Irms[0] > cfgIlim[0]) || (Irms[1] > cfgIlim[1]))
+        {
+          ctrCIrmsTick = millis();
+          crtCIrmsState = IRMS_STATE1;
+        }
+      }
+      break;
 
+    case IRMS_STATE1:
+        if ((Irms[0] < cfgIlim[0]) && (Irms[1] < cfgIlim[1]))
+          crtCIrmsState = IRMS_STATE0;
+
+        if (millis() - ctrCIrmsTick >= IRMS_STATE1_TICKS)
+        {
+          ctrCIrmsTick = millis();
+          ctrCIrmsSec = timeSecTick;
+          crtCIrmsState = IRMS_STATE2;
+        }
+        break;
+
+    case IRMS_STATE2:
+        // Forced
+        ctrInState = IN_STATE1;
+
+        if (timeSecTick - ctrCIrmsSec >= IRMS_STATE2_SECS)
+          crtCIrmsState = IRMS_STATE0;
+        break;
   }
 }
 

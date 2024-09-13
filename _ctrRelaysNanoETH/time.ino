@@ -92,22 +92,22 @@ void _TimeLoop(void)
       Serial.println(InDig[i]);
     }
     
-    // IRMs
-    for (i = 0; i< IRMS_NUMBER; i++)
+    // I
+    for (i = 0; i< I_NUMBER; i++)
     {
-      Serial.print("IRMS");
+      Serial.print("I");
       Serial.print(i);
       Serial.print(": ");
-      Serial.println(Irms[i]);
+      Serial.println(Ival[i]);
     }
 
-    // VDCs
-    for (i = 0; i< VDC_NUMBER; i++)
+    // V
+    for (i = 0; i< V_NUMBER; i++)
     {
-      Serial.print("VDC");
+      Serial.print("V");
       Serial.print(i);
       Serial.print(": ");
-      Serial.println(Vdc[i]);
+      Serial.println(Vval[i]);
     }
 
     Serial.println("<><><><><><><>");

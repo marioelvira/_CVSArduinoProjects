@@ -59,34 +59,73 @@ extern "C" {
 #define EEPROM_ADD_C1ADC_EMON_L_HI     0xBB
 #define EEPROM_ADD_C1ADC_EMON_SEC_LO   0xBC
 #define EEPROM_ADD_C1ADC_EMON_SEC_HI   0xBD
-#define EEPROM_ADD_V0ADC_VDC_M_LO      0xBE
-#define EEPROM_ADD_V0ADC_VDC_M_HI      0xBF
-#define EEPROM_ADD_V0ADC_VDC_B_LO      0xC0
-#define EEPROM_ADD_V0ADC_VDC_B_HI      0xC1
 
-#define EEPROM_ADD_V1ADC_VDC_M_LO      0xC4
-#define EEPROM_ADD_V1ADC_VDC_M_HI      0xC5
-#define EEPROM_ADD_V1ADC_VDC_B_LO      0xC6
-#define EEPROM_ADD_V1ADC_VDC_B_HI      0xC7
+#define EEPROM_ADD_C2ADC_TYPE          0xBE
+#define EEPROM_ADD_C2ADC_EMON_R_LO     0xBF
+#define EEPROM_ADD_C2ADC_EMON_R_HI     0xC0
+#define EEPROM_ADD_C2ADC_EMON_O_LO     0xC1
+#define EEPROM_ADD_C2ADC_EMON_O_HI     0xC2
+#define EEPROM_ADD_C2ADC_IDC_M_LO      0xC3
+#define EEPROM_ADD_C2ADC_IDC_M_HI      0xC4
+#define EEPROM_ADD_C2ADC_IDC_B_LO      0xC5
+#define EEPROM_ADD_C2ADC_IDC_B_HI      0xC6
+#define EEPROM_ADD_C2ADC_EMON_L_LO     0xC7
+#define EEPROM_ADD_C2ADC_EMON_L_HI     0xC8
+#define EEPROM_ADD_C2ADC_EMON_SEC_LO   0xC9
+#define EEPROM_ADD_C2ADC_EMON_SEC_HI   0xCA
+
+#define EEPROM_ADD_C3ADC_TYPE          0xCB
+#define EEPROM_ADD_C3ADC_EMON_R_LO     0xCC
+#define EEPROM_ADD_C3ADC_EMON_R_HI     0xCD
+#define EEPROM_ADD_C3ADC_EMON_O_LO     0xCE
+#define EEPROM_ADD_C3ADC_EMON_O_HI     0xCF
+#define EEPROM_ADD_C3ADC_IDC_M_LO      0xD0
+#define EEPROM_ADD_C3ADC_IDC_M_HI      0xD1
+#define EEPROM_ADD_C3ADC_IDC_B_LO      0xD2
+#define EEPROM_ADD_C3ADC_IDC_B_HI      0xD3
+#define EEPROM_ADD_C3ADC_EMON_L_LO     0xD4
+#define EEPROM_ADD_C3ADC_EMON_L_HI     0xD5
+#define EEPROM_ADD_C3ADC_EMON_SEC_LO   0xD6
+#define EEPROM_ADD_C3ADC_EMON_SEC_HI   0xD7
+
+#define EEPROM_ADD_V0ADC_VDC_M_LO      0xD8
+#define EEPROM_ADD_V0ADC_VDC_M_HI      0xD9
+#define EEPROM_ADD_V0ADC_VDC_B_LO      0xDA
+#define EEPROM_ADD_V0ADC_VDC_B_HI      0xDB
+
+#define EEPROM_ADD_V1ADC_VDC_M_LO      0xDC
+#define EEPROM_ADD_V1ADC_VDC_M_HI      0xDE
+#define EEPROM_ADD_V1ADC_VDC_B_LO      0xDF
+#define EEPROM_ADD_V1ADC_VDC_B_HI      0xE0
+
+#define EEPROM_ADD_V2ADC_VDC_M_LO      0xE1
+#define EEPROM_ADD_V2ADC_VDC_M_HI      0xE2
+#define EEPROM_ADD_V2ADC_VDC_B_LO      0xE3
+#define EEPROM_ADD_V2ADC_VDC_B_HI      0xE4
+
+#define EEPROM_ADD_V3ADC_VDC_M_LO      0xE5
+#define EEPROM_ADD_V3ADC_VDC_M_HI      0xE6
+#define EEPROM_ADD_V3ADC_VDC_B_LO      0xE7
+#define EEPROM_ADD_V3ADC_VDC_B_HI      0xE8
 
 //#define EEPROM_ADD_MAX               0xFA // 250
 
 // Values
-#define EEPROM_VAL_OK                   0xAA
+#define EEPROM_VAL_OK                   0xA0
 
 #define EEPROM_VAL_IP_MODE        FIXIP_MODE // DHCP_MODE
-#define EEPROM_VAL_IP1            172
-#define EEPROM_VAL_IP2            19
-#define EEPROM_VAL_IP3            1
+#define EEPROM_VAL_IP1            192
+#define EEPROM_VAL_IP2            168
+#define EEPROM_VAL_IP3            100
 #define EEPROM_VAL_IP4            200
 #define EEPROM_VAL_MASK1          255
 #define EEPROM_VAL_MASK2          255
 #define EEPROM_VAL_MASK3          255
 #define EEPROM_VAL_MASK4          0
-#define EEPROM_VAL_GATE1          172
-#define EEPROM_VAL_GATE2          19
-#define EEPROM_VAL_GATE3          1
-#define EEPROM_VAL_GATE4          8
+#define EEPROM_VAL_GATE1          192
+#define EEPROM_VAL_GATE2          168
+#define EEPROM_VAL_GATE3          100
+#define EEPROM_VAL_GATE4          1
 
 #define EEPROM_VAL_LOGIC_INS            1
 #define EEPROM_VAL_LOGIC_OUTS           1
@@ -100,18 +139,40 @@ extern "C" {
 #define EEPROM_VAL_C0ADC_EMON_SEC       2      // 2s
 
 #define EEPROM_VAL_C1ADC_TYPE           0      // 0->AC, 1->DC
-#define EEPROM_VAL_C1ADC_EMON_R         15     // 15A -> 1V
+#define EEPROM_VAL_C1ADC_EMON_R         5      // 5A -> 1V
 #define EEPROM_VAL_C1ADC_EMON_O         0      // Offset mA
-#define EEPROM_VAL_C1ADC_IDC_M          5000   // 5A
+#define EEPROM_VAL_C1ADC_IDC_M          10000  // 10A
 #define EEPROM_VAL_C1ADC_IDC_B          0
 #define EEPROM_VAL_C1ADC_EMON_L         6510   // 6510 mA -> 1500W
 #define EEPROM_VAL_C1ADC_EMON_SEC       2      // 2s
 
-#define EEPROM_VAL_V0ADC_VDC_M          2900   // 29V
+#define EEPROM_VAL_C2ADC_TYPE           0      // 0->AC, 1->DC
+#define EEPROM_VAL_C2ADC_EMON_R         5      // 5A -> 1V
+#define EEPROM_VAL_C2ADC_EMON_O         0      // Offset mA
+#define EEPROM_VAL_C2ADC_IDC_M          5000   // 5A
+#define EEPROM_VAL_C2ADC_IDC_B          0
+#define EEPROM_VAL_C2ADC_EMON_L         3255   // 6510 mA -> 750W
+#define EEPROM_VAL_C2ADC_EMON_SEC       3      // 3s
+
+#define EEPROM_VAL_C3ADC_TYPE           0      // 0->AC, 1->DC
+#define EEPROM_VAL_C3ADC_EMON_R         5      // 5A -> 1V
+#define EEPROM_VAL_C3ADC_EMON_O         0      // Offset mA
+#define EEPROM_VAL_C3ADC_IDC_M          5000   // 5A
+#define EEPROM_VAL_C3ADC_IDC_B          0
+#define EEPROM_VAL_C3ADC_EMON_L         3255   // 3255 mA -> 750W
+#define EEPROM_VAL_C3ADC_EMON_SEC       4      // 4s
+
+#define EEPROM_VAL_V0ADC_VDC_M          2500   // 25V
 #define EEPROM_VAL_V0ADC_VDC_B          0
 
-#define EEPROM_VAL_V1ADC_VDC_M          2900   // 29V
+#define EEPROM_VAL_V1ADC_VDC_M          2500   // 25V
 #define EEPROM_VAL_V1ADC_VDC_B          0
+
+#define EEPROM_VAL_V2ADC_VDC_M          2500   // 25V
+#define EEPROM_VAL_V2ADC_VDC_B          0
+
+#define EEPROM_VAL_V3ADC_VDC_M          2500   // 25V
+#define EEPROM_VAL_V3ADC_VDC_B          0
 
 #endif // _E2PROM_H_
 

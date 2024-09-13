@@ -1,89 +1,115 @@
 #include "main.h"
 #include "adcs.h"
 
-
-//////////
-// Irms //
-//////////
-void _IrmsSetup()
+///////
+// I //
+///////
+void _ISetup()
 {
   Ioffset = ADC_COUNTS>>1;
 
-  for (int i = 0; i < IRMS_NUMBER; i++)
+  for (int i = 0; i < I_NUMBER; i++)
   { 
-    nSamples[i] = 0;
-    Iratio[i] = cfgIACr[i] *((ADC_SUPPLY_VOLTAGE/1000.0)/(ADC_COUNTS));
+    // Irms
+    if (cfgIType[i] == I_TYPE_IRMS)
+    {
+      nSamples[i] = 0;
+      Iratio[i] = cfgIACr[i] *((ADC_SUPPLY_VOLTAGE/1000.0)/(ADC_COUNTS));
 
-    IrmsuTick[i] = micros() + samplePeriod + (samplePeriod>>2)*i;
-    IrmsCont[i] = 0;
-
-    IrmsTick[i] = millis() + samplePeriod + (samplePeriod>>2)*i;
-    Irms[i] = 0;
+      IuTick[i] = micros() + samplePeriod + (samplePeriod>>I_NUMBER)*i;
+      IrmsCont[i] = 0;
+    }
+    // Idc
+    else
+      IuTick[i] = micros() + IDC_MTICK + (IDC_MTICK>>I_NUMBER)*i;
+    
+    Ival[i] = 0;
   }
 }
 
-void _IrmsLoop()
+void _ILoop()
 {
   int adcDig, i, j;
   double add, sqr;
 
-  for (i = 0; i < IRMS_NUMBER; i++)
+  for (i = 0; i < I_NUMBER; i++)
   {
-    if (micros() - IrmsuTick[i] >= samplePeriod)
+    // Irms
+    if (cfgIType[i] == I_TYPE_IRMS)
     {
-      AdcDig[i + ADC_EMON_OFFSET] = analogRead(AdcPin[i + ADC_EMON_OFFSET]);
-      adcDig = AdcDig[i + ADC_EMON_OFFSET];
-
-      // Digital low pass filter extracts the 1.65 V dc offset,
-      // then subtract this - signal is now centered on 0 counts.
-      Ioffset = (Ioffset + (adcDig - Ioffset)/1024);
-      Isamples[nSamples[i]][i] = (double)adcDig - Ioffset;
-      nSamples[i]++;
-
-      IrmsuTick[i] = micros();
-
-      if (nSamples[i] >= numSamples)
+      if (micros() - IuTick[i] >= samplePeriod)
       {
-        add = 0;
+        AdcDig[i + ADC_I_OFFSET] = analogRead(AdcPin[i + ADC_I_OFFSET]);
+        adcDig = AdcDig[i + ADC_I_OFFSET];
 
-        for (int j = 0; j < numSamples; j++)
-          add += Isamples[j][i] * Isamples[j][i];
-  
-        sqr = sqrt(add / double(numSamples));
+        // Digital low pass filter extracts the 1.65 V dc offset,
+        // then subtract this - signal is now centered on 0 counts.
+        Ioffset = (Ioffset + (adcDig - Ioffset)/1024);
+        Isamples[nSamples[i]][i] = (double)adcDig - Ioffset;
+        nSamples[i]++;
 
-        Irms[i] = Iratio[i] * 1000 * sqr;
-        nSamples[i] = 0;
+        IuTick[i] = micros();
+
+        if (nSamples[i] >= numSamples)
+        {
+          add = 0;
+
+          for (int j = 0; j < numSamples; j++)
+            add += Isamples[j][i] * Isamples[j][i];
+    
+          sqr = sqrt(add / double(numSamples));
+
+          Ival[i] = Iratio[i] * 1000 * sqr;
+          nSamples[i] = 0;
+        }
+      }
+    }
+    // Idc
+    else
+    {
+      if (micros() - IuTick[i] >= IDC_MTICK)
+      {
+        AdcDig[i + ADC_I_OFFSET] = analogRead(AdcPin[i + ADC_I_OFFSET]);
+        adcDig = AdcDig[i + ADC_I_OFFSET];
+
+        Ival[i] = (float)adcDig*((float)cfgIDCm[i])/((float)10000*(float)ADC_FULL_SCALE) + (float)cfgIDCb[i]/1000;
+
+        IuTick[i] = micros();
       }
     }
   }
 }
 
-/////////
-// Vdc //
-/////////
-void _VdcSetup()
+///////
+// V //
+///////
+void _VSetup()
 {
-  for (int i = 0; i < VDC_NUMBER; i++)
+  for (int i = 0; i < V_NUMBER; i++)
   {
-    VdcTick[i] = millis() + VDC_MTICK + (VDC_MTICK>>2)*i;
-    Vdc[i] = 0;
+    VuTick[i] = micros() + VDC_MTICK + (VDC_MTICK>>V_NUMBER)*i;
+    Vval[i] = 0;
   }
 }
 
-void _VdcLoop()
+void _VLoop()
 {
-  int  adcDig;
+  int   adcDig;
+  float adcAna;
 
-  for (int i = 0; i < VDC_NUMBER; i++)
+  for (int i = 0; i < V_NUMBER; i++)
   {
-    if (millis() - VdcTick[i] >= VDC_MTICK)
+    if (micros() - VuTick[i] >= VDC_MTICK)
     {
-      AdcDig[i + ADC_VDC_OFFSET] = analogRead(AdcPin[i + ADC_VDC_OFFSET]);
-      adcDig = AdcDig[i + ADC_VDC_OFFSET];
+      AdcDig[i + ADC_V_OFFSET] = analogRead(AdcPin[i + ADC_V_OFFSET]);
+      adcDig = AdcDig[i + ADC_V_OFFSET];
 
-      Vdc[i] = (float)adcDig*((float)cfgVDCm[i])/(float)10000 + (float)cfgVDCb[i]/1000;
+      //adcAna = (((float)adcDig)*ADC_SUPPLY_VOLTAGE)/(float)ADC_FULL_SCALE;  // (mV).
+      //Vval[i] = adcAna*((float)cfgVDCm[i])/(float)10000 + (float)cfgVDCb[i]/1000;
 
-      VdcTick[i] = millis();
+      Vval[i] = (float)adcDig*((float)cfgVDCm[i])/(float)10000 + (float)cfgVDCb[i]/1000;
+
+      VuTick[i] = micros();
     }
   }
 }

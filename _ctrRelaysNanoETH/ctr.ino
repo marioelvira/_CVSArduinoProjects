@@ -50,7 +50,7 @@ void _ctrADCCurret() {
     case IRMS_STATE0:
       if ((InDig[0] == IN_OFF) && (InDig[1] == IN_OFF))
       {
-        if ((Irms[0] > cfgIlim[0]) || (Irms[1] > cfgIlim[1]))
+        if ((Ival[0] > cfgIlim[0]) || (Ival[1] > cfgIlim[1]))
         {
           ctrCIrmsTick = millis();
           crtCIrmsState = IRMS_STATE1;
@@ -59,7 +59,7 @@ void _ctrADCCurret() {
       break;
 
     case IRMS_STATE1:
-        if ((Irms[0] < cfgIlim[0]) && (Irms[1] < cfgIlim[1]))
+        if ((Ival[0] < cfgIlim[0]) && (Ival[1] < cfgIlim[1]))
           crtCIrmsState = IRMS_STATE0;
 
         if (millis() - ctrCIrmsTick >= IRMS_STATE1_TICKS)

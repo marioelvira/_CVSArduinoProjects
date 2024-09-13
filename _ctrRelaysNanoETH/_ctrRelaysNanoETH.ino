@@ -33,22 +33,21 @@ const double  nCyclesToMeasure = 5;   // 1
 const int     nSamplesPerCycle = 25; // 300
 const int     numSamples = nSamplesPerCycle * nCyclesToMeasure;
 const int     samplePeriod = ((1 / IRMS_FREQ_HZ) * nCyclesToMeasure * 1000000) / numSamples;
-double        Isamples[numSamples][IRMS_NUMBER];
-int           nSamples[IRMS_NUMBER];
+double        Isamples[numSamples][I_NUMBER];
+int           nSamples[I_NUMBER];
 double        Ioffset;
-double        Iratio[IRMS_NUMBER];
+double        Iratio[I_NUMBER];
 
-unsigned long IrmsuTick[IRMS_NUMBER];
-int           IrmsCont[IRMS_NUMBER];
+unsigned long IuTick[I_NUMBER];
+int           IrmsCont[I_NUMBER];
 
-int           Irms[IRMS_NUMBER];
-unsigned long IrmsTick[IRMS_NUMBER];
+int           Ival[I_NUMBER];
 
 /////////
 // Vdc //
 /////////
-unsigned long VdcTick[VDC_NUMBER];
-int           Vdc[VDC_NUMBER];
+unsigned long VuTick[V_NUMBER];
+int           Vval[V_NUMBER];
 
 ///////////////
 // Board Led //
@@ -103,18 +102,18 @@ unsigned long ctrCIrmsSec = 0;
 int cfgLogicIns;
 int cfgLogicOuts;
 
-int cfgIType[IRMS_NUMBER];
-int cfgIACr[IRMS_NUMBER];
-int cfgIACo[IRMS_NUMBER];
+int cfgIType[I_NUMBER];
+int cfgIACr[I_NUMBER];
+int cfgIACo[I_NUMBER];
 
-int cfgIDCm[IRMS_NUMBER];
-int cfgIDCb[IRMS_NUMBER];
+int cfgIDCm[I_NUMBER];
+int cfgIDCb[I_NUMBER];
 
-int cfgIlim[IRMS_NUMBER];
-int cfgIsec[IRMS_NUMBER];
+int cfgIlim[I_NUMBER];
+int cfgIsec[I_NUMBER];
 
-int cfgVDCm[VDC_NUMBER];
-int cfgVDCb[VDC_NUMBER];
+int cfgVDCm[V_NUMBER];
+int cfgVDCb[V_NUMBER];
 
 #if (_USE_ETHERNET_ == 1)
 int cfgModbusPORT = 502;
@@ -143,8 +142,8 @@ int  mbResponseLength;
 int       ipMode;
 
 uint8_t macAddress[6] = {0xF8, 0xDC, 0x7A, 0x45, 0xAD, 0xC5};
-uint8_t ipAddress[4]  = {172,19,1,200};
-uint8_t gateWay[4]    = {172,19,1,8};
+uint8_t ipAddress[4]  = {192,168,100,200};
+uint8_t gateWay[4]    = {192,168,100,1};
 uint8_t netMask[4]    = {255,255,255,0};
 uint8_t dnsAddress[4] = {8,8,8,8};
 

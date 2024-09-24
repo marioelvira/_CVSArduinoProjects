@@ -61,6 +61,10 @@ void _ETHLoop()
         #if (_USE_MBTCP_ == 1)
         _ModbusTcpSetup();
         #endif
+
+        #if (_USE_MQTT_ == 1)
+        //_MQTTSetup();
+        #endif
       }
 
       ethTick = millis();
@@ -125,6 +129,10 @@ void _ETHLoop()
 
       #if (_USE_MBTCP_ == 1)
       _ModbusTcpLoop();
+      #endif
+
+      #if (_USE_MQTT_ == 1)
+      //_MQTTLoop();
       #endif
 
       break;

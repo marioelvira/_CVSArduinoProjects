@@ -35,7 +35,9 @@ void _ILoop()
   for (i = 0; i < I_NUMBER; i++)
   {
     // Irms
-    if (cfgIType[i] == I_TYPE_IRMS)
+    if (cfgIType[i] == I_TYPE_NOTUSED)
+      Ival[i] = 0;
+    else if (cfgIType[i] == I_TYPE_IRMS)
     {
       if (micros() - IuTick[i] >= samplePeriod)
       {

@@ -23,6 +23,9 @@ void _ConfigSetup(void)
 
 void _readCONFIG (void)
 {
+  #if (_USE_MQTT_ == 1)
+  int i, j;
+  #endif
   int ok;
   int eeprom_value_hi, eeprom_value_lo;
   
@@ -39,6 +42,7 @@ void _readCONFIG (void)
   
     EEPROM.write(EEPROM_ADD_OK, EEPROM_VAL_OK);
 
+    #if (_USE_ETHERNET_ == 1)
     // IP Mode
     EEPROM.write(EEPROM_ADD_IP_MODE, EEPROM_VAL_IP_MODE);
     EEPROM.write(EEPROM_ADD_IP1,     EEPROM_VAL_IP1);
@@ -54,22 +58,45 @@ void _readCONFIG (void)
     EEPROM.write(EEPROM_ADD_GATE3,   EEPROM_VAL_GATE3);
     EEPROM.write(EEPROM_ADD_GATE4,   EEPROM_VAL_GATE4);
 
+    #endif // _USE_ETHERNET_
+
+    #if (_USE_MQTT_ == 1)
+    // Broker Url
+    for (i = 0; i < MQTT_URL_MAX; i++)
+      EEPROM.write(EEPROM_ADD_BROKER + i, 0);
+    j = strlen(brokerUrlSt);
+    for (i = 0; i < j; i++)
+      EEPROM.write(EEPROM_ADD_BROKER + i, brokerUrlSt[i]);
+    // Broker port
+    eeprom_value_lo = MQTT_BROKER_PORT & 0x00FF;
+    EEPROM.write(EEPROM_ADD_BROKER_PORT, eeprom_value_lo);
+    eeprom_value_hi = (MQTT_BROKER_PORT & 0xFF00)>>8;
+    EEPROM.write(EEPROM_ADD_BROKER_PORT + 1, eeprom_value_hi);
+    // Broker User
+    for (i = 0; i < MQTT_USER_MAX; i++)
+      EEPROM.write(EEPROM_ADD_MQTT_USER + i, 0);
+    j = strlen(brokerUserSt);
+    for (i = 0; i < j; i++)
+      EEPROM.write(EEPROM_ADD_MQTT_USER + i, brokerUserSt[i]);
+    // Broker Pswd
+    for (i = 0; i < MQTT_PSWD_MAX; i++)
+      EEPROM.write(EEPROM_ADD_MQTT_PSWD + i, 0);
+    j = strlen(brokerPswdSt);
+    for (i = 0; i < j; i++)
+      EEPROM.write(EEPROM_ADD_MQTT_PSWD + i, brokerPswdSt[i]);
+    #endif // _USE_MQTT_
+
     // Logic
     EEPROM.write(EEPROM_ADD_LOGIC_INS,  EEPROM_VAL_LOGIC_INS);
     EEPROM.write(EEPROM_ADD_LOGIC_OUTS, EEPROM_VAL_LOGIC_OUTS);
 
     // ADC 0
     EEPROM.write(EEPROM_ADD_C0ADC_TYPE, EEPROM_VAL_C0ADC_TYPE);
-
+    
     eeprom_value_lo = EEPROM_VAL_C0ADC_EMON_R & 0x00FF;
     EEPROM.write(EEPROM_ADD_C0ADC_EMON_R_LO, eeprom_value_lo);
     eeprom_value_hi = (EEPROM_VAL_C0ADC_EMON_R & 0xFF00)>>8;
     EEPROM.write(EEPROM_ADD_C0ADC_EMON_R_HI, eeprom_value_hi);
-    eeprom_value_lo = EEPROM_VAL_C0ADC_EMON_O & 0x00FF;
-    EEPROM.write(EEPROM_ADD_C0ADC_EMON_O_LO, eeprom_value_lo);
-    eeprom_value_hi = (EEPROM_VAL_C0ADC_EMON_O & 0xFF00)>>8;
-    EEPROM.write(EEPROM_ADD_C0ADC_EMON_O_HI, eeprom_value_hi);
-
     eeprom_value_lo = EEPROM_VAL_C0ADC_IDC_M & 0x00FF;
     EEPROM.write(EEPROM_ADD_C0ADC_IDC_M_LO, eeprom_value_lo);
     eeprom_value_hi = (EEPROM_VAL_C0ADC_IDC_M & 0xFF00)>>8;
@@ -90,15 +117,11 @@ void _readCONFIG (void)
 
     // ADC 1
     EEPROM.write(EEPROM_ADD_C1ADC_TYPE, EEPROM_VAL_C1ADC_TYPE);
+
     eeprom_value_lo = EEPROM_VAL_C1ADC_EMON_R & 0x00FF;
     EEPROM.write(EEPROM_ADD_C1ADC_EMON_R_LO, eeprom_value_lo);
     eeprom_value_hi = (EEPROM_VAL_C1ADC_EMON_R & 0xFF00)>>8;
     EEPROM.write(EEPROM_ADD_C1ADC_EMON_R_HI, eeprom_value_hi);
-    eeprom_value_lo = EEPROM_VAL_C1ADC_EMON_O & 0x00FF;
-    EEPROM.write(EEPROM_ADD_C1ADC_EMON_O_LO, eeprom_value_lo);
-    eeprom_value_hi = (EEPROM_VAL_C1ADC_EMON_O & 0xFF00)>>8;
-    EEPROM.write(EEPROM_ADD_C1ADC_EMON_O_HI, eeprom_value_hi);
-
     eeprom_value_lo = EEPROM_VAL_C1ADC_IDC_M & 0x00FF;
     EEPROM.write(EEPROM_ADD_C1ADC_IDC_M_LO, eeprom_value_lo);
     eeprom_value_hi = (EEPROM_VAL_C1ADC_IDC_M & 0xFF00)>>8;
@@ -119,15 +142,11 @@ void _readCONFIG (void)
 
     // ADC 2
     EEPROM.write(EEPROM_ADD_C2ADC_TYPE, EEPROM_VAL_C2ADC_TYPE);
+
     eeprom_value_lo = EEPROM_VAL_C2ADC_EMON_R & 0x00FF;
     EEPROM.write(EEPROM_ADD_C2ADC_EMON_R_LO, eeprom_value_lo);
     eeprom_value_hi = (EEPROM_VAL_C2ADC_EMON_R & 0xFF00)>>8;
     EEPROM.write(EEPROM_ADD_C2ADC_EMON_R_HI, eeprom_value_hi);
-    eeprom_value_lo = EEPROM_VAL_C2ADC_EMON_O & 0x00FF;
-    EEPROM.write(EEPROM_ADD_C2ADC_EMON_O_LO, eeprom_value_lo);
-    eeprom_value_hi = (EEPROM_VAL_C2ADC_EMON_O & 0xFF00)>>8;
-    EEPROM.write(EEPROM_ADD_C2ADC_EMON_O_HI, eeprom_value_hi);
-
     eeprom_value_lo = EEPROM_VAL_C2ADC_IDC_M & 0x00FF;
     EEPROM.write(EEPROM_ADD_C2ADC_IDC_M_LO, eeprom_value_lo);
     eeprom_value_hi = (EEPROM_VAL_C2ADC_IDC_M & 0xFF00)>>8;
@@ -148,15 +167,11 @@ void _readCONFIG (void)
 
     // ADC 3
     EEPROM.write(EEPROM_ADD_C3ADC_TYPE, EEPROM_VAL_C3ADC_TYPE);
+
     eeprom_value_lo = EEPROM_VAL_C3ADC_EMON_R & 0x00FF;
     EEPROM.write(EEPROM_ADD_C3ADC_EMON_R_LO, eeprom_value_lo);
     eeprom_value_hi = (EEPROM_VAL_C3ADC_EMON_R & 0xFF00)>>8;
     EEPROM.write(EEPROM_ADD_C3ADC_EMON_R_HI, eeprom_value_hi);
-    eeprom_value_lo = EEPROM_VAL_C3ADC_EMON_O & 0x00FF;
-    EEPROM.write(EEPROM_ADD_C3ADC_EMON_O_LO, eeprom_value_lo);
-    eeprom_value_hi = (EEPROM_VAL_C3ADC_EMON_O & 0xFF00)>>8;
-    EEPROM.write(EEPROM_ADD_C3ADC_EMON_O_HI, eeprom_value_hi);
-
     eeprom_value_lo = EEPROM_VAL_C3ADC_IDC_M & 0x00FF;
     EEPROM.write(EEPROM_ADD_C3ADC_IDC_M_LO, eeprom_value_lo);
     eeprom_value_hi = (EEPROM_VAL_C3ADC_IDC_M & 0xFF00)>>8;
@@ -229,6 +244,9 @@ void _readCONFIG (void)
 
 void _ram2eepromCONFIG (void)
 {
+  #if (_USE_MQTT_ == 1)
+  int i, j;
+  #endif
   int eeprom_value_hi, eeprom_value_lo;
 
   #if (_USE_ETHERNET_ == 1)
@@ -238,14 +256,40 @@ void _ram2eepromCONFIG (void)
   EEPROM.write(EEPROM_ADD_IP2,     (byte)ipAddress[1]);
   EEPROM.write(EEPROM_ADD_IP3,     (byte)ipAddress[2]);
   EEPROM.write(EEPROM_ADD_IP4,     (byte)ipAddress[3]);
-  EEPROM.write(EEPROM_ADD_MASK1,   (byte)gateWay[0]);
-  EEPROM.write(EEPROM_ADD_MASK2,   (byte)gateWay[1]);
-  EEPROM.write(EEPROM_ADD_MASK3,   (byte)gateWay[2]);
-  EEPROM.write(EEPROM_ADD_MASK4,   (byte)gateWay[3]);
-  EEPROM.write(EEPROM_ADD_GATE1,   (byte)netMask[0]);
-  EEPROM.write(EEPROM_ADD_GATE2,   (byte)netMask[1]);
-  EEPROM.write(EEPROM_ADD_GATE3,   (byte)netMask[2]);
-  EEPROM.write(EEPROM_ADD_GATE4,   (byte)netMask[3]);
+  EEPROM.write(EEPROM_ADD_MASK1,   (byte)netMask[0]);
+  EEPROM.write(EEPROM_ADD_MASK2,   (byte)netMask[1]);
+  EEPROM.write(EEPROM_ADD_MASK3,   (byte)netMask[2]);
+  EEPROM.write(EEPROM_ADD_MASK4,   (byte)netMask[3]);
+  EEPROM.write(EEPROM_ADD_GATE1,   (byte)gateWay[0]);
+  EEPROM.write(EEPROM_ADD_GATE2,   (byte)gateWay[1]);
+  EEPROM.write(EEPROM_ADD_GATE3,   (byte)gateWay[2]);
+  EEPROM.write(EEPROM_ADD_GATE4,   (byte)gateWay[3]);
+  #endif
+
+  #if (_USE_MQTT_ == 1)
+  // Broker Url
+   for (i = 0; i < MQTT_URL_MAX; i++)
+    EEPROM.write(EEPROM_ADD_BROKER + i, 0);
+  j = strlen(brokerUrl);
+  for (i = 0; i < j; i++)
+    EEPROM.write(EEPROM_ADD_BROKER + i, brokerUrl[i]);
+  // Broker port
+  eeprom_value_lo = brokerPort & 0x00FF;
+  EEPROM.write(EEPROM_ADD_BROKER_PORT, eeprom_value_lo);
+  eeprom_value_hi = (brokerPort & 0xFF00)>>8;
+  EEPROM.write(EEPROM_ADD_BROKER_PORT + 1, eeprom_value_hi);
+  // Broker User
+  for (i = 0; i < MQTT_USER_MAX; i++)
+    EEPROM.write(EEPROM_ADD_MQTT_USER + i, 0);
+  j = strlen(brokerUser);
+  for (i = 0; i < j; i++)
+    EEPROM.write(EEPROM_ADD_MQTT_USER + i, brokerUser[i]);
+  // Broker Pswd
+  for (i = 0; i < MQTT_PSWD_MAX; i++)
+    EEPROM.write(EEPROM_ADD_MQTT_PSWD + i, 0);
+  j = strlen(brokerPswd);
+  for (i = 0; i < j; i++)
+    EEPROM.write(EEPROM_ADD_MQTT_PSWD + i, brokerPswd[i]);
   #endif
 
   // Data Data
@@ -259,11 +303,6 @@ void _ram2eepromCONFIG (void)
   EEPROM.write(EEPROM_ADD_C0ADC_EMON_R_LO, eeprom_value_lo);
   eeprom_value_hi = (cfgIACr[0] & 0xFF00)>>8;
   EEPROM.write(EEPROM_ADD_C0ADC_EMON_R_HI, eeprom_value_hi);
-  eeprom_value_lo = cfgIACo[0] & 0x00FF;
-  EEPROM.write(EEPROM_ADD_C0ADC_EMON_O_LO, eeprom_value_lo);
-  eeprom_value_hi = (cfgIACo[0] & 0xFF00)>>8;
-  EEPROM.write(EEPROM_ADD_C0ADC_EMON_O_HI, eeprom_value_hi);
-
   eeprom_value_lo = cfgIDCm[0] & 0x00FF;
   EEPROM.write(EEPROM_ADD_C0ADC_IDC_M_LO, eeprom_value_lo);
   eeprom_value_hi = (cfgIDCm[0] & 0xFF00)>>8;
@@ -289,11 +328,6 @@ void _ram2eepromCONFIG (void)
   EEPROM.write(EEPROM_ADD_C1ADC_EMON_R_LO, eeprom_value_lo);
   eeprom_value_hi = (cfgIACr[1] & 0xFF00)>>8;
   EEPROM.write(EEPROM_ADD_C1ADC_EMON_R_HI, eeprom_value_hi);
-  eeprom_value_lo = cfgIACo[1] & 0x00FF;
-  EEPROM.write(EEPROM_ADD_C1ADC_EMON_O_LO, eeprom_value_lo);
-  eeprom_value_hi = (cfgIACo[1] & 0xFF00)>>8;
-  EEPROM.write(EEPROM_ADD_C1ADC_EMON_O_HI, eeprom_value_hi);
-
   eeprom_value_lo = cfgIDCm[1] & 0x00FF;
   EEPROM.write(EEPROM_ADD_C1ADC_IDC_M_LO, eeprom_value_lo);
   eeprom_value_hi = (cfgIDCm[1] & 0xFF00)>>8;
@@ -319,11 +353,6 @@ void _ram2eepromCONFIG (void)
   EEPROM.write(EEPROM_ADD_C2ADC_EMON_R_LO, eeprom_value_lo);
   eeprom_value_hi = (cfgIACr[2] & 0xFF00)>>8;
   EEPROM.write(EEPROM_ADD_C2ADC_EMON_R_HI, eeprom_value_hi);
-  eeprom_value_lo = cfgIACo[2] & 0x00FF;
-  EEPROM.write(EEPROM_ADD_C2ADC_EMON_O_LO, eeprom_value_lo);
-  eeprom_value_hi = (cfgIACo[2] & 0xFF00)>>8;
-  EEPROM.write(EEPROM_ADD_C2ADC_EMON_O_HI, eeprom_value_hi);
-
   eeprom_value_lo = cfgIDCm[2] & 0x00FF;
   EEPROM.write(EEPROM_ADD_C2ADC_IDC_M_LO, eeprom_value_lo);
   eeprom_value_hi = (cfgIDCm[2] & 0xFF00)>>8;
@@ -349,11 +378,6 @@ void _ram2eepromCONFIG (void)
   EEPROM.write(EEPROM_ADD_C3ADC_EMON_R_LO, eeprom_value_lo);
   eeprom_value_hi = (cfgIACr[3] & 0xFF00)>>8;
   EEPROM.write(EEPROM_ADD_C3ADC_EMON_R_HI, eeprom_value_hi);
-  eeprom_value_lo = cfgIACo[3] & 0x00FF;
-  EEPROM.write(EEPROM_ADD_C3ADC_EMON_O_LO, eeprom_value_lo);
-  eeprom_value_hi = (cfgIACo[3] & 0xFF00)>>8;
-  EEPROM.write(EEPROM_ADD_C3ADC_EMON_O_HI, eeprom_value_hi);
-
   eeprom_value_lo = cfgIDCm[3] & 0x00FF;
   EEPROM.write(EEPROM_ADD_C3ADC_IDC_M_LO, eeprom_value_lo);
   eeprom_value_hi = (cfgIDCm[3] & 0xFF00)>>8;
@@ -415,6 +439,9 @@ void _ram2eepromCONFIG (void)
 
 void _eeprom2ramCONFIG (void)
 {
+  #if (_USE_MQTT_ == 1)
+  int i, j;
+  #endif
   int eeprom_value_hi, eeprom_value_lo;
 
   #if (_USE_ETHERNET_ == 1)
@@ -461,6 +488,34 @@ void _eeprom2ramCONFIG (void)
 
   #endif // _USE_ETHERNET_
 
+  #if (_USE_MQTT_ == 1)
+  // Broker Url
+  for (i = 0; i < MQTT_URL_MAX; i++)
+    brokerUrl[i] = char(EEPROM.read(EEPROM_ADD_BROKER + i));
+  // Broker Port
+  eeprom_value_hi = EEPROM.read(EEPROM_ADD_BROKER_PORT + 1);
+  eeprom_value_lo = EEPROM.read(EEPROM_ADD_BROKER_PORT);   
+  brokerPort = ((eeprom_value_hi & 0x00FF)<<8)|(eeprom_value_lo & 0x00FF);
+  // Broker User
+  for (i = 0; i < MQTT_USER_MAX; i++)
+    brokerUser[i] = char(EEPROM.read(EEPROM_ADD_MQTT_USER + i));
+  // Broker Pswd
+  for (i = 0; i < MQTT_PSWD_MAX; i++)
+    brokerPswd[i] = char(EEPROM.read(EEPROM_ADD_MQTT_PSWD + i));  
+
+  #if (_EEPROM_SERIAL_DEBUG_ == 1)
+  Serial.print("Broker URL: ");
+  Serial.println(brokerUrl);
+  Serial.print("Broker Port: ");
+  Serial.println(brokerPort);
+  Serial.print("Broker User: ");
+  Serial.println(brokerUser);
+  Serial.print("Broker Password: ");
+  Serial.println(brokerPswd);  
+  #endif 
+
+  #endif // _USE_MQTT_
+
   cfgLogicIns       = (int)EEPROM.read(EEPROM_ADD_LOGIC_INS);
   cfgLogicOuts      = (int)EEPROM.read(EEPROM_ADD_LOGIC_OUTS); 
 
@@ -470,10 +525,6 @@ void _eeprom2ramCONFIG (void)
   eeprom_value_hi   = (int)EEPROM.read(EEPROM_ADD_C0ADC_EMON_R_HI);
   eeprom_value_lo   = (int)EEPROM.read(EEPROM_ADD_C0ADC_EMON_R_LO);
   cfgIACr[0]        = (int)((eeprom_value_hi & 0x00FF)<<8)|(eeprom_value_lo & 0x00FF);
-  eeprom_value_hi   = (int)EEPROM.read(EEPROM_ADD_C0ADC_EMON_O_HI);
-  eeprom_value_lo   = (int)EEPROM.read(EEPROM_ADD_C0ADC_EMON_O_LO);
-  cfgIACo[0]        = (int)((eeprom_value_hi & 0x00FF)<<8)|(eeprom_value_lo & 0x00FF);
-
   eeprom_value_hi   = (int)EEPROM.read(EEPROM_ADD_C0ADC_IDC_M_HI);
   eeprom_value_lo   = (int)EEPROM.read(EEPROM_ADD_C0ADC_IDC_M_LO);
   cfgIDCm[0]        = (int)((eeprom_value_hi & 0x00FF)<<8)|(eeprom_value_lo & 0x00FF);
@@ -494,10 +545,6 @@ void _eeprom2ramCONFIG (void)
   eeprom_value_hi   = (int)EEPROM.read(EEPROM_ADD_C1ADC_EMON_R_HI);
   eeprom_value_lo   = (int)EEPROM.read(EEPROM_ADD_C1ADC_EMON_R_LO);
   cfgIACr[1]        = (int)((eeprom_value_hi & 0x00FF)<<8)|(eeprom_value_lo & 0x00FF);
-  eeprom_value_hi   = (int)EEPROM.read(EEPROM_ADD_C1ADC_EMON_O_HI);
-  eeprom_value_lo   = (int)EEPROM.read(EEPROM_ADD_C1ADC_EMON_O_LO);
-  cfgIACo[1]        = (int)((eeprom_value_hi & 0x00FF)<<8)|(eeprom_value_lo & 0x00FF);
-
   eeprom_value_hi   = (int)EEPROM.read(EEPROM_ADD_C1ADC_IDC_M_HI);
   eeprom_value_lo   = (int)EEPROM.read(EEPROM_ADD_C1ADC_IDC_M_LO);
   cfgIDCm[1]        = (int)((eeprom_value_hi & 0x00FF)<<8)|(eeprom_value_lo & 0x00FF);
@@ -518,10 +565,6 @@ void _eeprom2ramCONFIG (void)
   eeprom_value_hi   = (int)EEPROM.read(EEPROM_ADD_C2ADC_EMON_R_HI);
   eeprom_value_lo   = (int)EEPROM.read(EEPROM_ADD_C2ADC_EMON_R_LO);
   cfgIACr[2]        = (int)((eeprom_value_hi & 0x00FF)<<8)|(eeprom_value_lo & 0x00FF);
-  eeprom_value_hi   = (int)EEPROM.read(EEPROM_ADD_C2ADC_EMON_O_HI);
-  eeprom_value_lo   = (int)EEPROM.read(EEPROM_ADD_C2ADC_EMON_O_LO);
-  cfgIACo[2]        = (int)((eeprom_value_hi & 0x00FF)<<8)|(eeprom_value_lo & 0x00FF);
-
   eeprom_value_hi   = (int)EEPROM.read(EEPROM_ADD_C2ADC_IDC_M_HI);
   eeprom_value_lo   = (int)EEPROM.read(EEPROM_ADD_C2ADC_IDC_M_LO);
   cfgIDCm[2]        = (int)((eeprom_value_hi & 0x00FF)<<8)|(eeprom_value_lo & 0x00FF);
@@ -542,10 +585,6 @@ void _eeprom2ramCONFIG (void)
   eeprom_value_hi   = (int)EEPROM.read(EEPROM_ADD_C3ADC_EMON_R_HI);
   eeprom_value_lo   = (int)EEPROM.read(EEPROM_ADD_C3ADC_EMON_R_LO);
   cfgIACr[3]        = (int)((eeprom_value_hi & 0x00FF)<<8)|(eeprom_value_lo & 0x00FF);
-  eeprom_value_hi   = (int)EEPROM.read(EEPROM_ADD_C3ADC_EMON_O_HI);
-  eeprom_value_lo   = (int)EEPROM.read(EEPROM_ADD_C3ADC_EMON_O_LO);
-  cfgIACo[3]        = (int)((eeprom_value_hi & 0x00FF)<<8)|(eeprom_value_lo & 0x00FF);
-
   eeprom_value_hi   = (int)EEPROM.read(EEPROM_ADD_C3ADC_IDC_M_HI);
   eeprom_value_lo   = (int)EEPROM.read(EEPROM_ADD_C3ADC_IDC_M_LO);
   cfgIDCm[3]        = (int)((eeprom_value_hi & 0x00FF)<<8)|(eeprom_value_lo & 0x00FF);
@@ -597,37 +636,33 @@ void _eeprom2ramCONFIG (void)
   Serial.print("Logic Outs: "); Serial.println (cfgLogicOuts);
 
   // I
-  Serial.print("C0 I Type");   Serial.print(": "); Serial.print (cfgIType[0]);  Serial.println(" ");
+  Serial.print("C0 I Type");       Serial.print(": "); Serial.print (cfgIType[0]);  Serial.println(" ");
   Serial.print("C0 Irms Ratio");   Serial.print(": "); Serial.print (cfgIACr[0]);  Serial.println(" ");
-  Serial.print("C0 Irms Offset"); Serial.print(": "); Serial.print (cfgIACo[0]);  Serial.println(" mA");
   Serial.print("C0 Idc recta m");  Serial.print(": "); Serial.print (cfgIDCm[0]);  Serial.println(" ");
   Serial.print("C0 Idc recta b");  Serial.print(": "); Serial.print (cfgIDCb[0]);  Serial.println(" (/1000)");
-  Serial.print("C0 I Limit");   Serial.print(": "); Serial.print (cfgIlim[0]);  Serial.println(" ");
-  Serial.print("C0 I Hys Sec"); Serial.print(": "); Serial.print (cfgIsec[0]); Serial.println(" sec");
+  Serial.print("C0 I Limit");      Serial.print(": "); Serial.print (cfgIlim[0]);  Serial.println(" ");
+  Serial.print("C0 I Hys Sec");    Serial.print(": "); Serial.print (cfgIsec[0]); Serial.println(" sec");
 
-  Serial.print("C1 I Type");   Serial.print(": "); Serial.print (cfgIType[1]);  Serial.println(" ");
+  Serial.print("C1 I Type");       Serial.print(": "); Serial.print (cfgIType[1]);  Serial.println(" ");
   Serial.print("C1 Irms Ratio");   Serial.print(": "); Serial.print (cfgIACr[1]);  Serial.println(" ");
-  Serial.print("C1 Irms Offset"); Serial.print(": "); Serial.print (cfgIACo[1]);  Serial.println(" mA");
   Serial.print("C1 Idc recta m");  Serial.print(": "); Serial.print (cfgIDCm[1]);  Serial.println(" ");
   Serial.print("C1 Idc recta b");  Serial.print(": "); Serial.print (cfgIDCb[1]);  Serial.println(" (/1000)");
-  Serial.print("C1 I Limit");   Serial.print(": "); Serial.print (cfgIlim[1]);  Serial.println(" ");
-  Serial.print("C1 I Hys Sec"); Serial.print(": "); Serial.print (cfgIsec[1]); Serial.println(" sec");
+  Serial.print("C1 I Limit");      Serial.print(": "); Serial.print (cfgIlim[1]);  Serial.println(" ");
+  Serial.print("C1 I Hys Sec");    Serial.print(": "); Serial.print (cfgIsec[1]); Serial.println(" sec");
 
-  Serial.print("C2 I Type");   Serial.print(": "); Serial.print (cfgIType[2]);  Serial.println(" ");
+  Serial.print("C2 I Type");       Serial.print(": "); Serial.print (cfgIType[2]);  Serial.println(" ");
   Serial.print("C2 Irms Ratio");   Serial.print(": "); Serial.print (cfgIACr[2]);  Serial.println(" ");
-  Serial.print("C2 Irms Offset"); Serial.print(": "); Serial.print (cfgIACo[2]);  Serial.println(" mA");
   Serial.print("C2 Idc recta m");  Serial.print(": "); Serial.print (cfgIDCm[2]);  Serial.println(" ");
   Serial.print("C2 Idc recta b");  Serial.print(": "); Serial.print (cfgIDCb[2]);  Serial.println(" (/1000)");
-  Serial.print("C2 I Limit");   Serial.print(": "); Serial.print (cfgIlim[2]);  Serial.println(" ");
-  Serial.print("C2 I Hys Sec"); Serial.print(": "); Serial.print (cfgIsec[2]); Serial.println(" sec");
+  Serial.print("C2 I Limit");      Serial.print(": "); Serial.print (cfgIlim[2]);  Serial.println(" ");
+  Serial.print("C2 I Hys Sec");    Serial.print(": "); Serial.print (cfgIsec[2]); Serial.println(" sec");
 
-  Serial.print("C3 I Type");   Serial.print(": "); Serial.print (cfgIType[3]);  Serial.println(" ");
+  Serial.print("C3 I Type");       Serial.print(": "); Serial.print (cfgIType[3]);  Serial.println(" ");
   Serial.print("C3 Irms Ratio");   Serial.print(": "); Serial.print (cfgIACr[3]);  Serial.println(" ");
-  Serial.print("C3 Irms Offset"); Serial.print(": "); Serial.print (cfgIACo[3]);  Serial.println(" mA");
   Serial.print("C3 Idc recta m");  Serial.print(": "); Serial.print (cfgIDCm[3]);  Serial.println(" ");
   Serial.print("C3 Idc recta b");  Serial.print(": "); Serial.print (cfgIDCb[3]);  Serial.println(" (/1000)");
-  Serial.print("C3 I Limit");   Serial.print(": "); Serial.print (cfgIlim[3]);  Serial.println(" ");
-  Serial.print("C3 I Hys Sec"); Serial.print(": "); Serial.print (cfgIsec[3]); Serial.println(" sec");
+  Serial.print("C3 I Limit");      Serial.print(": "); Serial.print (cfgIlim[3]);  Serial.println(" ");
+  Serial.print("C3 I Hys Sec");    Serial.print(": "); Serial.print (cfgIsec[3]); Serial.println(" sec");
 
   // V
   Serial.print("V0 Vdc recta m");  Serial.print(": "); Serial.print (cfgVDCm[0]);  Serial.println(" ");

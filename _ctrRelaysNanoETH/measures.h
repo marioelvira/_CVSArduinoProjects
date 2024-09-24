@@ -18,8 +18,9 @@ extern "C" {
 
 // I
 #define I_NUMBER            4   // Idem ADC_V_OFFSET
-#define I_TYPE_IRMS         0
-#define I_TYPE_IDC          1
+#define I_TYPE_NOTUSED      0
+#define I_TYPE_IRMS         1
+#define I_TYPE_IDC          2
 
 // Irms
 #define IRMS_FREQ_HZ        50

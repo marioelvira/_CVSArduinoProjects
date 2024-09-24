@@ -1,17 +1,25 @@
+#include "main.h"
+#include "__ver.h"
+
 #include <EEPROM.h>
 #include <UIPEthernet.h>
-
-#include "__ver.h"
+#if (_USE_MQTT_ == 1)
+#include <PubSubClient.h>
+#endif
 
 #include "adcs.h"
 #include "ctr.h"
 #include "e2prom.h"
 #include "io.h"
 #include "ip.h"
-#include "main.h"
 #include "measures.h"
 #include "mEthernet.h"
+#if (_USE_MQTT_ == 1)
+#include "MQTT.h"
+#endif
+#if (_USE_MBTCP_ == 1)
 #include "modbusTCP.h"
+#endif
 #include "mRAM.h"
 #include "wde.h"
 
@@ -104,7 +112,6 @@ int cfgLogicOuts;
 
 int cfgIType[I_NUMBER];
 int cfgIACr[I_NUMBER];
-int cfgIACo[I_NUMBER];
 
 int cfgIDCm[I_NUMBER];
 int cfgIDCb[I_NUMBER];
@@ -149,6 +156,28 @@ uint8_t dnsAddress[4] = {8,8,8,8};
 
 int ethStatus;
 unsigned long   ethTick;
+#endif
+
+//////////
+// MQTT //
+//////////
+#if (_USE_MQTT_ == 1)
+const char* brokerUrlSt = MQTT_BROKER;
+char brokerUrl[MQTT_URL_MAX];
+int brokerPort;
+const char* brokerUserSt = MQTT_USERNAME;
+char brokerUser[MQTT_USER_MAX];
+const char* brokerPswdSt = MQTT_PASSWORD;
+char brokerPswd[MQTT_PSWD_MAX];
+
+EthernetClient  ethMqttClient;
+PubSubClient mqttClient(ethMqttClient);
+
+String mqttClientId = "relayMQTT-123dfqfvq234"; // TODO Add + String(ESP.getChipId());
+
+int mqttStatus;
+unsigned long mqttTick = 0;
+int mqttTopic;
 #endif
 
 //////////

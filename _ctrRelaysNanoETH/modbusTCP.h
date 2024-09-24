@@ -54,9 +54,11 @@ extern "C" {
 
 // Holding Registers
 #define MB_HR_ADD_CFG      0
-#define MB_HR_NREG_CFG     39
+#define MB_HR_NREG_CFG     35
 #define MB_HR_ADD_IP       50
 #define MB_HR_NREG_IP      13
+#define MB_HR_ADD_BRK      70
+#define MB_HR_NREG_BRK     37
 #define MB_HR_ADD_OUTS     110
 #define MB_HR_NREG_OUTS    6
 

@@ -6,6 +6,9 @@
 #if (_USE_MQTT_ == 1)
 #include <PubSubClient.h>
 #endif
+#if (_USE_NTP_ == 1)
+#include <NTPClient.h>
+#endif
 
 #include "adcs.h"
 #include "ctr.h"
@@ -21,6 +24,9 @@
 #include "modbusTCP.h"
 #endif
 #include "mRAM.h"
+#if (_USE_NTP_ == 1)
+#include "mNTP.h"
+#endif
 #include "wde.h"
 
 /////////////
@@ -84,19 +90,22 @@ int   InDig[IN_NUMBER];
 //////////
 // Time //
 //////////
+String timeOnString;
 unsigned long timeTick = 0;
 unsigned long timeSecTick = 0;
 int timeSec = 0;
 int timeMin = 0;
 int timeHour = 0;
+int timeDay = 0;
 
 /////////////
 // Control //
 /////////////
-int   ctrMode;
-int   ctrInState;
-int   ctrInState_ant;
-int   ctrOutState;
+String ctrStateString;
+int    ctrMode;
+int    ctrInState;
+int    ctrInState_ant;
+int    ctrOutState;
 
 unsigned long ctrOutTick = 0;
 
@@ -148,7 +157,7 @@ int  mbResponseLength;
 #if (_USE_ETHERNET_ == 1)
 int       ipMode;
 
-uint8_t macAddress[6] = {0xF8, 0xDC, 0x7A, 0x45, 0xAD, 0xC5};
+uint8_t macAddress[6] = {0xF8, 0xDC, 0x7A, 0x00, 0x02, 0x04};
 uint8_t ipAddress[4]  = {192,168,100,200};
 uint8_t gateWay[4]    = {192,168,100,1};
 uint8_t netMask[4]    = {255,255,255,0};
@@ -181,10 +190,18 @@ int mqttTopic;
 #endif
 
 //////////
-// mRAM //
+// mNTP //
 //////////
-#if (_USE_FREERAM_ == 1)
-unsigned long freeRam;
+#if (_USE_NTP_ == 1)
+String mntpTimeString;
+int mntpSec = 0;
+int mntpMin = 0;
+int mntpHour = 0;
+
+int mntpStatus;
+int mntpUpdated = 0;
+EthernetUDP mNtpUDP;
+NTPClient mNtpClient(mNtpUDP, "pool.ntp.org", 3600);
 #endif
 
 ////////

@@ -1,3 +1,24 @@
+void _timeOnString(void)
+{
+    if (timeHour < 10)
+      timeOnString = "0" + String(timeHour);
+    else
+      timeOnString = String(timeHour);
+
+    timeOnString = timeOnString + ":";
+
+    if (timeMin < 10)
+      timeOnString = timeOnString + "0" + String(timeMin);
+    else
+      timeOnString = timeOnString + String(timeMin);
+
+    timeOnString = timeOnString + ":";
+
+    if (timeSec < 10)
+      timeOnString = timeOnString + "0" + String(timeSec);
+    else
+      timeOnString = timeOnString + String(timeSec);
+}
 
 /////////////////
 // Time set up //
@@ -9,6 +30,7 @@ void _TimeSetup(void)
   timeSec = 0;
   timeMin = 0;
   timeHour = 0;
+   timeDay = 0;
   
   #if (_USE_FREERAM_ == 1)
   // RAM setup
@@ -37,12 +59,12 @@ void _TimeLoop(void)
       }
     }
     
+    _timeOnString();
+    _ctrStateString();
     timeTick = millis();
 
-    //_ADCsLoop();
-
-    #if (_USE_FREERAM_ == 1)
-    _FreeRAM();
+    #if (_USE_NTP_ == 1)
+    _mNTPfakeSec();
     #endif
 
     #if (_USE_WDE_ == 1)
@@ -60,10 +82,10 @@ void _TimeLoop(void)
     
     int i;
     
-    #if (_USE_FREERAM_ == 1)
-    Serial.print("Free RAM: ");
-    Serial.println(freeRam);
-    #endif
+    Serial.println("<><><><><><><>");
+    Serial.print("Tiempo Encendio: ");
+    Serial.print(timeDay); Serial.print("d "); Serial.print(timeOnString);
+    Serial.println(" ");
 
     // ADC
     for (i = 0; i< ADC_NUMBER; i++)
@@ -95,7 +117,7 @@ void _TimeLoop(void)
     // I
     for (i = 0; i< I_NUMBER; i++)
     {
-      Serial.print("I");
+      Serial.print("i");
       Serial.print(i);
       Serial.print(": ");
       Serial.println(Ival[i]);
@@ -104,7 +126,7 @@ void _TimeLoop(void)
     // V
     for (i = 0; i< V_NUMBER; i++)
     {
-      Serial.print("V");
+      Serial.print("v");
       Serial.print(i);
       Serial.print(": ");
       Serial.println(Vval[i]);

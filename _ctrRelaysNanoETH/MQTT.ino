@@ -102,19 +102,26 @@ void _MQTTSend(int itopic)
   ///////////////////
   if (itopic == 0)
   {
-    /* 
+    #if (_USE_NTP_ == 1)
+    str = str + "\"time\":\"";
+    str = str + mntpTimeString;
+    str = str + "\",\n";
+    #endif
+
     str = str + "\"tOn\":\"";
     str = str + String(timeDay) + "d " + timeOnString;
     str = str + "\",\n";
-   
-    str = str + "\"tU\":\"";
-    str = str + mntpTimeString;
+
+    str = str + "\"ctr\":\"";
+    str = str + ctrStateString;
     str = str + "\",\n";
-    
+
     str = str + "\"ip\":\"";
-    str = str + String(ipAddress.toString());
-    str = str + "\",\n"; 
-    */
+    str = str + String(ipAddress[3]); str = str + ".";
+    str = str + String(ipAddress[2]); str = str + ".";
+    str = str + String(ipAddress[1]); str = str + ".";
+    str = str + String(ipAddress[0]);
+    str = str + "\",\n";
   }
   ////////////////
   // TOPIC_RIOS //
@@ -122,17 +129,52 @@ void _MQTTSend(int itopic)
   else if (itopic == 1)
   {
     /////////
+    // ADC //
+    /////////
+    str = str + "\"i0\":\"";
+    str = str + Ival[0];
+    str = str + "\",\n";
+    
+    str = str + "\"i1\":\"";
+    str = str + Ival[1];
+    str = str + "\",\n";
+
+    str = str + "\"i2\":\"";
+    str = str + Ival[2];
+    str = str + "\",\n";
+    
+    str = str + "\"i3\":\"";
+    str = str + Ival[3];
+    str = str + "\",\n";
+
+    str = str + "\"v0\":\"";
+    str = str + Vval[0];
+    str = str + "\",\n";
+    
+    str = str + "\"v1\":\"";
+    str = str + Vval[1];
+    str = str + "\",\n";
+
+    str = str + "\"v2\":\"";
+    str = str + Vval[2];
+    str = str + "\",\n";
+    
+    str = str + "\"v3\":\"";
+    str = str + Vval[3];
+    str = str + "\",\n";
+
+    /////////
     // IOs //
     /////////
-    /*
     str = str + "\"bO\":\"";
-    str = str + String(ioOutA) + String(ioOutB) + String(ioOutC);
+    for (i = 0; i < OUT_NUMBER; i++)
+      str = str + String(OutDig[i]);
     str = str + "\",\n";
 
     str = str + "\"bI\":\"";
-    str = str + String(ioInC) + String(ioInB) + String(ioInA);
+    for (i = 0; i < IN_NUMBER; i++)
+      str = str + String(InDig[i]);
     str = str + "\",\n";
-    */
   }
 
   str_len = str.length();
@@ -190,7 +232,7 @@ void _MQTTLoop(void)
   {
     case MQTT_NOT_CONNECTED:
       #if (_MQTT_SERIAL_DEBUG_ == 1)
-      Serial.printf("MQTT Not connected...\n");
+      Serial.println("MQTT Not connected...");
       #endif
       
       mqttStatus = MQTT_CONNECTING;
@@ -205,13 +247,13 @@ void _MQTTLoop(void)
           break;
         
         #if (_MQTT_SERIAL_DEBUG_ == 1)
-        Serial.printf("Attempting MQTT connection...\n");
+        Serial.println("Attempting MQTT connection...");
         #endif
       
         if (mqttClient.connect(mqttClientId.c_str(), brokerUser, brokerPswd))
         {
           #if (_MQTT_SERIAL_DEBUG_ == 1)
-          Serial.printf("MQTT connected!!!...\n");
+          Serial.println("MQTT connected!!!...");
           #endif
           
           mqttStatus = MQTT_CONNECTED;
@@ -221,7 +263,8 @@ void _MQTTLoop(void)
           mqttTick = millis();
           
           #if (_MQTT_SERIAL_DEBUG_ == 1)
-          Serial.printf("Error!  : MQTT Connect failed, rc = %d\n", mqttClient.state());
+          Serial.print("Error!  : MQTT Connect failed, rc = ");
+          Serial.println(mqttClient.state());
           #endif
         }
       }
@@ -246,7 +289,8 @@ void _MQTTLoop(void)
       else
       {
         #if (_MQTT_SERIAL_DEBUG_ == 1)
-        Serial.printf("Error!  : MQTT Connect failed, rc = %d\n", mqttClient.state());
+        Serial.print("Error!  : MQTT Connect failed, rc = ");
+        Serial.println(mqttClient.state());
         #endif
 
         mqttStatus = MQTT_CONNECTING;
@@ -273,7 +317,8 @@ void _MQTTLoop(void)
       else
       {
         #if (_MQTT_SERIAL_DEBUG_ == 1)
-        Serial.printf("Error!  : MQTT Connect failed, rc = %d\n", mqttClient.state());
+        Serial.print("Error!  : MQTT Connect failed, rc = ");
+        Serial.println(mqttClient.state());
         #endif
 
         mqttStatus = MQTT_CONNECTING;

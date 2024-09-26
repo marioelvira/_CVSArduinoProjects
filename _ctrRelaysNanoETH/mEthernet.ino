@@ -63,7 +63,11 @@ void _ETHLoop()
         #endif
 
         #if (_USE_MQTT_ == 1)
-        //_MQTTSetup();
+        _MQTTSetup();
+        #endif
+
+        #if (_USE_NTP_ == 1)
+        _mNTPSetup();
         #endif
       }
 
@@ -132,7 +136,11 @@ void _ETHLoop()
       #endif
 
       #if (_USE_MQTT_ == 1)
-      //_MQTTLoop();
+      _MQTTLoop();
+      #endif
+
+      #if (_USE_NTP_ == 1)
+      _mNTPLoop();
       #endif
 
       break;

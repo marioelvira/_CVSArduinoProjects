@@ -1,3 +1,21 @@
+void _ctrStateString (void)
+{
+  switch (ctrInState)
+  {
+    case IN_STATE0:
+      ctrStateString = "Baterias";
+      break;
+
+    case IN_STATE1:
+      ctrStateString = "GEN Diesel";
+      break;
+
+    case IN_STATE2:
+      ctrStateString = "GEN Gasolina";
+      break;   
+  }
+}
+
 ////////////////
 // Ctr set up //
 ////////////////

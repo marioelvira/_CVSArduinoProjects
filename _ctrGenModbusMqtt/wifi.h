@@ -2,10 +2,8 @@
 extern "C" {
 #endif
 
-#ifndef _WIFI_H_
-#define _WIFI_H_
-
-#include "main.h"
+#ifndef _mWIFI_H_
+#define _mWIFI_H_
 
 ///////////
 // Wi-Fi //
@@ -19,6 +17,7 @@ extern "C" {
 #define SSIDST   "SSID"
 #define PSKST    "password"
 */
+
 #define SSIDAP    "MBMQTT8266"
 #define PSKAP     "topsecret"
 

@@ -86,7 +86,7 @@ extern "C" {
 //#define EEPROM_ADD_MAX          0xFA // 250
 
 // Values
-#define EEPROM_VAL_OK             0xAE
+#define EEPROM_VAL_OK             0xA0
 
 #define EEPROM_VAL_IP_MODE        DHCP_MODE
 #define EEPROM_VAL_IP1            192
@@ -137,7 +137,7 @@ extern "C" {
 #define EEPROM_VAL_BUZZER_ON      10  // Secs
 #define EEPROM_VAL_TSTART         10  // Secs
 #define EEPROM_VAL_TSTOP          20  // Secs
-#define EEPROM_VAL_GEN_AL         30  // Secs
+#define EEPROM_VAL_GEN_AL         60  // Secs
 
 #define EEPROM_VAL_O11_TIMER   	10  // Min
 #define EEPROM_VAL_O12_TIMER   	20  // Min

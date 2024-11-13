@@ -258,6 +258,7 @@ void _mbWriteMultipleHolding()
 
     _ram2eepromCONFIG();
   }
+  #if (_USE_MQTT_ == 1)
   else if ((addr == MB_HR_ADD_BRK) && (nregs == MB_HR_NREG_BRK))
   {
     
@@ -277,6 +278,7 @@ void _mbWriteMultipleHolding()
 
     _ram2eepromCONFIG();
   }
+  #endif
   else if ((addr == MB_HR_ADD_OUTS) && (nregs == MB_HR_NREG_OUTS))
   {
     // Only in MODE_TEST

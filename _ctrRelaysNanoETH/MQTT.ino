@@ -217,7 +217,7 @@ void _MQTTSetup(void)
    
   mqttClient.setServer(brokerUrl, brokerPort);
   mqttClient.setCallback(mqttDataCallback);
-  
+    
   mqttStatus = MQTT_NOT_CONNECTED;
   mqttTopic = 0;
 }
@@ -228,6 +228,17 @@ void _MQTTSetup(void)
 void _MQTTLoop(void)
 {
  
+  if (brokerPort == 0)
+  {
+    #if (_MQTT_SERIAL_DEBUG_ == 1)
+    Serial.println("MQTT disabled...");
+    #endif
+
+    mqttStatus = MQTT_NOT_CONNECTED;
+    mqttTopic = 0;
+    return;
+  }
+
   switch (mqttStatus)
   {
     case MQTT_NOT_CONNECTED:

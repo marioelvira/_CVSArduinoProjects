@@ -6,6 +6,13 @@ void _WifiSetup(void)
 {
   // Wi-Fi status
   wifiStatus = WIFI_START_ACCESSPOINT;
+
+  mac[0] = 0xF8;
+  mac[1] = 0xDC;
+  mac[2] = 0x7A;
+  mac[3] = comptime[0];
+  mac[4] = comptime[2];
+  mac[5] = comptime[4];
 }
 
 /////////////////////////
@@ -20,6 +27,7 @@ void _WifiLoop()
       #if (_WIFI_SERIAL_DEBUG_ == 1)
       Serial.println("Access point mode start ");
       Serial.print("SSID: ");
+
       Serial.println(ssidAp);
       Serial.print("PASSWORD: ");
       Serial.println(passwordAp);
@@ -27,7 +35,8 @@ void _WifiLoop()
     
       WiFi.mode(WIFI_AP);
       WiFi.softAP(ssidAp, passwordAp);
-  
+      WiFi.macAddress(mac);
+
       wifiIP = WiFi.softAPIP();
       
       #if (_WIFI_SERIAL_DEBUG_ == 1)

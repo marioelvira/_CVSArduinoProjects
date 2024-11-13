@@ -9,8 +9,7 @@ extern "C" {
 // C:\Users\mario.elvira\AppData\Local\Arduino15\packages\esp8266\hardware\esp8266\2.7.4
 // D:\Datos\Documents\Arduino\libraries
 
-// Board: Arduino AVR Boards -> Arduino Nano
-// Porcessor: ATMega328P (old Bootloader)
+// Board: Arduino magaAVR Boards -> Arduino Nano Every
 
 ///////////
 // Debug //

@@ -12,9 +12,9 @@ extern "C" {
 #define MQTT_CONNECTED       2
 #define MQTT_SUBSCRIBED      3
 
-#define MQTT_CONNECTION_TIMEOUT   5000  // 5 sec
-#define MQTT_SUBSCRIBE_TIMEOUT    1000  // 1 sec
-#define MQTT_PUBLISH_TIMEOUT      500   // 500 ms
+#define MQTT_CONNECTION_TIMEOUT       120000    // 2 min
+#define MQTT_SUBSCRIBE_TIMEOUT        1000      // 1 sec
+#define MQTT_PUBLISH_TIMEOUT          500       // 500 ms
 
 // MQTT broker credentials
 #define MQTT_BROKER         "sdpelicanos.webhop.me"

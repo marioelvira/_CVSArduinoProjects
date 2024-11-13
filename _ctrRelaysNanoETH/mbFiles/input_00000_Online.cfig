@@ -1,12 +1,12 @@
 U16#0000 Modo#0->Auto; 1->Test
-I16#0001 C0 Consumo#mA
-I16#0002 C1 Consumo#mA
+I16#0001 C0 Consumos Luz#mA
+I16#0002 C1 Consumos Enchufes#mA
 I16#0003 C2 Consumo#mA
 I16#0004 C3 Consumo#mA
-I16#0005 V0 Tension#Vx10
-I16#0006 V1 Tension#Vx10
-I16#0007 V2 Tension#Vx10
-I16#0008 V4 Tension#Vx10
+I16#0005 V0 Reserva#Vx10
+I16#0006 V1 Batreria 24Vdc#Vx10
+I16#0007 V2 Bateria Generador#Vx10
+I16#0008 V4 Alimentacion#Vx10
 U16#0009 In 0#
 U16#0010 In 1#
 U16#0011 Out 0#

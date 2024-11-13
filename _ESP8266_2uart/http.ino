@@ -318,7 +318,10 @@ void _serveNetworkSETTINGS()
   // End
 
   // Red
-  html = html + "<div class=\"section\"><span>2</span>IP</div>";
+  html = html + "<div class=\"section\"><span>2</span>IP (mac ";
+  html = html + String(mac[0], HEX) + ":" + String(mac[1], HEX) + ":" + String(mac[2], HEX) + ":";
+  html = html + String(mac[3], HEX) + ":" + String(mac[4], HEX) + ":" + String(mac[5], HEX) + ")";
+  html = html + "</div>";
   html = html + "<div class=\"inner-wrap\">";
 
   if (ipMode == DHCP_MODE)

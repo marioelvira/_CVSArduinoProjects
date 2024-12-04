@@ -21,7 +21,7 @@ void _ModbusTcpLoop()
   switch (modbusTcpStatus)
   {
     case MODBUSTCP_INIT:
-      modbusTcpServer.begin();
+      modbusTcpServer.begin(cfgModbusPORT);
       #if (_SERIAL_DEBUG_ == 1)
       Serial.println("Modbus TCP server started");
       #endif

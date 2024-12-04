@@ -149,6 +149,9 @@ int wdeForceReset;
 ////////////
 int cfgLogicIns;
 int cfgLogicOuts;
+int cfgTimefOuts;
+
+int cfgModbusPORT;
 
 ///////////////////////
 // Modbus TCP server //

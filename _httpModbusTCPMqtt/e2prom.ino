@@ -105,6 +105,16 @@ void _readCONFIG (void)
     EEPROM.write(EEPROM_ADD_LOGIC_INS,  EEPROM_VAL_LOGIC_INS);
     EEPROM.write(EEPROM_ADD_LOGIC_OUTS, EEPROM_VAL_LOGIC_OUTS);
 	  
+    eeprom_value_lo = EEPROM_VAL_TIMEF_OUTS & 0x00FF;
+    EEPROM.write(EEPROM_ADD_TIMEF_OUTS_LO, eeprom_value_lo);
+    eeprom_value_hi = (EEPROM_VAL_TIMEF_OUTS & 0xFF00)>>8;
+    EEPROM.write(EEPROM_ADD_TIMEF_OUTS_HI, eeprom_value_hi);
+
+    eeprom_value_lo = EEPROM_VAL_MODBUS_PORT & 0x00FF;
+    EEPROM.write(EEPROM_ADD_MODBUS_PORT_LO, eeprom_value_lo);
+    eeprom_value_hi = (EEPROM_VAL_MODBUS_PORT & 0xFF00)>>8;
+    EEPROM.write(EEPROM_ADD_MODBUS_PORT_HI, eeprom_value_hi);
+
     EEPROM.commit();    //Store data to EEPROM
   }
   else
@@ -214,11 +224,21 @@ void _readCONFIG (void)
   // Other Data
   cfgLogicIns       = (int)EEPROM.read(EEPROM_ADD_LOGIC_INS);
   cfgLogicOuts      = (int)EEPROM.read(EEPROM_ADD_LOGIC_OUTS);
-    
+
+  eeprom_value_hi   = (int)EEPROM.read(EEPROM_ADD_TIMEF_OUTS_HI);
+  eeprom_value_lo   = (int)EEPROM.read(EEPROM_ADD_TIMEF_OUTS_LO);
+  cfgTimefOuts       = (int)((eeprom_value_hi & 0x00FF)<<8)|(eeprom_value_lo & 0x00FF);
+
+  eeprom_value_hi   = (int)EEPROM.read(EEPROM_ADD_MODBUS_PORT_HI);
+  eeprom_value_lo   = (int)EEPROM.read(EEPROM_ADD_MODBUS_PORT_LO);
+  cfgModbusPORT     = (int)((eeprom_value_hi & 0x00FF)<<8)|(eeprom_value_lo & 0x00FF);
+
   #if (_EEPROM_SERIAL_DEBUG_ == 1)
 
   Serial.print("Logic Ins: ");     Serial.println(cfgLogicIns);
   Serial.print("Logic Outs: ");    Serial.println(cfgLogicOuts);
+  Serial.print("Time for Outs: "); Serial.println(cfgTimefOuts);
+  Serial.print("Modbus Port: ");   Serial.println(cfgModbusPORT);
     
   #endif
 }

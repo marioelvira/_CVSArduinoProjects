@@ -143,6 +143,7 @@ void _serveCfgSETTINGS()
   html = html + "<div class=\"inner-wrap\">";
   html = html + "<label> Entradas ON <input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgLogicIns) + "\" name=\"cfgIns\"/></label>";
   html = html + "<label> Salidas ON <input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgLogicOuts) + "\" name=\"cfgOuts\"/></label>";
+  html = html + "<label> Tiempo Salidas <input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgTimefOuts) + "\" name=\"cfgTfOuts\"/></label>";
   html = html + "</div>";
 
   html = html + "<div class=\"button-section\">";
@@ -167,16 +168,15 @@ void _setCfgSETTINGS()
     
   String html = "";
   
-  String rcfgIns     = httpServer.arg("cfgIns");
-  String rcfgOuts    = httpServer.arg("cfgOuts");
-  
-  //String rdebugVal = httpServer.arg("tdebugVal");
+  String rcfgIns          = httpServer.arg("cfgIns");
+  String rcfgOuts         = httpServer.arg("cfgOuts");
+  String rcfgTimefOuts    = httpServer.arg("cfgTfOuts");
   
   int error = 0;
 
   if ((rcfgIns.length() == 0)     ||
-      (rcfgOuts.length() == 0))
-      //(rdebugVal.length() == 0))
+      (rcfgOuts.length() == 0)    ||
+      (rcfgTimefOuts.length() == 0))
   {
     error = 1;  // falta un campo...
     #if (_HTTP_SERIAL_DEBUG_ == 1)
@@ -189,18 +189,25 @@ void _setCfgSETTINGS()
   {
     cfgLogicIns  = rcfgIns.toInt();
     cfgLogicOuts = rcfgOuts.toInt();
+    cfgTimefOuts = rcfgTimefOuts.toInt();
         
     //DebugVal = rdebugVal.toInt();
     
     #if (_HTTP_SERIAL_DEBUG_ == 1)  
     Serial.print("cfgLogic Ins: ");  Serial.println(cfgLogicIns);
-    Serial.print("cfgLogic Outs: "); Serial.println(cfgLogicOuts);    
+    Serial.print("cfgLogic Outs: "); Serial.println(cfgLogicOuts);  
+    Serial.print("Time for Outs: "); Serial.println(cfgTimefOuts);
     #endif   
 
     // Data 
     EEPROM.write(EEPROM_ADD_LOGIC_INS,  (byte)cfgLogicIns);
     EEPROM.write(EEPROM_ADD_LOGIC_OUTS, (byte)cfgLogicOuts);
-        
+
+    eeprom_value_lo = cfgTimefOuts & 0x00FF;
+    EEPROM.write(EEPROM_ADD_TIMEF_OUTS_LO, eeprom_value_lo);
+    eeprom_value_hi = (cfgTimefOuts & 0xFF00)>>8;
+    EEPROM.write(EEPROM_ADD_TIMEF_OUTS_HI, eeprom_value_hi);
+
     EEPROM.commit();    //Store data to EEPROM
   }
 
@@ -276,7 +283,6 @@ void _serveNetSETTINGS()
 
   html = html + "<label>SSID <input type=\"text\" maxlength=\"30\" value=\"" + String(ssid) + "\" name=\"ssid\"/></label>";
   html = html + "<label>Password <input type=\"text\" maxlength=\"30\" value=\"" + String(password) + "\" name=\"pass\"/></label>";
-
   html = html + "</div>";
   // End
 
@@ -298,22 +304,24 @@ void _serveNetSETTINGS()
   html = html + "<label>IP Address <input type=\"text\"  maxlength=\"16\" value=\"" + String(ipAddress.toString()) + "\" name=\"ipaddress\"/></label>";
   html = html + "<label>Mask <input type=\"text\" maxlength=\"16\" value=\"" + String(netMask.toString()) + "\" name=\"mask\"/></label>";
   html = html + "<label>Gateway <input type=\"text\" maxlength=\"16\" value=\"" + String(gateWay.toString()) + "\" name=\"gateway\"/></label>";
-
   html = html + "</div>";
   // End
 
   // Broker
   html = html + "<div class=\"section\"><span>3</span>Broker </div>";
   html = html + "<div class=\"inner-wrap\">";
-
   html = html + "<label>Url <input type=\"text\" maxlength=\"30\" value=\"" + String(brokerUrl) + "\" name=\"brokerurl\"/></label>";
   html = html + "<label>Port <input type=\"text\" maxlength=\"16\" value=\"" + String(brokerPort) + "\" name=\"brokerport\"/></label>";
   html = html + "<label>User <input type=\"text\" maxlength=\"30\" value=\"" + String(brokerUser) + "\" name=\"brokeruser\"/></label>";
   html = html + "<label>Pswd <input type=\"text\" maxlength=\"30\" value=\"" + String(brokerPswd) + "\" name=\"brokerpswd\"/></label>";
-
   html = html + "</div>";
   // End
-                        
+
+  html = html + "<div class=\"section\"><span>4</span>Modbus TCP</div>";
+  html = html + "<div class=\"inner-wrap\">";
+  html = html + "<label> Port<input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgModbusPORT) + "\" name=\"cfgMbPort\"/></label>";
+  html = html + "</div>";
+
   html = html + "<div class=\"button-section\">";
   html = html + "  <input type=\"submit\" value=\"Guardar\">";
   html = html + "  <a href=\"index.htm\"><input type=\"button\" value=\"Volver\"></a>";
@@ -345,7 +353,9 @@ void _setNetSETTINGS()
   String rbrokerport = httpServer.arg("brokerport");
   String rbrokeruser = httpServer.arg("brokeruser");
   String rbrokerpswd = httpServer.arg("brokerpswd");
-      
+
+  String rcfgModbusPort   = httpServer.arg("cfgMbPort");
+
   String html = "";
   int i, j, k, m;
   int error = 0;
@@ -393,10 +403,11 @@ void _setNetSETTINGS()
     error = 1;
 
   // Check broker error
-  if ((rbrokerurl.length() == 0)  ||
-      (rbrokerport.length() == 0) ||
-      (rbrokeruser.length() == 0) ||
-      (rbrokerpswd.length() == 0))
+  if ((rbrokerurl.length() == 0)    ||
+      (rbrokerport.length() == 0)   ||
+      (rbrokeruser.length() == 0)   ||
+      (rbrokerpswd.length() == 0)   ||
+      (rcfgModbusPort.length() == 0))
     error |= 1;
 
   // If no error on data...
@@ -427,6 +438,13 @@ void _setNetSETTINGS()
      for (i = 0; i < j; i++)
        EEPROM.write(EEPROM_ADD_MQTT_PSWD + i, rbrokerpswd[i]);
  
+    // Modbus PORT
+    cfgModbusPORT = rcfgModbusPort.toInt();
+    eeprom_value_lo = cfgModbusPORT & 0x00FF;
+    EEPROM.write(EEPROM_ADD_MODBUS_PORT_LO, eeprom_value_lo);
+    eeprom_value_hi = (cfgModbusPORT & 0xFF00)>>8;
+    EEPROM.write(EEPROM_ADD_MODBUS_PORT_HI, eeprom_value_hi);
+
      /////////////////////////
      // Wi-Fi configuration //
      /////////////////////////
@@ -583,6 +601,8 @@ void _setNetSETTINGS()
      Serial.println(rbrokerurl);
      Serial.print("---->Broker Port: ");
      Serial.println(rbrokerport);     
+
+     Serial.print("Modbus Port: ");   Serial.println(cfgModbusPORT);
      #endif
      
      EEPROM.commit();

@@ -11,9 +11,6 @@ extern "C" {
 // IO definition //
 ///////////////////
 
-#define ROOM_PINOUT     0	// IN/OUT Board
-#define ELIGHT_PINOUT   1	// Only OUT Board
-
 /* ----------------------------------
  *   |                      --------
  *   |__  |      RX -GPIO3 -||     º|- VCC----
@@ -69,16 +66,18 @@ The following list shows the state of the following pins on BOOT:
  GPIO10: pin is high at BOOT
  GPIO9: pin is high at BOOT
  GPIO3: pin is high at BOOT
+*/
 
 // PIN definition
+#if (LOLIN_PINOUT == 1)
 #define PIN_LED         2
 #define PIN_OUTA        16
-#define PIN_OUTB        5
-#define PIN_OUTC        4
+//#define PIN_OUTB      5
+//#define PIN_OUTC      4
 #define PIN_INA         14
-#define PIN_INB         12
-#define PIN_INC         13
-*/
+//#define PIN_INB       12
+//#define PIN_INC       13
+#endif
 
 #define PIN_OUT_ON        1
 #define PIN_OUT_OFF       0

@@ -50,8 +50,11 @@ char password[WIFI_PSWD_MAX];
 
 IPAddress wifiIP;
 
+//String ChipId = String(ESP.getChipId());
+
 // Accesspoint Mode
-const char* ssidAp = SSIDAP;
+//const char* ssidAp = SSIDAP;
+String ssidAp = "ESP-2uart" + String(ESP.getChipId());
 const char* passwordAp = PSKAP;
 
 int wifiStatus;

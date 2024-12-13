@@ -46,10 +46,15 @@ extern "C" {
 #define EEPROM_ADD_LOGIC_INS      0x99
 #define EEPROM_ADD_LOGIC_OUTS     0x9A
 
+#define EEPROM_ADD_TIMEF_OUTS_LO  0x9B
+#define EEPROM_ADD_TIMEF_OUTS_HI  0x9C
+#define EEPROM_ADD_MODBUS_PORT_LO 0x9E
+#define EEPROM_ADD_MODBUS_PORT_HI 0x9F
+
 //#define EEPROM_ADD_MAX          0xFA // 250
 
 // Values
-#define EEPROM_VAL_OK             0xA0
+#define EEPROM_VAL_OK             0xA1
 
 #define EEPROM_VAL_IP_MODE        DHCP_MODE
 #define EEPROM_VAL_IP1            192
@@ -74,8 +79,10 @@ extern "C" {
 //#define EEPROM_ADD_MQTT_PSWD    
 //#define EEPROM_VAL_BROKER_PORT    7000
 
-#define EEPROM_VAL_LOGIC_INS      1
-#define EEPROM_VAL_LOGIC_OUTS     1
+#define EEPROM_VAL_LOGIC_INS      0
+#define EEPROM_VAL_LOGIC_OUTS     0
+#define EEPROM_VAL_TIMEF_OUTS     0
+#define EEPROM_VAL_MODBUS_PORT    8502
 
 #endif // _E2PROM_H_
 

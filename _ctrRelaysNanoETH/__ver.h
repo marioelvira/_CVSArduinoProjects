@@ -1,2 +1,2 @@
 #define PROJECT     "NANO ETH RELAYS "
-#define FW_VERSION  "2.2.1"
+#define FW_VERSION  "2.2.0"

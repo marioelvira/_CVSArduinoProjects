@@ -9,18 +9,27 @@ extern "C" {
 #define MODE_AUTO   0
 
 /*
-  Tabla de Verdad
-  ---------------
+  Control por Entradas
+  --------------------
 
-  In1 In2 |   OutA 1  OutB 2  OutC 3  OutD 4  OutE 5
+  In0 - Gen Diesel
+  In1 - Grupo Gasolina
+  Out0 - Inv Baterias: Enchufes
+  Out1 - Inv Baterias: Luces
+  Out2 - Gen Diesel: Enchufes
+  Out3 - Gen Diesel: Luces
+  Out4 - Grupo Gasolina: Enchufes
+  Out5 - Grupo Gasolina: Luces
+
+  In0 In1 |   Out0    Out1    Out2    Out3    Out4
   --------------------------------------------------
-  0   0   |   1       1       0       0       0   IN_STATE0
-  1   0   |   0       0       1       1       0   IN_STATE1
-  1   1   |   0       0       1       1       0   IN_STATE1
-  0   1   |   0       0       0       1       1   IN_STATE2
+  0   0   |   1       1       0       0       0   IN_STATE0 - Inversor BAT
+  1   0   |   0       0       1       1       0   IN_STATE1 - Generador Diesel
+  0   1   |   0       0       0       1       1   IN_STATE2 - Grupo Gasolina
+  1   1   |   0       0       1       1       0   IN_STATE1 - *Generador Diesel
  
-
-  Control por consumo:
+  Control por consumos:
+  ---------------------
     Si, estamos en IN_STATE0, y el consumo en AIN0 > X amps o AIN1 > X amps durante mas de 3 segundos
     vamos al IN_STATE1 y permanecemos durante 3 minutos.
 */

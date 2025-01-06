@@ -11,17 +11,11 @@ void _ISetup()
   for (int i = 0; i < I_NUMBER; i++)
   { 
     // Irms
-    if (cfgIType[i] == I_TYPE_IRMS)
-    {
-      nSamples[i] = 0;
-      Iratio[i] = cfgIACr[i] *((ADC_SUPPLY_VOLTAGE/1000.0)/(ADC_COUNTS));
+    nSamples[i] = 0;
+    Iratio[i] = cfgIACr[i] *((ADC_SUPPLY_VOLTAGE/1000.0)/(ADC_COUNTS));
 
-      IuTick[i] = micros() + samplePeriod + (samplePeriod>>I_NUMBER)*i;
-      IrmsCont[i] = 0;
-    }
-    // Idc
-    else
-      IuTick[i] = micros() + IDC_MTICK + (IDC_MTICK>>I_NUMBER)*i;
+    IuTick[i] = micros() + samplePeriod + (samplePeriod>>I_NUMBER)*i;
+    IrmsCont[i] = 0;
     
     Ival[i] = 0;
   }
@@ -37,7 +31,7 @@ void _ILoop()
     // Irms
     if (cfgIType[i] == I_TYPE_NOTUSED)
       Ival[i] = 0;
-    else if (cfgIType[i] == I_TYPE_IRMS)
+    else
     {
       if (micros() - IuTick[i] >= samplePeriod)
       {
@@ -64,19 +58,6 @@ void _ILoop()
           Ival[i] = Iratio[i] * 1000 * sqr;
           nSamples[i] = 0;
         }
-      }
-    }
-    // Idc
-    else
-    {
-      if (micros() - IuTick[i] >= IDC_MTICK)
-      {
-        AdcDig[i + ADC_I_OFFSET] = analogRead(AdcPin[i + ADC_I_OFFSET]);
-        adcDig = AdcDig[i + ADC_I_OFFSET];
-
-        Ival[i] = (float)adcDig*((float)cfgIDCm[i])/((float)10000*(float)ADC_FULL_SCALE) + (float)cfgIDCb[i]/1000;
-
-        IuTick[i] = micros();
       }
     }
   }

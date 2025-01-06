@@ -22,14 +22,14 @@ extern "C" {
 
 #if (_USE_ETHERNET_ == 1)
 #define _USE_MBTCP_                1
-#define _USE_MQTT_                 1
+#define _USE_MQTT_                 0 // 1
 #define _USE_NTP_                  0
 #endif
 
 #define _SERIAL_DEBUG_             1
 
 #if (_SERIAL_DEBUG_ == 1)
-#define _EEPROM_SERIAL_DEBUG_      0
+#define _EEPROM_SERIAL_DEBUG_      1
 #define _STATUS_SERIAL_DEBUG_      0
 #define _ETH_SERIAL_DEBUG_         1
 #define _MBTCP_SERIAL_DEBUG_       0

@@ -1,35 +1,30 @@
 U16#0000 Modo#0->Auto 1->Test
-U16#0001 IN Logica#
+U16#0001 INs Logica#
 U16#0002 OUTs Logica#
-U16#0003 ADC0 I Type#0-No used 1-Irms 2-Idc
+U16#0003 ADC0 I Type#0-No used 1-Irms
 U16#0004 ADC0 Irms Ratio#A->1V
-U16#0005 ADC0 Idc recta m#
-U16#0006 ADC0 Idc recta b#
-U16#0007 ADC0 I Limite#mA
-U16#0008 ADC0 I Hys Tiempo#sec
-U16#0009 ADC1 I Type#0-No used 1-Irms 2-Idc
-U16#0010 ADC1 Irms Ratio#A->1V
-U16#0011 ADC1 Idc recta m#
-U16#0012 ADC1 Idc recta b#
-U16#0013 ADC1 I Limite#mA
-U16#0014 ADC1 I Hys Tiempo#sec
-U16#0015 ADC2 I Type#0-No used 1-Irms 2-Idc
-U16#0016 ADC2 Irms Ratio#A->1V
-U16#0017 ADC2 Idc recta m#
-U16#0018 ADC2 Idc recta b#
-U16#0019 ADC2 I Limite#mA
-U16#0020 ADC2 I Hys Tiempo#sec
-U16#0021 ADC3 I Type#0-No used 1-Irms 2-Idc
-U16#0022 ADC3 Irms Ratio#A->1V
-U16#0023 ADC3 Idc recta m#
-U16#0024 ADC3 Idc recta b#
-U16#0025 ADC3 I Limite#mA
-U16#0026 ADC3 I Hys Tiempo#sec
-U16#0027 ADC4 Vdc recta m#
-U16#0028 ADC4 Vdc recta b#
-U16#0029 ADC5 Vdc recta m#
-U16#0030 ADC5 Vdc recta b#
-U16#0031 ADC6 Vdc recta m#
-U16#0032 ADC6 Vdc recta b#
-U16#0033 ADC7 Vdc recta m#
-U16#0034 ADC7 Vdc recta b#
+U16#0005 ADC0 I Limite#mA
+U16#0006 ADC0 I Tiempo#segundos
+U16#0007 ADC1 I Type#0-No used 1-Irms
+U16#0008 ADC1 Irms Ratio#A->1V
+U16#0009 ADC1 I Limite#mA
+U16#0010 ADC1 I Tiempo (NO USADO)#segundos
+U16#0011 ADC2 Vdc recta m#
+U16#0012 ADC2 Vdc recta b#
+U16#0013 ADC3 Vdc recta m#
+U16#0014 ADC3 Vdc recta b#
+U16#0015 ADC4 Vdc recta m#
+U16#0016 ADC4 Vdc recta b#
+U16#0017 ADC5 Vdc recta m#
+U16#0018 ADC5 Vdc recta b#
+U16#0019 ADC6 Vdc recta m#
+U16#0020 ADC6 Vdc recta b#
+U16#0021 ADC7 Vdc recta m#
+U16#0022 ADC7 Vdc recta b#
+U16#0023 E0 Tiempo 0 #segundos
+U16#0024 E0 Tiempo 1 #segundos
+U16#0025 E1 Tiempo 0 #segundos
+U16#0026 E1 Tiempo 1 #segundos
+U16#0027 E2 Tiempo 0 #segundos
+U16#0028 E2 Tiempo 1 #segundos
+U16#0028 E1 Tiempo Sobreconsumo #segundos

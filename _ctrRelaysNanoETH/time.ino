@@ -60,7 +60,11 @@ void _TimeLoop(void)
     }
     
     _timeOnString();
+    
+    #if (_USE_MQTT_ == 1)
     _ctrStateString();
+    #endif
+
     timeTick = millis();
 
     #if (_USE_NTP_ == 1)

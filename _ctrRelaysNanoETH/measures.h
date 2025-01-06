@@ -9,7 +9,7 @@ extern "C" {
 
 // Offsets
 #define ADC_I_OFFSET        0
-#define ADC_V_OFFSET        4
+#define ADC_V_OFFSET        2 // 4
 
 #define ADC_BITS            10
 #define ADC_COUNTS          (1<<ADC_BITS)
@@ -17,10 +17,8 @@ extern "C" {
 #define ADC_FULL_SCALE      1024
 
 // I
-#define I_NUMBER            4   // Idem ADC_V_OFFSET
+#define I_NUMBER            2 // 4 // Idem ADC_V_OFFSET
 #define I_TYPE_NOTUSED      0
-#define I_TYPE_IRMS         1
-#define I_TYPE_IDC          2
 
 // Irms
 #define IRMS_FREQ_HZ        50
@@ -31,7 +29,7 @@ extern "C" {
 #define IDC_MTICK           1000000 // 1s
 
 // V
-#define V_NUMBER            4
+#define V_NUMBER            6 // 4
 
 // Vdc
 #define VDC_MTICK           1000000 // 1s

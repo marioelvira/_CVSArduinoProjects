@@ -44,17 +44,17 @@ extern "C" {
 
 // Input Registers
 #define MB_IR_ADD_ONLINE   0
-#define MB_IR_NREG_ONLINE  17
+#define MB_IR_NREG_ONLINE  20
 #define MB_IR_ADD_INS      100
 #define MB_IR_NREG_INS     2
 #define MB_IR_ADD_OUTS     110
 #define MB_IR_NREG_OUTS    6
 #define MB_IR_ADD_ADCS     120
-#define MB_IR_NREG_ADCS    4
+#define MB_IR_NREG_ADCS    8
 
 // Holding Registers
 #define MB_HR_ADD_CFG      0
-#define MB_HR_NREG_CFG     35
+#define MB_HR_NREG_CFG     30
 #define MB_HR_ADD_IP       50
 #define MB_HR_NREG_IP      13
 #define MB_HR_ADD_BRK      70

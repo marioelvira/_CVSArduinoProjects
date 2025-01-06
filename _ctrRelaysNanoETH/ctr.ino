@@ -1,3 +1,5 @@
+
+#if (_USE_MQTT_ == 1)
 void _ctrStateString (void)
 {
   switch (ctrInState)
@@ -15,6 +17,7 @@ void _ctrStateString (void)
       break;   
   }
 }
+#endif
 
 ////////////////
 // Ctr set up //
@@ -80,7 +83,7 @@ void _ctrADCCurret() {
         if ((Ival[0] < cfgIlim[0]) && (Ival[1] < cfgIlim[1]))
           crtCIrmsState = IRMS_STATE0;
 
-        if (millis() - ctrCIrmsTick >= IRMS_STATE1_TICKS)
+        if (millis() - ctrCIrmsTick >= cfgIsec[0]*1000 /*IRMS_STATE1_TICKS*/)
         {
           ctrCIrmsTick = millis();
           ctrCIrmsSec = timeSecTick;
@@ -92,7 +95,7 @@ void _ctrADCCurret() {
         // Forced
         ctrInState = IN_STATE1;
 
-        if (timeSecTick - ctrCIrmsSec >= IRMS_STATE2_SECS)
+        if (timeSecTick - ctrCIrmsSec >= cfgCtrSecs[6] /*IRMS_STATE2_SECS*/)
           crtCIrmsState = IRMS_STATE0;
         break;
   }
@@ -126,7 +129,7 @@ void _ctrOutState0 () {
       OutDig[3] = OUT_OFF;
       OutDig[4] = OUT_OFF;
     
-      if (millis() - ctrOutTick >= STATE0_0_1_TICKS)
+      if (millis() - ctrOutTick >= cfgCtrSecs[0]*1000 /*STATE0_0_1_TICKS*/)
       {
         ctrOutTick = millis();
         ctrOutState = OUT_STATE1;
@@ -140,7 +143,7 @@ void _ctrOutState0 () {
       OutDig[3] = OUT_OFF;
       OutDig[4] = OUT_OFF;
           
-      if (millis() - ctrOutTick >= STATE0_1_2_TICKS)
+      if (millis() - ctrOutTick >= cfgCtrSecs[1]*1000 /*STATE0_1_2_TICKS*/)
       {
         ctrOutTick = millis();
         ctrOutState = OUT_STATE2;
@@ -178,7 +181,7 @@ void _ctrOutState1 () {
       OutDig[3] = OUT_OFF;
       OutDig[4] = OUT_OFF;
     
-      if (millis() - ctrOutTick >= STATE1_0_1_TICKS)
+      if (millis() - ctrOutTick >= cfgCtrSecs[2]*1000 /*STATE1_0_1_TICKS*/)
       {
         ctrOutTick = millis();
         ctrOutState = OUT_STATE1;
@@ -192,7 +195,7 @@ void _ctrOutState1 () {
       OutDig[3] = OUT_OFF;
       OutDig[4] = OUT_OFF;
           
-      if (millis() - ctrOutTick >= STATE1_1_2_TICKS)
+      if (millis() - ctrOutTick >= cfgCtrSecs[3]*1000 /*STATE1_1_2_TICKS*/)
       {
         ctrOutTick = millis();
         ctrOutState = OUT_STATE2;
@@ -229,7 +232,7 @@ void _ctrOutState2 () {
       OutDig[3] = OUT_OFF;
       OutDig[4] = OUT_OFF;
     
-      if (millis() - ctrOutTick >= STATE2_0_1_TICKS)
+      if (millis() - ctrOutTick >= cfgCtrSecs[4]*1000 /*STATE2_0_1_TICKS*/)
       {
         ctrOutTick = millis();
         ctrOutState = OUT_STATE1;
@@ -243,7 +246,7 @@ void _ctrOutState2 () {
       OutDig[3] = OUT_OFF;
       OutDig[4] = OUT_ON;
           
-      if (millis() - ctrOutTick >= STATE2_1_2_TICKS)
+      if (millis() - ctrOutTick >= cfgCtrSecs[5]*1000 /*STATE2_1_2_TICKS*/)
       {
         ctrOutTick = millis();
         ctrOutState = OUT_STATE2;

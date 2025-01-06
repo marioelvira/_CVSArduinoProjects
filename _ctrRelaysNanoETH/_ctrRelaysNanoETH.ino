@@ -116,20 +116,18 @@ unsigned long ctrCIrmsSec = 0;
 ////////////
 // Config //
 ////////////
-int cfgLogicIns;
-int cfgLogicOuts;
+bool cfgLogicIns;
+bool cfgLogicOuts;
 
 int cfgIType[I_NUMBER];
 int cfgIACr[I_NUMBER];
-
-int cfgIDCm[I_NUMBER];
-int cfgIDCb[I_NUMBER];
-
 int cfgIlim[I_NUMBER];
 int cfgIsec[I_NUMBER];
 
 int cfgVDCm[V_NUMBER];
 int cfgVDCb[V_NUMBER];
+
+int cfgCtrSecs[7];
 
 #if (_USE_ETHERNET_ == 1)
 int cfgModbusPORT = 502;
@@ -231,7 +229,7 @@ void _PINSetup(void)
   for (i = 0; i < OUT_NUMBER; i++)
   {
     pinMode(OutPin[i], OUTPUT);
-    digitalWrite(OutPin[i], PIN_OUT_OFF);
+    digitalWrite(OutPin[i], !cfgLogicOuts /*PIN_OUT_OFF*/);
     OutDig[i] = OUT_OFF;
   }
 
@@ -313,9 +311,9 @@ void _PINLoop()
   for (i = 0; i < OUT_NUMBER; i++)
   {
     if (OutDig[i] == OUT_ON)
-      digitalWrite(OutPin[i], PIN_OUT_ON);
+      digitalWrite(OutPin[i], !cfgLogicOuts /*PIN_OUT_ON*/);
     else
-      digitalWrite(OutPin[i], PIN_OUT_OFF);
+      digitalWrite(OutPin[i], cfgLogicOuts /*PIN_OUT_OFF*/);
   }
 
   #if (_USE_RS485_RXTX_ == 1)
@@ -330,7 +328,7 @@ void _PINLoop()
   //-----//
   for (i = 0; i < IN_NUMBER; i++)
   {
-    if (digitalRead(InPin[i]) == PIN_IN_OFF)
+    if (digitalRead(InPin[i]) == cfgLogicIns /*PIN_IN_OFF*/)
       InDig[i] = IN_OFF;
     else
       InDig[i] = IN_ON;

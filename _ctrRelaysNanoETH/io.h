@@ -73,12 +73,12 @@ extern "C" {
 #define PIN_IN1         9
 
 // Status OUTs
-#define PIN_OUT_ON        1
-#define PIN_OUT_OFF       0
+//#define PIN_OUT_ON     1
+//#define PIN_OUT_OFF    0
 
 // Status Pull-up INs
-#define PIN_IN_OFF        1
-#define PIN_IN_ON         0
+//#define PIN_IN_OFF      1
+//#define PIN_IN_ON       0
 
 // IO definition
 #define IN_OFF            0

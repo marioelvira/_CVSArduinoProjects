@@ -656,6 +656,7 @@ void _serveSETTINGS()
   html = html + "</div>";
   // End
 
+  #if (_USE_MQTT_ == 1)
   // Broker
   html = html + "<div class=\"section\"><span>3</span>Broker </div>";
   html = html + "<div class=\"inner-wrap\">";
@@ -667,7 +668,8 @@ void _serveSETTINGS()
 
   html = html + "</div>";
   // End
-                        
+  #endif
+
   html = html + "<div class=\"button-section\">";
   html = html + "  <input type=\"submit\" value=\"Guardar\">";
   html = html + "  <a href=\"index.htm\"><input type=\"button\" value=\"Volver\"></a>";
@@ -695,11 +697,13 @@ void _setSETTINGS()
   String rmask = httpServer.arg("mask");
   String rgate = httpServer.arg("gateway");
   
+  #if (_USE_MQTT_ == 1)
   String rbrokerurl = httpServer.arg("brokerurl");
   String rbrokerport = httpServer.arg("brokerport");
   String rbrokeruser = httpServer.arg("brokeruser");
   String rbrokerpswd = httpServer.arg("brokerpswd");
-      
+  #endif
+
   String html = "";
   int i, j, k, m;
   int error = 0;
@@ -746,16 +750,19 @@ void _setSETTINGS()
   else
     error = 1;
 
+  #if (_USE_MQTT_ == 1)
   // Check broker error
   if ((rbrokerurl.length() == 0)  ||
       (rbrokerport.length() == 0) ||
       (rbrokeruser.length() == 0) ||
       (rbrokerpswd.length() == 0))
     error |= 1;
+  #endif
 
   // If no error on data...
   if (error == 0)
   {
+    #if (_USE_MQTT_ == 1)
      // Broker Url
      for (i = 0; i < MQTT_URL_MAX; i++)
        EEPROM.write(EEPROM_ADD_BROKER + i, 0);
@@ -780,7 +787,8 @@ void _setSETTINGS()
      j = rbrokerpswd.length();
      for (i = 0; i < j; i++)
        EEPROM.write(EEPROM_ADD_MQTT_PSWD + i, rbrokerpswd[i]);
- 
+     #endif
+
      /////////////////////////
      // Wi-Fi configuration //
      /////////////////////////
@@ -932,11 +940,14 @@ void _setSETTINGS()
      Serial.print("---->Local gateway: ");
      Serial.println(localgate);
 
+    #if (_USE_MQTT_ == 1)
      // Broker configuration
      Serial.print("---->Broker Url: ");
      Serial.println(rbrokerurl);
      Serial.print("---->Broker Port: ");
      Serial.println(rbrokerport);     
+     #endif
+
      #endif
      
      EEPROM.commit();
@@ -1366,10 +1377,12 @@ void _readSTATUS()
   html = html + "<td>" + String(wifiStatus) + "</td>";
   html = html + "</tr>";
 
+  #if (_USE_MQTT_ == 1)
   html = html + "<tr>";
   html = html + "<td>MQTT </td>";
   html = html + "<td>" + String(mqttStatus) + "</td>";
   html = html + "</tr>";
+  #endif
 
   html = html + "<tr>";
   html = html + "<td>Alarma </td>";

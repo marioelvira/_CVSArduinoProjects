@@ -1,9 +1,19 @@
+#include "main.h"
+
 #include <ESP8266WiFi.h>
 #include <WiFiUdp.h>
 #include <ESP8266WebServer.h>
+#if (_USE_NTP_ == 1)
 #include <NTPClient.h>
+#include <TimeLib.h>
+#endif
+#if (_USE_MQTT_ == 1)
 #include <PubSubClient.h>
+#endif
 #include <EEPROM.h>
+#if (_USE_SOLAR_ == 1)
+#include <SolarCalculator.h>
+#endif
 
 #include "adcs.h"
 #include "alarm.h"
@@ -12,12 +22,15 @@
 #include "gen.h"
 #include "io.h"
 #include "ip.h"
-#include "main.h"
 #include "ctr.h"
 #include "wifi.h"
+#if (_USE_MQTT_ == 1)
 #include "MQTT.h"
+#endif
 #include "mModbus.h"
+#if (_USE_NTP_ == 1)
 #include "mNTP.h"
+#endif
 #include "mRAM.h"
 #include "mRS485.h"
 #include "wde.h"
@@ -126,6 +139,7 @@ int httpStatus;
 //////////
 // MQTT //
 //////////
+#if (_USE_MQTT_ == 1)
 const char* brokerUrlSt = MQTT_BROKER;
 char brokerUrl[MQTT_URL_MAX];
 int brokerPort;
@@ -142,6 +156,7 @@ String mqttClientId = "mbMQTT-" + String(ESP.getChipId());
 int mqttStatus;
 unsigned long mqttTick = 0;
 int mqttPayload;
+#endif
 
 //////////
 // Time //
@@ -158,7 +173,12 @@ int timeTickSec = 0;
 //////////
 // mNTP //
 //////////
+#if (_USE_NTP_ == 1)
 String mntpTimeString;
+
+//String mntpFormattedTime;
+time_t mntpEpochTime;
+
 int mntpSec = 0;
 int mntpMin = 0;
 int mntpHour = 0;
@@ -167,6 +187,23 @@ int mntpStatus;
 int mntpUpdated = 0;
 WiFiUDP mNtpUDP;
 NTPClient mNtpClient(mNtpUDP, "pool.ntp.org", 3600);
+#endif
+
+// Solar
+#if (_USE_SOLAR_ == 1)
+// Data
+double stransit, sunrise, sunset;
+
+int syear = 2025;
+int smonth = 6;
+int sday = 21;
+
+// Location
+double slatitude = 42.464;
+double slongitude = -2.0293;
+int sutc_offset = 1;
+int sheight = 450;  // in meters
+#endif
 
 //////////
 // mRAM //
@@ -373,7 +410,9 @@ void setup(void)
   _TimeSetup();
 
   // MQTT setup
+  #if (_USE_MQTT_ == 1)
   _MQTTSetup();
+  #endif
 
   #if (_USE_RS485_ == 1)
   _RS485Setup();
@@ -466,10 +505,12 @@ void loop()
   if ((wifiStatus == WIFI_ON_ACCESSPOINT) || (wifiStatus == WIFI_STATION_CONNECTED))
     _HttpLoop();
 
+  #if (_USE_MQTT_ == 1)
   if (wifiStatus == WIFI_STATION_CONNECTED)
     _MQTTLoop();
   else
     mqttStatus = MQTT_NOT_CONNECTED;
+  #endif
 
   if (controlMode == MODE_AUTO)
     _CtrLoop();

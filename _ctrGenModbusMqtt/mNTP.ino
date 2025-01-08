@@ -1,27 +1,18 @@
+#include "main.h"
+
+#if (_USE_NTP_ == 1)
 
 void _ntpTimeString(void)
 {
-    if (mntpHour < 10)
-      mntpTimeString = "0" + String(mntpHour);
-    else
-      mntpTimeString = String(mntpHour);
+  char timeBuffer[40];
 
-    mntpTimeString = mntpTimeString + ":";
-
-    if (mntpMin < 10)
-      mntpTimeString = mntpTimeString + "0" + String(mntpMin);
-    else
-      mntpTimeString = mntpTimeString + String(mntpMin);
-
-    mntpTimeString = mntpTimeString + ":";
-
-    if (mntpSec < 10)
-      mntpTimeString = mntpTimeString + "0" + String(mntpSec);
-    else
-      mntpTimeString = mntpTimeString + String(mntpSec);
-
-    if (mntpUpdated == 0)
-      mntpTimeString = mntpTimeString + " NO Sync";
+  if (mntpUpdated == 0)
+    sprintf(timeBuffer, "%02d:%02d:%02d", mntpHour, mntpMin, mntpSec);
+  else
+    sprintf(timeBuffer, "%02d/%02d/%4d %02d:%02d:%02d", day(), month(), year(), mntpHour, mntpMin, mntpSec);
+    //sprintf(timeBuffer, "%02d/%02d/%4d %02d:%02d:%02d", day(), month(), year(), hour(), minute(), second());
+  
+  mntpTimeString = String(timeBuffer);
 }     
 
 void _mNTPfakeSec(void)
@@ -84,19 +75,29 @@ void _mNTPloop(void)
       mNtpClient.update();
       mntpUpdated = 1;
 
-      mntpHour = mNtpClient.getHours();
-      mntpMin  = mNtpClient.getMinutes();
-      mntpSec  = mNtpClient.getSeconds();
-      
+      mntpEpochTime = mNtpClient.getEpochTime();
+      setTime(mntpEpochTime);
+
       #if (_NTP_SERIAL_DEBUG_ == 1)
-      Serial.println("TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT");
-      Serial.println("NTP Time Update ");
+      _ntpTimeString();
+
+      Serial.println("TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT"); 
+      Serial.println(mntpTimeString);
       Serial.println("TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT");
       #endif
-      
+
+      mntpHour = hour();   // mNtpClient.getHours();
+      mntpMin  = minute(); // mNtpClient.getMinutes();
+      mntpSec  = second(); // mNtpClient.getSeconds();
+
+      syear = year();
+      smonth = month();
+      sday = day();   
       break;
 
     case MNTP_STOP:
       break;
   }
 }
+
+#endif // (_USE_MQTT_ == 1)

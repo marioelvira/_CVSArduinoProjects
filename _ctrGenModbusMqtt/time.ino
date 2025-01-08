@@ -31,9 +31,11 @@ void _TimeSetup(void)
   timeHour = 0;
   timeDay = 0;
 
+  #if (_USE_NTP_ == 1)
   // NTP Stop
   _mNTPSetup();
-  
+  #endif
+
   // RAM setup
   _RAMSetup();
 }
@@ -69,8 +71,10 @@ void _TimeLoop(void)
       // Gen control
       _GenMinLoop();
 
+      #if (_USE_NTP_ == 1)
       // NTP loop
       _mNTPloop();
+      #endif
 
       // Check each minute
       #if (_USE_MB_ == 1)
@@ -81,9 +85,15 @@ void _TimeLoop(void)
     // Gen control
     _GenTimeLoop();
 
+    #if (_USE_NTP_ == 1)
     // NTP fake clock
     _mNTPfakeSec();
-      
+    #endif
+
+    #if (_USE_SOLAR_ == 1)
+    _SolarSunriseSunset();
+    #endif
+
     _timeOnString();
     timeTick = millis();
 
@@ -135,9 +145,11 @@ void _TimeLoop(void)
     Serial.print(genTimeDay); Serial.print("d "); Serial.print(genTimeOnString);
     Serial.println(" ");
 
+    #if (_USE_MQTT_ == 1)
     Serial.print("MQTT Status: ");
     Serial.print(mqttStatus); Serial.print(" - pl ");Serial.println(mqttPayload);
- 
+    #endif
+
     Serial.print("Wi-Fi Status: ");
     Serial.println(wifiStatus);
 

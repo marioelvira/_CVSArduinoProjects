@@ -77,6 +77,7 @@ void _readCONFIG (void)
       EEPROM.write(EEPROM_ADD_WIFI_PSWD + i, passwordSt[i]);
     #endif
 
+    #if (_USE_MQTT_ == 1)
     // Broker Url
     for (i = 0; i < MQTT_URL_MAX; i++)
       EEPROM.write(EEPROM_ADD_BROKER + i, 0);
@@ -100,6 +101,7 @@ void _readCONFIG (void)
     j = strlen(brokerPswdSt);
     for (i = 0; i < j; i++)
       EEPROM.write(EEPROM_ADD_MQTT_PSWD + i, brokerPswdSt[i]);
+    #endif
 
     // Other Data
     EEPROM.write(EEPROM_ADD_LOGIC_INS,  EEPROM_VAL_LOGIC_INS);
@@ -229,6 +231,7 @@ void _readCONFIG (void)
     #endif
   }
 
+  #if (_USE_MQTT_ == 1)
   // Broker Url
   for (i = 0; i < MQTT_URL_MAX; i++)
     brokerUrl[i] = char(EEPROM.read(EEPROM_ADD_BROKER + i));
@@ -251,9 +254,11 @@ void _readCONFIG (void)
   Serial.print("Broker User: ");
   Serial.println(brokerUser);
   Serial.print("Broker Password: ");
-  Serial.println(brokerPswd);  
+  Serial.println(brokerPswd);
   #endif 
 
+  #endif
+  
   // Other Data
   cfgLogicIns       = (int)EEPROM.read(EEPROM_ADD_LOGIC_INS);
   cfgLogicOuts      = (int)EEPROM.read(EEPROM_ADD_LOGIC_OUTS);

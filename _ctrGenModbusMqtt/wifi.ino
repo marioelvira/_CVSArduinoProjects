@@ -135,7 +135,9 @@ void _WifiLoop()
         #endif
 
         _HttpSetup();
+        #if (_USE_NTP_ == 1)
         _mNTPStart();
+        #endif
       
         wifiStatus = WIFI_STATION_CONNECTED;
       }
@@ -146,7 +148,9 @@ void _WifiLoop()
       if (WiFi.status() != WL_CONNECTED)
       {
         _HttpEnd();
+        #if (_USE_NTP_ == 1)
         _mNTPStop();
+        #endif
         
         wifiStatus = WIFI_START_STATION;
       }
@@ -201,7 +205,10 @@ void _WifiLedLoop()
       break;
 
     case WIFI_STATION_CONNECTED:
-      /*
+      
+      #if (_USE_MQTT_ == 1)
+      _MQTTLedLoop();
+      #else
       if (millis() - wifiLEDTick >= WIFI_BLINK_STATION)
       {
         //#if (_WIFI_SERIAL_DEBUG_ == 1)
@@ -211,8 +218,8 @@ void _WifiLedLoop()
         wifiLEDTick = millis();
       }      
       outLed = IO_ON;
-      */
-      _MQTTLedLoop();
+      #endif
+
       break;
   }
 }

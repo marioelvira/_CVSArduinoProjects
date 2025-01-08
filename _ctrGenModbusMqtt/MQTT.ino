@@ -1,4 +1,7 @@
 #include "MQTT.h"
+#include "main.h"
+
+#if (_USE_MQTT_ == 1)
 
 void mqttDataCallback(char* rtopic, byte* rpayload, unsigned int rlength)
 {
@@ -703,3 +706,5 @@ void _MQTTLedLoop()
       break;
   }
 }
+
+#endif // (_USE_MQTT_ == 1)

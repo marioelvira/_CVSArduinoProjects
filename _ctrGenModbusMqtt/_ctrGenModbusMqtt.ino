@@ -27,7 +27,12 @@
 #if (_USE_MQTT_ == 1)
 #include "MQTT.h"
 #endif
+#if (_USE_MBTCP_ == 1)
+#include "mModbusTCP.h"
+#endif
+#if (_USE_MB_ == 1)
 #include "mModbus.h"
+#endif
 #if (_USE_NTP_ == 1)
 #include "mNTP.h"
 #endif
@@ -175,34 +180,28 @@ int timeTickSec = 0;
 //////////
 #if (_USE_NTP_ == 1)
 String mntpTimeString;
-
-//String mntpFormattedTime;
 time_t mntpEpochTime;
+
+int mntpYear = 2025;
+int mntpMonth = 6;
+int mntpDay = 21;
 
 int mntpSec = 0;
 int mntpMin = 0;
 int mntpHour = 0;
 
-int mntpStatus;
-int mntpUpdated = 0;
+int   mntpStatus;
+bool  mntpSync;
+
 WiFiUDP mNtpUDP;
 NTPClient mNtpClient(mNtpUDP, "pool.ntp.org", 3600);
 #endif
 
 // Solar
 #if (_USE_SOLAR_ == 1)
-// Data
-double stransit, sunrise, sunset;
-
-int syear = 2025;
-int smonth = 6;
-int sday = 21;
-
-// Location
-double slatitude = 42.464;
-double slongitude = -2.0293;
-int sutc_offset = 1;
-int sheight = 450;  // in meters
+bool  sCalculated = false;
+int   sunrise_h, sunrise_m;
+int   sunset_h, sunset_m;
 #endif
 
 //////////
@@ -421,6 +420,10 @@ void setup(void)
   #endif
   #endif
 
+  #if (_USE_MBTCP_ == 1)
+  _mMBTCPSetup();
+  #endif
+
   // Ctr setup
   _CtrSetup();
 
@@ -503,7 +506,12 @@ void loop()
   _WifiLedLoop();
 
   if ((wifiStatus == WIFI_ON_ACCESSPOINT) || (wifiStatus == WIFI_STATION_CONNECTED))
+  {
     _HttpLoop();
+    #if (_USE_MBTCP_ == 1)
+    _mMBTCPloop();
+    #endif
+  }
 
   #if (_USE_MQTT_ == 1)
   if (wifiStatus == WIFI_STATION_CONNECTED)

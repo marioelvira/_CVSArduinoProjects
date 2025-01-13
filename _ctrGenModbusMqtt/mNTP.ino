@@ -6,7 +6,7 @@ void _ntpTimeString(void)
 {
   char timeBuffer[40];
 
-  if (mntpUpdated == 0)
+  if (mntpSync == false)
     sprintf(timeBuffer, "%02d:%02d:%02d", mntpHour, mntpMin, mntpSec);
   else
     sprintf(timeBuffer, "%02d/%02d/%4d %02d:%02d:%02d", day(), month(), year(), mntpHour, mntpMin, mntpSec);
@@ -27,7 +27,14 @@ void _mNTPfakeSec(void)
       mntpMin = 0;
       mntpHour++;
       if (mntpHour >= 24)
+      {
         mntpHour = 0;
+
+        // New day!!!
+        #if (_USE_SOLAR_ == 1)
+        sCalculated = false;
+        #endif
+      }
     }
   }
   
@@ -39,6 +46,7 @@ void _mNTPfakeSec(void)
 ////////////////
 void _mNTPSetup(void)
 {
+  mntpSync = false;
   mntpStatus = MNTP_STOP;
 }
 
@@ -72,11 +80,28 @@ void _mNTPloop(void)
       break;
 
     case MNTP_UPDATE:
-      mNtpClient.update();
-      mntpUpdated = 1;
+      if (mNtpClient.update() == false)
+      {
+        //mntpSync = false;
+        #if (_NTP_SERIAL_DEBUG_ == 1)
+        Serial.println("TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT"); 
+        Serial.println("NTP Not updated");
+        Serial.println("TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT");
+        #endif
+        break;
+      }
 
+      mntpSync = true;
       mntpEpochTime = mNtpClient.getEpochTime();
       setTime(mntpEpochTime);
+
+      #if (_USE_SOLAR_ == 1)
+      if (sCalculated == false)
+      {
+        _SolarSunriseSunset();
+        sCalculated = true;
+      }
+      #endif
 
       #if (_NTP_SERIAL_DEBUG_ == 1)
       _ntpTimeString();
@@ -86,13 +111,13 @@ void _mNTPloop(void)
       Serial.println("TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT");
       #endif
 
-      mntpHour = hour();   // mNtpClient.getHours();
-      mntpMin  = minute(); // mNtpClient.getMinutes();
-      mntpSec  = second(); // mNtpClient.getSeconds();
-
-      syear = year();
-      smonth = month();
-      sday = day();   
+      mntpYear  = year();
+      mntpMonth = month();
+      mntpDay   = day();
+      mntpHour  = hour();
+      mntpMin   = minute();
+      mntpSec   = second();
+      
       break;
 
     case MNTP_STOP:

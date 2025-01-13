@@ -7,7 +7,7 @@ extern "C" {
 
 #include "main.h"
 
-#define WTE_TIMEOUT   3000
+#define WTE_TIMEOUT   1000 // 3000
 
 #endif // _WDE_H_
 

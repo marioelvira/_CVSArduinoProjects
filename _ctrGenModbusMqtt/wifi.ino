@@ -99,7 +99,6 @@ void _WifiLoop()
       // If connected...
       else
       {
-
         ipAddress = WiFi.localIP();
         gateWay   = WiFi.gatewayIP();
         netMask   = WiFi.subnetMask();
@@ -135,6 +134,7 @@ void _WifiLoop()
         #endif
 
         _HttpSetup();
+        
         #if (_USE_NTP_ == 1)
         _mNTPStart();
         #endif

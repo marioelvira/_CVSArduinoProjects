@@ -90,10 +90,6 @@ void _TimeLoop(void)
     _mNTPfakeSec();
     #endif
 
-    #if (_USE_SOLAR_ == 1)
-    _SolarSunriseSunset();
-    #endif
-
     _timeOnString();
     timeTick = millis();
 
@@ -118,6 +114,10 @@ void _TimeLoop(void)
     Serial.print(mntpTimeString);
     Serial.println(" ");
 
+    Serial.println("Solar Data: ");
+    Serial.print("Sunrise: "); Serial.print(sunrise_h); Serial.print(":");Serial.println(sunrise_m);
+    Serial.print("Sunset:  "); Serial.print(sunset_h);  Serial.print(":");Serial.println(sunset_m);
+  
     Serial.print("Free RAM: ");
     Serial.println(freeRam);
     
@@ -129,22 +129,15 @@ void _TimeLoop(void)
     Serial.println(ControlState);  
 
     Serial.print("Alarm Status: ");
-    Serial.print(alState); Serial.print(" "); Serial.println(alNotify); Serial.print("-"); Serial.println(AL_NOTIFY_CONT);
+    Serial.print(alState); Serial.print(" "); Serial.print(alNotify); Serial.print("-"); Serial.println(AL_NOTIFY_CONT);
     
-    Serial.print("Alarm: ");
-    Serial.print(alarm[0]); Serial.print(alarm[1]); Serial.print(alarm[2]); Serial.print(alarm[3]);
-    Serial.print(alarm[4]); Serial.print(alarm[5]); Serial.print(alarm[6]); Serial.println(alarm[7]);
-    Serial.print(alarm[8]); Serial.print(alarm[9]); Serial.print(alarm[10]); Serial.print(alarm[11]);
-    Serial.print(alarm[12]); Serial.print(alarm[13]); Serial.print(alarm[14]); Serial.println(alarm[15]);
-    Serial.print(alarm[16]); Serial.print(alarm[17]); Serial.print(alarm[18]); Serial.print(alarm[19]);
-    Serial.print(alarm[20]); Serial.print(alarm[21]); Serial.print(alarm[22]); Serial.println(alarm[23]);
-    Serial.println(" ");
+    Serial.println("Alarms: ");
+    Serial.print(alarm[0]); Serial.print(alarm[1]); Serial.print(alarm[2]); Serial.print(alarm[3]);Serial.print(alarm[4]); Serial.print(alarm[5]); Serial.print(alarm[6]); Serial.println(alarm[7]);
+    Serial.print(alarm[8]); Serial.print(alarm[9]); Serial.print(alarm[10]); Serial.print(alarm[11]);Serial.print(alarm[12]); Serial.print(alarm[13]); Serial.print(alarm[14]); Serial.println(alarm[15]);
+    Serial.print(alarm[16]); Serial.print(alarm[17]); Serial.print(alarm[18]); Serial.print(alarm[19]);Serial.print(alarm[20]); Serial.print(alarm[21]); Serial.print(alarm[22]); Serial.println(alarm[23]);
     
-    Serial.print("Gen Status: ");
-    Serial.print(genMinOn); Serial.println("m ");
-    Serial.print(genTimeDay); Serial.print("d "); Serial.print(genTimeOnString);
-    Serial.println(" ");
-
+    Serial.print("Gen Status: "); Serial.print(genMinOn); Serial.print("m "); Serial.print(genTimeDay); Serial.print("d "); Serial.println(genTimeOnString);
+    
     #if (_USE_MQTT_ == 1)
     Serial.print("MQTT Status: ");
     Serial.print(mqttStatus); Serial.print(" - pl ");Serial.println(mqttPayload);

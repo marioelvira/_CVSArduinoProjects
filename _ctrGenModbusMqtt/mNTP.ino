@@ -7,7 +7,7 @@ void _ntpTimeString(void)
   char timeBuffer[40];
 
   if (mntpSync == false)
-    sprintf(timeBuffer, "%02d:%02d:%02d", mntpHour, mntpMin, mntpSec);
+    sprintf(timeBuffer, "No Sincronizado");
   else
     sprintf(timeBuffer, "%02d/%02d/%4d %02d:%02d:%02d", day(), month(), year(), mntpHour, mntpMin, mntpSec);
     //sprintf(timeBuffer, "%02d/%02d/%4d %02d:%02d:%02d", day(), month(), year(), hour(), minute(), second());

@@ -103,6 +103,18 @@ void _readCONFIG (void)
       EEPROM.write(EEPROM_ADD_MQTT_PSWD + i, brokerPswdSt[i]);
     #endif
 
+    #if (_USE_MBTCP_ == 1)
+    // Modbus TCP
+    EEPROM.write(EEPROM_ADD_MB_IP1, EEPROM_VAL_MB_IP1);
+    EEPROM.write(EEPROM_ADD_MB_IP2, EEPROM_VAL_MB_IP2);
+    EEPROM.write(EEPROM_ADD_MB_IP3, EEPROM_VAL_MB_IP3);
+    EEPROM.write(EEPROM_ADD_MB_IP4, EEPROM_VAL_MB_IP4);
+    eeprom_value_lo = EEPROM_VAL_MB_PORT & 0x00FF;
+    EEPROM.write(EEPROM_ADD_MB_PORT, eeprom_value_lo);
+    eeprom_value_hi = (EEPROM_VAL_MB_PORT & 0xFF00)>>8;
+    EEPROM.write(EEPROM_ADD_MB_PORT + 1, eeprom_value_hi);
+    #endif
+
     // Other Data
     EEPROM.write(EEPROM_ADD_LOGIC_INS,  EEPROM_VAL_LOGIC_INS);
     EEPROM.write(EEPROM_ADD_LOGIC_OUTS, EEPROM_VAL_LOGIC_OUTS);
@@ -259,6 +271,25 @@ void _readCONFIG (void)
 
   #endif
   
+  #if (_USE_MBTCP_ == 1)
+  // Modbus TCP
+  val[0] = EEPROM.read(EEPROM_ADD_MB_IP1);
+  val[1] = EEPROM.read(EEPROM_ADD_MB_IP2);
+  val[2] = EEPROM.read(EEPROM_ADD_MB_IP3);
+  val[3] = EEPROM.read(EEPROM_ADD_MB_IP4);
+  mbIpAddress = IPAddress(val[0], val[1], val[2], val[3]);
+  eeprom_value_hi = EEPROM.read(EEPROM_ADD_MB_PORT + 1);
+  eeprom_value_lo = EEPROM.read(EEPROM_ADD_MB_PORT);  
+  mbPort = (int)((eeprom_value_hi & 0x00FF)<<8)|(eeprom_value_lo & 0x00FF);
+
+  #if (_EEPROM_SERIAL_DEBUG_ == 1)
+  Serial.print("Modbus TCP: IP: ");
+  Serial.print(mbIpAddress);
+  Serial.print(" Port: ");
+  Serial.println(mbPort);
+  #endif
+  #endif
+
   // Other Data
   cfgLogicIns       = (int)EEPROM.read(EEPROM_ADD_LOGIC_INS);
   cfgLogicOuts      = (int)EEPROM.read(EEPROM_ADD_LOGIC_OUTS);

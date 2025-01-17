@@ -670,6 +670,18 @@ void _serveSETTINGS()
   // End
   #endif
 
+  #if (_USE_MBTCP_ == 1)
+  // Modbus TCP
+  html = html + "<div class=\"section\"><span>4</span>Modbus TCP </div>";
+  html = html + "<div class=\"inner-wrap\">";
+
+  html = html + "<label>IP Address <input type=\"text\"  maxlength=\"16\" value=\"" + String(mbIpAddress.toString()) + "\" name=\"mbipaddress\"/></label>";
+  html = html + "<label>Port <input type=\"text\" maxlength=\"16\" value=\"" + String(mbPort) + "\" name=\"mbport\"/></label>";
+
+  html = html + "</div>";
+  // End
+  #endif
+
   html = html + "<div class=\"button-section\">";
   html = html + "  <input type=\"submit\" value=\"Guardar\">";
   html = html + "  <a href=\"index.htm\"><input type=\"button\" value=\"Volver\"></a>";
@@ -702,6 +714,11 @@ void _setSETTINGS()
   String rbrokerport = httpServer.arg("brokerport");
   String rbrokeruser = httpServer.arg("brokeruser");
   String rbrokerpswd = httpServer.arg("brokerpswd");
+  #endif
+
+  #if (_USE_MBTCP_ == 1)
+  String rmbipaddress = httpServer.arg("mbipaddress");
+  String rmbport = httpServer.arg("mbport");
   #endif
 
   String html = "";
@@ -756,7 +773,13 @@ void _setSETTINGS()
       (rbrokerport.length() == 0) ||
       (rbrokeruser.length() == 0) ||
       (rbrokerpswd.length() == 0))
-    error |= 1;
+    error = 1;
+  #endif
+
+  #if (_USE_MBTCP_ == 1)
+  if ((rmbipaddress.length() == 0)  ||
+      (rmbport.length() == 0))
+    error = 1;
   #endif
 
   // If no error on data...
@@ -922,6 +945,45 @@ void _setSETTINGS()
        }
      }
      
+     #if (_USE_MBTCP_ == 1)
+     // Modbus IP
+     j = rmbipaddress.length();
+     k = 0;
+     m = 0;
+     for (i = 0; i < j; i++)
+     {
+       schar = rmbipaddress[i];
+       if (schar == '.')
+       {        
+         sbuf[k] = 0;  // end of buffer
+         val[m] = (byte)(atoi(sbuf)); // change to int
+         k = 0;
+         m++;
+       }
+       else
+       {
+         sbuf[k] = schar;
+         k++;
+       }
+     }
+     // last IP value
+     sbuf[k] = 0;  // end of buffer
+     val[m] = (byte)(atoi(sbuf)); // change to int
+     mbIpAddress = IPAddress(val[0], val[1], val[2], val[3]);
+    
+     EEPROM.write(EEPROM_ADD_MB_IP1, val[0]);
+     EEPROM.write(EEPROM_ADD_MB_IP2, val[1]);
+     EEPROM.write(EEPROM_ADD_MB_IP3, val[2]);
+     EEPROM.write(EEPROM_ADD_MB_IP4, val[3]);
+
+     // Modbus Port
+     mbPort = rmbport.toInt();
+     eeprom_value_lo = mbPort & 0x00FF;
+     EEPROM.write(EEPROM_ADD_MB_PORT, eeprom_value_lo);
+     eeprom_value_hi = (mbPort & 0xFF00)>>8;
+     EEPROM.write(EEPROM_ADD_MB_PORT + 1, eeprom_value_hi);
+     #endif
+
      #if (_HTTP_SERIAL_DEBUG_ == 1)
      // Wi-Fi configuration
      Serial.print("---->Wi-Fi mode: ");
@@ -940,7 +1002,7 @@ void _setSETTINGS()
      Serial.print("---->Local gateway: ");
      Serial.println(localgate);
 
-    #if (_USE_MQTT_ == 1)
+     #if (_USE_MQTT_ == 1)
      // Broker configuration
      Serial.print("---->Broker Url: ");
      Serial.println(rbrokerurl);
@@ -948,7 +1010,14 @@ void _setSETTINGS()
      Serial.println(rbrokerport);     
      #endif
 
+     #if (_USE_MBTCP_ == 1)
+     Serial.print("---->Modbus TCP IP: ");
+     Serial.println(mbIpAddress);
+     Serial.print("---->Modbus TCP Port: ");
+     Serial.println(mbPort);
      #endif
+
+     #endif // (_HTTP_SERIAL_DEBUG_ == 1)
      
      EEPROM.commit();
 
@@ -1365,6 +1434,19 @@ void _readSTATUS()
   html = html + "<tr>";
   html = html + "<td>Tiempo Encendio</td>";
   html = html + "<td>" + String(timeDay) + "d " + timeOnString + "</td>";
+  html = html + "</tr>";
+  
+  html = html + "<tr>";
+  html = html + "<td>Fecha NTP</td>";
+  html = html + "<td>" + mntpTimeString + "</td>";
+  html = html + "</tr>";
+
+  html = html + "<tr>";
+  html = html + "<td>Solar</td>";
+  //if (sCalculated == true)
+    html = html + "<td> de " + String(sunrise_h) + ":" + String(sunrise_m) + " a " + String(sunset_h) + ":" + String(sunset_m) + "</td>";
+  //else
+  //  html = html + "<td> No Calculado </td>";
   html = html + "</tr>";
   
   html = html + "<tr>";

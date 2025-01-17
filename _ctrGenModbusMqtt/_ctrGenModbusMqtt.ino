@@ -200,8 +200,8 @@ NTPClient mNtpClient(mNtpUDP, "pool.ntp.org", 3600);
 // Solar
 #if (_USE_SOLAR_ == 1)
 bool  sCalculated = false;
-int   sunrise_h, sunrise_m;
-int   sunset_h, sunset_m;
+int   sunrise_h = 0, sunrise_m = 0;
+int   sunset_h = 0, sunset_m = 0;
 #endif
 
 //////////
@@ -300,6 +300,9 @@ int wdeForceReset;
 ////////////
 // Config //
 ////////////
+IPAddress mbIpAddress (192, 168, 0, 9);
+int mbPort;
+
 int cfgLogicIns;
 int cfgLogicOuts;
 int cfgMB1Add;

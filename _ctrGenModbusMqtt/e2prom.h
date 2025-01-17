@@ -35,13 +35,20 @@ extern "C" {
 #define WIFI_PSWD_MAX             32 // max 32 char -> Next 0x4F
 
 #define EEPROM_ADD_BROKER         0x4F
-#define MQTT_URL_MAX              24 // max 24 char -> Next 0x67
-#define EEPROM_ADD_BROKER_PORT    0x67
+#define MQTT_URL_MAX              22 // max 24 char -> Next 0x67
+#define EEPROM_ADD_BROKER_PORT    0x65
 #define BROKER_PORT_MAX           2
-#define EEPROM_ADD_MQTT_USER      0x69
-#define MQTT_USER_MAX             24 // max 24 char -> Next 0x81
-#define EEPROM_ADD_MQTT_PSWD      0x81
-#define MQTT_PSWD_MAX             24 // max 24 char -> Next 0x99
+#define EEPROM_ADD_MQTT_USER      0x67
+#define MQTT_USER_MAX             22 // max 22 char -> Next 0x7D
+#define EEPROM_ADD_MQTT_PSWD      0x7D
+#define MQTT_PSWD_MAX             22 // max 24 char -> Next 0x95
+
+#define EEPROM_ADD_MB_IP1         0x93
+#define EEPROM_ADD_MB_IP2         0x94
+#define EEPROM_ADD_MB_IP3         0x95
+#define EEPROM_ADD_MB_IP4         0x96
+#define EEPROM_ADD_MB_PORT        0x97
+//#define BROKER_PORT_MAX         2
 
 #define EEPROM_ADD_LOGIC_INS      0x99
 #define EEPROM_ADD_LOGIC_OUTS     0x9A
@@ -86,7 +93,7 @@ extern "C" {
 //#define EEPROM_ADD_MAX          0xFA // 250
 
 // Values
-#define EEPROM_VAL_OK             0xAF
+#define EEPROM_VAL_OK             0xAA
 
 #define EEPROM_VAL_IP_MODE        DHCP_MODE
 #define EEPROM_VAL_IP1            192
@@ -110,6 +117,13 @@ extern "C" {
 //#define EEPROM_VAL_MQTT_USER
 //#define EEPROM_ADD_MQTT_PSWD    
 //#define EEPROM_VAL_BROKER_PORT    7000
+
+#define EEPROM_VAL_MB_IP1         192
+#define EEPROM_VAL_MB_IP2         168
+#define EEPROM_VAL_MB_IP3         0
+#define EEPROM_VAL_MB_IP4         9
+#define EEPROM_VAL_MB_PORT        502
+//#define BROKER_PORT_MAX         2
 
 #define EEPROM_VAL_LOGIC_INS      1
 #define EEPROM_VAL_LOGIC_OUTS     1

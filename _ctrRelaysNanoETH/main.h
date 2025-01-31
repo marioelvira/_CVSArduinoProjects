@@ -1,3 +1,4 @@
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -22,7 +23,7 @@ extern "C" {
 
 #if (_USE_ETHERNET_ == 1)
 #define _USE_MBTCP_                1
-#define _USE_MQTT_                 0 // 1
+#define _USE_MQTT_                 1 // 1
 #define _USE_NTP_                  0
 #endif
 

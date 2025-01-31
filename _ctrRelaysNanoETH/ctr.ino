@@ -5,15 +5,15 @@ void _ctrStateString (void)
   switch (ctrInState)
   {
     case IN_STATE0:
-      ctrStateString = "Baterias";
+      ctrStateString = "BAT";
       break;
 
     case IN_STATE1:
-      ctrStateString = "GEN Diesel";
+      ctrStateString = "DIESEL";
       break;
 
     case IN_STATE2:
-      ctrStateString = "GEN Gasolina";
+      ctrStateString = "GAS";
       break;   
   }
 }

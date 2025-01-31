@@ -1443,10 +1443,7 @@ void _readSTATUS()
 
   html = html + "<tr>";
   html = html + "<td>Solar</td>";
-  //if (sCalculated == true)
-    html = html + "<td> de " + String(sunrise_h) + ":" + String(sunrise_m) + " a " + String(sunset_h) + ":" + String(sunset_m) + "</td>";
-  //else
-  //  html = html + "<td> No Calculado </td>";
+  html = html + "<td>" + solarString + "</td>";
   html = html + "</tr>";
   
   html = html + "<tr>";

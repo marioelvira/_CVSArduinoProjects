@@ -4,6 +4,18 @@
 
 #include <SolarCalculator.h>
 
+void _SolarString(void)
+{
+  char solarBuffer[40];
+
+  if (sCalculated == true)
+    sprintf(solarBuffer, "No Calculado");
+  else
+    sprintf(solarBuffer, "de %02d:%02d a %02d:%02d", sunrise_h, sunrise_m, sunset_h, sunset_m);
+  
+  solarString = String(solarBuffer);
+}
+
 /////////////////////////
 // Solar SunriseSunset //
 /////////////////////////
@@ -32,10 +44,11 @@ void _SolarSunriseSunset(void)
   sunset_h = (m / 60) % 24;
   sunset_m = m % 60;
 
+  _SolarString();
+
   #if (_SOLAR_SERIAL_DEBUG_ == 1)
-  Serial.println("Solar Calculated: ");
-  Serial.print("Sunrise: "); Serial.print(sunrise_h); Serial.print(":");Serial.println(sunrise_m);
-  Serial.print("Sunset:  "); Serial.print(sunset_h);  Serial.print(":");Serial.println(sunset_m);
+  Serial.print("Solar Calculated: ");
+  Serial.println(solarString); 
   #endif
 }
 

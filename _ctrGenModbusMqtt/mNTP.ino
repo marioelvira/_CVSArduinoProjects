@@ -95,14 +95,6 @@ void _mNTPloop(void)
       mntpEpochTime = mNtpClient.getEpochTime();
       setTime(mntpEpochTime);
 
-      #if (_USE_SOLAR_ == 1)
-      if (sCalculated == false)
-      {
-        _SolarSunriseSunset();
-        sCalculated = true;
-      }
-      #endif
-
       #if (_NTP_SERIAL_DEBUG_ == 1)
       _ntpTimeString();
 
@@ -118,6 +110,14 @@ void _mNTPloop(void)
       mntpMin   = minute();
       mntpSec   = second();
       
+      #if (_USE_SOLAR_ == 1)
+      if (sCalculated == false)
+      {
+        _SolarSunriseSunset();
+        sCalculated = true;
+      }
+      #endif
+
       break;
 
     case MNTP_STOP:

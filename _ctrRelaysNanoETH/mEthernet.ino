@@ -35,7 +35,17 @@ void _ETHLoop()
         #endif
         Ethernet.init(PIN_SPI_CS); // Set the CS pin
         Ethernet.begin(macAddress, ipAddress, dnsAddress, gateWay, netMask);
+        //Ethernet.setRetransmissionCount(1);
         status = 1;
+      }
+
+      // Check Link
+      if (Ethernet.linkStatus() == LinkOFF)
+      {
+        #if (_ETH_SERIAL_DEBUG_ == 1)
+        Serial.println("Ethernet Init Link OFF");
+        #endif
+        status = 0;
       }
 
       if (status == 0)
@@ -91,6 +101,7 @@ void _ETHLoop()
         #if (_ETH_SERIAL_DEBUG_ == 1)
         Serial.println("Ethernet Link OFF");
         #endif
+        ethStatus = ETH_ERROR;
       }
       
       // Only DHCP

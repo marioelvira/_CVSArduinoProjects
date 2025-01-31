@@ -12,7 +12,7 @@ extern "C" {
 #define MQTT_CONNECTED       2
 #define MQTT_SUBSCRIBED      3
 
-#define MQTT_CONNECTION_TIMEOUT       120000    // 2 min
+#define MQTT_CONNECTION_TIMEOUT       10000     // 120000    // 2 min
 #define MQTT_SUBSCRIBE_TIMEOUT        1000      // 1 sec
 #define MQTT_PUBLISH_TIMEOUT          500       // 500 ms
 
@@ -24,8 +24,8 @@ extern "C" {
 
 // MQTT Topics
 #define MQTT_NUM_TOPICS    2
-#define TOPIC_RSTATUS      "sdpelicanos@gmail.com/rstat"  // 1
-#define TOPIC_RIOS         "sdpelicanos@gmail.com/rios"   // 2
+#define TOPIC_RCTR         "sdpelicanos@gmail.com/rctr"   // 0
+#define TOPIC_RIOS         "sdpelicanos@gmail.com/rios"   // 1
 
 #define TOPIC_RON          "sdpelicanos@gmail.com/ron"
 #define TOPIC_ROFF         "sdpelicanos@gmail.com/roff"

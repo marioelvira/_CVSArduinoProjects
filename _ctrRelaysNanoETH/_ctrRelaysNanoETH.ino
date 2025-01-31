@@ -169,6 +169,8 @@ unsigned long   ethTick;
 // MQTT //
 //////////
 #if (_USE_MQTT_ == 1)
+IPAddress brokerIp(192, 168, 0, 200);
+
 const char* brokerUrlSt = MQTT_BROKER;
 char brokerUrl[MQTT_URL_MAX];
 int brokerPort;

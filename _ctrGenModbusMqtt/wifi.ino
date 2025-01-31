@@ -35,10 +35,9 @@ void _WifiLoop()
       Serial.println(wifiIP);
       #endif
 
-      // Http setup
       _HttpSetup();
 
-      wifiAPTick = millis();
+       wifiAPTick = millis();
         
       wifiStatus = WIFI_ON_ACCESSPOINT;
       break;
@@ -104,6 +103,7 @@ void _WifiLoop()
         netMask   = WiFi.subnetMask();
                 
         #if (_WIFI_SERIAL_DEBUG_ == 1)
+        Serial.println(" ");
         Serial.println("*******************************************************");
         Serial.println("*******************************************************");
         Serial.println("*******************************************************");
@@ -139,6 +139,10 @@ void _WifiLoop()
         _mNTPStart();
         #endif
       
+        #if (_USE_MBTCP_ == 1)
+        _mMBTCPStart();
+        #endif
+
         wifiStatus = WIFI_STATION_CONNECTED;
       }
       break;
@@ -148,10 +152,15 @@ void _WifiLoop()
       if (WiFi.status() != WL_CONNECTED)
       {
         _HttpEnd();
+
         #if (_USE_NTP_ == 1)
         _mNTPStop();
         #endif
         
+        #if (_USE_MBTCP_ == 1)
+        _mMBTCPStop();
+        #endif
+
         wifiStatus = WIFI_START_STATION;
       }
 

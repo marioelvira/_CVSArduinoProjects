@@ -69,6 +69,11 @@ int   InEndVal_ant = 0;
 int   InEndCounter = 0;
 int   InEndState = 0;
 
+int   InPulsVal = 0;
+int   InPulsVal_ant = 0;
+int   InPulsCounter = 0;
+int   InPulsState = 0;
+
 int   InGen = 0;
 int   outLed;
 
@@ -200,6 +205,7 @@ NTPClient mNtpClient(mNtpUDP, "pool.ntp.org", 3600);
 // Solar
 #if (_USE_SOLAR_ == 1)
 bool  sCalculated = false;
+String solarString;
 int   sunrise_h = 0, sunrise_m = 0;
 int   sunset_h = 0, sunset_m = 0;
 #endif
@@ -288,6 +294,17 @@ int mbWhat2read = 0;
 
 int mbInsAlarm[MB_NUM_IOS][MB_NUM_BRS];
 #endif
+#endif
+
+////////////
+// Modbus //
+////////////
+#if (_USE_MBTCP_ == 1)
+WiFiClient mbTCPclient;
+
+int mbTCPState;
+
+unsigned long mbTCPtick;
 #endif
 
 ////////
@@ -509,18 +526,20 @@ void loop()
   _WifiLedLoop();
 
   if ((wifiStatus == WIFI_ON_ACCESSPOINT) || (wifiStatus == WIFI_STATION_CONNECTED))
-  {
     _HttpLoop();
-    #if (_USE_MBTCP_ == 1)
-    _mMBTCPloop();
-    #endif
-  }
 
   #if (_USE_MQTT_ == 1)
   if (wifiStatus == WIFI_STATION_CONNECTED)
     _MQTTLoop();
   else
     mqttStatus = MQTT_NOT_CONNECTED;
+  #endif
+
+  #if (_USE_MBTCP_ == 1)
+  if (wifiStatus == WIFI_STATION_CONNECTED)
+    _mMBTCPloop();
+  else
+    mbTCPState = MBTCP_NOT_CONNECTED;
   #endif
 
   if (controlMode == MODE_AUTO)

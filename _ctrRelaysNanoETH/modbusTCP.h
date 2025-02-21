@@ -8,7 +8,9 @@ extern "C" {
 ///////////////////////
 // Modbus TCP server //
 ///////////////////////
-#define MODBUSTCP_PORT                 8502
+#define MODBUSTCP_PORT                 502
+#define MODBUS_TCP_TIMEOUT             3000
+#define MODBUS_TCP_RX_TIMEOUT          200
 
 #define MODBUSTCP_INIT                 0
 #define MODBUSTCP_CLIENT_WAITING       1
@@ -44,7 +46,7 @@ extern "C" {
 
 // Input Registers
 #define MB_IR_ADD_ONLINE   0
-#define MB_IR_NREG_ONLINE  20
+#define MB_IR_NREG_ONLINE  21
 #define MB_IR_ADD_INS      100
 #define MB_IR_NREG_INS     2
 #define MB_IR_ADD_OUTS     110

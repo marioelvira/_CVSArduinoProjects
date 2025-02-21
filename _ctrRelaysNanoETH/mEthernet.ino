@@ -80,8 +80,6 @@ void _ETHLoop()
         _mNTPSetup();
         #endif
       }
-
-      ethTick = millis();
       break;
 
     case ETH_OK:

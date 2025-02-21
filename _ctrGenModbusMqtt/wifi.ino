@@ -35,7 +35,7 @@ void _WifiLoop()
       Serial.println(wifiIP);
       #endif
 
-      _HttpSetup();
+      _HTTPStart();
 
        wifiAPTick = millis();
         
@@ -48,7 +48,7 @@ void _WifiLoop()
       {       
         if (millis() - wifiAPTick >= WIFI_ACCESSPOINT_TIMEOUT)
         {
-          _HttpEnd();
+          _HTTPStop();
 
           wifiStatus = WIFI_START_STATION;
         }
@@ -133,7 +133,7 @@ void _WifiLoop()
         Serial.println(mac[0],HEX);
         #endif
 
-        _HttpSetup();
+        _HTTPStart();
         
         #if (_USE_NTP_ == 1)
         _mNTPStart();
@@ -151,7 +151,7 @@ void _WifiLoop()
       // If no connected...
       if (WiFi.status() != WL_CONNECTED)
       {
-        _HttpEnd();
+        _HTTPStop();
 
         #if (_USE_NTP_ == 1)
         _mNTPStop();

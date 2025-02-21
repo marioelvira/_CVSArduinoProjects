@@ -423,7 +423,7 @@ void setup(void)
   _WifiSetup();
 
   // Http setup
-  _HttpSetup();
+  _HTTPSetup();
 
   // Time setup
   _TimeSetup();
@@ -526,7 +526,7 @@ void loop()
   _WifiLedLoop();
 
   if ((wifiStatus == WIFI_ON_ACCESSPOINT) || (wifiStatus == WIFI_STATION_CONNECTED))
-    _HttpLoop();
+    _HTTPLoop();
 
   #if (_USE_MQTT_ == 1)
   if (wifiStatus == WIFI_STATION_CONNECTED)
@@ -539,7 +539,7 @@ void loop()
   if (wifiStatus == WIFI_STATION_CONNECTED)
     _mMBTCPloop();
   else
-    mbTCPState = MBTCP_NOT_CONNECTED;
+    mbTCPState = MBTCP_STOP;
   #endif
 
   if (controlMode == MODE_AUTO)

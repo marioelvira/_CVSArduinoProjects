@@ -11,6 +11,7 @@ extern "C" {
 
 #define HTTP_INIT      0
 #define HTTP_ONSERVE   1
+#define HTTP_STOP      2
 
 #define JSON_TICK      100
 

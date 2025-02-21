@@ -1,6 +1,12 @@
 #include "main.h"
 #include "__ver.h"
 
+#if (_USE_FREERTOS_ == 1)
+#include <Arduino_FreeRTOS.h>
+#include <task.h>
+#include <semphr.h>
+#endif
+
 #include <EEPROM.h>
 #include <UIPEthernet.h>
 #if (_USE_MQTT_ == 1)
@@ -141,6 +147,8 @@ EthernetServer modbusTcpServer(MODBUSTCP_PORT);
 int modbusTcpStatus;
 
 EthernetClient  modbusTcpClient;
+unsigned long   modbusTcpTick = 0;
+int             modbusTcpClientError = 0;
 
 byte         modbusTcpByteArray[MB_MAX_BTYE];
 int          modbusTcpIndex;
@@ -162,7 +170,6 @@ uint8_t netMask[4]    = {255,255,255,0};
 uint8_t dnsAddress[4] = {8,8,8,8};
 
 int ethStatus;
-unsigned long   ethTick;
 #endif
 
 //////////
@@ -209,6 +216,16 @@ NTPClient mNtpClient(mNtpUDP, "pool.ntp.org", 3600);
 ////////
 #if (_USE_WDE_ == 1)
 int wdeForceReset;
+#endif
+
+//////////////
+// FreeRTOS //
+//////////////
+#if (_USE_FREERTOS_ == 1)
+//SemaphoreHandle_t xSemaphore;
+
+void TaskCrt      ( void *pvParameters );
+void TaskEthernet ( void *pvParameters );
 #endif
 
 ///////////////
@@ -288,6 +305,39 @@ void setup(void)
   _ETHSetup();
   #endif
 
+  //////////////
+  // FreeRTOS //
+  //////////////
+  #if (_USE_FREERTOS_ == 1)
+  /*
+  if (xSemaphore == NULL)
+  {
+    xSemaphore = xSemaphoreCreateMutex();
+    if ((xSemaphore) != NULL)
+      xSemaphoreGive (xSemaphore);
+  }
+  */
+  xTaskCreate(
+    TaskCrt
+    ,  "Control"  
+    ,  128        // This stack size can be checked & adjusted by reading the Stack Highwater
+    ,  NULL       // Parameters for the task
+    ,  2          // Priority, with 3 (configMAX_PRIORITIES - 1) being the highest, and 0 being the lowest.
+    ,  NULL );    // Task Handle
+
+  xTaskCreate(
+    TaskEthernet
+    ,  "Ethernet"  // A name just for humans
+    ,  128         // Stack size
+    ,  NULL        // Parameters for the task
+    ,  1           // Priority
+    ,  NULL );     // Task Handle
+
+  // Now the Task scheduler, 
+  // which takes over control of scheduling individual Tasks, is automatically started.
+  vTaskStartScheduler();  // PORTING
+
+  #endif // (_USE_FREERTOS_ == 1)
 }
 
 ///////////////////////
@@ -337,11 +387,48 @@ void _PINLoop()
   }
 }
 
+#if (_USE_FREERTOS_ == 1)
+///////////
+// Tasks //
+///////////
+void TaskCrt( void *pvParameters __attribute__((unused)) )
+{
+  for (;;)
+  {
+    /*
+    _PINLoop();
+
+    if (ctrMode == MODE_AUTO)
+      _CtrLoop();
+    */
+    _TimeLoop();
+    //_ADCsLoop();
+
+    vTaskDelay(1);  // one tick delay (15ms) in between reads for stability
+  }
+}
+
+void TaskEthernet( void *pvParameters __attribute__((unused)) )
+{
+  for (;;)
+  {
+
+    #if (_USE_ETHERNET_ == 1)
+    _ETHLoop();
+    #endif
+
+    vTaskDelay(1);  // one tick delay (15ms) in between reads for stability
+  }
+}
+#endif // (_USE_FREERTOS_ == 1)
+
 //===========//
 // MAIN LOOP //
 //===========//
 void loop()
 {
+  #if (_USE_FREERTOS_ == 1)
+  #else
   _PINLoop();
 
   if (ctrMode == MODE_AUTO)
@@ -353,4 +440,7 @@ void loop()
   #if (_USE_ETHERNET_ == 1)
   _ETHLoop();
   #endif
+  
+  #endif // (_USE_FREERTOS_ == 1)
 }
+

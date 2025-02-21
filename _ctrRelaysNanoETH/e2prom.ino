@@ -560,6 +560,8 @@ void _eeprom2ramCONFIG (void)
   Serial.print("cfgCtrSecs 5: ");  Serial.println (cfgCtrSecs[5]);
   Serial.print("cfgCtrSecs 6: ");  Serial.println (cfgCtrSecs[6]);
 
+  delay(1000);  // 100ms
+
   #endif
 }
 

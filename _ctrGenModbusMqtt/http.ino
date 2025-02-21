@@ -1,10 +1,14 @@
-void _HttpSetup(void)
+void _HTTPSetup(void)
 {
-  // Http status
+  httpStatus = HTTP_STOP;
+}
+
+void _HTTPStart(void)
+{
   httpStatus = HTTP_INIT;
 }
 
-void _HttpEnd(void)
+void _HTTPStop(void)
 {
   httpServer.stop();
 }
@@ -1473,10 +1477,10 @@ void _readSTATUS()
   httpServer.send(200, "text/plane", html);
 }
 
-////////////////////////
-// Http state machine //
-////////////////////////
-void _HttpLoop()
+///////////////
+// Http loop //
+///////////////
+void _HTTPLoop()
 {
   switch (httpStatus)
   {
@@ -1514,6 +1518,9 @@ void _HttpLoop()
     
     case HTTP_ONSERVE:
       httpServer.handleClient();
+      break;
+
+    case HTTP_STOP:
       break;
   }
 }

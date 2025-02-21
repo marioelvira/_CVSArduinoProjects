@@ -7,18 +7,19 @@
 ///////////////////////
 void _mMBTCPSetup(void)
 {
-  mbTCPState = MBTCP_NOT_CONNECTED;
+  mbTCPState = MBTCP_STOP;
 }
 
 void _mMBTCPStart(void)
 {
-  mbTCPState = MBTCP_CONNECT;
   mbTCPtick = millis();
+  mbTCPState = MBTCP_WAIT_TO_CONNECT;
 }
 
 void _mMBTCPStop(void)
 {
   mbTCPclient.stop();
+  mbTCPState = MBTCP_STOP;
 }
 
 /////////////////////
@@ -37,23 +38,20 @@ void _mMBTCPloop(void)
   #endif
 
   switch (mbTCPState)
-  {
-    case MBTCP_NOT_CONNECTED:
-      break;
-    
-    case MBTCP_CONNECT:
-	    if (millis() - mbTCPtick >= MBTCP_TROUND_MS /*MBTCP_INIT_MS*/)
-		    mbTCPState = MBTCP_CONNECTING;
+  { 
+    case MBTCP_WAIT_TO_CONNECT:
+	    if (millis() - mbTCPtick >= MBTCP_CONNECT_MS)
+		    mbTCPState = MBTCP_CONNECT;
       
       break;
 
-    case MBTCP_CONNECTING:
+    case MBTCP_CONNECT:
       if(!mbTCPclient.connect(mbtcpip, mbtcpport))
       {
         #if (_MBTCP_SERIAL_DEBUG_ == 1)
         Serial.println("++++++++> Modbus TCP Connection error");
         #endif
-        mbTCPState = MBTCP_CONNECT;
+        mbTCPState = MBTCP_WAIT_TO_CONNECT;
         mbTCPtick = millis();
       }
       else
@@ -61,49 +59,25 @@ void _mMBTCPloop(void)
         #if (_MBTCP_SERIAL_DEBUG_ == 1)
         Serial.println("++++++++> Modbus TCP Connected");
         #endif
-        mbTCPState = MBTCP_TX_RX; //MBTCP_TX;  //MBTCP_WAIT;
+
+        mbTCPtick = millis();
+        mbTCPState = MBTCP_WAIT_TX;
       }
       break;
 
-    case MBTCP_TX_RX:
+    case MBTCP_WAIT_TX:
+	    if (millis() - mbTCPtick >= MBTCP_ROUND_CONNETED_MS)
+		    mbTCPState = MBTCP_TX;
+
+      break;
+
+    case MBTCP_TX:
       if(mbTCPclient.connected())
       {
         #if (_MBTCP_SERIAL_DEBUG_ == 1)
         Serial.println("+++++++> Modbus TCP TX");
         #endif
 
-        delay(100);
-        mbTCPclient.flush();
-        delay(50);
-
-        //0000 0000 0006 0104 0000 0014
-        /*
-        mbTCPclient.write(0x00);
-        delay(1);
-        mbTCPclient.write(0x00);
-        delay(1);
-        mbTCPclient.write(0x00);
-        delay(1);
-        mbTCPclient.write(0x00);
-        delay(1);
-        mbTCPclient.write(0x00);
-        delay(1);
-        mbTCPclient.write(0x06);
-        delay(1);
-
-        mbTCPclient.write(0x01);
-        delay(1);
-        mbTCPclient.write(0x04);
-        delay(1);
-        mbTCPclient.write(0x00);
-        delay(1);
-        mbTCPclient.write(0x00);
-        delay(1);
-        mbTCPclient.write(0x00);
-        delay(1);
-        mbTCPclient.write(0x14);
-        delay(1);
-        */
         //0000 0000 0006 0104 0000 0014
         shexbuffer[0]  = 0x00;
         shexbuffer[1]  = 0x00;
@@ -117,128 +91,63 @@ void _mMBTCPloop(void)
         shexbuffer[8]  = 0x00;
         shexbuffer[9]  = 0x00;
         shexbuffer[10] = 0x00;
-        shexbuffer[11] = 0x14;
+        shexbuffer[11] = 0x15;
 
-        for (int i = 0; i < 12; i++) {
-          
-          c = shexbuffer[i];
-          mbTCPclient.write(c);
-          #if (_MBTCP_SERIAL_DEBUG_ == 1)
-          sprintf (hexc, "%02x", c);
-          Serial.print(hexc);
-          #endif
-          delay(1);
-        }
-        
+        mbTCPclient.write(shexbuffer, 12);
+
         #if (_MBTCP_SERIAL_DEBUG_ == 1)
+        for (int i = 0; i < 12; i++)
+        {  
+          sprintf (hexc, "%02x", shexbuffer[i]);
+          Serial.print(hexc);
+        }
         Serial.println(" ");
-        #endif
-
-        // Send Frame
-        //mbTCPclient.write(shexbuffer);
-        delay(500);
-
-        #if (_MBTCP_SERIAL_DEBUG_ == 1)
-        Serial.println("+++++++> Modbus TCP RX");
-        #endif
-
-        while (mbTCPclient.available() > 0) {
-          c = mbTCPclient.read();
-          #if (_MBTCP_SERIAL_DEBUG_ == 1)
-          sprintf (hexc, "%02x", c);
-          Serial.print(hexc);
-          #endif
-          delay(10);
-        }
-      }
-      #if (_MBTCP_SERIAL_DEBUG_ == 1)
-      Serial.println(" ");
-      #endif
-
-      _mMBTCPStop();
-
-      #if (_MBTCP_SERIAL_DEBUG_ == 1)
-      Serial.println("+++++++> Modbus TCP disconnected");
-      #endif
-
-      mbTCPState = MBTCP_CONNECT;
-      mbTCPtick = millis();
-
-      break;
-
-    /*
-    case MBTCP_TX:
-      if(mbTCPclient.connected())
-      {
-        delay(100);
-
-        // Send frame
-        mbTCPclient.write(0x00);
-        mbTCPclient.write(0x00);
-        mbTCPclient.write(0x00);
-        mbTCPclient.write(0x00);
-        mbTCPclient.write(0x00);
-        mbTCPclient.write(0x02);
-        mbTCPclient.write(0x01);
-        mbTCPclient.write(0x11);
-
-        #if (_MBTCP_SERIAL_DEBUG_ == 1)
-        Serial.println("+++++++> Modbus TCP TX");
+        Serial.println("+++++++> Modbus TCP RX wait");
         #endif
 
         mbTCPState = MBTCP_RX;
+        mbTCPtick = millis();
       }
       else
-       mbTCPState = MBTCP_DISCONNECT; 
+      {
+        #if (_MBTCP_SERIAL_DEBUG_ == 1)
+        Serial.println("++++++++> Modbus TCP Connection error. Try to reconnect");
+        #endif
+
+        mbTCPclient.stop();
+        mbTCPState = MBTCP_WAIT_TO_CONNECT;
+        mbTCPtick = millis();
+      }
 
       break;
 
     case MBTCP_RX:
-      if(mbTCPclient.connected())
+
+      if (millis() - mbTCPtick >= MBTCP_RESPONSE_MS)
       {
-        delay(100);
+        #if (_MBTCP_SERIAL_DEBUG_ == 1)
+        Serial.println(" ");
+        Serial.println("+++++++> Modbus TCP RX end");
+        #endif
+        
+        mbTCPState = MBTCP_WAIT_TX;
+        mbTCPtick = millis();
+      }
+
+      if (mbTCPclient.available() > 0)
+      {
+        c = mbTCPclient.read();
+        mbTCPtick = millis();
 
         #if (_MBTCP_SERIAL_DEBUG_ == 1)
-        Serial.println("+++++++> Modbus TCP RX");
+        sprintf (hexc, "%02x", c);
+        Serial.print(hexc);
         #endif
-
-        while (mbTCPclient.available() > 0) {
-          char c = mbTCPclient.read();
-          #if (_MBTCP_SERIAL_DEBUG_ == 1)
-          Serial.print(c, HEX);
-          #endif
-          delay(2);
-        }
-
-        //mbTCPclient.flush();
       }
 
-      mbTCPState = MBTCP_DISCONNECT;
-      //mbTCPState = MBTCP_WAIT;
-      //mbTCPtick = millis();
-
       break;
-    */
-    /*
-    case MBTCP_WAIT:
-	    if (millis() - mbTCPtick >= MBTCP_TROUND_MS)
-      {
-		    mbTCPState = MBTCP_TX;
-      }
-      break;
-    */
-    case MBTCP_DISCONNECT:
 
-      _mMBTCPStop();
-
-      #if (_MBTCP_SERIAL_DEBUG_ == 1)
-      Serial.println(" ");
-      Serial.println("+++++++> Modbus TCP disconnected");
-      #endif
-
-      mbTCPState = MBTCP_CONNECT;
-      mbTCPtick = millis();
-
+    case MBTCP_STOP:
       break;
   }
 

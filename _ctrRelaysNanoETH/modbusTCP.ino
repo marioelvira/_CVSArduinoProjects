@@ -17,6 +17,7 @@ void _ModbusTcpLoop()
   {
     case MODBUSTCP_INIT:
       modbusTcpServer.begin(cfgModbusPORT);
+
       #if (_MBTCP_SERIAL_DEBUG_ == 1)
       Serial.println("Modbus TCP server started");
       #endif
@@ -35,9 +36,9 @@ void _ModbusTcpLoop()
       Serial.println(F("new client Modbus TCP"));
       #endif
     
-      modbusTcpClient.setTimeout(5000); // default is 1000
-
+      modbusTcpClientError = 0;
       modbusTcpStatus = MODBUSTCP_CLIENT_CONNECTED;
+      modbusTcpTick = millis();
       break;
 
     case MODBUSTCP_CLIENT_CONNECTED:
@@ -49,11 +50,24 @@ void _ModbusTcpLoop()
            #if (_MBTCP_SERIAL_DEBUG_ == 1)
            Serial.println("Modbus tcp request:");
            #endif
-           
+
            mbFunction = MB_FUNC_NONE;
            modbusTcpIndex = 0;
+
            modbusTcpStatus = MODBUSTCP_ON_RX;
-        }    
+           modbusTcpTick = millis();
+        }
+
+        // Time out...
+        if (millis() - modbusTcpTick >= MODBUS_TCP_TIMEOUT)
+        {
+          modbusTcpStatus = MODBUSTCP_INIT;
+    
+          #if (_MBTCP_SERIAL_DEBUG_ == 1)
+          Serial.println("Modbus tcp time out");
+          #endif
+        }
+
       }
       // Client disconnected...
       else
@@ -77,17 +91,23 @@ void _ModbusTcpLoop()
            Serial.print (modbusTcpByteArray[modbusTcpIndex], HEX);
            #endif
            modbusTcpIndex++;
+
+           modbusTcpTick = millis();
         }
         else
         {
-           #if (_MBTCP_SERIAL_DEBUG_ == 1)
-           Serial.println (" ");
-           #endif
+          // RX Time out...
+          if (millis() - modbusTcpTick >= MODBUS_TCP_RX_TIMEOUT)
+          {
+             #if (_MBTCP_SERIAL_DEBUG_ == 1)
+             Serial.println (" ");
+             #endif
 
-           modbusTcpClient.flush();
+             modbusTcpClient.flush();
             
-           mbFunction = modbusTcpByteArray[MB_TCP_FUNC];
-           modbusTcpStatus = MODBUSTCP_ON_ANALYSIS;
+             mbFunction = modbusTcpByteArray[MB_TCP_FUNC];
+             modbusTcpStatus = MODBUSTCP_ON_ANALYSIS;
+          }
         }
       }
       // Client disconnected...
@@ -101,6 +121,17 @@ void _ModbusTcpLoop()
       break;
     
     case MODBUSTCP_ON_ANALYSIS:
+      /*
+      if (modbusTcpIndex < 4)
+      {
+        #if (_MBTCP_SERIAL_DEBUG_ == 1)
+        Serial.println(F("Left bytes RX Error"));
+        #endif
+
+        modbusTcpStatus = MODBUSTCP_CLIENT_WAITING;
+        break;
+      }        
+      */
       // Client connected...
       if (modbusTcpClient.connected())
       {
@@ -147,6 +178,9 @@ void _ModbusTcpLoop()
       break;
       
     case MODBUSTCP_ON_TX:
+
+      modbusTcpClient.flush();
+
       #if (_MBTCP_SERIAL_DEBUG_ == 1)
       Serial.print(F("Modbus tcp response: "));
       Serial.println(mbResponseLength);
@@ -321,6 +355,8 @@ void _mbWriteMultipleHolding()
     #if (_MBTCP_SERIAL_DEBUG_ == 1)
     Serial.println("_mbWriteMultipleHolding NOK");
     #endif
+
+    modbusTcpClientError++;
 
     // modbusTcpByteArray[MB_TCP_TID]         00
     // modbusTcpByteArray[MB_TCP_TID + 1]     01
@@ -519,6 +555,8 @@ void _mbReadHolding()
     Serial.println("_mbReadHolding NOK");
     #endif
 
+    modbusTcpClientError++;
+    
     // modbusTcpByteArray[MB_TCP_TID]         00
     // modbusTcpByteArray[MB_TCP_TID + 1]     01
     // modbusTcpByteArray[MB_TCP_PID]         02
@@ -627,6 +665,9 @@ void _mbReadInput()
 
     modbusTcpByteArray[MB_TCP_REGS + 38] = 0x00;
     modbusTcpByteArray[MB_TCP_REGS + 39] = ctrMode;
+
+    modbusTcpByteArray[MB_TCP_REGS + 40]  = (char)((modbusTcpClientError & 0xFF00)>>8);
+    modbusTcpByteArray[MB_TCP_REGS + 41]  = (char)(modbusTcpClientError & 0x00FF);
   }
   else if ((addr == MB_IR_ADD_INS) && (nregs == MB_IR_NREG_INS))
   { 
@@ -669,6 +710,7 @@ void _mbReadInput()
     #if (_MBTCP_SERIAL_DEBUG_ == 1)
     Serial.println("_mbReadInput OK");
     #endif
+    
     // modbusTcpByteArray[MB_TCP_TID]         00
     // modbusTcpByteArray[MB_TCP_TID + 1]     01
     // modbusTcpByteArray[MB_TCP_PID]         02
@@ -685,6 +727,8 @@ void _mbReadInput()
     #if (_MBTCP_SERIAL_DEBUG_ == 1)
     Serial.println("_mbReadInput NOK");
     #endif
+
+    modbusTcpClientError++;
 
     // modbusTcpByteArray[MB_TCP_TID]         00
     // modbusTcpByteArray[MB_TCP_TID + 1]     01

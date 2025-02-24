@@ -1,5 +1,4 @@
 #include "main.h"
-#include "__ver.h"
 
 #if (_USE_FREERTOS_ == 1)
 #include <Arduino_FreeRTOS.h>
@@ -9,9 +8,6 @@
 
 #include <EEPROM.h>
 #include <UIPEthernet.h>
-#if (_USE_MQTT_ == 1)
-#include <PubSubClient.h>
-#endif
 #if (_USE_NTP_ == 1)
 #include <NTPClient.h>
 #endif
@@ -23,9 +19,6 @@
 #include "ip.h"
 #include "measures.h"
 #include "mEthernet.h"
-#if (_USE_MQTT_ == 1)
-#include "MQTT.h"
-#endif
 #if (_USE_MBTCP_ == 1)
 #include "modbusTCP.h"
 #endif
@@ -38,7 +31,9 @@
 /////////////
 // Version //
 /////////////
-const char* FW_Version = FW_VERSION;
+// Get from compile time
+const char* compdate = __DATE__;
+const char* comptime = __TIME__;
 
 //////////
 // ADCs //
@@ -173,30 +168,6 @@ int ethStatus;
 #endif
 
 //////////
-// MQTT //
-//////////
-#if (_USE_MQTT_ == 1)
-IPAddress brokerIp(192, 168, 0, 200);
-
-const char* brokerUrlSt = MQTT_BROKER;
-char brokerUrl[MQTT_URL_MAX];
-int brokerPort;
-const char* brokerUserSt = MQTT_USERNAME;
-char brokerUser[MQTT_USER_MAX];
-const char* brokerPswdSt = MQTT_PASSWORD;
-char brokerPswd[MQTT_PSWD_MAX];
-
-EthernetClient  ethMqttClient;
-PubSubClient mqttClient(ethMqttClient);
-
-String mqttClientId = "relayMQTT-123dfqfvq234"; // TODO Add + String(ESP.getChipId());
-
-int mqttStatus;
-unsigned long mqttTick = 0;
-int mqttTopic;
-#endif
-
-//////////
 // mNTP //
 //////////
 #if (_USE_NTP_ == 1)
@@ -276,11 +247,12 @@ void setup(void)
   #if (_SERIAL_DEBUG_ == 1)
   delay(100);  // 100ms
   Serial.begin(9600);
-  
   Serial.print("Project: ");
   Serial.println(PROJECT);
   Serial.print("Version: ");
-  Serial.println(FW_VERSION);
+  Serial.println(compdate);
+  Serial.print("Time: ");
+  Serial.println(comptime);
   #endif
 
   // Config setup

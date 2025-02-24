@@ -12,6 +12,8 @@ extern "C" {
 
 // Board: Arduino magaAVR Boards -> Arduino Nano Every
 
+#define PROJECT     "NANO ETH RELAYS"
+
 ///////////
 // Debug //
 ///////////
@@ -24,7 +26,6 @@ extern "C" {
 
 #if (_USE_ETHERNET_ == 1)
 #define _USE_MBTCP_                1
-#define _USE_MQTT_                 0
 #define _USE_NTP_                  0
 #endif
 
@@ -35,7 +36,6 @@ extern "C" {
 #define _STATUS_SERIAL_DEBUG_      0
 #define _ETH_SERIAL_DEBUG_         1
 #define _MBTCP_SERIAL_DEBUG_       1
-#define _MQTT_SERIAL_DEBUG_        0
 #define _NTP_SERIAL_DEBUG_         0
 #endif
 

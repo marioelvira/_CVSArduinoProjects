@@ -11,3 +11,4 @@ U16#0059 IP Gateway 0#
 U16#0060 IP Gateway 1#
 U16#0061 IP Gateway 2#
 U16#0062 IP Gateway 3#
+U16#0063 Modbus Port#

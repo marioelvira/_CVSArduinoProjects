@@ -29,14 +29,8 @@ extern "C" {
 #define EEPROM_ADD_GATE3          0x0C
 #define EEPROM_ADD_GATE4          0x0D
 
-#define EEPROM_ADD_BROKER         		0x0E
-#define MQTT_URL_MAX              		24 // max 24 char -> Next 0x26
-#define EEPROM_ADD_BROKER_PORT    		0x26
-#define BROKER_PORT_MAX           		2
-#define EEPROM_ADD_MQTT_USER      		0x28
-#define MQTT_USER_MAX             		24 // max 24 char -> Next 0x28
-#define EEPROM_ADD_MQTT_PSWD      		0x40
-#define MQTT_PSWD_MAX             		24 // max 24 char -> Next 0x58
+#define EEPROM_ADD_MB_PORT_LO    		  0x0E
+#define EEPROM_ADD_MB_PORT_HI    		  0x0F
 
 #define EEPROM_ADD_LOGIC_INS          0xA0
 #define EEPROM_ADD_LOGIC_OUTS         0xA1
@@ -111,8 +105,10 @@ extern "C" {
 #define EEPROM_VAL_MASK4          0
 #define EEPROM_VAL_GATE1          192
 #define EEPROM_VAL_GATE2          168
-#define EEPROM_VAL_GATE3          100
+#define EEPROM_VAL_GATE3          0   // 100
 #define EEPROM_VAL_GATE4          1
+
+#define EEPROM_VAL_MB_PORT    		      502
 
 #define EEPROM_VAL_LOGIC_INS            0     // Logica leer 1
 #define EEPROM_VAL_LOGIC_OUTS           0     // Logica activar out

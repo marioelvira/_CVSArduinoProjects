@@ -17,10 +17,10 @@ extern "C" {
 // Debug //
 ///////////
 #define _SERIAL_DEBUG_             1
-#define _USE_RS485_                0//1
-#define _USE_MB_                   0//1
+#define _USE_RS485_                1//0//1
+#define _USE_MB_                   1//0//1
 #define _USE_MBTCP_                1//1
-#define _USE_MQTT_                 0//1
+#define _USE_MQTT_                 1//0//1
 #define _USE_NTP_                  1
 #define _USE_SOLAR_                1
 

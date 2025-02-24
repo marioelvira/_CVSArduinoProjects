@@ -23,9 +23,6 @@ void _ConfigSetup(void)
 
 void _readCONFIG (void)
 {
-  #if (_USE_MQTT_ == 1)
-  int i, j;
-  #endif
   int ok;
   int eeprom_value_hi, eeprom_value_lo;
   
@@ -57,34 +54,14 @@ void _readCONFIG (void)
     EEPROM.write(EEPROM_ADD_GATE2,   EEPROM_VAL_GATE2);
     EEPROM.write(EEPROM_ADD_GATE3,   EEPROM_VAL_GATE3);
     EEPROM.write(EEPROM_ADD_GATE4,   EEPROM_VAL_GATE4);
-
     #endif // _USE_ETHERNET_
 
-    #if (_USE_MQTT_ == 1)
-    // Broker Url
-    for (i = 0; i < MQTT_URL_MAX; i++)
-      EEPROM.write(EEPROM_ADD_BROKER + i, 0);
-    j = strlen(brokerUrlSt);
-    for (i = 0; i < j; i++)
-      EEPROM.write(EEPROM_ADD_BROKER + i, brokerUrlSt[i]);
-    // Broker port
-    eeprom_value_lo = MQTT_BROKER_PORT & 0x00FF;
-    EEPROM.write(EEPROM_ADD_BROKER_PORT, eeprom_value_lo);
-    eeprom_value_hi = (MQTT_BROKER_PORT & 0xFF00)>>8;
-    EEPROM.write(EEPROM_ADD_BROKER_PORT + 1, eeprom_value_hi);
-    // Broker User
-    for (i = 0; i < MQTT_USER_MAX; i++)
-      EEPROM.write(EEPROM_ADD_MQTT_USER + i, 0);
-    j = strlen(brokerUserSt);
-    for (i = 0; i < j; i++)
-      EEPROM.write(EEPROM_ADD_MQTT_USER + i, brokerUserSt[i]);
-    // Broker Pswd
-    for (i = 0; i < MQTT_PSWD_MAX; i++)
-      EEPROM.write(EEPROM_ADD_MQTT_PSWD + i, 0);
-    j = strlen(brokerPswdSt);
-    for (i = 0; i < j; i++)
-      EEPROM.write(EEPROM_ADD_MQTT_PSWD + i, brokerPswdSt[i]);
-    #endif // _USE_MQTT_
+    #if (_USE_MBTCP_ == 1)
+    eeprom_value_lo = EEPROM_VAL_MB_PORT & 0x00FF;
+    EEPROM.write(EEPROM_ADD_MB_PORT_LO, eeprom_value_lo);
+    eeprom_value_hi = (EEPROM_VAL_MB_PORT & 0xFF00)>>8;
+    EEPROM.write(EEPROM_ADD_MB_PORT_HI, eeprom_value_hi);
+    #endif
 
     // Logic
     EEPROM.write(EEPROM_ADD_LOGIC_INS,  EEPROM_VAL_LOGIC_INS);
@@ -203,9 +180,6 @@ void _readCONFIG (void)
 
 void _ram2eepromCONFIG (void)
 {
-  #if (_USE_MQTT_ == 1)
-  int i, j;
-  #endif
   int eeprom_value_hi, eeprom_value_lo;
 
   #if (_USE_ETHERNET_ == 1)
@@ -225,30 +199,11 @@ void _ram2eepromCONFIG (void)
   EEPROM.write(EEPROM_ADD_GATE4,   (byte)gateWay[3]);
   #endif
 
-  #if (_USE_MQTT_ == 1)
-  // Broker Url
-   for (i = 0; i < MQTT_URL_MAX; i++)
-    EEPROM.write(EEPROM_ADD_BROKER + i, 0);
-  j = strlen(brokerUrl);
-  for (i = 0; i < j; i++)
-    EEPROM.write(EEPROM_ADD_BROKER + i, brokerUrl[i]);
-  // Broker port
-  eeprom_value_lo = brokerPort & 0x00FF;
-  EEPROM.write(EEPROM_ADD_BROKER_PORT, eeprom_value_lo);
-  eeprom_value_hi = (brokerPort & 0xFF00)>>8;
-  EEPROM.write(EEPROM_ADD_BROKER_PORT + 1, eeprom_value_hi);
-  // Broker User
-  for (i = 0; i < MQTT_USER_MAX; i++)
-    EEPROM.write(EEPROM_ADD_MQTT_USER + i, 0);
-  j = strlen(brokerUser);
-  for (i = 0; i < j; i++)
-    EEPROM.write(EEPROM_ADD_MQTT_USER + i, brokerUser[i]);
-  // Broker Pswd
-  for (i = 0; i < MQTT_PSWD_MAX; i++)
-    EEPROM.write(EEPROM_ADD_MQTT_PSWD + i, 0);
-  j = strlen(brokerPswd);
-  for (i = 0; i < j; i++)
-    EEPROM.write(EEPROM_ADD_MQTT_PSWD + i, brokerPswd[i]);
+  #if (_USE_MBTCP_ == 1)
+  eeprom_value_lo = cfgModbusPORT & 0x00FF;
+  EEPROM.write(EEPROM_ADD_MB_PORT_LO, eeprom_value_lo);
+  eeprom_value_hi = (cfgModbusPORT & 0xFF00)>>8;
+  EEPROM.write(EEPROM_ADD_MB_PORT_HI, eeprom_value_hi);
   #endif
 
   // Data Data
@@ -357,9 +312,6 @@ void _ram2eepromCONFIG (void)
 
 void _eeprom2ramCONFIG (void)
 {
-  #if (_USE_MQTT_ == 1)
-  int i, j;
-  #endif
   int eeprom_value_hi, eeprom_value_lo;
 
   #if (_USE_ETHERNET_ == 1)
@@ -406,33 +358,15 @@ void _eeprom2ramCONFIG (void)
 
   #endif // _USE_ETHERNET_
 
-  #if (_USE_MQTT_ == 1)
-  // Broker Url
-  for (i = 0; i < MQTT_URL_MAX; i++)
-    brokerUrl[i] = char(EEPROM.read(EEPROM_ADD_BROKER + i));
-  // Broker Port
-  eeprom_value_hi = EEPROM.read(EEPROM_ADD_BROKER_PORT + 1);
-  eeprom_value_lo = EEPROM.read(EEPROM_ADD_BROKER_PORT);   
-  brokerPort = ((eeprom_value_hi & 0x00FF)<<8)|(eeprom_value_lo & 0x00FF);
-  // Broker User
-  for (i = 0; i < MQTT_USER_MAX; i++)
-    brokerUser[i] = char(EEPROM.read(EEPROM_ADD_MQTT_USER + i));
-  // Broker Pswd
-  for (i = 0; i < MQTT_PSWD_MAX; i++)
-    brokerPswd[i] = char(EEPROM.read(EEPROM_ADD_MQTT_PSWD + i));  
+  #if (_USE_MBTCP_ == 1)
+  eeprom_value_hi   = (int)EEPROM.read(EEPROM_ADD_MB_PORT_HI);
+  eeprom_value_lo   = (int)EEPROM.read(EEPROM_ADD_MB_PORT_LO);
+  cfgModbusPORT     = (int)((eeprom_value_hi & 0x00FF)<<8)|(eeprom_value_lo & 0x00FF);
 
   #if (_EEPROM_SERIAL_DEBUG_ == 1)
-  Serial.print("Broker URL: ");
-  Serial.println(brokerUrl);
-  Serial.print("Broker Port: ");
-  Serial.println(brokerPort);
-  Serial.print("Broker User: ");
-  Serial.println(brokerUser);
-  Serial.print("Broker Password: ");
-  Serial.println(brokerPswd);  
-  #endif 
-
-  #endif // _USE_MQTT_
+  Serial.print("Modbus Port: ");  Serial.println(cfgModbusPORT);
+  #endif
+  #endif
 
   cfgLogicIns       = (int)EEPROM.read(EEPROM_ADD_LOGIC_INS);
   cfgLogicOuts      = (int)EEPROM.read(EEPROM_ADD_LOGIC_OUTS); 

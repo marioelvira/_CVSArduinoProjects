@@ -5,7 +5,7 @@ extern "C" {
 #ifndef _MRS485_H_
 #define _MRS485_H_
 
-#define MRS485_ARRAY_SIZE   200
+#define MRS485_ARRAY_SIZE       200
 
 #define MRS485_BACK_TOUT_MS     500
 #define MRS485_RX_TOUT_MS       5

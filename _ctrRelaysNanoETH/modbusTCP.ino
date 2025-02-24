@@ -272,43 +272,23 @@ void _mbWriteMultipleHolding()
   }
   else if ((addr == MB_HR_ADD_IP) && (nregs == MB_HR_NREG_IP))
   {
-    ipMode  = (int)((modbusTcpByteArray[13] & 0x00FF)<<8)|(modbusTcpByteArray[14] & 0x00FF);
-    ipAddress[0] = (int)((modbusTcpByteArray[15] & 0x00FF)<<8)|(modbusTcpByteArray[16] & 0x00FF);
-    ipAddress[1] = (int)((modbusTcpByteArray[17] & 0x00FF)<<8)|(modbusTcpByteArray[18] & 0x00FF);
-    ipAddress[2] = (int)((modbusTcpByteArray[19] & 0x00FF)<<8)|(modbusTcpByteArray[20] & 0x00FF);
-    ipAddress[3] = (int)((modbusTcpByteArray[21] & 0x00FF)<<8)|(modbusTcpByteArray[22] & 0x00FF);
-    netMask[0]   = (int)((modbusTcpByteArray[23] & 0x00FF)<<8)|(modbusTcpByteArray[24] & 0x00FF);
-    netMask[1]   = (int)((modbusTcpByteArray[25] & 0x00FF)<<8)|(modbusTcpByteArray[26] & 0x00FF);
-    netMask[2]   = (int)((modbusTcpByteArray[27] & 0x00FF)<<8)|(modbusTcpByteArray[28] & 0x00FF);
-    netMask[3]   = (int)((modbusTcpByteArray[29] & 0x00FF)<<8)|(modbusTcpByteArray[30] & 0x00FF);
-    gateWay[0]   = (int)((modbusTcpByteArray[31] & 0x00FF)<<8)|(modbusTcpByteArray[32] & 0x00FF);
-    gateWay[1]   = (int)((modbusTcpByteArray[33] & 0x00FF)<<8)|(modbusTcpByteArray[34] & 0x00FF);
-    gateWay[2]   = (int)((modbusTcpByteArray[35] & 0x00FF)<<8)|(modbusTcpByteArray[36] & 0x00FF);
-    gateWay[3]   = (int)((modbusTcpByteArray[37] & 0x00FF)<<8)|(modbusTcpByteArray[38] & 0x00FF);
+    ipMode        = (int)((modbusTcpByteArray[13] & 0x00FF)<<8)|(modbusTcpByteArray[14] & 0x00FF);
+    ipAddress[0]  = (int)((modbusTcpByteArray[15] & 0x00FF)<<8)|(modbusTcpByteArray[16] & 0x00FF);
+    ipAddress[1]  = (int)((modbusTcpByteArray[17] & 0x00FF)<<8)|(modbusTcpByteArray[18] & 0x00FF);
+    ipAddress[2]  = (int)((modbusTcpByteArray[19] & 0x00FF)<<8)|(modbusTcpByteArray[20] & 0x00FF);
+    ipAddress[3]  = (int)((modbusTcpByteArray[21] & 0x00FF)<<8)|(modbusTcpByteArray[22] & 0x00FF);
+    netMask[0]    = (int)((modbusTcpByteArray[23] & 0x00FF)<<8)|(modbusTcpByteArray[24] & 0x00FF);
+    netMask[1]    = (int)((modbusTcpByteArray[25] & 0x00FF)<<8)|(modbusTcpByteArray[26] & 0x00FF);
+    netMask[2]    = (int)((modbusTcpByteArray[27] & 0x00FF)<<8)|(modbusTcpByteArray[28] & 0x00FF);
+    netMask[3]    = (int)((modbusTcpByteArray[29] & 0x00FF)<<8)|(modbusTcpByteArray[30] & 0x00FF);
+    gateWay[0]    = (int)((modbusTcpByteArray[31] & 0x00FF)<<8)|(modbusTcpByteArray[32] & 0x00FF);
+    gateWay[1]    = (int)((modbusTcpByteArray[33] & 0x00FF)<<8)|(modbusTcpByteArray[34] & 0x00FF);
+    gateWay[2]    = (int)((modbusTcpByteArray[35] & 0x00FF)<<8)|(modbusTcpByteArray[36] & 0x00FF);
+    gateWay[3]    = (int)((modbusTcpByteArray[37] & 0x00FF)<<8)|(modbusTcpByteArray[38] & 0x00FF);
+    cfgModbusPORT = (int)((modbusTcpByteArray[39] & 0x00FF)<<8)|(modbusTcpByteArray[40] & 0x00FF);
 
     _ram2eepromCONFIG();
   }
-  #if (_USE_MQTT_ == 1)
-  else if ((addr == MB_HR_ADD_BRK) && (nregs == MB_HR_NREG_BRK))
-  {
-    
-    // Broker Url
-    for (i = 0; i < MQTT_URL_MAX; i++)
-      brokerUrl[i] = (modbusTcpByteArray[13 + i] & 0x00FF);
-
-    brokerPort = (int)((modbusTcpByteArray[13 + MQTT_URL_MAX] & 0x00FF)<<8)|(modbusTcpByteArray[13 + MQTT_URL_MAX + 1] & 0x00FF);
-
-     // Broker User
-    for (i = 0; i < MQTT_USER_MAX; i++)
-      brokerUser[i] = (modbusTcpByteArray[13 + MQTT_URL_MAX + 2 + i] & 0x00FF);
-
-    // Broker Password
-    for (i = 0; i < MQTT_PSWD_MAX; i++)
-      brokerPswd[i] = (modbusTcpByteArray[13 + MQTT_URL_MAX + 2 + MQTT_PSWD_MAX + i] & 0x00FF);
-
-    _ram2eepromCONFIG();
-  }
-  #endif
   else if ((addr == MB_HR_ADD_OUTS) && (nregs == MB_HR_NREG_OUTS))
   {
     // Only in MODE_TEST
@@ -499,30 +479,12 @@ void _mbReadHolding()
     modbusTcpByteArray[MB_TCP_REGS + 23]  = gateWay[2];
     modbusTcpByteArray[MB_TCP_REGS + 24]  = 0x00;
     modbusTcpByteArray[MB_TCP_REGS + 25]  = gateWay[3];
+    modbusTcpByteArray[MB_TCP_REGS + 26]  = (char)((cfgModbusPORT & 0xFF00)>>8);
+    modbusTcpByteArray[MB_TCP_REGS + 27]  = (char)(cfgModbusPORT & 0x00FF);
   }
-  #if (_USE_MQTT_ == 1)
-  else if ((addr == MB_HR_ADD_BRK) && (nregs == MB_HR_NREG_BRK))
-  {
-    // Broker Url
-    for (i = 0; i < MQTT_URL_MAX; i++)
-      modbusTcpByteArray[MB_TCP_REGS + i] = brokerUrl[i];
-    
-    modbusTcpByteArray[MB_TCP_REGS + MQTT_URL_MAX] = (brokerPort & 0xFF00)>>8;
-    modbusTcpByteArray[MB_TCP_REGS + MQTT_URL_MAX + 1] = brokerPort & 0x00FF;
-
-    // Broker User
-    for (i = 0; i < MQTT_USER_MAX; i++)
-      modbusTcpByteArray[MB_TCP_REGS + MQTT_URL_MAX + 2 + i] = brokerUser[i];
-
-    // Broker Password
-    for (i = 0; i < MQTT_PSWD_MAX; i++)
-      modbusTcpByteArray[MB_TCP_REGS + MQTT_URL_MAX + 2 + MQTT_USER_MAX + i] = brokerPswd[i];
-  }
-  #endif
   else if ((addr == MB_HR_ADD_OUTS) && (nregs == MB_HR_NREG_OUTS))
   {
-    // modbusTcpByteArray[MB_TCP_FUNC]        07
-    modbusTcpByteArray[MB_TCP_NBYTES] = nregs * 2;
+    modbusTcpByteArray[MB_TCP_NBYTES] = (char)((nregs*2) & 0x00FF);
 
     for(int i = 0; i < MB_HR_NREG_OUTS; i++)
     {
@@ -591,6 +553,7 @@ void _mbReadInput()
 
   if ((addr == MB_IR_ADD_ONLINE) && (nregs == MB_IR_NREG_ONLINE))
   {
+    modbusTcpByteArray[MB_TCP_NBYTES]      = (char)((nregs*2) & 0x00FF);
 
     if (ctrInState == IN_STATE0)
     {
@@ -670,9 +633,8 @@ void _mbReadInput()
     modbusTcpByteArray[MB_TCP_REGS + 41]  = (char)(modbusTcpClientError & 0x00FF);
   }
   else if ((addr == MB_IR_ADD_INS) && (nregs == MB_IR_NREG_INS))
-  { 
-    // modbusTcpByteArray[MB_TCP_FUNC]        07
-    modbusTcpByteArray[MB_TCP_NBYTES] = nregs * 2;
+  {
+    modbusTcpByteArray[MB_TCP_NBYTES] = (char)((nregs*2) & 0x00FF);
 
     for(int i = 0; i < MB_IR_NREG_INS; i++)
     {
@@ -682,8 +644,7 @@ void _mbReadInput()
   }
   else if ((addr == MB_IR_ADD_OUTS) && (nregs == MB_IR_NREG_OUTS))
   {
-    // modbusTcpByteArray[MB_TCP_FUNC]        07
-    modbusTcpByteArray[MB_TCP_NBYTES] = nregs * 2;
+    modbusTcpByteArray[MB_TCP_NBYTES] = (char)((nregs*2) & 0x00FF);
 
     for(int i = 0; i < MB_IR_NREG_OUTS; i++)
     {
@@ -693,8 +654,7 @@ void _mbReadInput()
   }
   else if ((addr == MB_IR_ADD_ADCS) && (nregs == MB_IR_NREG_ADCS))
   {
-    // modbusTcpByteArray[MB_TCP_FUNC]        07
-    modbusTcpByteArray[MB_TCP_NBYTES] = nregs * 2;
+    modbusTcpByteArray[MB_TCP_NBYTES] = (char)((nregs*2) & 0x00FF);
 
     for(int i = 0; i < MB_IR_NREG_ADCS; i++)
     {
@@ -764,30 +724,30 @@ void _mbSlaveID()
   modbusTcpByteArray[MB_TCP_REGS + 2] = 0xFF;
 
   // 12 bytes
-  modbusTcpByteArray[MB_TCP_REGS + 3] = '0';  //SN_VER0;
-  modbusTcpByteArray[MB_TCP_REGS + 4] = '0';  //SN_VER1;
-  modbusTcpByteArray[MB_TCP_REGS + 5] = '0';  //SN_VER2;
-  modbusTcpByteArray[MB_TCP_REGS + 6] = '0';  //SN_VER3;
-  modbusTcpByteArray[MB_TCP_REGS + 7] = '0';  //SN_VER4;
-  modbusTcpByteArray[MB_TCP_REGS + 8] = '0'; //SN_VER5;
-  modbusTcpByteArray[MB_TCP_REGS + 9] = '0'; //SN_VER6;
-  modbusTcpByteArray[MB_TCP_REGS + 10] = '0'; //SN_VER7;
-  modbusTcpByteArray[MB_TCP_REGS + 11] = '0'; //SN_VER8;
-  modbusTcpByteArray[MB_TCP_REGS + 12] = '0'; //SN_VER9;
-  modbusTcpByteArray[MB_TCP_REGS + 13] = '0'; //SN_VER10;
-  modbusTcpByteArray[MB_TCP_REGS + 14] = '0'; //SN_VER11;
+  modbusTcpByteArray[MB_TCP_REGS + 3] = compdate[0];   //F
+  modbusTcpByteArray[MB_TCP_REGS + 4] = compdate[1];   //e
+  modbusTcpByteArray[MB_TCP_REGS + 5] = compdate[2];   //b
+  modbusTcpByteArray[MB_TCP_REGS + 6] = compdate[3];   //
+  modbusTcpByteArray[MB_TCP_REGS + 7] = compdate[4];   //d
+  modbusTcpByteArray[MB_TCP_REGS + 8] = compdate[5];   //d
+  modbusTcpByteArray[MB_TCP_REGS + 9] = compdate[6];   //
+  modbusTcpByteArray[MB_TCP_REGS + 10] = compdate[7];  //y
+  modbusTcpByteArray[MB_TCP_REGS + 11] = compdate[8];  //y
+  modbusTcpByteArray[MB_TCP_REGS + 12] = compdate[9];  //y
+  modbusTcpByteArray[MB_TCP_REGS + 13] = compdate[10]; //y
+  modbusTcpByteArray[MB_TCP_REGS + 14] = 0;
   
   // 10 bytes
-  modbusTcpByteArray[MB_TCP_REGS + 15] = FW_Version[0]; //FW_VER0;
-  modbusTcpByteArray[MB_TCP_REGS + 16] = FW_Version[1]; //FW_VER1;
-  modbusTcpByteArray[MB_TCP_REGS + 17] = FW_Version[2]; //FW_VER2;
-  modbusTcpByteArray[MB_TCP_REGS + 18] = FW_Version[3]; //FW_VER3;
-  modbusTcpByteArray[MB_TCP_REGS + 19] = FW_Version[4]; //FW_VER4;
-  modbusTcpByteArray[MB_TCP_REGS + 20] = '0'; //FW_VER5;
-  modbusTcpByteArray[MB_TCP_REGS + 21] = '0'; //FW_VER6;
-  modbusTcpByteArray[MB_TCP_REGS + 22] = '0'; //FW_VER7;
-  modbusTcpByteArray[MB_TCP_REGS + 23] = '0'; //FW_VER8;
-  modbusTcpByteArray[MB_TCP_REGS + 24] = '0'; //FW_VER9;
+  modbusTcpByteArray[MB_TCP_REGS + 15] = comptime[0]; //h
+  modbusTcpByteArray[MB_TCP_REGS + 16] = comptime[1]; //h
+  modbusTcpByteArray[MB_TCP_REGS + 17] = comptime[2]; //-
+  modbusTcpByteArray[MB_TCP_REGS + 18] = comptime[3]; //m
+  modbusTcpByteArray[MB_TCP_REGS + 19] = comptime[4]; //m
+  modbusTcpByteArray[MB_TCP_REGS + 20] = comptime[5]; //-
+  modbusTcpByteArray[MB_TCP_REGS + 21] = comptime[6]; //s
+  modbusTcpByteArray[MB_TCP_REGS + 22] = comptime[7]; //s
+  modbusTcpByteArray[MB_TCP_REGS + 23] = '0';
+  modbusTcpByteArray[MB_TCP_REGS + 24] = '0';
 
   mbResponseLength = 32;
   modbusTcpStatus = MODBUSTCP_ON_TX;

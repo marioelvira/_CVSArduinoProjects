@@ -165,7 +165,8 @@ String mqttClientId = "mbMQTT-" + String(ESP.getChipId());
 
 int mqttStatus;
 unsigned long mqttTick = 0;
-int mqttPayload;
+
+int mqttTopic;
 #endif
 
 //////////
@@ -305,6 +306,18 @@ WiFiClient mbTCPclient;
 int mbTCPState;
 
 unsigned long mbTCPtick;
+
+char mbTCPRxBuffer[MBTCP_ARRAY_SIZE];
+int  mbTCPRxIndex = 0;
+
+int  mbTCPFunction;
+
+char mbctrInState[2];
+char mbctrOutState[2];
+int  mbctrOutTick;
+int  mbRMSval[MB_RMS_NUMBER];
+int  mbDCval[MB_DC_NUMBER];
+
 #endif
 
 ////////
@@ -407,6 +420,8 @@ void setup(void)
   Serial.println(PROJECT);
   Serial.print("Version: ");
   Serial.println(compdate);
+  Serial.print("Time: ");
+  Serial.println(comptime);
   #endif
   
   // Config setup

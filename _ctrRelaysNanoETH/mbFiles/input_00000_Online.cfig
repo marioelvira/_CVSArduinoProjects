@@ -18,4 +18,5 @@ U16#0016 Out 3 - Gen Diesel: Luces#
 U16#0017 Out 4 - Grupo Gasolina: Enchufes#
 U16#0018 Out 5 - Grupo Gasolina: Luces#
 U16#0019 Modo#0->Auto; 1->Test
-U16#0020 Modbus Errors#
+U16#0020 Modbus Client#
+U16#0021 Modbus Errors#

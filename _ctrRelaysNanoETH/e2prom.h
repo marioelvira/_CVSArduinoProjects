@@ -97,15 +97,15 @@ extern "C" {
 #define EEPROM_VAL_IP_MODE        FIXIP_MODE // DHCP_MODE  
 #define EEPROM_VAL_IP1            192
 #define EEPROM_VAL_IP2            168
-#define EEPROM_VAL_IP3            0   // 100
-#define EEPROM_VAL_IP4            9   // 200
+#define EEPROM_VAL_IP3            0
+#define EEPROM_VAL_IP4            9
 #define EEPROM_VAL_MASK1          255
 #define EEPROM_VAL_MASK2          255
 #define EEPROM_VAL_MASK3          255
 #define EEPROM_VAL_MASK4          0
 #define EEPROM_VAL_GATE1          192
 #define EEPROM_VAL_GATE2          168
-#define EEPROM_VAL_GATE3          0   // 100
+#define EEPROM_VAL_GATE3          0
 #define EEPROM_VAL_GATE4          1
 
 #define EEPROM_VAL_MB_PORT    		      502

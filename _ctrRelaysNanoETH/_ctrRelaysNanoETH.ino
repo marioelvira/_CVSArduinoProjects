@@ -138,18 +138,23 @@ int cfgModbusPORT = 502;
 // Modbus TCP //
 ////////////////
 #if (_USE_MBTCP_ == 1)
-EthernetServer modbusTcpServer(MODBUSTCP_PORT);
-int modbusTcpStatus;
+EthernetServer mbTcpServer(MB_PORT);
+int mbTcpServerStatus;
 
-EthernetClient  modbusTcpClient;
-unsigned long   modbusTcpTick = 0;
-int             modbusTcpClientError = 0;
+EthernetClient mbTcpClient;
+int mbTcpClientStatus;
+bool mbTcpClientConnected;
 
-byte         modbusTcpByteArray[MB_MAX_BTYE];
-int          modbusTcpIndex;
+byte  mbTcpRxArray[MB_RX_MAX_BTYE];
+int   mbTcpRxIndex;
+unsigned long   mbTcpRxTick;
+int   mbTcpRxError = 0;
 
-byte mbFunction;
-int  mbResponseLength;
+byte  mbTcpFunc;
+
+byte  mbTcpTxArray[MB_TX_MAX_BTYE];
+int   mbTcpTxLength;
+
 #endif 
 
 //////////////

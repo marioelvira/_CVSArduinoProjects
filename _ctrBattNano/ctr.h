@@ -13,6 +13,8 @@ extern "C" {
  ******************
  * Funcionamiento * 
  ******************
+ La Salida Digital, va al inversor para que tire de la batería.
+ Todo el control se basa en esa salida digital.
 
  Si la Entrada de relog está a 1 -> Relé abierto (NO permite funcionamiento al Inversor) y nos quedamos ahí
  Sino -> Cerrar Relé y ...

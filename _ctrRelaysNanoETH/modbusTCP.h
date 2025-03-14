@@ -8,16 +8,21 @@ extern "C" {
 ///////////////////////
 // Modbus TCP server //
 ///////////////////////
-#define MODBUSTCP_PORT                 502
-#define MODBUS_TCP_TIMEOUT             3000
-#define MODBUS_TCP_RX_TIMEOUT          200
+#define MB_PORT                 502
+#define MB_RX_MAX_BTYE          150
+#define MB_TX_MAX_BTYE          150
 
-#define MODBUSTCP_INIT                 0
-#define MODBUSTCP_CLIENT_WAITING       1
-#define MODBUSTCP_CLIENT_CONNECTED     2
-#define MODBUSTCP_ON_RX                3
-#define MODBUSTCP_ON_ANALYSIS          4
-#define MODBUSTCP_ON_TX                5
+#define MB_CONNECTION_TIMEOUT   5000
+#define MB_RX_TIMEOUT           200
+
+#define MB_SERVER_INIT          0
+#define MB_SERVER_ON            1
+
+#define MB_CLIENT_INIT          0
+#define MB_CLIENT_CONNECTED     1
+#define MB_CLIENT_ON_RX         2
+#define MB_CLIENT_ON_ANALYSIS   3
+#define MB_CLIENT_ON_TX         4
 
 // Modbus Address definitions
 #define MB_ADDRESS_BROADCAST                  ( 0 )
@@ -46,7 +51,7 @@ extern "C" {
 
 // Input Registers
 #define MB_IR_ADD_ONLINE   0
-#define MB_IR_NREG_ONLINE  21
+#define MB_IR_NREG_ONLINE  22
 #define MB_IR_ADD_INS      100
 #define MB_IR_NREG_INS     2
 #define MB_IR_ADD_OUTS     110
@@ -70,8 +75,8 @@ extern "C" {
 #define MB_EC_SLAVE_DEVICE_FAILURE    4
 
 // MB TCP offsets
-//#define MB_TCP_TID            0
-//#define MB_TCP_PID            2
+#define MB_TCP_TID              0
+#define MB_TCP_PID              2
 #define MB_TCP_LEN              4
 #define MB_TCP_UID              6
 // MB
@@ -82,8 +87,6 @@ extern "C" {
 // MB offsets TX
 #define MB_TCP_NBYTES           8
 #define MB_TCP_REGS             9
-
-#define MB_MAX_BTYE             260 
 
 #endif // _MODBUS_H_
 

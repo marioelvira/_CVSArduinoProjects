@@ -19,7 +19,7 @@ extern "C" {
 ///////////
 
 #define _USE_LED_                  0  // Used as SPI
-#define _USE_WDE_                  0  // TODO
+#define _USE_WDE_                  1
 #define _USE_FREERAM_              0
 #define _USE_FREERTOS_             0
 #define _USE_ETHERNET_             1
@@ -37,6 +37,7 @@ extern "C" {
 #define _ETH_SERIAL_DEBUG_         1
 #define _MBTCP_SERIAL_DEBUG_       1
 #define _NTP_SERIAL_DEBUG_         0
+#define _WD_SERIAL_DEBUG_          1
 #endif
 
 #endif // _MAIN_H_

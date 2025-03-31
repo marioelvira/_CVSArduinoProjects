@@ -11,18 +11,17 @@ extern "C" {
 #define MBTCP_ROUND_CONNETED_MS   4000
 #define MBTCP_RESPONSE_MS         500
 
+#define MBTCP_STOP              0
 #define MBTCP_WAIT_TO_CONNECT   1
 #define MBTCP_CONNECT           2
 #define MBTCP_WAIT_TX           3
 #define MBTCP_TX                4
 #define MBTCP_RX                5
 #define MBTCP_ON_ANALYSIS       6
-#define MBTCP_STOP              7
-
 
 // Input Registers
 #define MB_IR_ADD_ONLINE        0
-#define MB_IR_NREG_ONLINE       21
+#define MB_IR_NREG_ONLINE       22
 
 // MB TCP offsets
 //#define MB_TCP_TID            0

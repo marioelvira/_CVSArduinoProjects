@@ -66,6 +66,10 @@ extern "C" {
 #define MB_HR_NREG_IP      14
 #define MB_HR_ADD_OUTS     110
 #define MB_HR_NREG_OUTS    6
+#if (_USE_WDE_ == 1)
+#define MB_HR_ADD_WD       200
+#define MB_HR_NREG_WD      1
+#endif
 
 // MODBUS Error Codes
 #define MB_EC_NONE                    0

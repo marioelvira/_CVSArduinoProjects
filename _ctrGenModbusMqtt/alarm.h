@@ -22,7 +22,7 @@ extern "C" {
 #define AL_ERROR2_STR   "GEN encendido"
 #define AL_ERROR3_STR   "GEN error"
 #define AL_ERROR4_STR   "Bateria baja"
-#define AL_ERROR5_STR   "NA"
+#define AL_ERROR5_STR   "Com tarj MBTCP"
 #define AL_ERROR6_STR   "NA"
 #define AL_ERROR7_STR   "NA"
 // INs Mb1

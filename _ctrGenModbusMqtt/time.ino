@@ -103,27 +103,18 @@ void _TimeLoop(void)
     _WDELoop();
     #endif
     
-    #if (_STATUS_SERIAL_DEBUG_ == 1)
+    #if (_TICK_SERIAL_DEBUG_ == 1)
     
+    Serial.println(" ");
     Serial.println("<><><><><><><>");
+    
+    #if (_CTR_SERIAL_DEBUG_ == 1)
     Serial.print("Tiempo Encendio: ");
     Serial.print(timeDay); Serial.print("d "); Serial.print(timeOnString);
     Serial.println(" ");
-
-    Serial.print("Tiempo NTP: ");
-    Serial.print(mntpTimeString);
-    Serial.println(" ");
-
-    Serial.println("Solar Data: ");
-    Serial.print("Sunrise: "); Serial.print(sunrise_h); Serial.print(":");Serial.println(sunrise_m);
-    Serial.print("Sunset:  "); Serial.print(sunset_h);  Serial.print(":");Serial.println(sunset_m);
-  
-    Serial.print("Free RAM: ");
-    Serial.println(freeRam);
-    
+   
     Serial.print("Indicador LCD: ");
-    Serial.print(DisplayIndicador);
-    Serial.println(" ");
+    Serial.println(DisplayIndicador);
     
     Serial.print("Control Status: ");
     Serial.println(ControlState);  
@@ -137,23 +128,47 @@ void _TimeLoop(void)
     Serial.print(alarm[16]); Serial.print(alarm[17]); Serial.print(alarm[18]); Serial.print(alarm[19]);Serial.print(alarm[20]); Serial.print(alarm[21]); Serial.print(alarm[22]); Serial.println(alarm[23]);
     
     Serial.print("Gen Status: "); Serial.print(genMinOn); Serial.print("m "); Serial.print(genTimeDay); Serial.print("d "); Serial.println(genTimeOnString);
-    
-    #if (_USE_MQTT_ == 1)
-    Serial.print("MQTT Status: ");
-    Serial.print(mqttStatus); Serial.print(" - pl ");Serial.println(mqttPayload);
-    #endif
-
-    Serial.print("Wi-Fi Status: ");
-    Serial.println(wifiStatus);
 
     Serial.print("AdcVal: ");
     Serial.println(AdcIn);
     Serial.print("AdcIn: ");
-    Serial.println(AdcVal);    
+    Serial.println(AdcVal);
+    #endif // _CTR_SERIAL_DEBUG_
+
+    #if (_FREERAM_SERIAL_DEBUG_ == 1)
+    Serial.print("Free RAM: ");
+    Serial.println(freeRam);
+    #endif
+
+    #if (_NTP_SERIAL_DEBUG_ == 1)
+    Serial.print("Tiempo NTP: ");
+    Serial.println(mntpTimeString);
+    #endif
+
+    #if (_SOLAR_SERIAL_DEBUG_ == 1)
+    Serial.println("Solar Data: ");
+    Serial.print("Sunrise: "); Serial.print(sunrise_h); Serial.print(":");Serial.println(sunrise_m);
+    Serial.print("Sunset:  "); Serial.print(sunset_h);  Serial.print(":");Serial.println(sunset_m);
+    #endif
+
+    #if (_MQTT_SERIAL_DEBUG_ == 1)
+    Serial.print("MQTT Status: ");
+    Serial.print(mqttStatus); Serial.print(" - pl ");Serial.println(mqttPayload);
+    #endif
+
+    #if (_MBTCP_SERIAL_DEBUG_ == 1)
+    Serial.print("Modbus TCP Status: ");
+    Serial.print(mbTCPState); Serial.print(" "); Serial.println((millis() - mbTCPtick));
+    #endif
+
+    #if (_WIFI_SERIAL_DEBUG_ == 1)
+    Serial.print("Wi-Fi Status: ");
+    Serial.println(wifiStatus);
+    #endif
 
     Serial.println("<><><><><><><>");
     Serial.println(" ");
 
-    #endif
+    #endif // (_TICK_SERIAL_DEBUG_ == 1)
   }
 }

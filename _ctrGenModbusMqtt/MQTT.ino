@@ -436,7 +436,6 @@ void _MQTTSend(int itopic)
   ///////////
   else if (itopic == 4)
   {
-
     int balarm = 0;
 
     str = str + "\"time\":\"";

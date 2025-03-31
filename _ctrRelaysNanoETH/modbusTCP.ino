@@ -229,78 +229,78 @@ void _mbWriteMultipleHolding()
 
   if ((addr == MB_HR_ADD_CFG) && (nregs == MB_HR_NREG_CFG))
   {
-    value = (int)((mbTcpTxArray[13] & 0x00FF)<<8)|(mbTcpTxArray[14] & 0x00FF);
+    value = (int)((mbTcpRxArray[13] & 0x00FF)<<8)|(mbTcpRxArray[14] & 0x00FF);
     if (value == MODE_AUTO)
       ctrMode = MODE_AUTO;
     else
       ctrMode = MODE_TEST;
     
-    value  = (int)((mbTcpTxArray[15] & 0x00FF)<<8)|(mbTcpTxArray[16] & 0x00FF);
+    value  = (int)((mbTcpRxArray[15] & 0x00FF)<<8)|(mbTcpRxArray[16] & 0x00FF);
     if (value == IN_OFF)
       cfgLogicIns = IN_OFF;
     else 
       cfgLogicIns = IN_ON;
       
-    value = (int)((mbTcpTxArray[17] & 0x00FF)<<8)|(mbTcpTxArray[18] & 0x00FF);
+    value = (int)((mbTcpRxArray[17] & 0x00FF)<<8)|(mbTcpRxArray[18] & 0x00FF);
     if (value == OUT_OFF)
       cfgLogicOuts = OUT_OFF;
     else 
       cfgLogicOuts = OUT_ON;
 
-    cfgIType[0] = (int)((mbTcpTxArray[19] & 0x00FF)<<8)|(mbTcpTxArray[20] & 0x00FF);
-    cfgIACr[0]  = (int)((mbTcpTxArray[21] & 0x00FF)<<8)|(mbTcpTxArray[22] & 0x00FF);
-    cfgIlim[0]  = (int)((mbTcpTxArray[23] & 0x00FF)<<8)|(mbTcpTxArray[24] & 0x00FF);
-    cfgIsec[0]  = (int)((mbTcpTxArray[25] & 0x00FF)<<8)|(mbTcpTxArray[26] & 0x00FF);
+    cfgIType[0] = (int)((mbTcpRxArray[19] & 0x00FF)<<8)|(mbTcpRxArray[20] & 0x00FF);
+    cfgIACr[0]  = (int)((mbTcpRxArray[21] & 0x00FF)<<8)|(mbTcpRxArray[22] & 0x00FF);
+    cfgIlim[0]  = (int)((mbTcpRxArray[23] & 0x00FF)<<8)|(mbTcpRxArray[24] & 0x00FF);
+    cfgIsec[0]  = (int)((mbTcpRxArray[25] & 0x00FF)<<8)|(mbTcpRxArray[26] & 0x00FF);
   
-    cfgIType[1] = (int)((mbTcpTxArray[27] & 0x00FF)<<8)|(mbTcpTxArray[28] & 0x00FF);
-    cfgIACr[1]  = (int)((mbTcpTxArray[29] & 0x00FF)<<8)|(mbTcpTxArray[30] & 0x00FF);
-    cfgIlim[1]  = (int)((mbTcpTxArray[31] & 0x00FF)<<8)|(mbTcpTxArray[32] & 0x00FF);
-    cfgIsec[1]  = (int)((mbTcpTxArray[33] & 0x00FF)<<8)|(mbTcpTxArray[34] & 0x00FF);
+    cfgIType[1] = (int)((mbTcpRxArray[27] & 0x00FF)<<8)|(mbTcpRxArray[28] & 0x00FF);
+    cfgIACr[1]  = (int)((mbTcpRxArray[29] & 0x00FF)<<8)|(mbTcpRxArray[30] & 0x00FF);
+    cfgIlim[1]  = (int)((mbTcpRxArray[31] & 0x00FF)<<8)|(mbTcpRxArray[32] & 0x00FF);
+    cfgIsec[1]  = (int)((mbTcpRxArray[33] & 0x00FF)<<8)|(mbTcpRxArray[34] & 0x00FF);
 
-    cfgVDCm[0]  = (int)((mbTcpTxArray[35] & 0x00FF)<<8)|(mbTcpTxArray[36] & 0x00FF);
-    cfgVDCb[0]  = (int)((mbTcpTxArray[37] & 0x00FF)<<8)|(mbTcpTxArray[38] & 0x00FF);
+    cfgVDCm[0]  = (int)((mbTcpRxArray[35] & 0x00FF)<<8)|(mbTcpRxArray[36] & 0x00FF);
+    cfgVDCb[0]  = (int)((mbTcpRxArray[37] & 0x00FF)<<8)|(mbTcpRxArray[38] & 0x00FF);
 
-    cfgVDCm[1]  = (int)((mbTcpTxArray[39] & 0x00FF)<<8)|(mbTcpTxArray[40] & 0x00FF);
-    cfgVDCb[1]  = (int)((mbTcpTxArray[41] & 0x00FF)<<8)|(mbTcpTxArray[42] & 0x00FF);
+    cfgVDCm[1]  = (int)((mbTcpRxArray[39] & 0x00FF)<<8)|(mbTcpRxArray[40] & 0x00FF);
+    cfgVDCb[1]  = (int)((mbTcpRxArray[41] & 0x00FF)<<8)|(mbTcpRxArray[42] & 0x00FF);
 
-    cfgVDCm[2]  = (int)((mbTcpTxArray[43] & 0x00FF)<<8)|(mbTcpTxArray[44] & 0x00FF);
-    cfgVDCb[2]  = (int)((mbTcpTxArray[45] & 0x00FF)<<8)|(mbTcpTxArray[46] & 0x00FF);
+    cfgVDCm[2]  = (int)((mbTcpRxArray[43] & 0x00FF)<<8)|(mbTcpRxArray[44] & 0x00FF);
+    cfgVDCb[2]  = (int)((mbTcpRxArray[45] & 0x00FF)<<8)|(mbTcpRxArray[46] & 0x00FF);
 
-    cfgVDCm[3]  = (int)((mbTcpTxArray[47] & 0x00FF)<<8)|(mbTcpTxArray[48] & 0x00FF);
-    cfgVDCb[3]  = (int)((mbTcpTxArray[49] & 0x00FF)<<8)|(mbTcpTxArray[50] & 0x00FF);
+    cfgVDCm[3]  = (int)((mbTcpRxArray[47] & 0x00FF)<<8)|(mbTcpRxArray[48] & 0x00FF);
+    cfgVDCb[3]  = (int)((mbTcpRxArray[49] & 0x00FF)<<8)|(mbTcpRxArray[50] & 0x00FF);
 
-    cfgVDCm[4]  = (int)((mbTcpTxArray[51] & 0x00FF)<<8)|(mbTcpTxArray[52] & 0x00FF);
-    cfgVDCb[4]  = (int)((mbTcpTxArray[53] & 0x00FF)<<8)|(mbTcpTxArray[54] & 0x00FF);
+    cfgVDCm[4]  = (int)((mbTcpRxArray[51] & 0x00FF)<<8)|(mbTcpRxArray[52] & 0x00FF);
+    cfgVDCb[4]  = (int)((mbTcpRxArray[53] & 0x00FF)<<8)|(mbTcpRxArray[54] & 0x00FF);
 
-    cfgVDCm[5]  = (int)((mbTcpTxArray[55] & 0x00FF)<<8)|(mbTcpTxArray[56] & 0x00FF);
-    cfgVDCb[5]  = (int)((mbTcpTxArray[57] & 0x00FF)<<8)|(mbTcpTxArray[58] & 0x00FF);
+    cfgVDCm[5]  = (int)((mbTcpRxArray[55] & 0x00FF)<<8)|(mbTcpRxArray[56] & 0x00FF);
+    cfgVDCb[5]  = (int)((mbTcpRxArray[57] & 0x00FF)<<8)|(mbTcpRxArray[58] & 0x00FF);
 
-    cfgCtrSecs[0] = (int)((mbTcpTxArray[59] & 0x00FF)<<8)|(mbTcpTxArray[60] & 0x00FF);
-    cfgCtrSecs[1] = (int)((mbTcpTxArray[61] & 0x00FF)<<8)|(mbTcpTxArray[62] & 0x00FF);
-    cfgCtrSecs[2] = (int)((mbTcpTxArray[63] & 0x00FF)<<8)|(mbTcpTxArray[64] & 0x00FF);
-    cfgCtrSecs[3] = (int)((mbTcpTxArray[65] & 0x00FF)<<8)|(mbTcpTxArray[66] & 0x00FF);
-    cfgCtrSecs[4] = (int)((mbTcpTxArray[67] & 0x00FF)<<8)|(mbTcpTxArray[68] & 0x00FF);
-    cfgCtrSecs[5] = (int)((mbTcpTxArray[69] & 0x00FF)<<8)|(mbTcpTxArray[70] & 0x00FF);
-    cfgCtrSecs[6] = (int)((mbTcpTxArray[71] & 0x00FF)<<8)|(mbTcpTxArray[72] & 0x00FF);
+    cfgCtrSecs[0] = (int)((mbTcpRxArray[59] & 0x00FF)<<8)|(mbTcpRxArray[60] & 0x00FF);
+    cfgCtrSecs[1] = (int)((mbTcpRxArray[61] & 0x00FF)<<8)|(mbTcpRxArray[62] & 0x00FF);
+    cfgCtrSecs[2] = (int)((mbTcpRxArray[63] & 0x00FF)<<8)|(mbTcpRxArray[64] & 0x00FF);
+    cfgCtrSecs[3] = (int)((mbTcpRxArray[65] & 0x00FF)<<8)|(mbTcpRxArray[66] & 0x00FF);
+    cfgCtrSecs[4] = (int)((mbTcpRxArray[67] & 0x00FF)<<8)|(mbTcpRxArray[68] & 0x00FF);
+    cfgCtrSecs[5] = (int)((mbTcpRxArray[69] & 0x00FF)<<8)|(mbTcpRxArray[70] & 0x00FF);
+    cfgCtrSecs[6] = (int)((mbTcpRxArray[71] & 0x00FF)<<8)|(mbTcpRxArray[72] & 0x00FF);
 
     _ram2eepromCONFIG();
   }
   else if ((addr == MB_HR_ADD_IP) && (nregs == MB_HR_NREG_IP))
   {
-    ipMode        = (int)((mbTcpTxArray[13] & 0x00FF)<<8)|(mbTcpTxArray[14] & 0x00FF);
-    ipAddress[0]  = (int)((mbTcpTxArray[15] & 0x00FF)<<8)|(mbTcpTxArray[16] & 0x00FF);
-    ipAddress[1]  = (int)((mbTcpTxArray[17] & 0x00FF)<<8)|(mbTcpTxArray[18] & 0x00FF);
-    ipAddress[2]  = (int)((mbTcpTxArray[19] & 0x00FF)<<8)|(mbTcpTxArray[20] & 0x00FF);
-    ipAddress[3]  = (int)((mbTcpTxArray[21] & 0x00FF)<<8)|(mbTcpTxArray[22] & 0x00FF);
-    netMask[0]    = (int)((mbTcpTxArray[23] & 0x00FF)<<8)|(mbTcpTxArray[24] & 0x00FF);
-    netMask[1]    = (int)((mbTcpTxArray[25] & 0x00FF)<<8)|(mbTcpTxArray[26] & 0x00FF);
-    netMask[2]    = (int)((mbTcpTxArray[27] & 0x00FF)<<8)|(mbTcpTxArray[28] & 0x00FF);
-    netMask[3]    = (int)((mbTcpTxArray[29] & 0x00FF)<<8)|(mbTcpTxArray[30] & 0x00FF);
-    gateWay[0]    = (int)((mbTcpTxArray[31] & 0x00FF)<<8)|(mbTcpTxArray[32] & 0x00FF);
-    gateWay[1]    = (int)((mbTcpTxArray[33] & 0x00FF)<<8)|(mbTcpTxArray[34] & 0x00FF);
-    gateWay[2]    = (int)((mbTcpTxArray[35] & 0x00FF)<<8)|(mbTcpTxArray[36] & 0x00FF);
-    gateWay[3]    = (int)((mbTcpTxArray[37] & 0x00FF)<<8)|(mbTcpTxArray[38] & 0x00FF);
-    cfgModbusPORT = (int)((mbTcpTxArray[39] & 0x00FF)<<8)|(mbTcpTxArray[40] & 0x00FF);
+    ipMode        = (int)((mbTcpRxArray[13] & 0x00FF)<<8)|(mbTcpRxArray[14] & 0x00FF);
+    ipAddress[0]  = (int)((mbTcpRxArray[15] & 0x00FF)<<8)|(mbTcpRxArray[16] & 0x00FF);
+    ipAddress[1]  = (int)((mbTcpRxArray[17] & 0x00FF)<<8)|(mbTcpRxArray[18] & 0x00FF);
+    ipAddress[2]  = (int)((mbTcpRxArray[19] & 0x00FF)<<8)|(mbTcpRxArray[20] & 0x00FF);
+    ipAddress[3]  = (int)((mbTcpRxArray[21] & 0x00FF)<<8)|(mbTcpRxArray[22] & 0x00FF);
+    netMask[0]    = (int)((mbTcpRxArray[23] & 0x00FF)<<8)|(mbTcpRxArray[24] & 0x00FF);
+    netMask[1]    = (int)((mbTcpRxArray[25] & 0x00FF)<<8)|(mbTcpRxArray[26] & 0x00FF);
+    netMask[2]    = (int)((mbTcpRxArray[27] & 0x00FF)<<8)|(mbTcpRxArray[28] & 0x00FF);
+    netMask[3]    = (int)((mbTcpRxArray[29] & 0x00FF)<<8)|(mbTcpRxArray[30] & 0x00FF);
+    gateWay[0]    = (int)((mbTcpRxArray[31] & 0x00FF)<<8)|(mbTcpRxArray[32] & 0x00FF);
+    gateWay[1]    = (int)((mbTcpRxArray[33] & 0x00FF)<<8)|(mbTcpRxArray[34] & 0x00FF);
+    gateWay[2]    = (int)((mbTcpRxArray[35] & 0x00FF)<<8)|(mbTcpRxArray[36] & 0x00FF);
+    gateWay[3]    = (int)((mbTcpRxArray[37] & 0x00FF)<<8)|(mbTcpRxArray[38] & 0x00FF);
+    cfgModbusPORT = (int)((mbTcpRxArray[39] & 0x00FF)<<8)|(mbTcpRxArray[40] & 0x00FF);
 
     _ram2eepromCONFIG();
   }
@@ -313,7 +313,7 @@ void _mbWriteMultipleHolding()
     {
       for (int i = 0; i < MB_HR_NREG_OUTS; i++)
       {
-        value = (int)((mbTcpTxArray[i*2 + 13] & 0x00FF)<<8)|(mbTcpTxArray[i*2 + 14] & 0x00FF);
+        value = (int)((mbTcpRxArray[i*2 + 13] & 0x00FF)<<8)|(mbTcpRxArray[i*2 + 14] & 0x00FF);
         if (value == OUT_OFF)
           OutDig[i] = OUT_OFF;
         else
@@ -321,6 +321,12 @@ void _mbWriteMultipleHolding()
       }
     }
   }
+  #if (_USE_WDE_ == 1)
+  else if ((addr == MB_HR_ADD_WD) && (nregs == MB_HR_NREG_WD))
+  {
+    wdeForceReset = (int)((mbTcpRxArray[13] & 0x00FF)<<8)|(mbTcpRxArray[14] & 0x00FF);
+  }
+  #endif
   else
     exception = 1;
 
@@ -508,6 +514,13 @@ void _mbReadHolding()
       mbTcpTxArray[MB_TCP_REGS + 1 + i * 2] = OutDig[i];
     }
   }
+  #if (_USE_WDE_ == 1)
+  else if ((addr == MB_HR_ADD_WD) && (nregs == MB_HR_NREG_WD))
+  {
+    mbTcpTxArray[MB_TCP_REGS]       = 0x00;
+    mbTcpTxArray[MB_TCP_REGS + 1]   = wdeForceReset;
+  }
+  #endif
   else
     exception = 1;
 

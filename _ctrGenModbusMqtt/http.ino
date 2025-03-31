@@ -39,7 +39,7 @@ void _serveMAIN()
   html = html + "<h1>" + PROJECT + " #Estado<span>ESP8266 tech</span><span align=\"right\"> Ver: " + compdate + " " + comptime + "</span></h1>";
 
   html = html + "<div class=\"section\"><span>1</span>Sistema</div>";
-  html = html + "<p class=\"sansserif\" id=\"TEMPSid\">...</p>";
+  html = html + "<p class=\"sansserif\" id=\"STATUSSid\">...</p>";
   html = html + "<p>";
   html = html + "  <input type=\"button\" value=\"Reset\" onclick=\"sendOUT(1)\">";
   html = html + "  <input type=\"button\" value=\"Restore\" onclick=\"sendOUT(2)\">";
@@ -143,7 +143,7 @@ void _serveMAIN()
   html = html + "  var xhttp = new XMLHttpRequest();";
   html = html + "  xhttp.onreadystatechange = function() {";
   html = html + "    if (this.readyState == 4 && this.status == 200) {";
-  html = html + "      document.getElementById(\"TEMPSid\").innerHTML = this.responseText;";
+  html = html + "      document.getElementById(\"STATUSSid\").innerHTML = this.responseText;";
   html = html + "   }";
   html = html + "  };";
   html = html + "  xhttp.open(\"GET\", \"readSTATUS\", true);";
@@ -453,7 +453,7 @@ void _setCtrSETTINGS()
   if ((rtimeBZ.length() == 0)    ||
       (rtimeStart.length() == 0) ||
       (rtimeStop.length() == 0)  ||
-      (rtimeGenAl.length() == 0)  ||
+      (rtimeGenAl.length() == 0) ||
 	  
       (rtime1.length() == 0)  ||
       (rtime2.length() == 0)  ||
@@ -1184,6 +1184,61 @@ void _readCTR()
    html = html + "<td><font style=\"color:grey\">Desactivado</font></td>";
   html = html + "</tr>";
   
+  html = html + "<tr>";
+  html = html + "<td>RELE: Control Estado</td>";
+  html = html + "<td>" + mbctrInState[1] + mbctrInState[0] + "</td>";
+  html = html + "</tr>";
+
+  html = html + "<tr>";
+  html = html + "<td>RELE: Salida Estado</td>";
+  html = html + "<td>" + mbctrOutState[1] + mbctrOutState[0] + "</td>";
+  html = html + "</tr>";
+
+  html = html + "<tr>";
+  html = html + "<td>RELE: Contador</td>";
+  html = html + "<td>" + String(mbctrOutTick) + "</td>";
+  html = html + "</tr>";
+
+  html = html + "<tr>";
+  html = html + "<td>Consumos Luz</td>";
+  html = html + "<td>" + String(mbRMSval[0]) + "</td>";
+  html = html + "</tr>";
+
+  html = html + "<tr>";
+  html = html + "<td>Consumos Enchufes</td>";
+  html = html + "<td>" + String(mbRMSval[1]) + "</td>";
+  html = html + "</tr>";
+
+  html = html + "<tr>";
+  html = html + "<td>In DC2 </td>";
+  html = html + "<td>" + String(mbDCval[0]) + "</td>";
+  html = html + "</tr>";
+
+  html = html + "<tr>";
+  html = html + "<td>In DC3 </td>";
+  html = html + "<td>" + String(mbDCval[1]) + "</td>";
+  html = html + "</tr>";
+
+  html = html + "<tr>";
+  html = html + "<td>In DC4 Reserva</td>";
+  html = html + "<td>" + String(mbDCval[2]) + "</td>";
+  html = html + "</tr>";
+
+  html = html + "<tr>";
+  html = html + "<td>In DC5 Bateria 24Vdc</td>";
+  html = html + "<td>" + String(mbDCval[3]) + "</td>";
+  html = html + "</tr>";
+
+  html = html + "<tr>";
+  html = html + "<td>In DC6 Bateria Generador</td>";
+  html = html + "<td>" + String(mbDCval[4]) + "</td>";
+  html = html + "</tr>";
+
+  html = html + "<tr>";
+  html = html + "<td>In DC7 Alimentacion</td>";
+  html = html + "<td>" + String(mbDCval[5]) + "</td>";
+  html = html + "</tr>";
+
   html = html + "</table>";
   
   httpServer.send(200, "text/plane", html);

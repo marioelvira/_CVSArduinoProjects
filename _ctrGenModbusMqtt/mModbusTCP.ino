@@ -8,18 +8,46 @@
 void _mMBTCPSetup(void)
 {
   mbTCPState = MBTCP_STOP;
+  alarm[AL_ERROR5] = 1;
+  _mMBTCPResetvals ();
 }
 
 void _mMBTCPStart(void)
 {
   mbTCPtick = millis();
+  #if (_MBTCP_SERIAL_DEBUG_ == 1)
+  Serial.print("++++++> Modbus TCP: Start");
+  #endif
   mbTCPState = MBTCP_WAIT_TO_CONNECT;
 }
 
 void _mMBTCPStop(void)
 {
   mbTCPclient.stop();
+  #if (_MBTCP_SERIAL_DEBUG_ == 1)
+  Serial.print("++++++> Modbus TCP: Stop");
+  #endif
   mbTCPState = MBTCP_STOP;
+}
+
+void _mMBTCPResetvals (void)
+{
+  mbctrInState[0] = 'N';
+  mbctrInState[1] = 'C';
+
+  mbctrOutState[0] = 'N';
+  mbctrOutState[1] = 'C';
+  mbctrOutTick = 0;
+
+  mbRMSval[0] = 0;
+  mbRMSval[1] = 0;
+
+  mbDCval[0] = 0;
+  mbDCval[1] = 0;
+  mbDCval[2] = 0;
+  mbDCval[3] = 0;
+  mbDCval[4] = 0;
+  mbDCval[5] = 0;
 }
 
 /////////////////////
@@ -32,6 +60,14 @@ void _mMBTCPloop(void)
   #if (_MBTCP_SERIAL_DEBUG_ == 1)
   char hexc[3];
   #endif
+
+  if ((mbTCPState == MBTCP_WAIT_TO_CONNECT) || (mbTCPState == MBTCP_CONNECT))
+  {
+    alarm[AL_ERROR5] = 1;
+    _mMBTCPResetvals ();
+  }
+  else
+    alarm[AL_ERROR5] = 0;
 
   switch (mbTCPState)
   { 
@@ -136,15 +172,28 @@ void _mMBTCPloop(void)
         #endif
         
         mbTCPState = MBTCP_ON_ANALYSIS;
+        break;
       }
 
       if (mbTCPclient.available() > 0)
       {
-        mbTCPRxBuffer[mbTCPRxIndex] = mbTCPclient.read();
-        #if (_MBTCP_SERIAL_DEBUG_ == 1)
-        sprintf (hexc, "%02x", mbTCPRxBuffer[mbTCPRxIndex]);
-        Serial.print(hexc);
-        #endif
+        if (mbTCPRxIndex >= (MBTCP_ARRAY_SIZE))
+        {
+          #if (_MBTCP_SERIAL_DEBUG_ == 1)
+          Serial.println("+++++++> Modbus TCP Rx Overflow");
+          #endif
+
+          mbTCPState = MBTCP_WAIT_TX;
+          mbTCPtick = millis();
+        }
+        else
+        {
+          mbTCPRxBuffer[mbTCPRxIndex] = mbTCPclient.read();
+          #if (_MBTCP_SERIAL_DEBUG_ == 1)
+          sprintf (hexc, "%02x", mbTCPRxBuffer[mbTCPRxIndex]);
+          Serial.print(hexc);
+          #endif
+        }
 
         mbTCPRxIndex++;
         mbTCPtick = millis();
@@ -214,7 +263,8 @@ void _mbReadInput()
     //rOutDig[4]    = (int)((mbTCPRxBuffer[MB_TCP_REGS + 34] & 0x00FF)<<8)|(mbTCPRxBuffer[MB_TCP_REGS + 35] & 0x00FF);
     //rOutDig[5]    = (int)((mbTCPRxBuffer[MB_TCP_REGS + 36] & 0x00FF)<<8)|(mbTCPRxBuffer[MB_TCP_REGS + 37] & 0x00FF);
     //rctrMode      = (int)((mbTCPRxBuffer[MB_TCP_REGS + 38] & 0x00FF)<<8)|(mbTCPRxBuffer[MB_TCP_REGS + 39] & 0x00FF);
-    //rMBError      = (int)((mbTCPRxBuffer[MB_TCP_REGS + 40] & 0x00FF)<<8)|(mbTCPRxBuffer[MB_TCP_REGS + 41] & 0x00FF);
+    //rMBConnected  = (int)((mbTCPRxBuffer[MB_TCP_REGS + 40] & 0x00FF)<<8)|(mbTCPRxBuffer[MB_TCP_REGS + 41] & 0x00FF);
+    //rMBError      = (int)((mbTCPRxBuffer[MB_TCP_REGS + 41] & 0x00FF)<<8)|(mbTCPRxBuffer[MB_TCP_REGS + 42] & 0x00FF);
   }
 }
 

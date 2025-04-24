@@ -315,6 +315,7 @@ int  mbTCPFunction;
 char mbctrInState[2];
 char mbctrOutState[2];
 int  mbctrOutTick;
+char mbRMState[2];
 int  mbRMSval[MB_RMS_NUMBER];
 int  mbDCval[MB_DC_NUMBER];
 

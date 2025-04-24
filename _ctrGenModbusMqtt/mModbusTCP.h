@@ -21,7 +21,7 @@ extern "C" {
 
 // Input Registers
 #define MB_IR_ADD_ONLINE        0
-#define MB_IR_NREG_ONLINE       22
+#define MB_IR_NREG_ONLINE       24
 
 // MB TCP offsets
 //#define MB_TCP_TID            0

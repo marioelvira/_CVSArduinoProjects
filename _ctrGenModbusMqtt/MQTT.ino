@@ -399,35 +399,43 @@ void _MQTTSend(int itopic)
     //////////
     // ADCs //
     //////////
-    str = str + "\"rms0\":\"";
+    str = str + "\"i0st\":\"";
+    str = str + mbRMState[0];
+    str = str + "\",\n";
+
+    str = str + "\"i0\":\"";
     str = str + mbRMSval[0];
     str = str + "\",\n";
     
-    str = str + "\"rms1\":\"";
+    str = str + "\"i1st\":\"";
+    str = str + mbRMState[1];
+    str = str + "\",\n";
+
+    str = str + "\"i1\":\"";
     str = str + mbRMSval[1];
     str = str + "\",\n";
 
-    str = str + "\"dcv0\":\"";
+    str = str + "\"v0\":\"";
     str = str + mbDCval[0];
     str = str + "\",\n";
     
-    str = str + "\"dcv1\":\"";
+    str = str + "\"v1\":\"";
     str = str + mbDCval[1];
     str = str + "\",\n";
 
-    str = str + "\"dcv2\":\"";
+    str = str + "\"v2\":\"";
     str = str + mbDCval[2];
     str = str + "\",\n";
     
-    str = str + "\"dcv3\":\"";
+    str = str + "\"v3\":\"";
     str = str + mbDCval[3];
     str = str + "\",\n";
 
-    str = str + "\"dcv4\":\"";
+    str = str + "\"v4\":\"";
     str = str + mbDCval[4];
     str = str + "\",\n";
 
-    str = str + "\"dcv5\":\"";
+    str = str + "\"v5\":\"";
     str = str + mbDCval[5];
     str = str + "\",\n";
   }

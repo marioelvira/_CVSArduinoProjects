@@ -120,8 +120,8 @@ extern "C" {
 
 #define EEPROM_VAL_MB_IP1         192
 #define EEPROM_VAL_MB_IP2         168
-#define EEPROM_VAL_MB_IP3         0
-#define EEPROM_VAL_MB_IP4         9
+#define EEPROM_VAL_MB_IP3         1
+#define EEPROM_VAL_MB_IP4         50
 #define EEPROM_VAL_MB_PORT        502
 //#define BROKER_PORT_MAX         2
 

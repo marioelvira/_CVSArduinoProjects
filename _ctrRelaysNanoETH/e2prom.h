@@ -92,20 +92,20 @@ extern "C" {
 //#define EEPROM_ADD_MAX              0xFA // 250
 
 // Values
-#define EEPROM_VAL_OK                 0xAF
+#define EEPROM_VAL_OK                 0xA0
 
 #define EEPROM_VAL_IP_MODE        FIXIP_MODE // DHCP_MODE  
 #define EEPROM_VAL_IP1            192
 #define EEPROM_VAL_IP2            168
-#define EEPROM_VAL_IP3            100//0
-#define EEPROM_VAL_IP4            9
+#define EEPROM_VAL_IP3            1//0
+#define EEPROM_VAL_IP4            50
 #define EEPROM_VAL_MASK1          255
 #define EEPROM_VAL_MASK2          255
 #define EEPROM_VAL_MASK3          255
 #define EEPROM_VAL_MASK4          0
 #define EEPROM_VAL_GATE1          192
 #define EEPROM_VAL_GATE2          168
-#define EEPROM_VAL_GATE3          100//0
+#define EEPROM_VAL_GATE3          1//0
 #define EEPROM_VAL_GATE4          1
 
 #define EEPROM_VAL_MB_PORT    		      502
@@ -114,14 +114,15 @@ extern "C" {
 #define EEPROM_VAL_LOGIC_OUTS           0     // Logica activar out
 
 #define EEPROM_VAL_ADC0_TYPE           1      // 0-> NOT USED, 1->AC
-#define EEPROM_VAL_ADC0_EMON_R         5      // 5A -> 1V
-#define EEPROM_VAL_ADC0_EMON_L         6510   // 6510 mA -> 1500W
+#define EEPROM_VAL_ADC0_EMON_R         10     // 10A -> 1V
+#define EEPROM_VAL_ADC0_EMON_L         6500   // 6500 mA -> 1400W
 #define EEPROM_VAL_ADC0_EMON_SEC       3      // 3s
 
 #define EEPROM_VAL_ADC1_TYPE           1      // 0-> NOT USED, 1->AC
 #define EEPROM_VAL_ADC1_EMON_R         5      // 5A -> 1V
-#define EEPROM_VAL_ADC1_EMON_L         6510   // 6510 mA -> 1500W
+#define EEPROM_VAL_ADC1_EMON_L         6500   // 6500 mA -> 1400W
 #define EEPROM_VAL_ADC1_EMON_SEC       3      // 3s
+
 #define EEPROM_VAL_ADC2_VDC_M          20000  // 5V -> 100A
 #define EEPROM_VAL_ADC2_VDC_B          0
 #define EEPROM_VAL_ADC3_VDC_M          20000  // 5V -> 100A

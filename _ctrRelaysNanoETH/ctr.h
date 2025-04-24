@@ -21,12 +21,12 @@ extern "C" {
   Out4 - Grupo Gasolina: Enchufes
   Out5 - Grupo Gasolina: Luces
 
-  In0 In1 |   Out0    Out1    Out2    Out3    Out4
+  In1[0] In2[1] |   Out1[0] Out2[1] Out3[2] Out4[3] Out5[4]
   --------------------------------------------------
-  0   0   |   1       1       0       0       0   IN_STATE0 - Inversor BAT
-  1   0   |   0       0       1       1       0   IN_STATE1 - Generador Diesel
-  0   1   |   0       0       0       1       1   IN_STATE2 - Grupo Gasolina
-  1   1   |   0       0       1       1       0   IN_STATE1 - *Generador Diesel
+  0       0    |   1       1       0       0       0   IN_STATE0 - Inversores Enchufes y Luz
+  1       0    |   0       0       1       1       0   IN_STATE1 - Generador Diesel Enchufes y Luz
+  0       1    |   0       0       0       1       1   IN_STATE2 - Grupo Gasolina Enchuufes y Luz
+  1       1    |   0       0       1       1       0   IN_STATE1 - *Generador Diesel Enchufes y Luz (defecto)
  
   Control por consumos:
   ---------------------

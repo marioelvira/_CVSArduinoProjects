@@ -30,9 +30,10 @@ void _CtrSetup(void)
   ctrOutState = OUT_STATE0;
 
   ctrInState_ant = ctrInState;
-  ctrOutTick = millis();
+  ctrOutSecTick = timeSecTick;
 
-  crtCIrmsState = IRMS_STATE0;
+  crtCIrmsState[0] = IRMS_STATE0;
+  crtCIrmsState[1] = IRMS_STATE0;
 }
 
 ///////////////////////
@@ -48,7 +49,11 @@ void _CtrLoop(void)
   else if ((InDig[0] == IN_OFF) && (InDig[1] == IN_ON))
     ctrInState = IN_STATE2;
 
-  _ctrADCCurret();
+  if (ctrInState == IN_STATE0)
+  {
+    _ctrADCCurret(0);
+    _ctrADCCurret(1);
+  }
 
   if (ctrInState_ant != ctrInState)
     _ctrOutReset();
@@ -64,39 +69,43 @@ void _CtrLoop(void)
     _ctrOutState2();
 }
 
-void _ctrADCCurret() {
+void _ctrADCCurret(int i) {
 
-  switch (crtCIrmsState)
+  switch (crtCIrmsState[i])
   {
     case IRMS_STATE0:
-      if ((InDig[0] == IN_OFF) && (InDig[1] == IN_OFF))
+      if (Ival[i] > cfgIlim[i])
       {
-        if ((Ival[0] > cfgIlim[0]) || (Ival[1] > cfgIlim[1]))
-        {
-          ctrCIrmsTick = millis();
-          crtCIrmsState = IRMS_STATE1;
-        }
+        ctrCIrmsUpSecTick[i] = timeSecTick;
+        ctrCIrmsDownSecTick[i] = timeSecTick;
+        crtCIrmsState[i] = IRMS_STATE1;
       }
       break;
 
     case IRMS_STATE1:
-        if ((Ival[0] < cfgIlim[0]) && (Ival[1] < cfgIlim[1]))
-          crtCIrmsState = IRMS_STATE0;
-
-        if (millis() - ctrCIrmsTick >= cfgIsec[0]*1000 /*IRMS_STATE1_TICKS*/)
+      if (Ival[i] > cfgIlim[i])
+      {
+        ctrCIrmsDownSecTick[i] = timeSecTick;
+        
+        if (timeSecTick - ctrCIrmsUpSecTick[i] >=  (unsigned long)cfgIsec[i])
         {
-          ctrCIrmsTick = millis();
-          ctrCIrmsSec = timeSecTick;
-          crtCIrmsState = IRMS_STATE2;
+          ctrOutState = OUT_STATE0;
+          ctrOutSecTick = timeSecTick;
+        
+          ctrCIrmsUpSecTick[i] = timeSecTick;
+          crtCIrmsState[i] = IRMS_STATE2;
         }
-        break;
+      }
+      else
+      {
+        if (timeSecTick - ctrCIrmsDownSecTick[i] >=  (unsigned long)cfgIsec[i])
+          crtCIrmsState[i] = IRMS_STATE0;
+      }
+      break;
 
     case IRMS_STATE2:
-        // Forced
-        ctrInState = IN_STATE1;
-
-        if (timeSecTick - ctrCIrmsSec >= cfgCtrSecs[6] /*IRMS_STATE2_SECS*/)
-          crtCIrmsState = IRMS_STATE0;
+        if (timeSecTick - ctrCIrmsUpSecTick[i] >=  (unsigned long)cfgCtrSecs[6])
+          crtCIrmsState[i] = IRMS_STATE0;
         break;
   }
 }
@@ -110,7 +119,7 @@ void _ctrOutReset() {
   OutDig[4] = OUT_OFF;
 
   ctrOutState = OUT_STATE0;
-  ctrOutTick = millis();
+  ctrOutSecTick = timeSecTick;
 }
 
 ////////////////////////////////////////////////
@@ -129,9 +138,9 @@ void _ctrOutState0 () {
       OutDig[3] = OUT_OFF;
       OutDig[4] = OUT_OFF;
     
-      if (millis() - ctrOutTick >= cfgCtrSecs[0]*1000 /*STATE0_0_1_TICKS*/)
+      if (timeSecTick - ctrOutSecTick >=  (unsigned long)cfgCtrSecs[0])
       {
-        ctrOutTick = millis();
+        ctrOutSecTick = timeSecTick;
         ctrOutState = OUT_STATE1;
       }
       break;
@@ -142,10 +151,10 @@ void _ctrOutState0 () {
       OutDig[2] = OUT_OFF;
       OutDig[3] = OUT_OFF;
       OutDig[4] = OUT_OFF;
-          
-      if (millis() - ctrOutTick >= cfgCtrSecs[1]*1000 /*STATE0_1_2_TICKS*/)
+
+      if (timeSecTick - ctrOutSecTick >=  (unsigned long)cfgCtrSecs[1])
       {
-        ctrOutTick = millis();
+        ctrOutSecTick = timeSecTick;
         ctrOutState = OUT_STATE2;
       }
       
@@ -158,8 +167,7 @@ void _ctrOutState0 () {
       OutDig[3] = OUT_OFF;
       OutDig[4] = OUT_OFF;
 
-      ctrOutTick = millis();
-
+      ctrOutSecTick = timeSecTick;
       break;
   }
 }
@@ -171,7 +179,7 @@ void _ctrOutState0 () {
 //  1   1   |   0     0     1     1     0     //
 ////////////////////////////////////////////////
 void _ctrOutState1 () {
-
+  
   switch (ctrOutState)
   {
     case OUT_STATE0:
@@ -181,9 +189,9 @@ void _ctrOutState1 () {
       OutDig[3] = OUT_OFF;
       OutDig[4] = OUT_OFF;
     
-      if (millis() - ctrOutTick >= cfgCtrSecs[2]*1000 /*STATE1_0_1_TICKS*/)
+      if (timeSecTick - ctrOutSecTick >=  (unsigned long)cfgCtrSecs[2])
       {
-        ctrOutTick = millis();
+        ctrOutSecTick = timeSecTick;
         ctrOutState = OUT_STATE1;
       }
       break;
@@ -194,10 +202,10 @@ void _ctrOutState1 () {
       OutDig[2] = OUT_ON;
       OutDig[3] = OUT_OFF;
       OutDig[4] = OUT_OFF;
-          
-      if (millis() - ctrOutTick >= cfgCtrSecs[3]*1000 /*STATE1_1_2_TICKS*/)
+      
+      if (timeSecTick - ctrOutSecTick >=  (unsigned long)cfgCtrSecs[3])
       {
-        ctrOutTick = millis();
+        ctrOutSecTick = timeSecTick;
         ctrOutState = OUT_STATE2;
       }
       
@@ -210,8 +218,7 @@ void _ctrOutState1 () {
       OutDig[3] = OUT_ON;
       OutDig[4] = OUT_OFF;
 
-      ctrOutTick = millis();
-
+      ctrOutSecTick = timeSecTick;
       break;
   }
 }
@@ -232,9 +239,9 @@ void _ctrOutState2 () {
       OutDig[3] = OUT_OFF;
       OutDig[4] = OUT_OFF;
     
-      if (millis() - ctrOutTick >= cfgCtrSecs[4]*1000 /*STATE2_0_1_TICKS*/)
+      if (timeSecTick - ctrOutSecTick >=  (unsigned long)cfgCtrSecs[4])
       {
-        ctrOutTick = millis();
+        ctrOutSecTick = timeSecTick;
         ctrOutState = OUT_STATE1;
       }
       break;
@@ -245,10 +252,10 @@ void _ctrOutState2 () {
       OutDig[2] = OUT_OFF;
       OutDig[3] = OUT_OFF;
       OutDig[4] = OUT_ON;
-          
-      if (millis() - ctrOutTick >= cfgCtrSecs[5]*1000 /*STATE2_1_2_TICKS*/)
+  
+      if (timeSecTick - ctrOutSecTick >=  (unsigned long)cfgCtrSecs[5])
       {
-        ctrOutTick = millis();
+        ctrOutSecTick = timeSecTick;
         ctrOutState = OUT_STATE2;
       }
       
@@ -261,8 +268,7 @@ void _ctrOutState2 () {
       OutDig[3] = OUT_ON;
       OutDig[4] = OUT_ON;
 
-      ctrOutTick = millis();
-
+      ctrOutSecTick = timeSecTick;
       break;
   }
 }

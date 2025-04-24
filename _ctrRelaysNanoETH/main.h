@@ -21,7 +21,6 @@ extern "C" {
 #define _USE_LED_                  0  // Used as SPI
 #define _USE_WDE_                  1
 #define _USE_FREERAM_              0
-#define _USE_FREERTOS_             0
 #define _USE_ETHERNET_             1
 
 #if (_USE_ETHERNET_ == 1)
@@ -34,10 +33,10 @@ extern "C" {
 #if (_SERIAL_DEBUG_ == 1)
 #define _EEPROM_SERIAL_DEBUG_      1
 #define _STATUS_SERIAL_DEBUG_      0
-#define _ETH_SERIAL_DEBUG_         1
-#define _MBTCP_SERIAL_DEBUG_       1
+#define _ETH_SERIAL_DEBUG_         0
+#define _MBTCP_SERIAL_DEBUG_       0
 #define _NTP_SERIAL_DEBUG_         0
-#define _WD_SERIAL_DEBUG_          1
+#define _WD_SERIAL_DEBUG_          0
 #endif
 
 #endif // _MAIN_H_

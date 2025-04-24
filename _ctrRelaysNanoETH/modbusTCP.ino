@@ -618,52 +618,57 @@ void _mbReadInput()
       mbTcpTxArray[MB_TCP_REGS + 3]  = '2';
     }  
 
-    ctrOutSecs = (int)((millis() - ctrOutTick)/1000);
+    ctrOutSecs = (int)(timeSecTick - ctrOutSecTick);
     mbTcpTxArray[MB_TCP_REGS + 4]  = (char)((ctrOutSecs & 0xFF00)>>8);
     mbTcpTxArray[MB_TCP_REGS + 5]  = (char)(ctrOutSecs & 0x00FF);
     
-    mbTcpTxArray[MB_TCP_REGS + 6]  = (char)((Ival[0] & 0xFF00)>>8);
-    mbTcpTxArray[MB_TCP_REGS + 7]  = (char)(Ival[0] & 0x00FF);
-    mbTcpTxArray[MB_TCP_REGS + 8]  = (char)((Ival[1] & 0xFF00)>>8);
-    mbTcpTxArray[MB_TCP_REGS + 9]  = (char)(Ival[1] & 0x00FF);
+    mbTcpTxArray[MB_TCP_REGS + 6] = 0;
+    mbTcpTxArray[MB_TCP_REGS + 7] = crtCIrmsState[0];
+    mbTcpTxArray[MB_TCP_REGS + 8]  = (char)((Ival[0] & 0xFF00)>>8);
+    mbTcpTxArray[MB_TCP_REGS + 9]  = (char)(Ival[0] & 0x00FF);
+
+    mbTcpTxArray[MB_TCP_REGS + 10] = 0;
+    mbTcpTxArray[MB_TCP_REGS + 11] = crtCIrmsState[1];
+    mbTcpTxArray[MB_TCP_REGS + 12]  = (char)((Ival[1] & 0xFF00)>>8);
+    mbTcpTxArray[MB_TCP_REGS + 13]  = (char)(Ival[1] & 0x00FF);
     
-    mbTcpTxArray[MB_TCP_REGS + 10]  = (char)((Vval[0] & 0xFF00)>>8);
-    mbTcpTxArray[MB_TCP_REGS + 11]  = (char)(Vval[0] & 0x00FF);
-    mbTcpTxArray[MB_TCP_REGS + 12]  = (char)((Vval[1] & 0xFF00)>>8);
-    mbTcpTxArray[MB_TCP_REGS + 13]  = (char)(Vval[1] & 0x00FF);
-    mbTcpTxArray[MB_TCP_REGS + 14]  = (char)((Vval[2] & 0xFF00)>>8);
-    mbTcpTxArray[MB_TCP_REGS + 15]  = (char)(Vval[2] & 0x00FF);
-    mbTcpTxArray[MB_TCP_REGS + 16]  = (char)((Vval[3] & 0xFF00)>>8);
-    mbTcpTxArray[MB_TCP_REGS + 17]  = (char)(Vval[3] & 0x00FF);
-    mbTcpTxArray[MB_TCP_REGS + 18]  = (char)((Vval[4] & 0xFF00)>>8);
-    mbTcpTxArray[MB_TCP_REGS + 19]  = (char)(Vval[4] & 0x00FF);
-    mbTcpTxArray[MB_TCP_REGS + 20]  = (char)((Vval[5] & 0xFF00)>>8);
-    mbTcpTxArray[MB_TCP_REGS + 21]  = (char)(Vval[5] & 0x00FF);
+    mbTcpTxArray[MB_TCP_REGS + 14]  = (char)((Vval[0] & 0xFF00)>>8);
+    mbTcpTxArray[MB_TCP_REGS + 15]  = (char)(Vval[0] & 0x00FF);
+    mbTcpTxArray[MB_TCP_REGS + 16]  = (char)((Vval[1] & 0xFF00)>>8);
+    mbTcpTxArray[MB_TCP_REGS + 17]  = (char)(Vval[1] & 0x00FF);
+    mbTcpTxArray[MB_TCP_REGS + 18]  = (char)((Vval[2] & 0xFF00)>>8);
+    mbTcpTxArray[MB_TCP_REGS + 19]  = (char)(Vval[2] & 0x00FF);
+    mbTcpTxArray[MB_TCP_REGS + 20]  = (char)((Vval[3] & 0xFF00)>>8);
+    mbTcpTxArray[MB_TCP_REGS + 21]  = (char)(Vval[3] & 0x00FF);
+    mbTcpTxArray[MB_TCP_REGS + 22]  = (char)((Vval[4] & 0xFF00)>>8);
+    mbTcpTxArray[MB_TCP_REGS + 23]  = (char)(Vval[4] & 0x00FF);
+    mbTcpTxArray[MB_TCP_REGS + 24]  = (char)((Vval[5] & 0xFF00)>>8);
+    mbTcpTxArray[MB_TCP_REGS + 25]  = (char)(Vval[5] & 0x00FF);
 
-    mbTcpTxArray[MB_TCP_REGS + 22] = 0x00;
-    mbTcpTxArray[MB_TCP_REGS + 23] = InDig[0];
-    mbTcpTxArray[MB_TCP_REGS + 24] = 0x00;
-    mbTcpTxArray[MB_TCP_REGS + 25] = InDig[1];
     mbTcpTxArray[MB_TCP_REGS + 26] = 0x00;
-    mbTcpTxArray[MB_TCP_REGS + 27] = OutDig[0];
+    mbTcpTxArray[MB_TCP_REGS + 27] = InDig[0];
     mbTcpTxArray[MB_TCP_REGS + 28] = 0x00;
-    mbTcpTxArray[MB_TCP_REGS + 29] = OutDig[1];
+    mbTcpTxArray[MB_TCP_REGS + 29] = InDig[1];
     mbTcpTxArray[MB_TCP_REGS + 30] = 0x00;
-    mbTcpTxArray[MB_TCP_REGS + 31] = OutDig[2];
+    mbTcpTxArray[MB_TCP_REGS + 31] = OutDig[0];
     mbTcpTxArray[MB_TCP_REGS + 32] = 0x00;
-    mbTcpTxArray[MB_TCP_REGS + 33] = OutDig[3];
+    mbTcpTxArray[MB_TCP_REGS + 33] = OutDig[1];
     mbTcpTxArray[MB_TCP_REGS + 34] = 0x00;
-    mbTcpTxArray[MB_TCP_REGS + 35] = OutDig[4];
+    mbTcpTxArray[MB_TCP_REGS + 35] = OutDig[2];
     mbTcpTxArray[MB_TCP_REGS + 36] = 0x00;
-    mbTcpTxArray[MB_TCP_REGS + 37] = OutDig[5];
-
+    mbTcpTxArray[MB_TCP_REGS + 37] = OutDig[3];
     mbTcpTxArray[MB_TCP_REGS + 38] = 0x00;
-    mbTcpTxArray[MB_TCP_REGS + 39] = ctrMode;
+    mbTcpTxArray[MB_TCP_REGS + 39] = OutDig[4];
+    mbTcpTxArray[MB_TCP_REGS + 40] = 0x00;
+    mbTcpTxArray[MB_TCP_REGS + 41] = OutDig[5];
 
-    mbTcpTxArray[MB_TCP_REGS + 40]  = 0x00;
-    mbTcpTxArray[MB_TCP_REGS + 41]  = (char)(mbTcpClientConnected);
-    mbTcpTxArray[MB_TCP_REGS + 42]  = (char)((mbTcpRxError & 0xFF00)>>8);
-    mbTcpTxArray[MB_TCP_REGS + 43]  = (char)(mbTcpRxError & 0x00FF);
+    mbTcpTxArray[MB_TCP_REGS + 42] = 0x00;
+    mbTcpTxArray[MB_TCP_REGS + 43] = ctrMode;
+
+    mbTcpTxArray[MB_TCP_REGS + 44]  = 0x00;
+    mbTcpTxArray[MB_TCP_REGS + 45]  = (char)(mbTcpClientConnected);
+    mbTcpTxArray[MB_TCP_REGS + 46]  = (char)((mbTcpRxError & 0xFF00)>>8);
+    mbTcpTxArray[MB_TCP_REGS + 47]  = (char)(mbTcpRxError & 0x00FF);
   }
   else if ((addr == MB_IR_ADD_INS) && (nregs == MB_IR_NREG_INS))
   {

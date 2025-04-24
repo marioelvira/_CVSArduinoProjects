@@ -109,11 +109,11 @@ int    ctrInState;
 int    ctrInState_ant;
 int    ctrOutState;
 
-unsigned long ctrOutTick = 0;
+unsigned long ctrOutSecTick = 0;
 
-int   crtCIrmsState;
-unsigned long ctrCIrmsTick = 0;
-unsigned long ctrCIrmsSec = 0;
+int   crtCIrmsState[I_NUMBER];
+unsigned long ctrCIrmsUpSecTick[I_NUMBER];
+unsigned long ctrCIrmsDownSecTick[I_NUMBER];
 
 ////////////
 // Config //

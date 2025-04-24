@@ -91,6 +91,19 @@ void _TimeLoop(void)
     Serial.print(timeDay); Serial.print("d "); Serial.print(timeOnString);
     Serial.println(" ");
 
+    Serial.print("ctrInState: ");
+    Serial.print(ctrInState);
+    Serial.println(" ");
+
+    Serial.print("ctrOutState: ");
+    Serial.print(ctrOutState);
+    Serial.println(" ");
+
+    Serial.print("crtCIrmsState: ");
+    Serial.print(crtCIrmsState);
+    Serial.println(" ");
+
+    /*
     // ADC
     for (i = 0; i< ADC_NUMBER; i++)
     {
@@ -135,7 +148,7 @@ void _TimeLoop(void)
       Serial.print(": ");
       Serial.println(Vval[i]);
     }
-
+    */
     Serial.println("<><><><><><><>");
     Serial.println(" ");
 

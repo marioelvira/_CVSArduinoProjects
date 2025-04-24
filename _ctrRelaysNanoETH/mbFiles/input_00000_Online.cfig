@@ -1,22 +1,24 @@
 C16#0000 Control Estado#
 C16#0001 Salida Estado#
-U16#0002 Contador#
-I16#0003 In RMS0 Consumos Luz#mA
-I16#0004 In RMS1 Consumos Enchufes#mA
-I16#0005 In DC2 #*
-I16#0006 In DC3 #*
-I16#0007 In DC4 Reserva#Vx10
-I16#0008 In DC5 Bateria 24Vdc#Vx10
-I16#0009 In DC6 Bateria Generador#Vx10
-I16#0010 In DC7 Alimentacion#Vx10
-U16#0011 In 0 - Gen Diesel#
-U16#0012 In 1 - Grupo Gasolina#
-U16#0013 Out 0 - Inv Baterias: Enchufes#
-U16#0014 Out 1 - Inv Baterias: Luces#
-U16#0015 Out 2 - Gen Diesel: Enchufes#
-U16#0016 Out 3 - Gen Diesel: Luces#
-U16#0017 Out 4 - Grupo Gasolina: Enchufes#
-U16#0018 Out 5 - Grupo Gasolina: Luces#
-U16#0019 Modo#0->Auto; 1->Test
-U16#0020 Modbus Client#
-U16#0021 Modbus Errors#
+U16#0002 Contador#segundos
+U16#0003 In RMS0 Estado#
+I16#0004 In RMS0 Consumos Enchufes#mA
+U16#0005 In RMS1 Estado#
+I16#0006 In RMS1 Consumos Luz#mA
+I16#0007 In DC2 #*
+I16#0008 In DC3 #*
+I16#0009 In DC4 Reserva#Vx10
+I16#0010 In DC5 Bateria 24Vdc#Vx10
+I16#0011 In DC6 Bateria Generador#Vx10
+I16#0012 In DC7 Alimentacion#Vx10
+U16#0013 In 0 - Gen Diesel#
+U16#0014 In 1 - Grupo Gasolina#
+U16#0015 Out 0 B - Inv1 Baterias: Enchufes#
+U16#0016 Out 1 C - Inv1 Baterias: Luces#
+U16#0018 Out 2 D - Gen Diesel: Enchufes#
+U16#0019 Out 3 E - Gen Diesel: Luces#
+U16#0020 Out 4 F - Grupo Gasolina: Enchufes y Luces#
+U16#0021 Out 5 A - No usada#
+U16#0022 Modo#0->Auto; 1->Test
+U16#0023 Modbus Client#
+U16#0024 Modbus Errors#

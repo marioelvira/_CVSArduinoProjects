@@ -1,6 +1,6 @@
-U16#0110 Out: A 1#
-U16#0111 Out: B 2#
-U16#0112 Out: C 3#
-U16#0113 Out: D 4#
-U16#0114 Out: E 5#
-U16#0115 Out: AUX#
+U16#0110 Out0: 1 B#
+U16#0111 Out1: 2 C#
+U16#0112 Out2: 3 D#
+U16#0113 Out3: 4 E#
+U16#0114 Out4: 5 F#
+U16#0115 Out5: 6 A No usada#

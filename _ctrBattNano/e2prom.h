@@ -63,7 +63,7 @@ extern "C" {
 #define EEPROM_VAL_ADC_VDC_B          0
 #define EEPROM_VAL_ADC_VDC_L1         123   // 12,3V
 #define EEPROM_VAL_ADC_VDC_L2         140   // 14V
-#define EEPROM_VAL_ADC_VDC_SEC        10     // 10 sec
+#define EEPROM_VAL_ADC_VDC_SEC        10    // 10 sec
 
 #endif // _E2PROM_H_
 

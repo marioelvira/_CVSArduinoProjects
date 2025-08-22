@@ -1082,6 +1082,7 @@ void _setSETTINGS()
 void _readCTR()
 {
   String html = "";
+  int aux;
 
   html = "<table style=\"width:100%\">";
 
@@ -1200,12 +1201,24 @@ void _readCTR()
   html = html + "</tr>";
 
   html = html + "<tr>";
-  html = html + "<td>Consumos Luz</td>";
+  html = html + "<td>Enchufes Estado</td>";
+  aux = mbRMState[0];
+  html = html + "<td>" + String(aux) + "</td>";
+  html = html + "</tr>";
+
+  html = html + "<tr>";
+  html = html + "<td>Enchufes Consumos</td>";
   html = html + "<td>" + String(mbRMSval[0]) + "</td>";
   html = html + "</tr>";
 
   html = html + "<tr>";
-  html = html + "<td>Consumos Enchufes</td>";
+  html = html + "<td>Luminaria Estado</td>";
+  aux = mbRMState[1];
+  html = html + "<td>" + String(aux) + "</td>";
+  html = html + "</tr>";
+
+  html = html + "<tr>";
+  html = html + "<td>Luminiaria Consumos</td>";
   html = html + "<td>" + String(mbRMSval[1]) + "</td>";
   html = html + "</tr>";
 

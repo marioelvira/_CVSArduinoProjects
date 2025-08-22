@@ -86,6 +86,11 @@ unsigned long   crtVdctick;
 
 int             crtDisplayState;
 
+int ctrIn2;
+int ctrOut2;
+int             crtOut2State;
+unsigned long   crtOut2tick;
+
 ////////////
 // Config //
 ////////////

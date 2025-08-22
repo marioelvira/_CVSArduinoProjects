@@ -7,7 +7,7 @@ extern "C" {
 
 #define MBTCP_ARRAY_SIZE        100
 
-#define MBTCP_CONNECT_MS          10000
+#define MBTCP_CONNECT_MS          60000 //10000
 #define MBTCP_ROUND_CONNETED_MS   4000
 #define MBTCP_RESPONSE_MS         500
 

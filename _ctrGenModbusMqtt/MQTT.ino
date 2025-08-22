@@ -379,7 +379,7 @@ void _MQTTSend(int itopic)
   ///////////////////
   // Control Reles //
   ///////////////////
-  else if (itopic == 4)
+  else if (itopic == 3)
   {
     /////////////
     // Control //
@@ -392,52 +392,52 @@ void _MQTTSend(int itopic)
     str = str + mbctrOutState[0] + mbctrOutState[1];
     str = str + "\",\n";
 
-    str = str + "\"mbotc\":\"";
+    str = str + "\"mbotc\":";
     str = str + String(mbctrOutTick);
-    str = str + "\",\n";
-
+    str = str + ",\n";
+    
     //////////
     // ADCs //
     //////////
-    str = str + "\"i0st\":\"";
-    str = str + mbRMState[0];
-    str = str + "\",\n";
+    str = str + "\"i0st\":";
+    str = str + String(mbRMState[0]);
+    str = str + ",\n";
 
-    str = str + "\"i0\":\"";
-    str = str + mbRMSval[0];
-    str = str + "\",\n";
+    str = str + "\"i0\":";
+    str = str + String(mbRMSval[0]);
+    str = str + ",\n";
     
-    str = str + "\"i1st\":\"";
-    str = str + mbRMState[1];
-    str = str + "\",\n";
+    str = str + "\"i1st\":";
+    str = str + String(mbRMState[1]);
+    str = str + ",\n";
 
-    str = str + "\"i1\":\"";
-    str = str + mbRMSval[1];
-    str = str + "\",\n";
+    str = str + "\"i1\":";
+    str = str + String(mbRMSval[1]);
+    str = str + ",\n";
 
-    str = str + "\"v0\":\"";
-    str = str + mbDCval[0];
-    str = str + "\",\n";
+    str = str + "\"v0\":";
+    str = str + String(mbDCval[0]);
+    str = str + ",\n";
     
-    str = str + "\"v1\":\"";
-    str = str + mbDCval[1];
-    str = str + "\",\n";
+    str = str + "\"v1\":";
+    str = str + String(mbDCval[1]);
+    str = str + ",\n";
 
-    str = str + "\"v2\":\"";
-    str = str + mbDCval[2];
-    str = str + "\",\n";
+    str = str + "\"v2\":";
+    str = str + String(mbDCval[2]);
+    str = str + ",\n";
     
-    str = str + "\"v3\":\"";
-    str = str + mbDCval[3];
-    str = str + "\",\n";
+    str = str + "\"v3\":";
+    str = str + String(mbDCval[3]);
+    str = str + ",\n";
 
-    str = str + "\"v4\":\"";
-    str = str + mbDCval[4];
-    str = str + "\",\n";
+    str = str + "\"v4\":";
+    str = str + String(mbDCval[4]);
+    str = str + ",\n";
 
-    str = str + "\"v5\":\"";
-    str = str + mbDCval[5];
-    str = str + "\",\n";
+    str = str + "\"v5\":";
+    str = str + String(mbDCval[5]);
+    str = str + ",\n";
   }
   ///////////
   // Alarm //
@@ -604,6 +604,7 @@ void _MQTTSend(int itopic)
   if(mqttPublish((char*)stopic, (char*)spayload))
   {
     #if (_MQTT_SERIAL_DEBUG_ == 1)
+    Serial.println(" ");
     Serial.println("TOPIC_STATE publish was succeeded");
     Serial.println("$$$$$$$$$$$$$$$$ RX $$$$$$$$$$$$$$$$$$$$$");
     Serial.println(stopic);

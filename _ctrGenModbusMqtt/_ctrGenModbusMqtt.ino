@@ -315,7 +315,7 @@ int  mbTCPFunction;
 char mbctrInState[2];
 char mbctrOutState[2];
 int  mbctrOutTick;
-char mbRMState[2];
+int  mbRMState[2];
 int  mbRMSval[MB_RMS_NUMBER];
 int  mbDCval[MB_DC_NUMBER];
 
@@ -415,14 +415,17 @@ void _PINSetup(void)
 void setup(void)
 {  
   #if (_SERIAL_DEBUG_ == 1)
-  delay(100);  // 100ms
+  delay(2000);
   Serial.begin(9600);
+  Serial.println("*******");
   Serial.print("Project: ");
   Serial.println(PROJECT);
   Serial.print("Version: ");
   Serial.println(compdate);
   Serial.print("Time: ");
   Serial.println(comptime);
+  Serial.println("*******");
+  delay(2000);
   #endif
   
   // Config setup

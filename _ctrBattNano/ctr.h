@@ -51,6 +51,9 @@ extern "C" {
 #define OUT_RELE_INVERTER_OFF   0
 #define OUT_RELE_INVERTER_ON    1
 
+#define CTR_TICK_OUT2_ON        2000  // 2s
+#define CTR_TICK_OUT2_OFF       1000  // 1s
+
 //#define X_3600    3600
 
 #endif // _CTR_H_

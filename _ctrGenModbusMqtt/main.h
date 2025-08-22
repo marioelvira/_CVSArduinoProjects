@@ -19,13 +19,14 @@ extern "C" {
 #define _SERIAL_DEBUG_             1
 #define _USE_RS485_                0//1
 #define _USE_MB_                   0//1
-#define _USE_MBTCP_                1//1
-#define _USE_MQTT_                 0//1
+#define _USE_MBTCP_                1
+#define _USE_MQTT_                 1
 #define _USE_NTP_                  1
 #define _USE_SOLAR_                1
 
 #define _USE_LED_INDICATOR_        1
 #define _USE_WDE_                  1
+#define _USE_MQTT_TEST_            1
 
 #if (_USE_RS485_ == 1)
 #define _SERIAL_DEBUG_             0
@@ -34,14 +35,14 @@ extern "C" {
 #endif
 
 #if (_SERIAL_DEBUG_ == 1)
-#define _TICK_SERIAL_DEBUG_        1
+#define _TICK_SERIAL_DEBUG_        0//1
 #define _ALARM_SERIAL_DEBUG_       0//1
 #define _PULS_SERIAL_DEBUG_        0//1
 #define _EEPROM_SERIAL_DEBUG_      1
 #define _HTTP_SERIAL_DEBUG_        0//1
 #define _WIFI_SERIAL_DEBUG_        1
 #define _CTR_SERIAL_DEBUG_         0
-#define _MQTT_SERIAL_DEBUG_        0//1
+#define _MQTT_SERIAL_DEBUG_        1
 #define _MBTCP_SERIAL_DEBUG_       1
 #define _NTP_SERIAL_DEBUG_         1
 #define _FREERAM_SERIAL_DEBUG_     0//1

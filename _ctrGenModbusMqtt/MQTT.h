@@ -17,13 +17,40 @@ extern "C" {
 #define MQTT_PUBLISH_TIMEOUT      500   // 500 ms
 
 // MQTT broker credentials
+//#define MQTT_BROKER       "192.168.0.200"
 #define MQTT_BROKER         "sdpelicanos.webhop.me"
-#define MQTT_BROKER_PORT    1883 // 7000
+#define MQTT_BROKER_PORT    1883
 #define MQTT_USERNAME       "sdpelicanos@gmail.com"
 #define MQTT_PASSWORD       "MQTTSup3rP@@sw0rd"
 
 // MQTT Topics publish
 #define MQTT_LAST_TOPIC   4
+
+#if (_USE_MQTT_TEST_ == 1)
+
+#define TOPIC_SCTR        "sdpelicanos@gmail.com/sctr_"  //0
+#define TOPIC_SINS        "sdpelicanos@gmail.com/sins_"  //1
+#define TOPIC_TEST        "sdpelicanos@gmail.com/test_"  //2
+#define TOPIC_RCTR        "sdpelicanos@gmail.com/rctr_"  //3
+
+#define TOPIC_ALARM       "sdpelicanos@gmail.com/alarm_" //4 - Siempre el último
+
+// MQTT Topics subscribe
+#define TOPIC_OON         "sdpelicanos@gmail.com/Oon_"
+#define TOPIC_OOFF        "sdpelicanos@gmail.com/Ooff_"
+
+#define TOPIC_MODE_AUTO   "sdpelicanos@gmail.com/mda_"
+#define TOPIC_MODE_TEST   "sdpelicanos@gmail.com/mdt_"
+
+#define TOPIC_WATCHDOG    "sdpelicanos@gmail.com/wd_"
+
+#define TOPIC_GENON       "sdpelicanos@gmail.com/gOn_"
+#define TOPIC_GENOFF      "sdpelicanos@gmail.com/gOff_"
+#define TOPIC_OUTON       "sdpelicanos@gmail.com/oOn_"
+#define TOPIC_OUTOFF      "sdpelicanos@gmail.com/oOff_"
+
+#else // (_USE_MQTT_TEST_ == 1)
+
 #define TOPIC_SCTR        "sdpelicanos@gmail.com/sctr"  //0
 #define TOPIC_SINS        "sdpelicanos@gmail.com/sins"  //1
 #define TOPIC_TEST        "sdpelicanos@gmail.com/test"  //2
@@ -44,6 +71,8 @@ extern "C" {
 #define TOPIC_GENOFF      "sdpelicanos@gmail.com/gOff"
 #define TOPIC_OUTON       "sdpelicanos@gmail.com/oOn"
 #define TOPIC_OUTOFF      "sdpelicanos@gmail.com/oOff"
+
+#endif // (_USE_MQTT_TEST_ == 1)
 
 #define MQTT_BLINK_CONNECTING   3000
 

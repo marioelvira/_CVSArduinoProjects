@@ -18,8 +18,8 @@ extern "C" {
  *                       -| AREF     D10 |- SPI-SS   (PWM)  -> OUTF
  *                   D14 -| A0        D9 |- PWM      (PWM)  -> OUTE
  *                   D15 -| A1        D8 |-                 -> OUTD
- *                   D16 -| A2        D7 |-                 -> OUTC
- *                   D17 -| A3        D6 |- (PWM)           -> OUTB
+ *            IN2 -> D16 -| A2        D7 |-                 -> OUTC
+ *           OUT2 <- D17 -| A3        D6 |- (PWM)           -> OUTB
  *               SDA/D18 -| A4        D5 |- (PWM)           -> OUTA
  *               SCL/D19 -| A5        D4 |-                 <- IN1 - IN CLOCK
  *                   D20 -| A6  [  ]  D3 |- INT1 (PWM)      <- IN0 - PULSADOR
@@ -47,7 +47,7 @@ extern "C" {
 //#define PIN_ADC3     A3
 
 // OUTs
-#define OUT_NUMBER      9
+#define OUT_NUMBER      10
 
 #define PIN_OUTA        5
 #define PIN_OUTB        6
@@ -58,14 +58,16 @@ extern "C" {
 #define PIN_OUTG        11
 #define PIN_OUTDP       12
 #define PIN_OUTRELE     2
+#define PIN_OUT2        16
 
 //#define PIN_RS485_RXTX  4
 
 // INs
-#define IN_NUMBER       2
+#define IN_NUMBER       3
 
 #define PIN_IN0         4
 #define PIN_IN1         3
+#define PIN_IN2         17
 
 // Status OUTs
 #define PIN_OUT_ON        1

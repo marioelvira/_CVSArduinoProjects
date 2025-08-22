@@ -16,7 +16,7 @@ void _mMBTCPStart(void)
 {
   mbTCPtick = millis();
   #if (_MBTCP_SERIAL_DEBUG_ == 1)
-  Serial.print("++++++> Modbus TCP: Start");
+  Serial.println("++++++> Modbus TCP: Start");
   #endif
   mbTCPState = MBTCP_WAIT_TO_CONNECT;
 }
@@ -193,10 +193,10 @@ void _mMBTCPloop(void)
           sprintf (hexc, "%02x", mbTCPRxBuffer[mbTCPRxIndex]);
           Serial.print(hexc);
           #endif
-        }
 
-        mbTCPRxIndex++;
-        mbTCPtick = millis();
+          mbTCPRxIndex++;
+          mbTCPtick = millis();
+        }
       }
 
       break;
@@ -239,8 +239,12 @@ void _mbReadInput()
   Serial.println(nbytes);
   #endif
 
-  if (nbytes == (MB_IR_ADD_ONLINE*2))
+  if (nbytes == (MB_IR_NREG_ONLINE*2))
   {
+    #if (_MBTCP_SERIAL_DEBUG_ == 1)
+    Serial.println("data correct ");
+    #endif
+
     mbctrInState[0]  = mbTCPRxBuffer[MB_TCP_REGS];
     mbctrInState[1]  = mbTCPRxBuffer[MB_TCP_REGS + 1];
     mbctrOutState[0] = mbTCPRxBuffer[MB_TCP_REGS + 2];

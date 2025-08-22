@@ -189,6 +189,8 @@ void _CtrLoop(void)
   // LCD control
   _ctrLcdLoop();
 
+  _ctrIO2();
+
   // Inverter disabled
   if (ctrInClock == IN_CLOCK_INVERTER_DIS)
     ctrOutRele = OUT_RELE_INVERTER_OFF;
@@ -270,4 +272,40 @@ void _ctrDisplay(void)
 
       break;
   }
+}
+
+void _ctrIO2(void)
+{
+  ctrIn2 = InPin[2];
+
+  if (ctrIn2 == IN_DOWN)
+  {
+    ctrOut2 = OUT_OFF;
+    crtOut2tick = millis();
+    crtOut2State = OUT_ON;
+  }
+  else
+  {
+    switch (crtOut2State)
+    {
+      case OUT_ON:
+        ctrOut2 = OUT_ON;
+        if (millis() - crtOut2tick < (unsigned long)CTR_TICK_OUT2_ON)
+        {
+          crtOut2tick = millis();
+          crtOut2State = OUT_OFF;
+        }
+        break;
+
+      case OUT_OFF:
+        if (millis() - crtOut2tick < (unsigned long)CTR_TICK_OUT2_OFF)
+        {
+          crtOut2tick = millis();
+          crtOut2State = OUT_ON;
+        }
+        break;
+    }
+  }
+
+  OutDig[9] = ctrOut2;
 }

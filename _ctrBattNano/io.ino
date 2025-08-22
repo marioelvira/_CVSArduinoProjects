@@ -16,9 +16,12 @@ void _IOSetup()
 
   OutPin[8] = PIN_OUTRELE;
 
+  OutPin[9] = PIN_OUT2;
+
   // No bigger than IN_NUMBER
   InPin[0] = PIN_IN0;
   InPin[1] = PIN_IN1;
+  InPin[2] = PIN_IN2;
 
   ioTick = millis();
 

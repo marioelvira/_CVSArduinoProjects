@@ -111,6 +111,9 @@ int cfgADCVdcL1;
 int cfgADCVdcL2;
 int cfgADCVdcSec;
 
+int cfgLuzOnSec;
+int cfgLuzOffSec;
+
 ///////////
 // RS485 //
 ///////////

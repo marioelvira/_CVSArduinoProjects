@@ -19,9 +19,9 @@ void _IOSetup()
   OutPin[9] = PIN_OUT2;
 
   // No bigger than IN_NUMBER
-  InPin[0] = PIN_IN0;
-  InPin[1] = PIN_IN1;
-  InPin[2] = PIN_IN2;
+  InPin[0] = PIN_IN0;   // IN_PULS_CTR
+  InPin[1] = PIN_IN1;   // IN_CLOCK
+  InPin[2] = PIN_IN2;   // IN_PULS_BLINK
 
   ioTick = millis();
 

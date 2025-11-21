@@ -8,8 +8,10 @@ U16#0006 Irms Muestras#
 I16#0007 Irms Offset#mA
 U16#0008 Irms Limite#mA
 U16#0009 Irms Hys Tiempo#sec
-U16#000A Vdc recta m#
-U16#000B Vdc recta b#
-U16#000C Vdc Limite 1#Vx10
-U16#000D Vdc Limite 2#Vx10
-U16#000E Vdc Hys Tiempo#sec
+U16#0010 Vdc recta m#
+U16#0011 Vdc recta b#
+U16#0012 Vdc Limite 1#Vx10
+U16#0013 Vdc Limite 2#Vx10
+U16#0014 Vdc Hys Tiempo#sec
+U16#0015 Luz On Tiempo#sec
+U16#0016 Luz Off Tiempo#sec

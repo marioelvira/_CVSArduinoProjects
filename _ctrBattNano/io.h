@@ -58,7 +58,7 @@ extern "C" {
 #define PIN_OUTG        11
 #define PIN_OUTDP       12
 #define PIN_OUTRELE     2
-#define PIN_OUT2        16
+#define PIN_OUT2        17
 
 //#define PIN_RS485_RXTX  4
 
@@ -67,7 +67,7 @@ extern "C" {
 
 #define PIN_IN0         4
 #define PIN_IN1         3
-#define PIN_IN2         17
+#define PIN_IN2         16
 
 // Status OUTs
 #define PIN_OUT_ON        1

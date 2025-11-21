@@ -43,10 +43,13 @@ extern "C" {
 #define EEPROM_ADD_ADC_VDC_SEC_LO    0x18
 #define EEPROM_ADD_ADC_VDC_SEC_HI    0x19
 
+#define EEPROM_ADD_LUZ_ON_SEC        0x1A
+#define EEPROM_ADD_LUZ_OFF_SEC       0x1B
+
 //#define EEPROM_ADD_MAX             0xFA // 250
 
 // Values
-#define EEPROM_VAL_OK                 0xAE
+#define EEPROM_VAL_OK                 0xA7
   
 #define EEPROM_VAL_MODBUS_ID          0x01
 #define EEPROM_VAL_LOGIC_INS          1
@@ -64,6 +67,9 @@ extern "C" {
 #define EEPROM_VAL_ADC_VDC_L1         123   // 12,3V
 #define EEPROM_VAL_ADC_VDC_L2         140   // 14V
 #define EEPROM_VAL_ADC_VDC_SEC        10    // 10 sec
+
+#define EEPROM_VAL_LUZ_ON_SEC         2
+#define EEPROM_VAL_LUZ_OFF_SEC        1
 
 #endif // _E2PROM_H_
 

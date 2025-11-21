@@ -9,3 +9,5 @@ U16#0007 Segundos#
 U16#0008 Display Status#0->Stand by; 1->Inv Off
 U16#0009 Irms Status#0->Stand by; 1->Inv Off
 U16#0010 Vdc Status#0->Stand by; 1->Inv Off
+U16#0011 Pulsador Luz Puls#
+U16#0012 Salida Luz Puls#

@@ -186,6 +186,9 @@ void _mbWriteMultipleHolding(char modbusID)
     cfgADCVdcL2   = (int)((mrs485RxBuffer[33] & 0x00FF)<<8)|(mrs485RxBuffer[34] & 0x00FF);
     cfgADCVdcSec  = (int)((mrs485RxBuffer[35] & 0x00FF)<<8)|(mrs485RxBuffer[36] & 0x00FF);
 
+    cfgLuzOnSec   = (int)((mrs485RxBuffer[37] & 0x00FF)<<8)|(mrs485RxBuffer[38] & 0x00FF);
+    cfgLuzOffSec  = (int)((mrs485RxBuffer[39] & 0x00FF)<<8)|(mrs485RxBuffer[40] & 0x00FF);
+
     _ram2eepromCONFIG();
 
   }
@@ -287,6 +290,12 @@ void _mbReadHolding(char modbusID)
 
     mrs485TxBuffer[31]  = (cfgADCVdcSec & 0xFF00)>>8;
     mrs485TxBuffer[32]  = cfgADCVdcSec & 0x00FF;
+
+    mrs485TxBuffer[33]  = 0x00;
+    mrs485TxBuffer[34]  = cfgLuzOnSec & 0x00FF;
+
+    mrs485TxBuffer[35]  = 0x00;
+    mrs485TxBuffer[36]  = cfgLuzOffSec & 0x00FF;
   }
   else if ((addr == MB_HR_ADD_OUTS) && (nregs == MB_HR_NREG_OUTS))
   {
@@ -359,6 +368,11 @@ void _mbReadInput(char modbusID)
     mrs485TxBuffer[22] = crtIrmsState;
     mrs485TxBuffer[23] = 0x00;
     mrs485TxBuffer[24] = crtVdcState;
+
+    mrs485TxBuffer[25] = 0x00;
+    mrs485TxBuffer[26] = ctrIn2;
+    mrs485TxBuffer[27] = 0x00;
+    mrs485TxBuffer[28] = ctrOut2;
   }
   else if ((addr == MB_IR_ADD_INS) && (nregs == MB_IR_NREG_INS))
   { 

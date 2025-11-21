@@ -96,6 +96,9 @@ void _readCONFIG (void)
     eeprom_value_hi = (EEPROM_VAL_ADC_VDC_SEC & 0xFF00)>>8;
     EEPROM.write(EEPROM_ADD_ADC_VDC_SEC_HI, eeprom_value_hi);
 
+    EEPROM.write(EEPROM_ADD_LUZ_ON_SEC,  EEPROM_VAL_LUZ_ON_SEC);
+    EEPROM.write(EEPROM_ADD_LUZ_OFF_SEC, EEPROM_VAL_LUZ_OFF_SEC);
+
     //EEPROM.commit();    // ESPXX Store data to EEPROM
   }
   else
@@ -167,6 +170,9 @@ void _ram2eepromCONFIG (void)
   EEPROM.write(EEPROM_ADD_ADC_VDC_SEC_LO, eeprom_value_lo);
   eeprom_value_hi = (cfgADCVdcSec & 0xFF00)>>8;
   EEPROM.write(EEPROM_ADD_ADC_VDC_SEC_HI, eeprom_value_hi);
+
+  EEPROM.write(EEPROM_ADD_LUZ_ON_SEC,  (byte)cfgLuzOnSec);
+  EEPROM.write(EEPROM_ADD_LUZ_OFF_SEC, (byte)cfgLuzOffSec);
 }
 
 
@@ -217,6 +223,9 @@ void _eeprom2ramCONFIG (void)
   eeprom_value_lo   = (int)EEPROM.read(EEPROM_ADD_ADC_VDC_SEC_LO);
   cfgADCVdcSec      = (int)((eeprom_value_hi & 0x00FF)<<8)|(eeprom_value_lo & 0x00FF);
 
+  cfgLuzOnSec       = (int)EEPROM.read(EEPROM_ADD_LUZ_ON_SEC);
+  cfgLuzOffSec      = (int)EEPROM.read(EEPROM_ADD_LUZ_OFF_SEC);
+
   #if (_EEPROM_SERIAL_DEBUG_ == 1)
   Serial.print("Modbus ID: ");  Serial.println (cfgMbId);
   Serial.print("Logic Ins: ");  Serial.println (cfgLogicIns);
@@ -227,13 +236,16 @@ void _eeprom2ramCONFIG (void)
   Serial.print("Irms Samples"); Serial.print(": "); Serial.print (cfgADCEmonS);  Serial.println(" ");
   Serial.print("Irms Samples"); Serial.print(": "); Serial.print (cfgADCEmonO);  Serial.println(" mA");
   Serial.print("Irms Limit");   Serial.print(": "); Serial.print (cfgADCEmonL);  Serial.println(" ");
-  Serial.print("Irms Hys Sec"); Serial.print(": "); Serial.print (cfgADCEmonLS); Serial.println(" sec");
+  Serial.print("Irms Hys Sec"); Serial.print(": "); Serial.print (cfgADCEmonS);  Serial.println(" sec");
 
   Serial.print("Vdc recta m");  Serial.print(": "); Serial.print (cfgADCm);  Serial.println(" ");
   Serial.print("Vdc recta b");  Serial.print(": "); Serial.print (cfgADCb);  Serial.println(" (/1000)");
   Serial.print("Vdc Limit1");   Serial.print(": "); Serial.print (cfgADCVdcL1); Serial.println(" x10");
   Serial.print("Vdc Limit2");   Serial.print(": "); Serial.print (cfgADCVdcL2);  Serial.println(" x10");
   Serial.print("Irms Hys Sec"); Serial.print(": "); Serial.print (cfgADCVdcSec); Serial.println(" sec");
+
+  Serial.print("Out Luz On Sec"); Serial.print(": "); Serial.print (cfgLuzOnSec); Serial.println(" sec");
+  Serial.print("Out Luz Off Sec"); Serial.print(": "); Serial.print (cfgLuzOffSec); Serial.println(" sec");
   #endif
 }
 

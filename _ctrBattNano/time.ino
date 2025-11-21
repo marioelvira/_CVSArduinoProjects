@@ -83,6 +83,8 @@ void _TimeLoop(void)
       Serial.println(OutDig[i]);
     }
 
+    Serial.println("--");
+    
     // INs
     for (i = 0; i< IN_NUMBER; i++)
     {

@@ -276,7 +276,7 @@ void _ctrDisplay(void)
 
 void _ctrIO2(void)
 {
-  ctrIn2 = InPin[2];
+  ctrIn2 = InDig[IND_PULS_BLINK];
 
   if (ctrIn2 == IN_DOWN)
   {
@@ -290,7 +290,7 @@ void _ctrIO2(void)
     {
       case OUT_ON:
         ctrOut2 = OUT_ON;
-        if (millis() - crtOut2tick < (unsigned long)CTR_TICK_OUT2_ON)
+        if (millis() - crtOut2tick > (((unsigned long)cfgLuzOnSec)*1000)) // CTR_TICK_OUT2_ON
         {
           crtOut2tick = millis();
           crtOut2State = OUT_OFF;
@@ -298,7 +298,8 @@ void _ctrIO2(void)
         break;
 
       case OUT_OFF:
-        if (millis() - crtOut2tick < (unsigned long)CTR_TICK_OUT2_OFF)
+        ctrOut2 = OUT_OFF;
+        if (millis() - crtOut2tick > (((unsigned long)cfgLuzOffSec)*1000)) // CTR_TICK_OUT2_OFF
         {
           crtOut2tick = millis();
           crtOut2State = OUT_ON;

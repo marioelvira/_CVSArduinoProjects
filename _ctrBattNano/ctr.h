@@ -56,6 +56,11 @@ extern "C" {
 
 //#define X_3600    3600
 
+// IN_PULS_CTR
+#define IND_PULS_CTR     0
+#define IND_CLOCK        1
+#define IND_PULS_BLINK   2
+
 #endif // _CTR_H_
 
 #ifdef __cplusplus

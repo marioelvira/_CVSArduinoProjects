@@ -33,7 +33,7 @@ extern "C" {
 #if (_SERIAL_DEBUG_ == 1)
 #define _PULS_SERIAL_DEBUG_        1
 #define _EEPROM_SERIAL_DEBUG_      1
-#define _STATUS_SERIAL_DEBUG_      0
+#define _STATUS_SERIAL_DEBUG_      1
 #else 
 #define _PULS_SERIAL_DEBUG_        0
 #define _EEPROM_SERIAL_DEBUG_      0

@@ -24,13 +24,13 @@ extern "C" {
 
 // MQTT Topics
 #define MQTT_NUM_TOPICS    2
-#define TOPIC_RCTR         "sdpelicanos@gmail.com/rel_ctr"   // 0
-#define TOPIC_RIOS         "sdpelicanos@gmail.com/rel_ios"   // 1
+#define TOPIC_RCTR         "sdpelicanos@gmail.com/cal_ctr"   // 0
+#define TOPIC_RIOS         "sdpelicanos@gmail.com/cal_ios"   // 1
 
-#define TOPIC_RON          "sdpelicanos@gmail.com/rel_ron"
-#define TOPIC_ROFF         "sdpelicanos@gmail.com/rel_roff"
+#define TOPIC_RON          "sdpelicanos@gmail.com/cal_ron"
+#define TOPIC_ROFF         "sdpelicanos@gmail.com/cal_roff"
 
-#define TOPIC_RWD          "sdpelicanos@gmail.com/rel_rwd"
+#define TOPIC_RWD          "sdpelicanos@gmail.com/rwd"
 
 #define MQTT_BLINK_CONNECTING   3000
 

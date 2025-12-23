@@ -2,6 +2,7 @@
 
 #include <EEPROM.h>
 #include <UIPEthernet.h>
+
 #if (_USE_MQTT_ == 1)
 #include <PubSubClient.h>
 #endif
@@ -14,13 +15,17 @@
 #include <avr/wdt.h>
 #endif
 
-#include "adcs.h"
 #include "ctr.h"
 #include "e2prom.h"
+#if (_USE_HTTP_ == 1)
+#include "http.h"
+#endif
 #include "io.h"
 #include "ip.h"
-#include "measures.h"
 #include "mEthernet.h"
+#if (_USE_MBRTU_ == 1)
+#include "modbusRTU.h"
+#endif
 #if (_USE_MBTCP_ == 1)
 #include "modbusTCP.h"
 #endif
@@ -29,6 +34,9 @@
 #endif
 #if (_USE_NTP_ == 1)
 #include "mNTP.h"
+#endif
+#if (_USE_RS485_ == 1)
+#include "mRS485.h"
 #endif
 #if (_USE_WDE_ == 1)
 #include "wde.h"
@@ -40,35 +48,6 @@
 // Get from compile time
 const char* compdate = __DATE__;
 const char* comptime = __TIME__;
-
-//////////
-// ADCs //
-//////////
-int   AdcDig[ADC_NUMBER];
-int   AdcPin[ADC_NUMBER];
-
-//////////
-// Irms //
-//////////
-const double  nCyclesToMeasure = 5;   // 1
-const int     nSamplesPerCycle = 25; // 300
-const int     numSamples = nSamplesPerCycle * nCyclesToMeasure;
-const int     samplePeriod = ((1 / IRMS_FREQ_HZ) * nCyclesToMeasure * 1000000) / numSamples;
-double        Isamples[numSamples][I_NUMBER];
-int           nSamples[I_NUMBER];
-double        Ioffset;
-double        Iratio[I_NUMBER];
-
-unsigned long IuTick[I_NUMBER];
-int           IrmsCont[I_NUMBER];
-
-int           Ival[I_NUMBER];
-
-/////////
-// Vdc //
-/////////
-unsigned long VuTick[V_NUMBER];
-int           Vval[V_NUMBER];
 
 ///////////////
 // Board Led //
@@ -109,36 +88,37 @@ int timeDay = 0;
 // Control //
 /////////////
 String ctrStateString;
-int    ctrMode;
-int    ctrInState;
-int    ctrInState_ant;
-int    ctrOutState;
+int ctrMode;
+int ctrInState;
+int ctrOutState;
 
-unsigned long ctrOutSecTick = 0;
-
-int   crtCIrmsState[I_NUMBER];
-unsigned long ctrCIrmsUpSecTick[I_NUMBER];
-unsigned long ctrCIrmsDownSecTick[I_NUMBER];
+int ctrTempPrin = 0;
+int ctrTemp = 0;
 
 ////////////
 // Config //
 ////////////
-bool cfgLogicIns;
-bool cfgLogicOuts;
-
-int cfgIType[I_NUMBER];
-int cfgIACr[I_NUMBER];
-int cfgIlim[I_NUMBER];
-int cfgIsec[I_NUMBER];
-
-int cfgVDCm[V_NUMBER];
-int cfgVDCb[V_NUMBER];
-
-int cfgCtrSecs[7];
-
 #if (_USE_ETHERNET_ == 1)
 int cfgModbusPORT = 502;
 #endif
+
+bool cfgLogicIns;
+bool cfgLogicOuts;
+
+int cfgResPrim1Vout;
+int cfgResPrim2Vout;
+int cfgResInyeVout;
+int cfgResPrimInyeTemp;
+int cfgResPrimConsTemp;
+int cfgResPrimHystTemp;
+int cfgResInyeConsTemp;
+int cfgResInyeHystTemp;
+int cfgAguaConsTemp;
+int cfgAguaHystTemp;
+
+int cfgResPrimAlarMin;
+int cfgResInyeAlarMin;
+int cfgAguaAlarMin;
 
 ////////////////
 // Modbus TCP //
@@ -170,10 +150,10 @@ int   mbTcpTxLength;
 int       ipMode;
 
 uint8_t macAddress[6] = {0xF8, 0xDC, 0x7A, 0x00, 0x02, 0x04};
-uint8_t ipAddress[4]  = {192,168,100,200};
-uint8_t gateWay[4]    = {192,168,100,1};
+uint8_t ipAddress[4]  = {192,168,1,50};
+uint8_t gateWay[4]    = {192,168,1,1};
 uint8_t netMask[4]    = {255,255,255,0};
-uint8_t dnsAddress[4];  // Not init
+uint8_t dnsAddress[4]; // No incializar
 
 int ethStatus;
 #endif
@@ -200,12 +180,78 @@ NTPClient mNtpClient(mNtpUDP, "pool.ntp.org", 3600);
 EthernetClient ethClient;
 PubSubClient mqttClient(ethClient);
 
-String mqttClientId = "relesMQTT-INIT";
+String mqttClientId = "caleMQTT-INIT";
 
 int mqttStatus;
 unsigned long mqttTick = 0;
 
 int mqttTopic;
+#endif
+
+//////////
+// HTTP //
+//////////
+#if (_USE_HTTP_ == 1)
+EthernetServer httpServer(HTTP_PORT);
+int httpServerStatus;
+
+EthernetClient httpClient;
+int httpClientStatus;
+bool httpClientConnected;
+
+byte  http1stline;
+byte  httpRxArray[HTTP_RX_MAX_BTYE];
+int   httpRxIndex;
+unsigned long   httpRxTick;
+
+int   httpTxPage;
+//byte  httpTxArray[MB_TX_MAX_BTYE];
+//int   httpTxLength;
+
+#endif
+
+///////////
+// RS485 //
+///////////
+#if (_USE_RS485_ == 1)
+// RS485
+int             mrs485State;
+String          mrs485RxBuffer = "";
+unsigned long   mrs485tick;
+char            mrs485TxBuffer[MRS485_ARRAY_SIZE];
+int             mrs485TxNumBytes;
+
+int             OutRS485rxtx;
+
+////////////////
+// Modbus RTU //
+////////////////
+#if (_USE_MB_ == 1)
+int mbState;
+int mbSWake;
+unsigned long mbTick;
+byte mbCRC[2];
+
+// Modbus DIOs
+int mbInNBoard = 0;
+int mbIns[MB_NUM_IOS][MB_NUM_BRS];
+int mbOutNBoard = 0;
+int mbOuts[MB_NUM_IOS][MB_NUM_BRS];
+int mbROuts[MB_NUM_IOS][MB_NUM_BRS];
+
+int mbOutBoard = 0;
+int mbOutNum = 0;
+int mbOutVal = 0x00;
+
+int mbNError = 0;
+int mbNReply = 0;
+int mbNRetry = 0;
+int mbRetry = 0;
+
+int mbWhat2read = 0;
+
+int mbInsAlarm[MB_NUM_IOS][MB_NUM_BRS];
+#endif
 #endif
 
 ////////
@@ -277,7 +323,6 @@ void setup(void)
   // PIN & IO Setup
   _IOSetup();
   _PINSetup();
-  _ADCsSetup();
 
   // Time Setup
   _TimeSetup();
@@ -352,9 +397,8 @@ void loop()
     _CtrLoop();
 
   _TimeLoop();
-  _ADCsLoop();
-  
+
   #if (_USE_ETHERNET_ == 1)
   _ETHLoop();
-  #endif  
+  #endif
 }

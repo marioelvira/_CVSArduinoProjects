@@ -1,0 +1,14 @@
+U16#0050 IP Modo#0->DHCP 1->FIX
+U16#0051 IP Address 0#
+U16#0052 IP Address 1#
+U16#0053 IP Address 2#
+U16#0054 IP Address 3#
+U16#0055 IP Mask 0#
+U16#0056 IP Mask 1#
+U16#0057 IP Mask 2#
+U16#0058 IP Mask 3#
+U16#0059 IP Gateway 0#
+U16#0060 IP Gateway 1#
+U16#0061 IP Gateway 2#
+U16#0062 IP Gateway 3#
+U16#0063 Modbus Port#

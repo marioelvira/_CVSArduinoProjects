@@ -1185,6 +1185,7 @@ void _readCTR()
    html = html + "<td><font style=\"color:grey\">Desactivado</font></td>";
   html = html + "</tr>";
   
+  #if (_USE_MBTCP_ == 1)
   html = html + "<tr>";
   html = html + "<td>RELE: Control Estado</td>";
   html = html + "<td>" + mbctrInState[1] + mbctrInState[0] + "</td>";
@@ -1251,6 +1252,8 @@ void _readCTR()
   html = html + "<td>In DC7 Alimentacion</td>";
   html = html + "<td>" + String(mbDCval[5]) + "</td>";
   html = html + "</tr>";
+
+  #endif // (_USE_MBTCP_ == 1)
 
   html = html + "</table>";
   

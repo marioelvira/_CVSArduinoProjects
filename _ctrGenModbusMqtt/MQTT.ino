@@ -376,6 +376,8 @@ void _MQTTSend(int itopic)
     str = str + String(AdcIn);
     str = str + ",\n";
   }
+
+  #if (_USE_MBTCP_ == 1)
   ///////////////////
   // Control Reles //
   ///////////////////
@@ -439,10 +441,16 @@ void _MQTTSend(int itopic)
     str = str + String(mbDCval[5]);
     str = str + ",\n";
   }
+  #endif // (_USE_MBTCP_ == 1)
+  
   ///////////
   // Alarm //
   ///////////
+  #if (_USE_MBTCP_ == 1)
   else if (itopic == 4)
+  #else
+  else if (itopic == 3)
+  #endif
   {
     int balarm = 0;
 

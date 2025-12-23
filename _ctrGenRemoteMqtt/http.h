@@ -2,8 +2,8 @@
 extern "C" {
 #endif
 
-#ifndef _WIFI_H_
-#define _WIFI_H_
+#ifndef _HTTP_H_
+#define _HTTP_H_
 
 #include "main.h"
 
@@ -32,7 +32,7 @@ const char cssSTYLE[] =
   ".myform .privacy-policy{float: right;width: 250px;font: 12px Arial, Helvetica, sans-serif;color: #4D4D4D;margin-top: 10px;text-align: right;}"
   ".sansserif {font-family: Arial, Helvetica, sans-serif;}";
 
-#endif // _WIFI_H_
+#endif // _HTTP_H_
 
 #ifdef __cplusplus
 } // extern "C"

@@ -24,7 +24,11 @@ extern "C" {
 #define MQTT_PASSWORD       "MQTTSup3rP@@sw0rd"
 
 // MQTT Topics publish
+#if (_USE_MBTCP_ == 1)
 #define MQTT_LAST_TOPIC   4
+#else
+#define MQTT_LAST_TOPIC   3
+#endif
 
 #if (_USE_MQTT_TEST_ == 1)
 

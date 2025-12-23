@@ -2,8 +2,8 @@
 extern "C" {
 #endif
 
-#ifndef _mWIFI_H_
-#define _mWIFI_H_
+#ifndef _WIFI_H_
+#define _WIFI_H_
 
 ///////////
 // Wi-Fi //

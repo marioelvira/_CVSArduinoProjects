@@ -2,8 +2,8 @@
 extern "C" {
 #endif
 
-#ifndef _HTTP_H_
-#define _HTTP_H_
+#ifndef _WIFI_H_
+#define _WIFI_H_
 
 #include "main.h"
 
@@ -33,7 +33,7 @@ extern "C" {
 #define WIFI_STATION_CONNECTING    4
 #define WIFI_STATION_CONNECTED     5
 
-#endif // _HTTP_H_
+#endif // _WIFI_H_
 
 #ifdef __cplusplus
 } // extern "C"

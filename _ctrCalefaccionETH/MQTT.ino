@@ -88,36 +88,22 @@ void _MQTTSend(int itopic)
   ////////////////
   if (itopic == 0)
   {
+    str = str + "\"ctr\":\"";
+    str = str + "Calef";
+    str = str + "\",\n";
+
     #if (_USE_NTP_ == 1)
     str = str + "\"time\":\"";
     str = str + mntpTimeString;
     str = str + "\",\n";
     #endif
 
-    str = str + "\"tOn\":\"";
+    str = str + "\"t\":\"";
     str = str + String(timeDay) + "d " + timeOnString;
-    str = str + "\",\n";
+    str = str + "\",\n";  
 
     str = str + "\"ctr\":\"";
     str = str + ctrStateString;
-    str = str + "\",\n";
-
-    str = str + "\"ist\":\"";
-    if (ctrInState == IN_STATE0)
-    str = str + "E0";
-    else if (ctrInState == IN_STATE1)
-    str = str + "E1";
-    else /* ctrInState == IN_STATE2 */
-    str = str + "E2";
-    str = str + "\",\n";
-
-    str = str + "\"ost\":\"";
-    if (ctrOutState == OUT_STATE0)
-    str = str + "O0";
-    else if (ctrOutState == OUT_STATE1)
-    str = str + "O1";
-    else /* ctrOutState == OUT_STATE2 */
-    str = str + "O2";  
     str = str + "\",\n";
 
     str = str + "\"ip\":\"";
@@ -132,6 +118,7 @@ void _MQTTSend(int itopic)
   ////////////////
   else if (itopic == 1)
   {
+    /*
     /////////
     // ADC //
     /////////
@@ -166,7 +153,7 @@ void _MQTTSend(int itopic)
     str = str + "\"v5\":\"";
     str = str + Vval[5];
     str = str + "\",\n";
-
+    */
     /////////
     // IOs //
     /////////
@@ -217,15 +204,16 @@ void _MQTTSend(int itopic)
 void _MQTTSetup(void)
 { 
   String rIdStr((char*)compdate);
-  
+
   mqttClient.setServer(MQTT_BROKER, MQTT_BROKER_PORT);
   
   mqttClient.setCallback(mqttDataCallback);
 
-  mqttClientId = "calefactMQTT-" + rIdStr;
+  mqttClientId = "caleMQTT-";// + rIdStr;
   #if (_MQTT_SERIAL_DEBUG_ == 1)
   Serial.print("MQTT Client ID: "); Serial.println(mqttClientId);
   #endif
+
   mqttStatus = MQTT_NOT_CONNECTED;
   mqttTopic = 0;
 }

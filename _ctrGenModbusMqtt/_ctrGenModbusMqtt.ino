@@ -131,7 +131,7 @@ IPAddress ipAddress (192, 168, 43, 200);
 IPAddress gateWay   (192, 168, 43, 1);
 IPAddress netMask   (255, 255, 255, 0);
 
-byte mac[6];
+byte macAddress[6] = {0xF8, 0xDC, 0x7A, 0x10, 0x12, 0x14};
 
 /////////////////
 // Device Name //

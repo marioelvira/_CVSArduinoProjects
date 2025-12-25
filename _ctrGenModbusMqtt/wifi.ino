@@ -63,7 +63,7 @@ void _WifiLoop()
     case WIFI_START_STATION:
     
       WiFi.begin(ssid, password);
-      WiFi.macAddress(mac);
+      WiFi.macAddress(macAddress);
      
       WiFi.disconnect();          // Prevent connecting to wifi based on previous configuration
       WiFi.hostname(deviceName);  // DHCP Hostname (useful for finding device for static lease)
@@ -120,17 +120,17 @@ void _WifiLoop()
         Serial.print("Gateway: ");
         Serial.println(gateWay);
         Serial.print("MAC: ");
-        Serial.print(mac[5],HEX);
+        Serial.print(macAddress[5],HEX);
         Serial.print(":");
-        Serial.print(mac[4],HEX);
+        Serial.print(macAddress[4],HEX);
         Serial.print(":");
-        Serial.print(mac[3],HEX);
+        Serial.print(macAddress[3],HEX);
         Serial.print(":");
-        Serial.print(mac[2],HEX);
+        Serial.print(macAddress[2],HEX);
         Serial.print(":");
-        Serial.print(mac[1],HEX);
+        Serial.print(macAddress[1],HEX);
         Serial.print(":");
-        Serial.println(mac[0],HEX);
+        Serial.println(macAddress[0],HEX);
         #endif
 
         _HTTPStart();

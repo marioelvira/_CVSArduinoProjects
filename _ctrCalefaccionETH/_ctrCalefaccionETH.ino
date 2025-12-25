@@ -154,7 +154,12 @@ uint8_t ipAddress[4]  = {192,168,1,50};
 uint8_t gateWay[4]    = {192,168,1,1};
 uint8_t netMask[4]    = {255,255,255,0};
 uint8_t dnsAddress[4]; // No incializar
-
+/*
+IPAddress ipAddress (192, 168, 1, 50);
+IPAddress gateWay (192, 168, 1, 1);
+IPAddress netMask (255, 255, 255, 1);
+IPAddress dnsAddress;
+*/
 int ethStatus;
 #endif
 

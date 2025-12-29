@@ -13,6 +13,8 @@ extern "C" {
 #define HTTP_PORT               80
 #define HTTP_RX_MAX_CONF        15
 
+#define HTTP_NUM_NETWORK_PARAMS 4
+
 #define HTTP_CONNECTION_TIMEOUT   3000
 #define HTTP_RX_TIMEOUT           50
 

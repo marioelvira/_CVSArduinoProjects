@@ -142,7 +142,7 @@ void _setTimeSETTINGS()
   html = html + "<body>";
 
   html = html + "<div class=\"myform\">";
-  html = html + "<h1>INV MQTT+ #Configuraci&oacuten<span>Nano Every tech</span><span align=\"right\"> Compilation: " + FW_Version + "</span></h1>";
+  html = html + "<h1>INV MQTT+ #Configuraci&oacuten<span>Nano Every tech</span><span align=\"right\"> " + FW_Version + "</span></h1>";
   
   if (error == 0)
     html += "<p class=\"sansserif\">Configuraci&oacuten guardada correctamente.</p>";
@@ -160,322 +160,12 @@ void _setTimeSETTINGS()
 
   httpServer.send (200, "text/html", html);
 }
-
-void _setSETTINGS()
-{
-  String ripmode = httpServer.arg("ipmode");
-  String ripaddress = httpServer.arg("ipaddress");
-  String rmask = httpServer.arg("mask");
-  String rgate = httpServer.arg("gateway");
-  
-  String rbrokerurl = httpServer.arg("brokerurl");
-  String rbrokerport = httpServer.arg("brokerport");
-    
-  String html = "";
-  int i, j, k, m;
-  int error = 0;
-  char schar;
-  char sbuf[4];
-  byte val[4];
-
-  int eeprom_value_hi, eeprom_value_lo;
-
-  IPAddress localip;
-  IPAddress localmask;
-  IPAddress localgate;
-
-  // Wi-Fi and IP configuration
-  if (rwmode.length() > 0)
-  {
-    // Wi-Fi on Station mode
-    if (rwmode == "st")
-    {
-      // must have a value
-      if (rssid.length() == 0)
-        error = 1;
-
-      if (ripmode.length() == 0)
-        error = 1;
-
-      // must have a value
-      if (ripmode == "ipfx")
-      {
-        // Must be 
-        if ((ripaddress.length() == 0) ||
-            (rmask.length() == 0)      ||
-            (rgate.length() == 0))
-          error = 1;
-      }
-      // DHCP mode
-      //else {}
-      
-    }
-    // Wi-Fi Access Point mode
-    //else {}
-    
-  }
-  else
-    error = 1;
-
-  // Check broker error
-  if ((rbrokerurl.length() == 0) ||
-      (rbrokerport.length() == 0))
-    error |= 1;
-
-  // If no error on data...
-  if (error == 0)
-  {
-     ////////////
-     // Broker //
-     ////////////
-     for (i = 0; i < BROKER_MAX; i++)
-       EEPROM.write(EEPROM_ADD_BROKER + i, 0);
-     j = rbrokerurl.length();
-     for (i = 0; i < j; i++)
-       EEPROM.write(EEPROM_ADD_BROKER + i, rbrokerurl[i]);
-      
-     brokerPort = rbrokerport.toInt();
-     eeprom_value_lo = brokerPort & 0x00FF;
-     EEPROM.write(EEPROM_ADD_BROKER_PORT, eeprom_value_lo);
-     eeprom_value_hi = (brokerPort & 0xFF00)>>8;
-     EEPROM.write(EEPROM_ADD_BROKER_PORT + 1, eeprom_value_hi);
-          
-     /////////////////////////
-     // Wi-Fi configuration //
-     /////////////////////////
-     #if (_HTTP_SERIAL_DEBUG_ == 1)
-     Serial.println("Wi-Fi 2 eeprom:");
-     #endif
-     
-     // AP mode
-     if (rwmode == "ap")
-       EEPROM.write(EEPROM_ADD_WIFI_MODE, ACCESSPOINT_MODE);
-     else
-     {
-       // Station mode
-       EEPROM.write(EEPROM_ADD_WIFI_MODE, STATION_MODE);
-  
-       // ssid
-       for (i = 0; i < WIFI_SSID_MAX; i++)
-         EEPROM.write(EEPROM_ADD_WIFI_SSID + i, 0);
-       j = rssid.length();
-       for (i = 0; i < j; i++)
-         EEPROM.write(EEPROM_ADD_WIFI_SSID + i, rssid[i]);
-       // password
-       for (i = 0; i < WIFI_PSWD_MAX; i++)
-         EEPROM.write(EEPROM_ADD_WIFI_PSWD + i, 0);
-       j = rpass.length();
-       for (i = 0; i < j; i++)
-         EEPROM.write(EEPROM_ADD_WIFI_PSWD + i, rpass[i]);
-       
-       /////////////
-       // IP Mpde //
-       /////////////
-       #if (_HTTP_SERIAL_DEBUG_ == 1)
-       Serial.println("IP 2 eeprom:");
-       #endif
-       // mode
-       if (ripmode == "dhcp")
-         EEPROM.write(EEPROM_ADD_IP_MODE, DHCP_MODE);
-       else
-       {
-         EEPROM.write(EEPROM_ADD_IP_MODE, FIXIP_MODE);
-  
-         // IP
-         j = ripaddress.length();
-         k = 0;
-         m = 0;
-         for (i = 0; i < j; i++)
-         {
-           schar = ripaddress[i];
-           if (schar == '.')
-           {        
-             sbuf[k] = 0;  // end of buffer
-             val[m] = (byte)(atoi(sbuf)); // change to int
-             k = 0;
-             m++;
-           }
-           else
-           {
-             sbuf[k] = schar;
-             k++;
-           }
-         }
-         // last IP value
-         sbuf[k] = 0;  // end of buffer
-         val[m] = (byte)(atoi(sbuf)); // change to int
-         localip = IPAddress(val[0], val[1], val[2], val[3]);
-    
-         EEPROM.write(EEPROM_ADD_IP1, val[0]);
-         EEPROM.write(EEPROM_ADD_IP2, val[1]);
-         EEPROM.write(EEPROM_ADD_IP3, val[2]);
-         EEPROM.write(EEPROM_ADD_IP4, val[3]);
-         
-         // Mask
-         j = rmask.length();
-         k = 0;
-         m = 0;
-         for (i = 0; i < j; i++)
-         {
-           schar = rmask[i];
-           if (schar == '.')
-           {
-             sbuf[k] = 0;  // end of buffer
-             val[m] = (byte)(atoi(sbuf)); // change to int
-             k = 0;
-             m++;
-           }
-           else
-           {
-             sbuf[k] = schar;
-             k++;
-           }
-         }
-         // last IP value
-         sbuf[k] = 0;  // end of buffer
-         val[m] = (byte)(atoi(sbuf)); // change to int
-         localmask = IPAddress(val[0], val[1], val[2], val[3]);
-    
-         EEPROM.write(EEPROM_ADD_MASK1, val[0]);
-         EEPROM.write(EEPROM_ADD_MASK2, val[1]);
-         EEPROM.write(EEPROM_ADD_MASK3, val[2]);
-         EEPROM.write(EEPROM_ADD_MASK4, val[3]);
-    
-         // Gateway
-         j = rgate.length();
-         k = 0;
-         m = 0;
-         for (i = 0; i < j; i++)
-         {
-           schar = rgate[i];
-           if (schar == '.')
-           {
-             sbuf[k] = 0;  // end of buffer
-             val[m] = (byte)(atoi(sbuf)); // change to int
-             k = 0;
-             m++;
-           }
-           else
-           {
-             sbuf[k] = schar;
-             k++;
-           }
-         }
-         // last IP value
-         sbuf[k] = 0;  // end of buffer
-         val[m] = (byte)(atoi(sbuf)); // change to int
-         localgate = IPAddress(val[0], val[1], val[2], val[3]);
-    
-         EEPROM.write(EEPROM_ADD_GATE1, val[0]);
-         EEPROM.write(EEPROM_ADD_GATE2, val[1]);
-         EEPROM.write(EEPROM_ADD_GATE3, val[2]);
-         EEPROM.write(EEPROM_ADD_GATE4, val[3]);
-       }
-     }
-     
-     #if (_HTTP_SERIAL_DEBUG_ == 1)
-     // Wi-Fi configuration
-     Serial.print("---->Wi-Fi mode: ");
-     Serial.println(rwmode);
-     Serial.print("---->Wi-Fi SSID: ");
-     Serial.println(rssid);
-     Serial.print("---->Wi-Fi Password: ");
-     Serial.println(rpass);
-     Serial.println("");
-
-     // IP configuration
-     Serial.print("---->Local IP: ");
-     Serial.println(localip);
-     Serial.print("---->Local mask: ");
-     Serial.println(localmask);
-     Serial.print("---->Local gateway: ");
-     Serial.println(localgate);
-
-     // Broker configuration
-     Serial.print("---->Broker Url: ");
-     Serial.println(rbrokerurl);
-     Serial.print("---->Broker Port: ");
-     Serial.println(rbrokerport);     
-     #endif
-     
-     EEPROM.commit();
-
-     #if (_READ_EEPROM_ == 1)
-     _ReadEEPROM();
-     delay(1000);
-     #endif
-    
-     // Read config from EEPROM
-     _readCONFIG();
-
-     // OK
-     i = 200;
-   }
-   else
-   {
-     #if (_HTTP_SERIAL_DEBUG_ == 1)
-     Serial.println("Sending 404");
-     #endif
-
-     // Error
-     i = 404;
-  }
-
-  html = "<!DOCTYPE HTML><html>";
-  html = html + "<title>INV MQTT+ #Configuraci&oacuten</title>";
-  html = html + "<head>";
-  html = html + "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"/>";
-  html = html + "<link rel=\"icon\" href=\"data:,\">";
-  html = html + "<link rel=\"stylesheet\" type=\"text/css\" href=\"style.css\" />";
-  html = html + "</head>";
-
-  html = html + "<body>";
-
-  html = html + "<div class=\"myform\">";
-  html = html + "<h1>INV MQTT+ #Configuraci&oacuten<span>Nano Every tech</span><span align=\"right\"> Compilation: " + FW_Version + "</span></h1>";
-  
-  if (error == 0)
-    html += "<p class=\"sansserif\">Configuraci&oacuten guardada correctamente.</p>";
-  else
-    html += "<p class=\"sansserif\">Error el guardar la configuraci&oacuten. Revise los datos introducidos.</p>";
-
-  html = html + "<div class=\"button-section\">";
-  html = html + "  <a href=\"index.htm\"><input type=\"button\" value=\"Volver\"></a>";
-  html = html + "</div>";
-
-  html = html + "</div>";
-
-  html = html + "</body> ";
-  html = html + "</html>";
-
-  httpServer.send (200, "text/html", html);
-}
-
 */
 
+/*
 void _serveFavicon()
 {
-  const static byte tblFavicon[] PROGMEM = {0x00, 0x00, 0x01, 0x00, 0x01, 0x00, 0x10, 0x10, 0x10, 0x00, 0x01, 0x00, 0x04, 0x00, 0x28, 0x01, 
-                                            0x00, 0x00, 0x16, 0x00, 0x00, 0x00, 0x28, 0x00, 0x00, 0x00, 0x10, 0x00, 0x00, 0x00, 0x20, 0x00, 
-                                            0x00, 0x00, 0x01, 0x00, 0x04, 0x00, 0x00, 0x00, 0x00, 0x00, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 
-                                            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x10, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
-                                            0x00, 0x00, 0x82, 0x7E, 0x0A, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
-                                            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
-                                            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
-                                            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
-                                            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x11, 0x11, 0x11, 0x10, 0x00, 0x00, 0x00, 0x00, 
-                                            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
-                                            0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
-                                            0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x01, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 
-                                            0x00, 0x11, 0x10, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
-                                            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x10, 0x10, 0x01, 0x00, 0x01, 0x00, 0x10, 0x00, 0x10, 0x10, 
-                                            0x01, 0x00, 0x01, 0x00, 0x10, 0x00, 0x11, 0x10, 0x01, 0x00, 0x01, 0x00, 0x11, 0x10, 0x10, 0x10, 
-                                            0x01, 0x00, 0x01, 0x00, 0x10, 0x10, 0x10, 0x10, 0x11, 0x10, 0x11, 0x10, 0x11, 0x10, 0xFF, 0xFF, 
-                                            0x00, 0x00, 0xF0, 0x1F, 0x00, 0x00, 0xFF, 0xFF, 0x00, 0x00, 0xFE, 0xFF, 0x00, 0x00, 0xFE, 0xFF, 
-                                            0x00, 0x00, 0xFE, 0xFF, 0x00, 0x00, 0xFE, 0xFF, 0x00, 0x00, 0xFA, 0xBF, 0x00, 0x00, 0xFC, 0x7F, 
-                                            0x00, 0x00, 0xFE, 0xFF, 0x00, 0x00, 0xFF, 0xFF, 0x00, 0x00, 0x5B, 0xB7, 0x00, 0x00, 0x5B, 0xB7, 
-                                            0x00, 0x00, 0x1B, 0xB1, 0x00, 0x00, 0x5B, 0xB5, 0x00, 0x00, 0x51, 0x11, 0x00, 0x00 
-                                           };
+  const static byte tblFavicon[] PROGMEM = {0x00, 0x01, ...};
 
   httpClient.println(F("HTTP/1.1 200 OK"));
   httpClient.println(F("Content-Type: image/x-icon"));
@@ -487,20 +177,21 @@ void _serveFavicon()
     httpClient.print(p);
   }
 }
+*/
 
 void _serveERROR()
-{ 
+{
   httpClient.println(F("HTTP/1.1 404 ERROR"));
   httpClient.println(F("Content-Type: text/html"));
   httpClient.println();
-  httpClient.print(F("<HTML>"));
-  httpClient.print(F("<HEAD>"));
-  httpClient.print(F("<TITLE>Error 404</TITLE>"));
-  httpClient.print(F("</HEAD>"));
-  httpClient.print(F("<BODY>"));
+  httpClient.print(F("<html>"));
+  httpClient.print(F("<head>"));
+  httpClient.print(F("<title>Error 404</title>"));
+  httpClient.print(F("</head>"));
+  httpClient.print(F("<body>"));
   httpClient.print(F("<p>Error 404</p>"));
-  httpClient.print(F("</BODY>"));
-  httpClient.print(F("</HTML>"));
+  httpClient.print(F("</body>"));
+  httpClient.print(F("</html>"));
 }
 
 void _serveCSS()
@@ -525,13 +216,12 @@ void _serveMAIN()
 
   httpClient.print(F("<head>"));
   httpClient.print(F("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"/>"));
-  httpClient.print(F("<link rel=\"icon\" href=\"data:,\">"));
   httpClient.print(F("<link rel=\"stylesheet\" type=\"text/css\" href=\"style.css\" />"));
   httpClient.print(F("</head>"));
 
   httpClient.print(F("<body>"));
   httpClient.print(F("<div class=\"myform\">"));
-  html = "<h1>" + String(PROJECT) + " #Estado<span>" + String(TECHNOLOGY) + "</span><span align=\"right\"> Compilation: " + String(compdate) + " " + String(comptime) + "</span></h1>";
+  html = "<h1>" + String(PROJECT) + " #Estado<span>" + String(TECHNOLOGY) + "</span><span align=\"right\"> " + String(compdate) + " " + String(comptime) + "</span></h1>";
   httpClient.print(html);
 
   httpClient.print(F("<div class=\"section\">Estados</div>"));
@@ -564,7 +254,6 @@ void _serveMAIN()
   httpClient.print(F("  xhttp.send();"));
   httpClient.print(F("}"));
   
-  /*
   httpClient.print(F("setInterval(function() {"));
   httpClient.print(F("  getSTATUS();"));
   httpClient.print(F("}, 1000);"));
@@ -579,7 +268,7 @@ void _serveMAIN()
   httpClient.print(F("  xhttp.open(\"GET\", \"readSTATUS\", true);"));
   httpClient.print(F("  xhttp.send();"));
   httpClient.print(F("}"));
-  */
+
   httpClient.print(F("</script>"));
   
   httpClient.print(F("</form>"));
@@ -601,13 +290,12 @@ void _serveNetwork()
   httpClient.print("<title>" + String(PROJECT) + " Red Config</title>");
   
   httpClient.print(F("<head>"));
-  httpClient.print(F("<link rel=\"icon\" href=\"data:,\">"));
   httpClient.print(F("<link rel=\"stylesheet\" type=\"text/css\" href=\"style.css\" />"));
   httpClient.print(F("</head>"));
 
   httpClient.print(F("<body>"));
   httpClient.print(F("<div class=\"myform\">"));
-  html = "<h1>" + String(PROJECT) + " #Red Config<span>" + String(TECHNOLOGY) + "</span><span align=\"right\"> Compilation: " + String(compdate) + " " + String(comptime) + "</span></h1>";
+  html = "<h1>" + String(PROJECT) + " #Red Config<span>" + String(TECHNOLOGY) + "</span><span align=\"right\"> " + String(compdate) + " " + String(comptime) + "</span></h1>";
   httpClient.print(html);
   httpClient.print(F("<form method='get' action='setNetwork'>"));
 
@@ -634,10 +322,9 @@ void _serveNetwork()
 
   httpClient.print(F("</div>"));
   // End
-
   /*
   // Broker
-  httpClient.print(F("<div class=\"section\"><span>3</span>Broker </div>"));
+  httpClient.print(F("<div class=\"section\"><span>2</span>Broker </div>"));
   httpClient.print(F("<div class=\"inner-wrap\">"));
 
   httpClient.print(F("<label>URL <input type=\"text\" maxlength=\"30\" value=\"" + String(brokerUrl) + "\" name=\"brokerurl\"/></label>"));
@@ -645,7 +332,7 @@ void _serveNetwork()
 
   httpClient.print(F("</div>"));
   // End
-  */                    
+  */                
   httpClient.print(F("<div class=\"button-section\">"));
   httpClient.print(F("  <input type=\"submit\" value=\"Guardar\">"));
   httpClient.print(F("  <a href=\"index.htm\"><input type=\"button\" value=\"Volver\"></a>"));
@@ -660,7 +347,7 @@ void _serveNetwork()
   httpClient.print(F("</html>"));
 }
 
-String getValue(String data, char separator, int index)
+String _httpArg(String data, char separator, int index)
 {
   int found = 0;
   int strIndex[] = {0, -1};
@@ -674,34 +361,242 @@ String getValue(String data, char separator, int index)
         strIndex[1] = (i == maxIndex) ? i + 1 : i;
     }
   }
-  /*
-  #if (_HTTP_SERIAL_DEBUG_ == 1)
-  Serial.println ("****** _httpArg *****"); 
-  Serial.print (" found "); Serial.print (found);
-  Serial.print (" strIndex[0] "); Serial.print (strIndex[0]);
-  Serial.print (" strIndex[1] "); Serial.print (strIndex[1]);
-  #endif
-  */
+  
   return found > index ? data.substring(strIndex[0], strIndex[1]) : "";
 }
 
 void _setNetwork()
 {
-  int error = 0;
+  bool error = 0;
+  int i = 0, j, k, m;
+  String subStr, paramStr;
+  String ripmode, ripaddress, rmask, rgate;
 
-  String ripmode = getValue(httpRxString, '?', 2);
+  char schar;
+  char sbuf[4];
+  byte val[4];
+
+  int eeprom_value_hi, eeprom_value_lo;
+
+  IPAddress localip;
+  IPAddress localmask;
+  IPAddress localgate;
   
-  #if (_HTTP_SERIAL_DEBUG_ == 1)
-  Serial.print ("ipmode"); Serial.println (ripmode);
-  #endif
+  // Get params  
+  i = httpRxString.indexOf('?');
+  if (i != -1)
+  {
+    subStr = httpRxString.substring(i + 1);
+    i = subStr.indexOf(' ');
+    if (i != -1)
+      subStr = subStr.substring(0, i);
+    else
+      error = 1;
+  }
+  else
+    error = 1;
 
-  //int count = httpRxString.split('?', , HTTP_RX_MAX_CONF);
-  /*  
-  String ripmode = httpServer.arg("ipmode");
-  String ripaddress = httpServer.arg("ipaddress");
-  String rmask = httpServer.arg("mask");
-  String rgate = httpServer.arg("gateway");
-  */
+  if (error == 0)
+  {
+    for (i = 0; i < HTTP_NUM_NETWORK_PARAMS; i++)
+    {
+      //Get param
+      paramStr = _httpArg(subStr, '&', i);
+      #if (_HTTP_SERIAL_DEBUG_ == 1)
+      Serial.println (paramStr);
+      #endif
+
+      if (paramStr.indexOf("ipmode=") != -1)
+        ripmode = _httpArg(paramStr, '=', 1);
+      else if (paramStr.indexOf("ipaddress=") != -1)
+        ripaddress = _httpArg(paramStr, '=', 1);
+      else if (paramStr.indexOf("mask=") != -1)
+        rmask = _httpArg(paramStr, '=', 1);
+      else if (paramStr.indexOf("gateway=") != -1)
+        rgate = _httpArg(paramStr, '=', 1);
+    }
+  }
+
+  // must have a value
+  if (ripmode == "ipfx")
+  {
+    // Must be 
+    if ((ripaddress.length() == 0) ||
+        (rmask.length() == 0)      ||
+        (rgate.length() == 0))
+      error = 1;
+  }
+  // DHCP mode
+  //else {}
+  
+  // Check broker error
+  //if ((rbrokerurl.length() == 0) ||
+  //    (rbrokerport.length() == 0))
+  //  error |= 1;
+
+  // If no error on data...
+  if (error == 0)
+  {
+    /*
+    ////////////
+    // Broker //
+    ////////////
+    for (i = 0; i < BROKER_MAX; i++)
+      EEPROM.write(EEPROM_ADD_BROKER + i, 0);
+    j = rbrokerurl.length();
+    for (i = 0; i < j; i++)
+      EEPROM.write(EEPROM_ADD_BROKER + i, rbrokerurl[i]);
+      
+    brokerPort = rbrokerport.toInt();
+    eeprom_value_lo = brokerPort & 0x00FF;
+    EEPROM.write(EEPROM_ADD_BROKER_PORT, eeprom_value_lo);
+    eeprom_value_hi = (brokerPort & 0xFF00)>>8;
+    EEPROM.write(EEPROM_ADD_BROKER_PORT + 1, eeprom_value_hi);
+    */   
+       
+    /////////////
+    // IP Mpde //
+    /////////////
+    #if (_HTTP_SERIAL_DEBUG_ == 1)
+    Serial.println("IP 2 eeprom:");
+    #endif
+    // mode
+    if (ripmode == "dhcp")
+      EEPROM.write(EEPROM_ADD_IP_MODE, DHCP_MODE);
+    else
+    {
+      EEPROM.write(EEPROM_ADD_IP_MODE, FIXIP_MODE);
+  
+      // IP
+      j = ripaddress.length();
+      k = 0;
+      m = 0;
+      for (i = 0; i < j; i++)
+      {
+        schar = ripaddress[i];
+        if (schar == '.')
+        {        
+          sbuf[k] = 0;  // end of buffer
+          val[m] = (byte)(atoi(sbuf)); // change to int
+          k = 0;
+          m++;
+        }
+        else
+        {
+          sbuf[k] = schar;
+          k++;
+        }
+      }
+      // last IP value
+      sbuf[k] = 0;  // end of buffer
+      val[m] = (byte)(atoi(sbuf)); // change to int
+      localip = IPAddress(val[0], val[1], val[2], val[3]);
+    
+      EEPROM.write(EEPROM_ADD_IP1, val[0]);
+      EEPROM.write(EEPROM_ADD_IP2, val[1]);
+      EEPROM.write(EEPROM_ADD_IP3, val[2]);
+      EEPROM.write(EEPROM_ADD_IP4, val[3]);
+         
+      // Mask
+      j = rmask.length();
+      k = 0;
+      m = 0;
+      for (i = 0; i < j; i++)
+      {
+        schar = rmask[i];
+        if (schar == '.')
+        {
+          sbuf[k] = 0;  // end of buffer
+          val[m] = (byte)(atoi(sbuf)); // change to int
+          k = 0;
+          m++;
+        }
+        else
+        {
+          sbuf[k] = schar;
+          k++;
+        }
+      }
+      // last IP value
+      sbuf[k] = 0;  // end of buffer
+      val[m] = (byte)(atoi(sbuf)); // change to int
+      localmask = IPAddress(val[0], val[1], val[2], val[3]);
+    
+      EEPROM.write(EEPROM_ADD_MASK1, val[0]);
+      EEPROM.write(EEPROM_ADD_MASK2, val[1]);
+      EEPROM.write(EEPROM_ADD_MASK3, val[2]);
+      EEPROM.write(EEPROM_ADD_MASK4, val[3]);
+    
+      // Gateway
+      j = rgate.length();
+      k = 0;
+      m = 0;
+      for (i = 0; i < j; i++)
+      {
+        schar = rgate[i];
+        if (schar == '.')
+        {
+          sbuf[k] = 0;  // end of buffer
+          val[m] = (byte)(atoi(sbuf)); // change to int
+          k = 0;
+          m++;
+        }
+        else
+        {
+          sbuf[k] = schar;
+          k++;
+        }
+      }
+      // last IP value
+      sbuf[k] = 0;  // end of buffer
+      val[m] = (byte)(atoi(sbuf)); // change to int
+      localgate = IPAddress(val[0], val[1], val[2], val[3]);
+    
+      EEPROM.write(EEPROM_ADD_GATE1, val[0]);
+      EEPROM.write(EEPROM_ADD_GATE2, val[1]);
+      EEPROM.write(EEPROM_ADD_GATE3, val[2]);
+      EEPROM.write(EEPROM_ADD_GATE4, val[3]);
+    }
+
+    #if (_HTTP_SERIAL_DEBUG_ == 1)
+    
+     // IP configuration
+     Serial.print("---->Local IP: ");
+     Serial.println(localip);
+     Serial.print("---->Local mask: ");
+     Serial.println(localmask);
+     Serial.print("---->Local gateway: ");
+     Serial.println(localgate);
+     /*
+     // Broker configuration
+     Serial.print("---->Broker Url: ");
+     Serial.println(rbrokerurl);
+     Serial.print("---->Broker Port: ");
+     Serial.println(rbrokerport);     
+     */
+     #endif
+     
+     //EEPROM.commit();
+
+     #if (_READ_EEPROM_ == 1)
+     _ReadEEPROM();
+     delay(1000);
+     #endif
+    
+     // Read config from EEPROM
+     _readCONFIG();
+
+    #if (_HTTP_SERIAL_DEBUG_ == 1)
+    Serial.println("Sending 200");
+    #endif
+  }
+  else
+  {
+    #if (_HTTP_SERIAL_DEBUG_ == 1)
+    Serial.println("Sending 404");
+    #endif
+  }
+
 
   httpClient.println(F("HTTP/1.1 200 OK"));
   httpClient.println(F("Content-Type: text/html"));
@@ -711,7 +606,6 @@ void _setNetwork()
   httpClient.print("<title>" + String(PROJECT) + " + Red Config</title>");
   
   httpClient.print(F("<head>"));
-  httpClient.print(F("<link rel=\"icon\" href=\"data:,\">"));
   httpClient.print(F("<link rel=\"stylesheet\" type=\"text/css\" href=\"style.css\" />"));
   httpClient.print(F("</head>"));
 
@@ -746,7 +640,7 @@ void _setOUTS()
   httpClient.println();
   
   // Cambiar Modo
-  if (httpRxString.indexOf("OUTNumber=0 HTTP/1.") != -1)
+  if (httpRxString.indexOf("OUTNumber=0 HTTP") != -1)
   {
     if (ctrMode == MODE_TEST)
     {
@@ -767,7 +661,7 @@ void _setOUTS()
   }
   
   // Reset
-  if (httpRxString.indexOf("OUTNumber=1 HTTP/1.") != -1)
+  if (httpRxString.indexOf("OUTNumber=1 HTTP") != -1)
   {
     #if (_USE_WDE_ == 1)
     wdeForceReset = 1;
@@ -800,7 +694,7 @@ void _setOUTS()
   }
   */
   // Restore
-  if (httpRxString.indexOf("OUTNumber=20 HTTP/1.") != -1)
+  if (httpRxString.indexOf("OUTNumber=20 HTTP") != -1)
   {
     _ResetEEPROM();
     #if (_HTTP_SERIAL_DEBUG_ == 1)
@@ -828,11 +722,16 @@ void _serveSTATUS()
   httpClient.print(F("</tr>"));
 
   httpClient.print(F("<tr>"));
+  httpClient.print(F("<td>Control Modo </td>"));
+  httpClient.print("<td>" + String(ctrMode) + "</td>");
+  httpClient.print(F("</tr>"));
+
+  /*
+  httpClient.print(F("<tr>"));
   httpClient.print(F("<td>MQTT Estado </td>"));
   httpClient.print("<td>" + String(mqttStatus) + "</td>");
   httpClient.print(F("</tr>"));
 
-  /*
   httpClient.print(F("<tr>"));
   httpClient.print(F("<td>-----------------</td>"));
   httpClient.print(F("</tr>"));
@@ -869,7 +768,7 @@ void _HttpLoop()
       httpServer.begin(80);
 
       #if (_MBTCP_SERIAL_DEBUG_ == 1)
-      Serial.println("HTTP server started");
+      Serial.println("Http server started");
       #endif
       httpServerStatus = HTTP_SERVER_ON;
       break;
@@ -882,10 +781,6 @@ void _HttpLoop()
 
 void _httpClientLoop ()
 {
-  //#if (_HTTP_SERIAL_DEBUG_ == 1)
-  //Serial.print("HTTP State "); Serial.print(httpClientStatus); Serial.println(" ***");
-  //#endif
-
   switch (httpClientStatus)
   {
     case HTTP_CLIENT_INIT:
@@ -893,7 +788,7 @@ void _httpClientLoop ()
       if (httpClient)
       {
         #if (_HTTP_SERIAL_DEBUG_ == 1)
-        Serial.println(">>>>>>>>>>>>");
+        Serial.println(">>");
         Serial.print("http client connected: "); Serial.println(httpClient);
         #endif
 
@@ -913,7 +808,7 @@ void _httpClientLoop ()
         if (httpClient.available())
         {
           #if (_HTTP_SERIAL_DEBUG_ == 1)
-          Serial.println("http client start request");
+          Serial.println("http request start");
           #endif
 
           httpClientStatus = HTTP_CLIENT_ON_RX;
@@ -975,7 +870,7 @@ void _httpClientLoop ()
           if (millis() - httpRxTick >= HTTP_RX_TIMEOUT)
           {
              #if (_HTTP_SERIAL_DEBUG_ == 1)
-             Serial.println ("http client request received");
+             Serial.println ("http request rx");
              Serial.println(httpRxString);
              #endif
 
@@ -1001,59 +896,24 @@ void _httpClientLoop ()
       if (httpClient.connected())
       {
         #if (_HTTP_SERIAL_DEBUG_ == 1)
-        Serial.println("http request analysis");
+        Serial.println("http analysis");
         #endif
         
         if (httpRxString.indexOf("GET /favicon") != -1)
-        {
-          httpTxPage = 1;
-          #if (_HTTP_SERIAL_DEBUG_ == 1)
-          Serial.println("favcion");
-          #endif
-        }
+          httpTxPage = 0; // 1;
         else if (httpRxString.indexOf("GET /style.css") != -1)
-        {
           httpTxPage = 3;
-          #if (_HTTP_SERIAL_DEBUG_ == 1)
-          Serial.println("style");
-          #endif
-        }
         else if (httpRxString.indexOf("GET /readSTATUS") != -1)
-        {
           httpTxPage = 4;
-          #if (_HTTP_SERIAL_DEBUG_ == 1)
-          Serial.println("readSTATUS");
-          #endif
-        }
         else if (httpRxString.indexOf("GET /setOUTS") != -1)
-        {
           httpTxPage = 5;
-          #if (_HTTP_SERIAL_DEBUG_ == 1)
-          Serial.println("setOUTS");
-          #endif
-        }
         else if (httpRxString.indexOf("GET /nwset.htm") != -1)
-        {
           httpTxPage = 6;
-          #if (_HTTP_SERIAL_DEBUG_ == 1)
-          Serial.println("nwset.htm");
-          #endif
-        }
         else if (httpRxString.indexOf("GET /setNetwork") != -1)
-        {
           httpTxPage = 7;
-          #if (_HTTP_SERIAL_DEBUG_ == 1)
-          Serial.println("setNetwork");
-          #endif
-        }
         else if ((httpRxString.indexOf("GET /index.htm") != -1) ||
-                 (httpRxString.indexOf("GET / HTTP/1.1") != -1))
-        {
+                 (httpRxString.indexOf("GET / HTTP") != -1))
           httpTxPage = 2;
-          #if (_HTTP_SERIAL_DEBUG_ == 1)
-          Serial.println("index.htm");
-          #endif
-        }
         else
         {
           httpTxPage = 0;
@@ -1068,7 +928,7 @@ void _httpClientLoop ()
       else
       {
         #if (_HTTP_SERIAL_DEBUG_ == 1)
-        Serial.println("httpClient.connected() disconnected in analysis.");
+        Serial.println("httpClient.connected() disc in analysis");
         #endif
 
         httpClientStatus = HTTP_CLIENT_INIT;
@@ -1081,10 +941,6 @@ void _httpClientLoop ()
 
       httpClient.flush();
 
-      #if (_HTTP_SERIAL_DEBUG_ == 1)
-      Serial.println("http response sent");
-      #endif
-
       switch (httpTxPage)
       {
         // Error
@@ -1093,9 +949,9 @@ void _httpClientLoop ()
           break;
         
         // favicon
-        case 1:
-          _serveFavicon();
-          break;
+        //case 1:
+        //  _serveFavicon();
+        //  break;
         
         // index
         case 2:

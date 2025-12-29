@@ -56,13 +56,6 @@ void _readCONFIG (void)
     EEPROM.write(EEPROM_ADD_GATE4,   EEPROM_VAL_GATE4);
     #endif // _USE_ETHERNET_
 
-    #if (_USE_MBTCP_ == 1)
-    eeprom_value_lo = EEPROM_VAL_MB_PORT & 0x00FF;
-    EEPROM.write(EEPROM_ADD_MB_PORT_LO, eeprom_value_lo);
-    eeprom_value_hi = (EEPROM_VAL_MB_PORT & 0xFF00)>>8;
-    EEPROM.write(EEPROM_ADD_MB_PORT_HI, eeprom_value_hi);
-    #endif
-
     // Logic
     EEPROM.write(EEPROM_ADD_LOGIC_INS,  EEPROM_VAL_LOGIC_INS);
     EEPROM.write(EEPROM_ADD_LOGIC_OUTS, EEPROM_VAL_LOGIC_OUTS);
@@ -112,13 +105,6 @@ void _ram2eepromCONFIG (void)
   EEPROM.write(EEPROM_ADD_GATE2,   (byte)gateWay[1]);
   EEPROM.write(EEPROM_ADD_GATE3,   (byte)gateWay[2]);
   EEPROM.write(EEPROM_ADD_GATE4,   (byte)gateWay[3]);
-  #endif
-
-  #if (_USE_MBTCP_ == 1)
-  eeprom_value_lo = cfgModbusPORT & 0x00FF;
-  EEPROM.write(EEPROM_ADD_MB_PORT_LO, eeprom_value_lo);
-  eeprom_value_hi = (cfgModbusPORT & 0xFF00)>>8;
-  EEPROM.write(EEPROM_ADD_MB_PORT_HI, eeprom_value_hi);
   #endif
 
   // Data Data
@@ -187,16 +173,6 @@ void _eeprom2ramCONFIG (void)
   #endif
 
   #endif // _USE_ETHERNET_
-
-  #if (_USE_MBTCP_ == 1)
-  eeprom_value_hi   = (int)EEPROM.read(EEPROM_ADD_MB_PORT_HI);
-  eeprom_value_lo   = (int)EEPROM.read(EEPROM_ADD_MB_PORT_LO);
-  cfgModbusPORT     = (int)((eeprom_value_hi & 0x00FF)<<8)|(eeprom_value_lo & 0x00FF);
-
-  #if (_EEPROM_SERIAL_DEBUG_ == 1)
-  Serial.print("Modbus Port: ");  Serial.println(cfgModbusPORT);
-  #endif
-  #endif
 
   cfgLogicIns       = (int)EEPROM.read(EEPROM_ADD_LOGIC_INS);
   cfgLogicOuts      = (int)EEPROM.read(EEPROM_ADD_LOGIC_OUTS); 

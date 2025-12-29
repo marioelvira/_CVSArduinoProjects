@@ -95,10 +95,6 @@ int ctrTemp = 0;
 ////////////
 // Config //
 ////////////
-#if (_USE_ETHERNET_ == 1)
-int cfgModbusPORT = 502;
-#endif
-
 bool cfgLogicIns;
 bool cfgLogicOuts;
 

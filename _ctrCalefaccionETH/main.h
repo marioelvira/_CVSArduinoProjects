@@ -38,10 +38,10 @@ extern "C" {
 #endif
 
 #if (_SERIAL_DEBUG_ == 1)
-#define _EEPROM_SERIAL_DEBUG_      0//1
+#define _EEPROM_SERIAL_DEBUG_      0
 #define _STATUS_SERIAL_DEBUG_      0
-#define _HTTP_SERIAL_DEBUG_        1
-#define _ETH_SERIAL_DEBUG_         0//1
+#define _HTTP_SERIAL_DEBUG_        0
+#define _ETH_SERIAL_DEBUG_         0
 #define _MQTT_SERIAL_DEBUG_        0
 #define _NTP_SERIAL_DEBUG_         0
 #define _WD_SERIAL_DEBUG_          0

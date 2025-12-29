@@ -29,9 +29,6 @@ extern "C" {
 #define EEPROM_ADD_GATE3          0x0C
 #define EEPROM_ADD_GATE4          0x0D
 
-#define EEPROM_ADD_MB_PORT_LO    		  0x0E
-#define EEPROM_ADD_MB_PORT_HI    		  0x0F
-
 #define EEPROM_ADD_LOGIC_INS          0xA0
 #define EEPROM_ADD_LOGIC_OUTS         0xA1
 
@@ -68,8 +65,6 @@ extern "C" {
 #define EEPROM_VAL_GATE3          1
 #define EEPROM_VAL_GATE4          1
 
-#define EEPROM_VAL_MB_PORT    		      502
-
 #define EEPROM_VAL_LOGIC_INS            0     // Logica leer 1
 #define EEPROM_VAL_LOGIC_OUTS           0     // Logica activar out
 
@@ -86,8 +81,6 @@ extern "C" {
 #define EEPROM_VAL_RES_PRIM_ALAR_MIN    30
 #define EEPROM_VAL_RES_INYE_ALAR_MIN    30
 #define EEPROM_VAL_AGUA_ALAR_MIN        30
-
-
 
 #endif // _E2PROM_H_
 

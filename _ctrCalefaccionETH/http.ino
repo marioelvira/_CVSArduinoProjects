@@ -142,7 +142,7 @@ void _setTimeSETTINGS()
   html = html + "<body>";
 
   html = html + "<div class=\"myform\">";
-  html = html + "<h1>INV MQTT+ #Configuraci&oacuten<span>Nano Every tech</span><span align=\"right\"> Ver: " + FW_Version + "</span></h1>";
+  html = html + "<h1>INV MQTT+ #Configuraci&oacuten<span>Nano Every tech</span><span align=\"right\"> Compilation: " + FW_Version + "</span></h1>";
   
   if (error == 0)
     html += "<p class=\"sansserif\">Configuraci&oacuten guardada correctamente.</p>";
@@ -163,10 +163,6 @@ void _setTimeSETTINGS()
 
 void _setSETTINGS()
 {
-  String rwmode = httpServer.arg("wifimode");
-  String rssid = httpServer.arg("ssid");
-  String rpass = httpServer.arg("pass");
-  
   String ripmode = httpServer.arg("ipmode");
   String ripaddress = httpServer.arg("ipaddress");
   String rmask = httpServer.arg("mask");
@@ -436,7 +432,7 @@ void _setSETTINGS()
   html = html + "<body>";
 
   html = html + "<div class=\"myform\">";
-  html = html + "<h1>INV MQTT+ #Configuraci&oacuten<span>Nano Every tech</span><span align=\"right\"> Ver: " + FW_Version + "</span></h1>";
+  html = html + "<h1>INV MQTT+ #Configuraci&oacuten<span>Nano Every tech</span><span align=\"right\"> Compilation: " + FW_Version + "</span></h1>";
   
   if (error == 0)
     html += "<p class=\"sansserif\">Configuraci&oacuten guardada correctamente.</p>";
@@ -535,14 +531,11 @@ void _serveMAIN()
 
   httpClient.print(F("<body>"));
   httpClient.print(F("<div class=\"myform\">"));
-  html = "<h1>" + String(PROJECT) + " #Estado<span>Nano Every tech</span><span align=\"right\"> Ver: " + String(compdate) + " " + String(comptime) + "</span></h1>";
+  html = "<h1>" + String(PROJECT) + " #Estado<span>" + String(TECHNOLOGY) + "</span><span align=\"right\"> Compilation: " + String(compdate) + " " + String(comptime) + "</span></h1>";
   httpClient.print(html);
-  httpClient.print(F("<div class=\"section\">Temporizaciones</div>"));
-  httpClient.print(F("<p class=\"sansserif\" id=\"TEMPSid\">...</p>"));
-  httpClient.print(F("<div class=\"section\">Entradas</div>"));
-  httpClient.print(F("<p class=\"sansserif\" id=\"INSid\">...</p>"));
-  httpClient.print(F("<div class=\"section\">Estados / Salidas</div>"));
-  httpClient.print(F("<p class=\"sansserif\" id=\"OUTSid\">...</p>"));
+
+  httpClient.print(F("<div class=\"section\">Estados</div>"));
+  httpClient.print(F("<p class=\"sansserif\" id=\"STATUSid\">...</p>"));
 
   httpClient.print(F("<div class=\"section\">Control</div>"));
   httpClient.print(F("<p>"));
@@ -571,42 +564,19 @@ void _serveMAIN()
   httpClient.print(F("  xhttp.send();"));
   httpClient.print(F("}"));
   
+  /*
   httpClient.print(F("setInterval(function() {"));
-  httpClient.print(F("  getOUTS();"));
-  //httpClient.print(F("  getINS();"));
-  //httpClient.print(F("  getTEMPS();"));
+  httpClient.print(F("  getSTATUS();"));
   httpClient.print(F("}, 1000);"));
 
-  httpClient.print(F("function getOUTS() {"));
+  httpClient.print(F("function getSTATUS() {"));
   httpClient.print(F("  var xhttp = new XMLHttpRequest();"));
   httpClient.print(F("  xhttp.onreadystatechange = function() {"));
   httpClient.print(F("    if (this.readyState == 4 && this.status == 200) {"));
-  httpClient.print(F("      document.getElementById(\"OUTSid\").innerHTML = this.responseText;"));
+  httpClient.print(F("      document.getElementById(\"STATUSid\").innerHTML = this.responseText;"));
   httpClient.print(F("   }"));
   httpClient.print(F("  };"));
-  httpClient.print(F("  xhttp.open(\"GET\", \"readOUTS\", true);"));
-  httpClient.print(F("  xhttp.send();"));
-  httpClient.print(F("}"));
-  /*
-  httpClient.print(F("function getINS() {"));
-  httpClient.print(F("  var xhttp = new XMLHttpRequest();"));
-  httpClient.print(F("  xhttp.onreadystatechange = function() {"));
-  httpClient.print(F("    if (this.readyState == 4 && this.status == 200) {"));
-  httpClient.print(F("      document.getElementById(\"INSid\").innerHTML = this.responseText;"));
-  httpClient.print(F("   }"));
-  httpClient.print(F("  };"));
-  httpClient.print(F("  xhttp.open(\"GET\", \"readINS\", true);"));
-  httpClient.print(F("  xhttp.send();"));
-  httpClient.print(F("}"));
-
-  httpClient.print(F("function getTEMPS() {"));
-  httpClient.print(F("  var xhttp = new XMLHttpRequest();"));
-  httpClient.print(F("  xhttp.onreadystatechange = function() {"));
-  httpClient.print(F("    if (this.readyState == 4 && this.status == 200) {"));
-  httpClient.print(F("      document.getElementById(\"TEMPSid\").innerHTML = this.responseText;"));
-  httpClient.print(F("   }"));
-  httpClient.print(F("  };"));
-  httpClient.print(F("  xhttp.open(\"GET\", \"readTEMPS\", true;"));
+  httpClient.print(F("  xhttp.open(\"GET\", \"readSTATUS\", true);"));
   httpClient.print(F("  xhttp.send();"));
   httpClient.print(F("}"));
   */
@@ -637,7 +607,7 @@ void _serveNetwork()
 
   httpClient.print(F("<body>"));
   httpClient.print(F("<div class=\"myform\">"));
-  html = "<h1>" + String(PROJECT) + " #Red Config<span>Nano Every tech</span><span align=\"right\"> Ver: " + String(compdate) + " " + String(comptime) + "</span></h1>";
+  html = "<h1>" + String(PROJECT) + " #Red Config<span>" + String(TECHNOLOGY) + "</span><span align=\"right\"> Compilation: " + String(compdate) + " " + String(comptime) + "</span></h1>";
   httpClient.print(html);
   httpClient.print(F("<form method='get' action='setNetwork'>"));
 
@@ -690,9 +660,48 @@ void _serveNetwork()
   httpClient.print(F("</html>"));
 }
 
+String getValue(String data, char separator, int index)
+{
+  int found = 0;
+  int strIndex[] = {0, -1};
+  int maxIndex = data.length() - 1;
+
+  for (int i = 0; i <= maxIndex && found <= index; i++)
+  {
+    if(data.charAt(i) == separator || i == maxIndex){
+        found++;
+        strIndex[0] = strIndex[1] + 1;
+        strIndex[1] = (i == maxIndex) ? i + 1 : i;
+    }
+  }
+  /*
+  #if (_HTTP_SERIAL_DEBUG_ == 1)
+  Serial.println ("****** _httpArg *****"); 
+  Serial.print (" found "); Serial.print (found);
+  Serial.print (" strIndex[0] "); Serial.print (strIndex[0]);
+  Serial.print (" strIndex[1] "); Serial.print (strIndex[1]);
+  #endif
+  */
+  return found > index ? data.substring(strIndex[0], strIndex[1]) : "";
+}
+
 void _setNetwork()
 {
   int error = 0;
+
+  String ripmode = getValue(httpRxString, '?', 2);
+  
+  #if (_HTTP_SERIAL_DEBUG_ == 1)
+  Serial.print ("ipmode"); Serial.println (ripmode);
+  #endif
+
+  //int count = httpRxString.split('?', , HTTP_RX_MAX_CONF);
+  /*  
+  String ripmode = httpServer.arg("ipmode");
+  String ripaddress = httpServer.arg("ipaddress");
+  String rmask = httpServer.arg("mask");
+  String rgate = httpServer.arg("gateway");
+  */
 
   httpClient.println(F("HTTP/1.1 200 OK"));
   httpClient.println(F("Content-Type: text/html"));
@@ -735,18 +744,9 @@ void _setOUTS()
   httpClient.println(F("HTTP/1.1 200 OK"));
   httpClient.println(F("Content-Type: text/plane"));
   httpClient.println();
-
-  outNumber = (int)(atoi(httpRxArray[23]));
   
-  #if (_HTTP_SERIAL_DEBUG_ == 1)
-  Serial.print("Change status out: ");
-  Serial.print(httpRxArray[23]);
-  Serial.println(httpRxArray[24]);
-  //Serial.println(outNumber);
-  #endif
-
   // Cambiar Modo
-  if(outNumber == 0)
+  if (httpRxString.indexOf("OUTNumber=0 HTTP/1.") != -1)
   {
     if (ctrMode == MODE_TEST)
     {
@@ -765,9 +765,9 @@ void _setOUTS()
       html = "Mode Test";
     }
   }
-  /*
+  
   // Reset
-  if(out_number == "1")
+  if (httpRxString.indexOf("OUTNumber=1 HTTP/1.") != -1)
   {
     #if (_USE_WDE_ == 1)
     wdeForceReset = 1;
@@ -777,7 +777,7 @@ void _setOUTS()
     Serial.println("Watchdog reset");
     #endif
   }
-
+  /*
   // OutOpen
   if(out_number == "10")
   {
@@ -798,9 +798,9 @@ void _setOUTS()
       html = "OutOpen ON";
     }
   }
-   
+  */
   // Restore
-  if(out_number == "20")
+  if (httpRxString.indexOf("OUTNumber=20 HTTP/1.") != -1)
   {
     _ResetEEPROM();
     #if (_HTTP_SERIAL_DEBUG_ == 1)
@@ -808,12 +808,11 @@ void _setOUTS()
     #endif
     html = "Restore";
   }
-  */
 
   httpClient.print(html);
 }
 
-void _serveOUTS()
+void _serveSTATUS()
 {
   String html;
 
@@ -850,7 +849,6 @@ void _serveOUTS()
   httpClient.print(F("</table>"));
 }
 
-
 void _HttpSetup(void)
 {
   httpServerStatus = HTTP_SERVER_INIT;
@@ -859,7 +857,7 @@ void _HttpSetup(void)
   httpClientConnected = false;
 
   http1stline = 0;
-  httpRxIndex = 0;
+  httpRxString = "";
   httpRxTick = millis();
 }
 
@@ -903,7 +901,7 @@ void _httpClientLoop ()
         httpClientConnected = true;
 
         http1stline = 0;
-        httpRxIndex = 0;
+        httpRxString = "";
         httpRxTick = millis();
       }
       break;
@@ -921,7 +919,7 @@ void _httpClientLoop ()
           httpClientStatus = HTTP_CLIENT_ON_RX;
           
           http1stline = 0;
-          httpRxIndex = 0;
+          httpRxString = "";
           httpRxTick = millis();
         }
         else
@@ -966,16 +964,9 @@ void _httpClientLoop ()
           if (newChar == '\n')
             http1stline = 1;
 
-          if ((httpRxIndex < HTTP_RX_MAX_BTYE) && (http1stline == 0))
-          {
-            #if (_HTTP_SERIAL_DEBUG_ == 1)
-            Serial.print (newChar);
-            #endif
-
-            httpRxArray[httpRxIndex] = newChar;
-            httpRxIndex++;
-          }
-
+          if (http1stline == 0)
+            httpRxString += newChar;
+          
           httpRxTick = millis();
         }
         else
@@ -984,8 +975,8 @@ void _httpClientLoop ()
           if (millis() - httpRxTick >= HTTP_RX_TIMEOUT)
           {
              #if (_HTTP_SERIAL_DEBUG_ == 1)
-             Serial.println ("");
-             Serial.print ("http client request received of "); Serial.print (httpRxIndex); Serial.println (" bytes");
+             Serial.println ("http client request received");
+             Serial.println(httpRxString);
              #endif
 
              httpClientStatus = HTTP_CLIENT_ON_ANALYSIS;
@@ -1013,50 +1004,50 @@ void _httpClientLoop ()
         Serial.println("http request analysis");
         #endif
         
-        if (strncmp("GET /favicon", httpRxArray, 12) == 0)
+        if (httpRxString.indexOf("GET /favicon") != -1)
         {
           httpTxPage = 1;
           #if (_HTTP_SERIAL_DEBUG_ == 1)
           Serial.println("favcion");
           #endif
         }
-        else if (strncmp("GET /style.css", httpRxArray, 14) == 0)
+        else if (httpRxString.indexOf("GET /style.css") != -1)
         {
           httpTxPage = 3;
           #if (_HTTP_SERIAL_DEBUG_ == 1)
           Serial.println("style");
           #endif
         }
-        else if (strncmp("GET /readOUTS", httpRxArray, 13) == 0)
+        else if (httpRxString.indexOf("GET /readSTATUS") != -1)
         {
           httpTxPage = 4;
           #if (_HTTP_SERIAL_DEBUG_ == 1)
-          Serial.println("readOUTS");
+          Serial.println("readSTATUS");
           #endif
         }
-        else if (strncmp("GET /setOUTS", httpRxArray, 12) == 0)
+        else if (httpRxString.indexOf("GET /setOUTS") != -1)
         {
           httpTxPage = 5;
           #if (_HTTP_SERIAL_DEBUG_ == 1)
           Serial.println("setOUTS");
           #endif
         }
-        else if (strncmp("GET /nwset.htm", httpRxArray, 14) == 0)
+        else if (httpRxString.indexOf("GET /nwset.htm") != -1)
         {
           httpTxPage = 6;
           #if (_HTTP_SERIAL_DEBUG_ == 1)
           Serial.println("nwset.htm");
           #endif
         }
-        else if (strncmp("GET /setNetwork", httpRxArray, 15) == 0)
+        else if (httpRxString.indexOf("GET /setNetwork") != -1)
         {
           httpTxPage = 7;
           #if (_HTTP_SERIAL_DEBUG_ == 1)
           Serial.println("setNetwork");
           #endif
         }
-        else if ((strncmp("GET /index.htm", httpRxArray, 14) == 0) ||
-                 (strncmp("GET / HTTP/1.1", httpRxArray, 14) == 0))
+        else if ((httpRxString.indexOf("GET /index.htm") != -1) ||
+                 (httpRxString.indexOf("GET / HTTP/1.1") != -1))
         {
           httpTxPage = 2;
           #if (_HTTP_SERIAL_DEBUG_ == 1)
@@ -1117,7 +1108,7 @@ void _httpClientLoop ()
           break;
 
         case 4:
-          _serveOUTS();
+          _serveSTATUS();
           break;
 
         case 5:

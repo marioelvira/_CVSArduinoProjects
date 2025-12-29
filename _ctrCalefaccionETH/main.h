@@ -12,20 +12,20 @@ extern "C" {
 
 // Board: Arduino magaAVR Boards -> Arduino Nano Every
 
-#define PROJECT     "CALEFAC MQTT"
+#define PROJECT     "CONTROL CALEF"
+#define TECHNOLOGY  "Arduino Nano Every"
 
 ///////////
 // Debug //
 ///////////
 
 #define _USE_LED_                  0 // Used as SPI
-#define _USE_WDE_                  0 //1
+#define _USE_WDE_                  1
 #define _USE_ETHERNET_             1
 #define _USE_RS485_                0
 
 #if (_USE_ETHERNET_ == 1)
 #define _USE_HTTP_                 1
-#define _USE_MBTCP_                0
 #define _USE_MQTT_                 1
 #define _USE_NTP_                  0
 #endif
@@ -38,11 +38,10 @@ extern "C" {
 #endif
 
 #if (_SERIAL_DEBUG_ == 1)
-#define _EEPROM_SERIAL_DEBUG_      1
+#define _EEPROM_SERIAL_DEBUG_      0//1
 #define _STATUS_SERIAL_DEBUG_      0
 #define _HTTP_SERIAL_DEBUG_        1
-#define _ETH_SERIAL_DEBUG_         1
-#define _MBTCP_SERIAL_DEBUG_       1
+#define _ETH_SERIAL_DEBUG_         0//1
 #define _MQTT_SERIAL_DEBUG_        0
 #define _NTP_SERIAL_DEBUG_         0
 #define _WD_SERIAL_DEBUG_          0

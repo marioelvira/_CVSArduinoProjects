@@ -76,10 +76,6 @@ void _ETHLoop()
         _HttpSetup();
         #endif
 
-        #if (_USE_MBTCP_ == 1)
-        _ModbusTcpSetup();
-        #endif
-
         #if (_USE_MQTT_ == 1)
         _MQTTSetup();
         #endif
@@ -147,10 +143,6 @@ void _ETHLoop()
         }
         #endif
       }
-
-      #if (_USE_MBTCP_ == 1)
-      _ModbusTcpLoop();
-      #endif
 
       #if (_USE_HTTP_ == 1)
       _HttpLoop();

@@ -26,9 +26,6 @@
 #if (_USE_MBRTU_ == 1)
 #include "modbusRTU.h"
 #endif
-#if (_USE_MBTCP_ == 1)
-#include "modbusTCP.h"
-#endif
 #if (_USE_MQTT_ == 1)
 #include "MQTT.h"
 #endif
@@ -120,29 +117,6 @@ int cfgResPrimAlarMin;
 int cfgResInyeAlarMin;
 int cfgAguaAlarMin;
 
-////////////////
-// Modbus TCP //
-////////////////
-#if (_USE_MBTCP_ == 1)
-EthernetServer mbTcpServer(MB_PORT);
-int mbTcpServerStatus;
-
-EthernetClient mbTcpClient;
-int mbTcpClientStatus;
-bool mbTcpClientConnected;
-
-byte  mbTcpRxArray[MB_RX_MAX_BTYE];
-int   mbTcpRxIndex;
-unsigned long   mbTcpRxTick;
-int   mbTcpRxError = 0;
-
-byte  mbTcpFunc;
-
-byte  mbTcpTxArray[MB_TX_MAX_BTYE];
-int   mbTcpTxLength;
-
-#endif 
-
 //////////////
 // Ethernet //
 //////////////
@@ -154,12 +128,7 @@ uint8_t ipAddress[4]  = {192,168,1,50};
 uint8_t gateWay[4]    = {192,168,1,1};
 uint8_t netMask[4]    = {255,255,255,0};
 uint8_t dnsAddress[4]; // No incializar
-/*
-IPAddress ipAddress (192, 168, 1, 50);
-IPAddress gateWay (192, 168, 1, 1);
-IPAddress netMask (255, 255, 255, 1);
-IPAddress dnsAddress;
-*/
+
 int ethStatus;
 #endif
 
@@ -205,13 +174,12 @@ int httpClientStatus;
 bool httpClientConnected;
 
 byte  http1stline;
-byte  httpRxArray[HTTP_RX_MAX_BTYE];
-int   httpRxIndex;
+String httpRxString;
 unsigned long   httpRxTick;
 
 int   httpTxPage;
-//byte  httpTxArray[MB_TX_MAX_BTYE];
-//int   httpTxLength;
+
+String httpRxConfig[HTTP_RX_MAX_CONF];
 
 #endif
 

@@ -29,27 +29,35 @@ extern "C" {
 #define EEPROM_ADD_GATE3          0x0C
 #define EEPROM_ADD_GATE4          0x0D
 
+#define EEPROM_ADD_BROKER         0x4F
+#define MQTT_URL_MAX              22 // max 24 char -> Next 0x67
+#define EEPROM_ADD_BROKER_PORT    0x65
+#define BROKER_PORT_MAX           2
+#define EEPROM_ADD_MQTT_USER      0x67
+#define MQTT_USER_MAX             22 // max 22 char -> Next 0x7D
+#define EEPROM_ADD_MQTT_PSWD      0x7D
+#define MQTT_PSWD_MAX             22 // max 24 char -> Next 0x95
+
 #define EEPROM_ADD_LOGIC_INS          0xA0
 #define EEPROM_ADD_LOGIC_OUTS         0xA1
 
-#define EEPROM_ADD_RES_PRIM1_VOUT     0xA2
-#define EEPROM_ADD_RES_PRIM2_VOUT     0xA3
-#define EEPROM_ADD_RES_INYE_VOUT      0xA4
-#define EEPROM_ADD_RES_PRIM_INYE_TEMP 0xA5
-#define EEPROM_ADD_RES_PRIM_CONS_TEMP 0xA6
-#define EEPROM_ADD_RES_PRIM_HYST_TEMP 0xA7
-#define EEPROM_ADD_RES_INYE_CONS_TEMP 0xA8
-#define EEPROM_ADD_RES_PRIM_HYST_TEMP 0xA9
-#define EEPROM_ADD_AGUA_CONS_TEMP     0xAA
-#define EEPROM_ADD_AGUA_HYST_TEMP     0xAB
-#define EEPROM_ADD_RES_PRIM_ALAR_MIN  0xAC
-#define EEPROM_ADD_RES_INYE_ALAR_MIN  0xAD
-#define EEPROM_ADD_AGUA_ALAR_MIN      0xAE
+#define EEPROM_ADD_RES_PRIM_VOUT      0xA2
+#define EEPROM_ADD_RES_INYE_VOUT      0xA3
+#define EEPROM_ADD_RES_PRIM_INYE_TEMP 0xA4
+#define EEPROM_ADD_RES_PRIM_CONS_TEMP 0xA5
+#define EEPROM_ADD_RES_PRIM_HYST_TEMP 0xA6
+#define EEPROM_ADD_RES_INYE_CONS_TEMP 0xA7
+#define EEPROM_ADD_RES_PRIM_HYST_TEMP 0xA8
+#define EEPROM_ADD_AGUA_CONS_TEMP     0xA9
+#define EEPROM_ADD_AGUA_HYST_TEMP     0xAA
+#define EEPROM_ADD_RES_PRIM_ALAR_MIN  0xAB
+#define EEPROM_ADD_RES_INYE_ALAR_MIN  0xAC
+#define EEPROM_ADD_AGUA_ALAR_MIN      0xAD
 
 //#define EEPROM_ADD_MAX              0xFA // 250
 
 // Values
-#define EEPROM_VAL_OK                 0xA1
+#define EEPROM_VAL_OK                 0xAA
 
 #define EEPROM_VAL_IP_MODE        FIXIP_MODE // DHCP_MODE
 #define EEPROM_VAL_IP1            192
@@ -65,11 +73,15 @@ extern "C" {
 #define EEPROM_VAL_GATE3          1
 #define EEPROM_VAL_GATE4          1
 
+//#define EEPROM_VAL_BROKER  
+//#define EEPROM_VAL_MQTT_USER
+//#define EEPROM_ADD_MQTT_PSWD    
+//#define EEPROM_VAL_BROKER_PORT    7000
+
 #define EEPROM_VAL_LOGIC_INS            0     // Logica leer 1
 #define EEPROM_VAL_LOGIC_OUTS           0     // Logica activar out
 
-#define EEPROM_VAL_RES_PRIM1_VOUT       110   // V
-#define EEPROM_VAL_RES_PRIM2_VOUT       110   // V
+#define EEPROM_VAL_RES_PRIM_VOUT        110   // V
 #define EEPROM_VAL_RES_INYE_VOUT        110   // V
 #define EEPROM_VAL_RES_PRIM_INYE_TEMP   70    //º
 #define EEPROM_VAL_RES_PRIM_CONS_TEMP   115   //º

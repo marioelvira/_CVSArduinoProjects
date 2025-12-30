@@ -2,7 +2,10 @@
 
 #include <EEPROM.h>
 #include <UIPEthernet.h>
-
+//#include <EthernetENC.h>
+#if (_USE_UID_ == 1)
+#include <ArduinoUniqueID.h>
+#endif
 #if (_USE_MQTT_ == 1)
 #include <PubSubClient.h>
 #endif
@@ -45,6 +48,9 @@
 // Get from compile time
 const char* compdate = __DATE__;
 const char* comptime = __TIME__;
+#if (_USE_UID_ == 1)
+String UniqueIdStr;
+#endif
 
 ///////////////
 // Board Led //
@@ -98,8 +104,7 @@ int ctrTemp = 0;
 bool cfgLogicIns;
 bool cfgLogicOuts;
 
-int cfgResPrim1Vout;
-int cfgResPrim2Vout;
+int cfgResPrimVout;
 int cfgResInyeVout;
 int cfgResPrimInyeTemp;
 int cfgResPrimConsTemp;
@@ -147,10 +152,18 @@ NTPClient mNtpClient(mNtpUDP, "pool.ntp.org", 3600);
 // MQTT //
 //////////
 #if (_USE_MQTT_ == 1)
+const char* brokerUrlSt = MQTT_BROKER;
+char brokerUrl[MQTT_URL_MAX];
+int brokerPort;
+const char* brokerUserSt = MQTT_USERNAME;
+char brokerUser[MQTT_USER_MAX];
+const char* brokerPswdSt = MQTT_PASSWORD;
+char brokerPswd[MQTT_PSWD_MAX];
+
 EthernetClient ethClient;
 PubSubClient mqttClient(ethClient);
 
-String mqttClientId = "caleMQTT-INIT";
+String mqttClientId;
 
 int mqttStatus;
 unsigned long mqttTick = 0;
@@ -174,9 +187,6 @@ String httpRxString;
 unsigned long   httpRxTick;
 
 int   httpTxPage;
-
-String httpRxConfig[HTTP_RX_MAX_CONF];
-
 #endif
 
 ///////////
@@ -284,6 +294,19 @@ void setup(void)
   Serial.println(compdate);
   Serial.print("Time: ");
   Serial.println(comptime);
+  #endif
+
+  #if (_USE_UID_ == 1)
+  UniqueIdStr = "";
+  for (size_t i = 0; i < UniqueIDsize; i++) {
+    if (UniqueID[i] < 0x10) UniqueIdStr += "0";
+    UniqueIdStr += String(UniqueID[i], HEX);
+  }
+
+  #if (_SERIAL_DEBUG_ == 1)
+  Serial.print("UniqueID: ");
+  Serial.println(UniqueIdStr);
+  #endif
   #endif
 
   // Config setup

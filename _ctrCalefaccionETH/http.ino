@@ -322,17 +322,80 @@ void _serveNetwork()
 
   httpClient.print(F("</div>"));
   // End
-  /*
+
+  #if (_USE_MQTT_ == 1)
   // Broker
   httpClient.print(F("<div class=\"section\"><span>2</span>Broker </div>"));
   httpClient.print(F("<div class=\"inner-wrap\">"));
 
-  httpClient.print(F("<label>URL <input type=\"text\" maxlength=\"30\" value=\"" + String(brokerUrl) + "\" name=\"brokerurl\"/></label>"));
-  httpClient.print(F("<label>Port <input type=\"text\" maxlength=\"16\" value=\"" + String(brokerPort) + "\" name=\"brokerport\"/></label>"));
+  httpClient.print("<label>URL <input type=\"text\" maxlength=\"30\" value=\"" + String(brokerUrl) + "\" name=\"brokerurl\"/></label>");
+  httpClient.print("<label>Port <input type=\"text\" maxlength=\"16\" value=\"" + String(brokerPort) + "\" name=\"brokerport\"/></label>");
 
   httpClient.print(F("</div>"));
   // End
-  */                
+  #endif
+
+  httpClient.print(F("<div class=\"button-section\">"));
+  httpClient.print(F("  <input type=\"submit\" value=\"Guardar\">"));
+  httpClient.print(F("  <a href=\"index.htm\"><input type=\"button\" value=\"Volver\"></a>"));
+  httpClient.print(F("</div>"));
+  
+  httpClient.print(F("</div>"));
+  httpClient.print(F("</div>"));
+  httpClient.print(F("</form>"));
+  httpClient.print(F("</div>"));
+
+  httpClient.print(F("</body>"));
+  httpClient.print(F("</html>"));
+}
+
+void _serveCfg()
+{
+  String html;
+
+  httpClient.println(F("HTTP/1.1 200 OK"));
+  httpClient.println(F("Content-Type: text/html"));
+  httpClient.println();
+
+  httpClient.print(F("<!DOCTYPE HTML><html>"));
+  httpClient.print("<title>" + String(PROJECT) + " Config</title>");
+  
+  httpClient.print(F("<head>"));
+  httpClient.print(F("<link rel=\"stylesheet\" type=\"text/css\" href=\"style.css\" />"));
+  httpClient.print(F("</head>"));
+
+  httpClient.print(F("<body>"));
+  httpClient.print(F("<div class=\"myform\">"));
+  html = "<h1>" + String(PROJECT) + " #Config<span>" + String(TECHNOLOGY) + "</span><span align=\"right\"> " + String(compdate) + " " + String(comptime) + "</span></h1>";
+  httpClient.print(html);
+  httpClient.print(F("<form method='get' action='setCfg'>"));
+
+  httpClient.print(F("<div class=\"section\"><span>1</span>Control</div>"));
+  httpClient.print(F("<div class=\"inner-wrap\">"));
+  httpClient.print("<label> Tension Principal (Voltios)<input type=\"text\"  maxlength=\"16\" value=\""  + String(cfgResPrimVout)     + "\" name=\"cfgResPrimVout\"/></label>");
+  httpClient.print("<label> Tension Inyectior (Voltios)<input type=\"text\"  maxlength=\"16\" value=\""  + String(cfgResInyeVout)     + "\" name=\"cfgResInyeVout\"/></label>");
+  httpClient.print("<label> Temp Arranque Inyectior (ºC)<input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgResPrimInyeTemp) + "\" name=\"cfgResPrimInyeTemp\"/></label>");
+  httpClient.print("<label> Temp Consigna Principal (ºC)<input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgResPrimConsTemp) + "\" name=\"cfgResPrimConsTemp\"/></label>");
+  httpClient.print("<label> Temp Hist Principal (ºC)<input type=\"text\"  maxlength=\"16\" value=\""     + String(cfgResPrimHystTemp) + "\" name=\"cfgResPrimHystTemp\"/></label>");
+  httpClient.print("<label> Temp Consigna Inyectior (ºC)<input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgResInyeConsTemp) + "\" name=\"cfgResInyeConsTemp\"/></label>");
+  httpClient.print("<label> Temp Hist Inyectior (ºC)<input type=\"text\"  maxlength=\"16\" value=\""     + String(cfgResInyeHystTemp) + "\" name=\"cfgResInyeHystTemp\"/></label>");
+  httpClient.print("<label> Temp Consigna Agua (ºC)<input type=\"text\"  maxlength=\"16\" value=\""      + String(cfgAguaConsTemp)    + "\" name=\"cfgAguaConsTemp\"/></label>");
+  httpClient.print("<label> Temp Hist Agua (ºC)<input type=\"text\"  maxlength=\"16\" value=\""          + String(cfgAguaHystTemp)    + "\" name=\"cfgAguaHystTemp\"/></label>");
+  httpClient.print(F("</div>"));
+
+  httpClient.print(F("<div class=\"section\"><span>2</span>Alarmas</div>"));
+  httpClient.print(F("<div class=\"inner-wrap\">"));
+  httpClient.print("<label> Alarma Principal (Minutos)<input type=\"text\"  maxlength=\"3\" value=\""  + String(cfgResPrimAlarMin)    + "\" name=\"cfgResPrimAlarMin\"/></label>");
+  httpClient.print("<label> Alarma Inyectior (Minutos)<input type=\"text\"  maxlength=\"3\" value=\""  + String(cfgResInyeAlarMin)    + "\" name=\"cfgResInyeAlarMin\"/></label>");
+  httpClient.print("<label> Alarma Agua (Minutos)<input type=\"text\"  maxlength=\"3\" value=\""       + String(cfgAguaAlarMin)       + "\" name=\"cfgAguaAlarMin\"/></label>");
+  httpClient.print(F("</div>"));
+
+  httpClient.print(F("<div class=\"section\"><span>3</span>Logica</div>"));
+  httpClient.print(F("<div class=\"inner-wrap\">"));
+  httpClient.print("<label> Entradas ON <input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgLogicIns) + "\" name=\"cfgLogicIns\"/></label>");
+  httpClient.print("<label> Salidas ON <input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgLogicOuts) + "\" name=\"cfgLogicOuts\"/></label>");
+  httpClient.print(F("</div>"));
+
   httpClient.print(F("<div class=\"button-section\">"));
   httpClient.print(F("  <input type=\"submit\" value=\"Guardar\">"));
   httpClient.print(F("  <a href=\"index.htm\"><input type=\"button\" value=\"Volver\"></a>"));
@@ -597,13 +660,141 @@ void _setNetwork()
     #endif
   }
 
-
   httpClient.println(F("HTTP/1.1 200 OK"));
   httpClient.println(F("Content-Type: text/html"));
   httpClient.println();
 
   httpClient.print(F("<!DOCTYPE HTML><html>"));
   httpClient.print("<title>" + String(PROJECT) + " + Red Config</title>");
+  
+  httpClient.print(F("<head>"));
+  httpClient.print(F("<link rel=\"stylesheet\" type=\"text/css\" href=\"style.css\" />"));
+  httpClient.print(F("</head>"));
+
+  if (error == 0)
+    httpClient.print(F("<p class=\"sansserif\">Configuraci&oacuten guardada correctamente.</p>"));
+  else
+    httpClient.print(F("<p class=\"sansserif\">Error el guardar la configuraci&oacuten. Revise los datos introducidos.</p>"));
+
+  httpClient.print(F("<div class=\"button-section\">"));
+  httpClient.print(F("  <a href=\"index.htm\"><input type=\"button\" value=\"Volver\"></a>"));
+  httpClient.print(F("</div>"));
+  
+  httpClient.print(F("</div>"));
+  httpClient.print(F("</div>"));
+  httpClient.print(F("</form>"));
+  httpClient.print(F("</div>"));
+
+  httpClient.print(F("</body>"));
+  httpClient.print(F("</html>"));
+}
+
+void _setCfg()
+{
+  bool error = 0;
+  /*
+  int i = 0;
+  String subStr, paramStr;
+
+  String scfgLogicIns;
+  String scfgLogicOuts;
+
+  String scfgResPrimVout;
+  String scfgResInyeVout;
+  String scfgResPrimInyeTemp;
+  String scfgResPrimConsTemp;
+  String scfgResPrimHystTemp;
+  String scfgResInyeConsTemp;
+  String scfgResInyeHystTemp;
+  String scfgAguaConsTemp;
+  String scfgAguaHystTemp;
+
+  String scfgResPrimAlarMin;
+  String scfgResInyeAlarMin;
+  String scfgAguaAlarMin;
+
+ // Get params  
+  i = httpRxString.indexOf('?');
+  if (i != -1)
+  {
+    subStr = httpRxString.substring(i + 1);
+    i = subStr.indexOf(' ');
+    if (i != -1)
+      subStr = subStr.substring(0, i);
+    else
+      error = 1;
+  }
+  else
+    error = 1;
+
+  if (error == 0)
+  {
+    for (i = 0; i < HTTP_NUM_CFG_PARAMS; i++)
+    {
+      //Get param
+      paramStr = _httpArg(subStr, '&', i);
+      #if (_HTTP_SERIAL_DEBUG_ == 1)
+      Serial.println (paramStr);
+      #endif
+
+      if (paramStr.indexOf("cfgResInyeVout=") != -1)
+        scfgLogicIns = _httpArg(paramStr, '=', 1);
+      else if (paramStr.indexOf("cfgLogicOuts=") != -1)
+        scfgLogicOuts = _httpArg(paramStr, '=', 1);
+
+      else if (paramStr.indexOf("cfgResPrimVout=") != -1)
+        scfgResPrimVout = _httpArg(paramStr, '=', 1);
+      else if (paramStr.indexOf("cfgResInyeVout=") != -1)
+        scfgResInyeVout = _httpArg(paramStr, '=', 1);
+      else if (paramStr.indexOf("cfgResPrimInyeTemp=") != -1)
+        scfgResPrimInyeTemp = _httpArg(paramStr, '=', 1);
+      else if (paramStr.indexOf("cfgResPrimConsTemp=") != -1)
+        scfgResPrimConsTemp = _httpArg(paramStr, '=', 1);
+      else if (paramStr.indexOf("cfgResPrimHystTemp=") != -1)
+        scfgResPrimHystTemp = _httpArg(paramStr, '=', 1);
+      else if (paramStr.indexOf("cfgResInyeConsTemp=") != -1)
+        scfgResInyeConsTemp = _httpArg(paramStr, '=', 1);
+      else if (paramStr.indexOf("cfgResInyeHystTemp=") != -1)
+        scfgResInyeHystTemp = _httpArg(paramStr, '=', 1);
+      else if (paramStr.indexOf("cfgAguaConsTemp=") != -1)
+        scfgAguaConsTemp = _httpArg(paramStr, '=', 1);
+      else if (paramStr.indexOf("scfgAguaHystTemp=") != -1)
+        scfgAguaHystTemp = _httpArg(paramStr, '=', 1);
+
+      else if (paramStr.indexOf("cfgResPrimAlarMin=") != -1)
+        scfgResPrimAlarMin = _httpArg(paramStr, '=', 1);
+      else if (paramStr.indexOf("cfgResInyeAlarMin=") != -1)
+        scfgResInyeAlarMin = _httpArg(paramStr, '=', 1);
+      else if (paramStr.indexOf("cfgAguaAlarMin=") != -1)
+        scfgAguaAlarMin = _httpArg(paramStr, '=', 1);
+    }
+  }
+
+  // Must be 
+  if ((scfgLogicIns.length() == 0)        ||
+      (scfgLogicOuts.length() == 0)       ||
+
+      (scfgResPrimVout.length() == 0)     ||
+      (scfgResInyeVout.length() == 0)     ||
+      (scfgResPrimInyeTemp.length() == 0) ||
+      (scfgResPrimConsTemp.length() == 0) ||
+      (scfgResPrimHystTemp.length() == 0) ||
+      (scfgResInyeConsTemp.length() == 0) ||
+      (scfgAguaConsTemp.length() == 0)    ||
+      (scfgAguaHystTemp.length() == 0)    ||
+
+      (scfgResPrimAlarMin.length() == 0)  ||
+      (scfgResInyeAlarMin.length() == 0)  ||
+      (scfgAguaAlarMin.length() == 0))
+    error = 1;
+  */
+
+  httpClient.println(F("HTTP/1.1 200 OK"));
+  httpClient.println(F("Content-Type: text/html"));
+  httpClient.println();
+
+  httpClient.print(F("<!DOCTYPE HTML><html>"));
+  httpClient.print("<title>" + String(PROJECT) + " + Config</title>");
   
   httpClient.print(F("<head>"));
   httpClient.print(F("<link rel=\"stylesheet\" type=\"text/css\" href=\"style.css\" />"));
@@ -723,9 +914,11 @@ void _serveSTATUS()
 
   httpClient.print(F("<tr>"));
   httpClient.print(F("<td>Control Modo </td>"));
-  httpClient.print("<td>" + String(ctrMode) + "</td>");
+  if (ctrMode == MODE_AUTO)
+   httpClient.print(F("<td><font style=\"color:green\">AUTO</font></td>"));
+  else
+   httpClient.print(F("<td><font style=\"color:grey\">TEST</font></td>"));
   httpClient.print(F("</tr>"));
-
   /*
   httpClient.print(F("<tr>"));
   httpClient.print(F("<td>MQTT Estado </td>"));
@@ -911,6 +1104,10 @@ void _httpClientLoop ()
           httpTxPage = 6;
         else if (httpRxString.indexOf("GET /setNetwork") != -1)
           httpTxPage = 7;
+        else if (httpRxString.indexOf("GET /cfg.htm") != -1)
+          httpTxPage = 8;
+        else if (httpRxString.indexOf("GET /setCfg") != -1)
+          httpTxPage = 9;
         else if ((httpRxString.indexOf("GET /index.htm") != -1) ||
                  (httpRxString.indexOf("GET / HTTP") != -1))
           httpTxPage = 2;
@@ -977,6 +1174,14 @@ void _httpClientLoop ()
 
         case 7:
           _setNetwork();
+          break;
+
+        case 8:
+          _serveCfg();
+          break;
+
+        case 9:
+          _setCfg();
           break;
       }
       

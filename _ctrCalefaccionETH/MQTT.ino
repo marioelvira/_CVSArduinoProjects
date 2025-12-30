@@ -209,7 +209,7 @@ void _MQTTSetup(void)
   
   mqttClient.setCallback(mqttDataCallback);
 
-  mqttClientId = "caleMQTT-";// + rIdStr;
+  mqttClientId = "caleMQTT-" + UniqueIdStr;
   #if (_MQTT_SERIAL_DEBUG_ == 1)
   Serial.print("MQTT Client ID: "); Serial.println(mqttClientId);
   #endif

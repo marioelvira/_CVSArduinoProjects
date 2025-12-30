@@ -20,13 +20,14 @@ extern "C" {
 ///////////
 
 #define _USE_LED_                  0 // Used as SPI
-#define _USE_WDE_                  1
+#define _USE_WDE_                  0//1
 #define _USE_ETHERNET_             1
 #define _USE_RS485_                0
+#define _USE_UID_                  1
 
 #if (_USE_ETHERNET_ == 1)
 #define _USE_HTTP_                 1
-#define _USE_MQTT_                 1
+#define _USE_MQTT_                 0
 #define _USE_NTP_                  0
 #endif
 
@@ -42,7 +43,7 @@ extern "C" {
 #define _STATUS_SERIAL_DEBUG_      0
 #define _HTTP_SERIAL_DEBUG_        0
 #define _ETH_SERIAL_DEBUG_         0
-#define _MQTT_SERIAL_DEBUG_        0
+#define _MQTT_SERIAL_DEBUG_        1
 #define _NTP_SERIAL_DEBUG_         0
 #define _WD_SERIAL_DEBUG_          0
 #endif

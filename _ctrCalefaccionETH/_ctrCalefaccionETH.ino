@@ -1,43 +1,55 @@
 #include "main.h"
 
 #include <EEPROM.h>
-#include <UIPEthernet.h>
-//#include <EthernetENC.h>
-#if (_USE_UID_ == 1)
-#include <ArduinoUniqueID.h>
+
+#if (_USE_ETHERNET_ == 1)
+#include <ETH.h>
 #endif
+
 #if (_USE_MQTT_ == 1)
 #include <PubSubClient.h>
+#endif
+#if (_USE_HTTP_ == 1)
+#include <WebServer.h>
 #endif
 #if (_USE_NTP_ == 1)
 #include <NTPClient.h>
 #endif
 
 #if (_USE_WDE_ == 1)
-#include <avr/io.h>
-#include <avr/wdt.h>
+//TODO
+#endif
+
+#if (_USE_UID_ == 1)
+#include <ArduinoUniqueID.h>
 #endif
 
 #include "ctr.h"
 #include "e2prom.h"
-#if (_USE_HTTP_ == 1)
-#include "http.h"
-#endif
 #include "io.h"
 #include "ip.h"
+
+#if (_USE_ETHERNET_ == 1)
 #include "mEthernet.h"
-#if (_USE_MBRTU_ == 1)
-#include "modbusRTU.h"
 #endif
+
 #if (_USE_MQTT_ == 1)
 #include "MQTT.h"
+#endif
+#if (_USE_HTTP_ == 1)
+#include "http.h"
 #endif
 #if (_USE_NTP_ == 1)
 #include "mNTP.h"
 #endif
+
 #if (_USE_RS485_ == 1)
 #include "mRS485.h"
 #endif
+#if (_USE_MBRTU_ == 1)
+#include "modbusRTU.h"
+#endif
+
 #if (_USE_WDE_ == 1)
 #include "wde.h"
 #endif
@@ -122,15 +134,14 @@ int cfgAguaAlarMin;
 // Ethernet //
 //////////////
 #if (_USE_ETHERNET_ == 1)
-int       ipMode;
-
-uint8_t macAddress[6] = {0xF8, 0xDC, 0x7A, 0x00, 0x02, 0x04};
-uint8_t ipAddress[4]  = {192,168,1,50};
-uint8_t gateWay[4]    = {192,168,1,1};
-uint8_t netMask[4]    = {255,255,255,0};
-uint8_t dnsAddress[4]; // No incializar
-
+int ipMode;
 int ethStatus;
+
+//uint8_t macAddress[6] = {0xF8, 0xDC, 0x7A, 0x00, 0x02, 0x04};
+IPAddress ipAddress  (192, 168, 1, 200);
+IPAddress gateWay    (192, 168, 1, 1);
+IPAddress netMask    (255, 255, 255, 0);
+IPAddress dnsAddress;  // No incializar
 #endif
 
 //////////
@@ -175,18 +186,8 @@ int mqttTopic;
 // HTTP //
 //////////
 #if (_USE_HTTP_ == 1)
-EthernetServer httpServer(HTTP_PORT);
-int httpServerStatus;
-
-EthernetClient httpClient;
-int httpClientStatus;
-bool httpClientConnected;
-
-byte  http1stline;
-String httpRxString;
-unsigned long   httpRxTick;
-
-int   httpTxPage;
+WebServer httpServer(HTTP_PORT);
+int httpStatus;
 #endif
 
 ///////////
@@ -286,8 +287,8 @@ void _PINSetup(void)
 void setup(void)
 {
   #if (_SERIAL_DEBUG_ == 1)
-  delay(100);  // 100ms
-  Serial.begin(9600);
+  delay(2000);  // 100ms
+  Serial.begin(115200);
   Serial.print("Project: ");
   Serial.println(PROJECT);
   Serial.print("Version: ");
@@ -316,7 +317,7 @@ void setup(void)
   _IOSetup();
   _PINSetup();
 
-  // Time Setup
+  // Time setup
   _TimeSetup();
 
   // Ctr setup
@@ -328,7 +329,20 @@ void setup(void)
 
   #if (_USE_ETHERNET_ == 1)
   _ETHSetup();
+
+  #if (_USE_HTTP_ == 1)
+  _HTTPSetup();
   #endif
+
+  #if (_USE_MQTT_ == 1)
+  _MQTTSetup();
+  #endif
+
+  #if (_USE_NTP_ == 1)
+  _mNTPSetup();
+  #endif
+
+  #endif // _USE_ETHERNET_
 }
 
 ///////////////////////

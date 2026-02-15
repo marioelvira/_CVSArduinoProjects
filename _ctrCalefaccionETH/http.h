@@ -7,29 +7,13 @@ extern "C" {
 
 #include "main.h"
 
-/////////////////
-// HTTP server //
-/////////////////
-#define HTTP_PORT               80
+#define HTTP_PORT      80
 
-#define HTTP_NUM_NETWORK_PARAMS   4 //6
-#define HTTP_NUM_CFG_PARAMS       14  
+#define HTTP_START     0
+#define HTTP_ONSERVE   1
+#define HTTP_STOP      2
 
-#define HTTP_CONNECTION_TIMEOUT   3000
-#define HTTP_RX_TIMEOUT           50
-
-#define HTTP_SERVER_INIT          0
-#define HTTP_SERVER_ON            1
-
-#define HTTP_CLIENT_INIT          0
-#define HTTP_CLIENT_CONNECTED     1
-#define HTTP_CLIENT_ON_RX         2
-#define HTTP_CLIENT_ON_ANALYSIS   3
-#define HTTP_CLIENT_ON_TX         4
-
-/*
 #define JSON_TICK      100
-*/
 
 const char cssSTYLE[] =
   ".myform { width:450px;padding:30px;margin:40px auto;background: #FFF; border-radius: 10px; -webkit-border-radius:10px; -moz-border-radius: 10px; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.13); -moz-box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.13); -webkit-box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.13); }"               

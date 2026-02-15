@@ -14,6 +14,8 @@ void _RS485Setup(void)
   delay(100);  // 100ms
   Serial.begin(9600);
 
+  //Serial.begin(baud, config, rxPin, txPin); TODO
+
   mrs485State = MRS485_STANDBY;
   mrs485RxBuffer.reserve(MRS485_ARRAY_SIZE);
   //mrs485TxBuffer.reserve(MRS485_ARRAY_SIZE);

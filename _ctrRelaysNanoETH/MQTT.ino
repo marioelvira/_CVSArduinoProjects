@@ -121,10 +121,10 @@ void _MQTTSend(int itopic)
     str = str + "\",\n";
 
     str = str + "\"ip\":\"";
-    str = str + String(ipAddress[3]); str = str + ".";
-    str = str + String(ipAddress[2]); str = str + ".";
+    str = str + String(ipAddress[0]); str = str + ".";
     str = str + String(ipAddress[1]); str = str + ".";
-    str = str + String(ipAddress[0]);
+    str = str + String(ipAddress[2]); str = str + ".";
+    str = str + String(ipAddress[3]);
     str = str + "\",\n";
   }
   ////////////////
@@ -215,17 +215,22 @@ void _MQTTSend(int itopic)
 // MQTT set up //
 /////////////////
 void _MQTTSetup(void)
-{ 
-  String rIdStr((char*)compdate);
-  
+{  
   mqttClient.setServer(MQTT_BROKER, MQTT_BROKER_PORT);
   
   mqttClient.setCallback(mqttDataCallback);
+  
+  #if (_USE_UID_ == 1)
+  mqttClientId = "relaysMQTT-" + UniqueIdStr;
+  #else
+  String rIdStr((char*)compdate);
+  mqttClientId = "relaysMQTT-" + rIdStr;
+  #endif
 
-  mqttClientId = "calefactMQTT-" + rIdStr;
   #if (_MQTT_SERIAL_DEBUG_ == 1)
   Serial.print("MQTT Client ID: "); Serial.println(mqttClientId);
   #endif
+
   mqttStatus = MQTT_NOT_CONNECTED;
   mqttTopic = 0;
 }
@@ -320,7 +325,7 @@ void _MQTTLoop(void)
         _MQTTSend(mqttTopic);
         
 		    mqttTopic++;
-		    if (mqttTopic > MQTT_NUM_TOPICS)
+		    if (mqttTopic >= MQTT_NUM_TOPICS)
 		      mqttTopic = 0;
 
       }

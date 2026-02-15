@@ -9,27 +9,37 @@ extern "C" {
 ///////////////////
 // IO definition //
 ///////////////////
-
-/*                           |--------|
- *                        ---|   USB  |--- 
- *                        |  |--------|  |
- *                        |              |
- *          ETH -SPI-SCK -| D13      D12 |- SPI-MISO - ETH
- *                       -| 3V3      D11 |- SPI-MOSI - ETH
- *                       -| AREF     D10 |- SPI-SS - ETH
- *                OUT <- -| A0        D9 |- -> PWM2 - OUT AUX
- *                OUT <- -| A1        D8 |- -> OUT2 - BOM. ACHIQUE
- *                OUT <- -| A2        D7 |- -> OUT1 - BOM. AGUA
- *                OUT <- -| A3        D6 |- -> PWM1 - RES. INYECTOR
- *               I2C SCA -| A4        D5 |- -> PWM0 - RES. PRINCIPAL 
- *               I2C SCL -| A5        D4 |- -> OUT0 - QUEMADOR
- *                OUT <- -| A6  [  ]  D3 |- <- IN FREC.
- *             RTS_RS485 -| A7  ****  D2 |- <- IN TERMOSTATO
- *                    5V -| 5V       GND |- GND  
- *                 RESET -| RST      RST |- 
- *                   GND -| GND      RX0 |- RX_RS485
- *                   VIN -| 5V       TX1 |- TX_RS485 
- *                        ---------------
+/* Strapping: GPIO34,35, 36, 37 y 38   */
+/*                              |--------|
+ *                        ------| USB  C |------
+ *                        |     |--------|     |
+ *                        |                    |
+ *               OUT0 <- -| GPIO54        VUBS |-
+ *               OUT1 <- -| GPIO19        VSYS |-
+ *                       -| GND            GND |-
+ *                       -| GPIO18          EN |-
+ *                       -| GPIO17         3V3 |-
+ *                       -| GPIO16      GPIO20 |- -> Led status
+ *                       -| GPIO15      GPIO21 |-
+ *                       -| GND            GND |-
+ *                       -| GPIO14      GPIO22 |-
+ *                       -| GPIO06      GPIO23 |-
+ *                       -| GPIO05         RUN |- System Control
+ *                       -| GPIO04      GPIO26 |-
+ *                       -| GND            GND |-
+ *                       -| GPIO03      GPIO27 |-
+ *                       -| GPIO02      GPIO32 |-
+ *                       -| SCL/GPIO08  GPIO33 |-
+ *                       -| SCL/GPIO07  GPIO46 |- -> RTS_RS485
+ *                       -| GND            GND |-
+ *                       -| DM/GPIO24   GPIO47 |- <- RX_RS485
+ *                       -| DP/GPIO25   GPIO48 |- -> TX_RS485
+ *                       -|                    |-
+ *                       -|    ------------    |-
+ *                       -|    |          |    |-
+ *                       -|    |   ETH    |    |-
+ *                       -|    |          |    |-
+ *                        ----------------------
  */
 
 ////////////////////
@@ -37,45 +47,25 @@ extern "C" {
 ////////////////////
 
 // LED
-#define PIN_LED        13
-
-// ADCs
-#define ADC_NUMBER     8 // MAX 8
-
-#define PIN_ADC0       A0
-#define PIN_ADC1       A1
-#define PIN_ADC2       A2
-#define PIN_ADC3       A3
-#define PIN_ADC4       A4
-#define PIN_ADC5       A5
-#define PIN_ADC6       A6
-#define PIN_ADC7       A7
+#define PIN_LED        20 // Pin J1 - GPIO20
 
 // OUTs
-#define OUT_NUMBER      6
+#define OUT_NUMBER      2
 
-#define PIN_OUTA        2
-#define PIN_OUTB        3
-#define PIN_OUTC        4
-#define PIN_OUTD        5
-#define PIN_OUTE        6
-#define PIN_OUTF        7
+#define PIN_OUT0        54
+#define PIN_OUT1        19
 
 //#define PIN_RS485_RXTX  4
-#define PIN_SPI_CLK     13
-#define PIN_SPI_MISO    12
-#define PIN_SPI_MOSI    11
-#define PIN_SPI_CS      10
 
 // INs
 #define IN_NUMBER       2
 
-#define PIN_IN0         8
-#define PIN_IN1         9
+#define PIN_IN0         17
+#define PIN_IN1         18
 
 // Status OUTs
-//#define PIN_OUT_ON     1
-//#define PIN_OUT_OFF    0
+#define PIN_OUT_ON     1
+#define PIN_OUT_OFF    0
 
 // Status Pull-up INs
 //#define PIN_IN_OFF      1

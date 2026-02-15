@@ -1,55 +1,251 @@
 #include "main.h"
 
 #if (_USE_HTTP_ == 1)
+void _HTTPSetup(void)
+{
+  httpStatus = HTTP_STOP;
+}
 
-/*
-void _setTimeSETTINGS()
+void _HTTPStart(void)
+{
+  httpStatus = HTTP_START;
+}
+
+void _HTTPStop(void)
+{
+  httpServer.stop();
+}
+
+///////////
+// Pages //
+///////////
+
+void _serveCSS()
+{
+  httpServer.send (200, "text/css", cssSTYLE);
+}
+
+void _serveMAIN()
+{
+  String html = "";
+  
+  html = "<!DOCTYPE HTML><html>";
+  html = html + "<title>" + PROJECT + " Estado</title>";
+  html = html + "<head>";
+  html = html + "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"/>";
+  html = html + "<link rel=\"icon\" href=\"data:,\">";
+  html = html + "<link rel=\"stylesheet\" type=\"text/css\" href=\"style.css\" />";
+  html = html + "</head>";
+
+  html = html + "<body>";
+  html = html + "<div class=\"myform\">";
+  html = html + "<h1>" + PROJECT + " #Estado<span>" + TECHNOLOGY + "</span><span align=\"right\"> " + compdate + " " + comptime + "</span></h1>";
+
+  html = html + "<div class=\"section\"><span>1</span>Sistema</div>";
+  html = html + "<p class=\"sansserif\" id=\"STATUSSid\">...</p>";
+  html = html + "<p>";
+  html = html + "  <input type=\"button\" value=\"Reset\" onclick=\"sendOUT(1)\">";
+  html = html + "  <input type=\"button\" value=\"Restore\" onclick=\"sendOUT(2)\">";
+  html = html + "</p>";
+
+  html = html + "<div class=\"section\"><span>2</span>Control</div>";
+  html = html + "<p class=\"sansserif\" id=\"CTRid\">...</p>";
+  
+  html = html + "<div class=\"section\"><span>3</span>Entradas</div>";
+  html = html + "<p class=\"sansserif\" id=\"INSid\">...</p>";
+  
+  html = html + "<div class=\"section\"><span>4</span>Salidas</div>";
+  html = html + "<p class=\"sansserif\" id=\"OUTSid\">...</p>";
+
+  html = html + "<div class=\"section\"><span>5</span>Test</div>";
+  html = html + "<p>";
+  html = html + "  <input type=\"button\" value=\"Cambiar Modo\" onclick=\"sendOUT(0)\">";
+  html = html + "</p><p>";
+  html = html + "  <input type=\"button\" value=\"0\" onclick=\"sendOUT(10)\">";
+  html = html + "  <input type=\"button\" value=\"1\" onclick=\"sendOUT(11)\">";
+  html = html + "</p>";
+
+  html = html + "<div class=\"section\"><span>6</span>Configuraci&oacuten</div>";
+  html = html + "<p>";
+  html = html + "  <a href=\"network.htm\"><input type=\"button\" value=\"Red\"></a>";
+  html = html + "  <a href=\"settings.htm\"><input type=\"button\" value=\"Parametros\"></a>";
+  html = html + "</p>"; 
+  html = html + "</div>";
+
+  html = html + "<script>";
+  
+  html = html + "function sendOUT(out) {";
+  html = html + "  var xhttp = new XMLHttpRequest();";
+  html = html + "  xhttp.open(\"GET\", \"setOUTS?OUTNumber=\"+out, true);";
+  html = html + "  xhttp.send();";
+  html = html + "}";
+  
+  html = html + "setInterval(function() {";
+  html = html + "  getCTR();";
+  html = html + "  getOUTS();";
+  html = html + "  getINS();";
+  html = html + "  getSTATUS();";
+  html = html + "}, 1000);";
+  
+  html = html + "function getCTR() {";
+  html = html + "  var xhttp = new XMLHttpRequest();";
+  html = html + "  xhttp.onreadystatechange = function() {";
+  html = html + "    if (this.readyState == 4 && this.status == 200) {";
+  html = html + "      document.getElementById(\"CTRid\").innerHTML = this.responseText;";
+  html = html + "   }";
+  html = html + "  };";
+  html = html + "  xhttp.open(\"GET\", \"readCTR\", true);";
+  html = html + "  xhttp.send();";
+  html = html + "}";
+  
+  html = html + "function getOUTS() {";
+  html = html + "  var xhttp = new XMLHttpRequest();";
+  html = html + "  xhttp.onreadystatechange = function() {";
+  html = html + "    if (this.readyState == 4 && this.status == 200) {";
+  html = html + "      document.getElementById(\"OUTSid\").innerHTML = this.responseText;";
+  html = html + "   }";
+  html = html + "  };";
+  html = html + "  xhttp.open(\"GET\", \"readOUTS\", true);";
+  html = html + "  xhttp.send();";
+  html = html + "}";
+  
+  html = html + "function getINS() {";
+  html = html + "  var xhttp = new XMLHttpRequest();";
+  html = html + "  xhttp.onreadystatechange = function() {";
+  html = html + "    if (this.readyState == 4 && this.status == 200) {";
+  html = html + "      document.getElementById(\"INSid\").innerHTML = this.responseText;";
+  html = html + "   }";
+  html = html + "  };";
+  html = html + "  xhttp.open(\"GET\", \"readINS\", true);";
+  html = html + "  xhttp.send();";
+  html = html + "}";
+  
+  html = html + "function getSTATUS() {";
+  html = html + "  var xhttp = new XMLHttpRequest();";
+  html = html + "  xhttp.onreadystatechange = function() {";
+  html = html + "    if (this.readyState == 4 && this.status == 200) {";
+  html = html + "      document.getElementById(\"STATUSSid\").innerHTML = this.responseText;";
+  html = html + "   }";
+  html = html + "  };";
+  html = html + "  xhttp.open(\"GET\", \"readSTATUS\", true);";
+  html = html + "  xhttp.send();";
+  html = html + "}";
+  
+  html = html + "</script>";
+
+  html = html + "</form>";
+  html = html + "</div>";
+  
+  html = html + "</body> ";
+  html = html + "</html>";
+
+  httpServer.send (200, "text/html", html);
+}
+
+// Settings
+void _serveSETTINGS()
+{
+  String html = "";
+  
+  html = "<!DOCTYPE HTML><html>";
+  html = html + "<title>" + PROJECT + " Config</title>";
+  html = html + "<head>";
+  html = html + "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"/>";
+  html = html + "<link rel=\"icon\" href=\"data:,\">";
+  html = html + "<link rel=\"stylesheet\" type=\"text/css\" href=\"style.css\" />";
+  html = html + "</head>";
+
+  html = html + "<body>";
+  html = html + "<div class=\"myform\">";
+  html = html + "<h1>" + PROJECT + " #Config<span>" + TECHNOLOGY + "</span><span align=\"right\"> " + compdate + " " + comptime + "</span></h1>";
+
+  html = html + "<form method='get' action='settingsSet'>";
+
+  html = html + "<div class=\"section\"><span>1</span>Control</div>";
+  html = html + "<div class=\"inner-wrap\">";
+  html = html + "<label> Tension Principal (Voltios)<input type=\"text\"  maxlength=\"16\" value=\""  + String(cfgResPrimVout)     + "\" name=\"cfgResPrimVout\"/></label>";
+  html = html + "<label> Tension Inyectior (Voltios)<input type=\"text\"  maxlength=\"16\" value=\""  + String(cfgResInyeVout)     + "\" name=\"cfgResInyeVout\"/></label>";
+  html = html + "<label> Temp Arranque Inyectior (ºC)<input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgResPrimInyeTemp) + "\" name=\"cfgResPrimInyeTemp\"/></label>";
+  html = html + "<label> Temp Consigna Principal (ºC)<input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgResPrimConsTemp) + "\" name=\"cfgResPrimConsTemp\"/></label>";
+  html = html + "<label> Temp Hist Principal (ºC)<input type=\"text\"  maxlength=\"16\" value=\""     + String(cfgResPrimHystTemp) + "\" name=\"cfgResPrimHystTemp\"/></label>";
+  html = html + "<label> Temp Consigna Inyectior (ºC)<input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgResInyeConsTemp) + "\" name=\"cfgResInyeConsTemp\"/></label>";
+  html = html + "<label> Temp Hist Inyectior (ºC)<input type=\"text\"  maxlength=\"16\" value=\""     + String(cfgResInyeHystTemp) + "\" name=\"cfgResInyeHystTemp\"/></label>";
+  html = html + "<label> Temp Consigna Agua (ºC)<input type=\"text\"  maxlength=\"16\" value=\""      + String(cfgAguaConsTemp)    + "\" name=\"cfgAguaConsTemp\"/></label>";
+  html = html + "<label> Temp Hist Agua (ºC)<input type=\"text\"  maxlength=\"16\" value=\""          + String(cfgAguaHystTemp)    + "\" name=\"cfgAguaHystTemp\"/></label>";
+  html = html + "</div>";
+
+  html = html + "<div class=\"section\"><span>2</span>Alarmas</div>";
+  html = html + "<div class=\"inner-wrap\">";
+  html = html + "<label> Alarma Principal (Minutos)<input type=\"text\"  maxlength=\"3\" value=\""  + String(cfgResPrimAlarMin)    + "\" name=\"cfgResPrimAlarMin\"/></label>";
+  html = html + "<label> Alarma Inyectior (Minutos)<input type=\"text\"  maxlength=\"3\" value=\""  + String(cfgResInyeAlarMin)    + "\" name=\"cfgResInyeAlarMin\"/></label>";
+  html = html + "<label> Alarma Agua (Minutos)<input type=\"text\"  maxlength=\"3\" value=\""       + String(cfgAguaAlarMin)       + "\" name=\"cfgAguaAlarMin\"/></label>";
+  html = html + "</div>";
+
+  html = html + "<div class=\"section\"><span>3</span>Logica</div>";
+  html = html + "<div class=\"inner-wrap\">";
+  html = html + "<label> Entradas ON <input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgLogicIns) + "\" name=\"cfgLogicIns\"/></label>";
+  html = html + "<label> Salidas ON <input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgLogicOuts) + "\" name=\"cfgLogicOuts\"/></label>";
+  html = html + "</div>";
+
+  html = html + "<div class=\"button-section\">";
+  html = html + "  <input type=\"submit\" value=\"Guardar\">";
+  html = html + "  <a href=\"index.htm\"><input type=\"button\" value=\"Volver\"></a>";
+  html = html + "</div>";
+  
+  html = html + "</div>";
+  html = html + "</div>";
+  html = html + "</form>";
+  html = html + "</div>";
+
+  html = html + "</body> ";
+  html = html + "</html>";
+
+  httpServer.send (200, "text/html", html);
+}
+
+void _setSETTINGS()
 {
   int eeprom_value_hi, eeprom_value_lo;
     
   String html = "";
+  
+  String scfgResPrimVout     = httpServer.arg("cfgResPrimVout");
+  String scfgResInyeVout     = httpServer.arg("cfgResInyeVout");
+  String scfgResPrimInyeTemp = httpServer.arg("cfgResPrimInyeTemp");
+  String scfgResPrimConsTemp = httpServer.arg("cfgResPrimConsTemp");
+  String scfgResPrimHystTemp = httpServer.arg("cfgResPrimHystTemp");
+  String scfgResInyeHystTemp = httpServer.arg("cfgResInyeHystTemp");
+  String scfgAguaConsTemp    = httpServer.arg("cfgAguaConsTemp");
+  String scfgAguaHystTemp    = httpServer.arg("cfgAguaHystTemp");
 
-  String rscaleMIN = httpServer.arg("scaleMIN");
-  String rtimeFAN  = httpServer.arg("timeFAN");
-  String rtimePUMP = httpServer.arg("timePUMP");
-  String rtimeIRRI = httpServer.arg("timeIRRI");
-  
-  String cfgIns    = httpServer.arg("cfgIns");
-  String cfgOuts   = httpServer.arg("cfgOuts");
-  
-  String rADCf     = httpServer.arg("rADCf");
+  String scfgResPrimAlarMin  = httpServer.arg("cfgResPrimAlarMin");
+  String scfgResInyeAlarMin  = httpServer.arg("cfgResInyeAlarMin");
+  String scfgAguaAlarMin     = httpServer.arg("cfgAguaAlarMin");
 
-  String rTempHi       = httpServer.arg("tempHi");
-  String rTempLo       = httpServer.arg("tempLo");
-  String rTimeOpenMin  = httpServer.arg("timeOpenMin");
-  String rTimeCloseMin = httpServer.arg("timeCloseMin");
-  String rTimeCicloMin = httpServer.arg("timeCicloMin");
-  
-  String rFanTempHi    = httpServer.arg("fanTempHi");
-  String rFanTempLo    = httpServer.arg("fanTempLo");
+  String scfgLogicIns        = httpServer.arg("cfgLogicIns");
+  String scfgLogicOuts       = httpServer.arg("cfgLogicOuts");
 
   //String rdebugVal = httpServer.arg("tdebugVal");
   
   int error = 0;
 
-  if ((rscaleMIN.length() == 0) ||
-      (rtimeFAN.length() == 0)  ||
-      (rtimePUMP.length() == 0) ||
-      (rtimeIRRI.length() == 0) ||
-      
-      (cfgIns.length() == 0)    ||
-      (cfgOuts.length() == 0)   ||
-      
-      (rADCf.length() == 0)     ||
+  if ((scfgResPrimVout.length() == 0)     ||
+      (scfgResInyeVout.length() == 0)     ||
+      (scfgResPrimInyeTemp.length() == 0) ||
+      (scfgResPrimConsTemp.length() == 0) ||
+      (scfgResPrimHystTemp.length() == 0) ||
+      (scfgResInyeHystTemp.length() == 0) ||
+      (scfgAguaConsTemp.length() == 0)    ||
+      (scfgAguaHystTemp.length() == 0)    ||
 
-      (rTempHi.length() == 0)       ||
-      (rTempLo.length() == 0)       ||
-      (rTimeOpenMin.length() == 0)  ||
-      (rTimeCloseMin.length() == 0) ||
-      (rTimeCicloMin.length() == 0) ||
-      
-      (rFanTempHi.length() == 0)    ||
-      (rFanTempLo.length() == 0))
+      (scfgResPrimAlarMin.length() == 0)  ||
+      (scfgResInyeAlarMin.length() == 0)  ||
+      (scfgAguaAlarMin.length() == 0)     ||
+
+      (scfgLogicIns.length() == 0)        ||
+      (scfgLogicOuts.length() == 0))
+
+      //(rdebugVal.length() == 0))
   {
     error = 1;  // falta un campo...
     #if (_HTTP_SERIAL_DEBUG_ == 1)
@@ -60,79 +256,29 @@ void _setTimeSETTINGS()
   // Si no hay error...
   if (error == 0)
   {
-    cfgScaleMin = rscaleMIN.toInt();
-    cfgFanTick  = rtimeFAN.toInt();
-    cfgPumpTick = rtimePUMP.toInt();
-    cfgIrriTick = rtimeIRRI.toInt();
-    
-    cfgLogicIns = cfgIns.toInt();
-    cfgLogicOuts = cfgOuts.toInt();
-    
-    cfgADCf = rADCf.toInt();
-    
-    cfgTempHi = rTempHi.toInt();
-    cfgTempLo = rTempLo.toInt();
-    cfgTimeOpenMin = rTimeOpenMin.toInt();
-    cfgTimeCloseMin = rTimeCloseMin.toInt();
-    cfgTimeCicloMin = rTimeCicloMin.toInt();
+    cfgResPrimVout     = scfgResPrimVout.toInt();
+    cfgResInyeVout     = scfgResInyeVout.toInt();
+    cfgResPrimInyeTemp = scfgResPrimInyeTemp.toInt();
+    cfgResPrimConsTemp = scfgResPrimConsTemp.toInt();
+    cfgResPrimHystTemp = scfgResPrimHystTemp.toInt();
+    cfgResInyeHystTemp = scfgResInyeHystTemp.toInt();
+    cfgAguaConsTemp    = scfgAguaConsTemp.toInt();
+    cfgAguaHystTemp    = scfgAguaHystTemp.toInt();
 
-    cfgFanTempHi = rFanTempHi.toInt();
-    cfgFanTempLo = rFanTempLo.toInt();
+    cfgResPrimAlarMin  = scfgResPrimAlarMin.toInt();
+    cfgResInyeAlarMin  = scfgResInyeAlarMin.toInt();
+    cfgAguaAlarMin     = scfgAguaAlarMin.toInt();
+
+    cfgLogicIns  = scfgLogicIns.toInt();
+    cfgLogicOuts = scfgLogicOuts.toInt();
 
     //DebugVal = rdebugVal.toInt();
     
-    #if (_HTTP_SERIAL_DEBUG_ == 1)
-    Serial.print("Min Scale: ");     Serial.print (cfgScaleMin);        Serial.println(" min");
-    Serial.print("Fan: ");           Serial.print (cfgFanTick);         Serial.println(" * min");
-    Serial.print("Pump: ");          Serial.print (cfgPumpTick);        Serial.println(" * min");
-    Serial.print("Irri: ");          Serial.print (cfgIrriTick);        Serial.println(" * min");
-    
-    Serial.print("cfgLogic Ins: ");  Serial.println(cfgLogicIns);
-    Serial.print("cfgLogic Outs: "); Serial.println(cfgLogicOuts);
-
-    // NTC Adc
-    Serial.print("ADC f: ");         Serial.print (cfgADCf);            Serial.println(" si/no 1/0");
-
-    // Control
-    Serial.print("cfgTempHi: ");       Serial.print (cfgTempHi);        Serial.println(" ºC");
-    Serial.print("cfgTempLo: ");       Serial.print (cfgTempLo);        Serial.println(" ºC");
-    Serial.print("cfgTimeOpenMin: ");  Serial.print (cfgTimeOpenMin);   Serial.println(" min");
-    Serial.print("cfgTimeCloseMin: "); Serial.print (cfgTimeCloseMin);  Serial.println(" min");
-    Serial.print("cfgTimeCicloMin: "); Serial.print (cfgTimeCicloMin);  Serial.println(" min");
-
-    Serial.print("cfgFanTempHi: ");    Serial.print (cfgFanTempHi);     Serial.println(" ºC");
-    Serial.print("cfgFanTempLo: ");    Serial.print (cfgFanTempLo);     Serial.println(" ºC");
-
-    //Serial.print("Debug: ");       Serial.print (DebugVal);           Serial.println(" ---");
-    #endif   
-
-    // Data
-    EEPROM.write(EEPROM_ADD_SCALE_XM,  (byte)cfgScaleMin);
-    EEPROM.write(EEPROM_ADD_FAN_XM,    (byte)cfgFanTick);
-    EEPROM.write(EEPROM_ADD_PUMP_XM,   (byte)cfgPumpTick);
-    EEPROM.write(EEPROM_ADD_IRRI_XM,   (byte)cfgIrriTick);
-    
-    EEPROM.write(EEPROM_ADD_LOGIC_INS,  (byte)cfgLogicIns);
-    EEPROM.write(EEPROM_ADD_LOGIC_OUTS, (byte)cfgLogicOuts);
-    
-    EEPROM.write(EEPROM_ADD_ADC_F,      (byte)cfgADCf);
-
-    EEPROM.write(EEPROM_ADD_TEMP_HI,    (byte)cfgTempHi);
-    EEPROM.write(EEPROM_ADD_TEMP_LO,    (byte)cfgTempLo);
-    EEPROM.write(EEPROM_ADD_OPEN_MIN,   (byte)cfgTimeOpenMin);
-    EEPROM.write(EEPROM_ADD_CLOSE_MIN,  (byte)cfgTimeCloseMin);
-    EEPROM.write(EEPROM_ADD_CICLO_MIN,  (byte)cfgTimeCicloMin);
-   
-    EEPROM.write(EEPROM_ADD_FAN_TEMP_HI,  (byte)cfgFanTempHi);
-    EEPROM.write(EEPROM_ADD_FAN_TEMP_LO,  (byte)cfgFanTempLo);
-
-    //EEPROM.write(EEPROM_ADD_DEBUG,      (byte)DebugVal);
-
-    EEPROM.commit();    //Store data to EEPROM
+    _ram2eepromCONFIG();
   }
 
   html = "<!DOCTYPE HTML><html>";
-  html = html + "<title>INV MQTT+ #Configuraci&oacuten</title>";
+  html = html + "<title>" + PROJECT + " Config</title>";
   html = html + "<head>";
   html = html + "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"/>";
   html = html + "<link rel=\"icon\" href=\"data:,\">";
@@ -142,7 +288,7 @@ void _setTimeSETTINGS()
   html = html + "<body>";
 
   html = html + "<div class=\"myform\">";
-  html = html + "<h1>INV MQTT+ #Configuraci&oacuten<span>Nano Every tech</span><span align=\"right\"> " + FW_Version + "</span></h1>";
+  html = html + "<h1>" + PROJECT + " #Config<span>" + TECHNOLOGY + "</span><span align=\"right\"> " + compdate + " " + comptime + "</span></h1>";
   
   if (error == 0)
     html += "<p class=\"sansserif\">Configuraci&oacuten guardada correctamente.</p>";
@@ -160,281 +306,94 @@ void _setTimeSETTINGS()
 
   httpServer.send (200, "text/html", html);
 }
-*/
 
-/*
-void _serveFavicon()
+// Network Settings
+void _serveNETWORK()
 {
-  const static byte tblFavicon[] PROGMEM = {0x00, 0x01, ...};
-
-  httpClient.println(F("HTTP/1.1 200 OK"));
-  httpClient.println(F("Content-Type: image/x-icon"));
-  httpClient.println();
-
-  for (uint16_t i = 0; i < sizeof(tblFavicon); i++)
-  {
-    byte p = pgm_read_byte_near(tblFavicon + i);
-    httpClient.print(p);
-  }
-}
-*/
-
-void _serveERROR()
-{
-  httpClient.println(F("HTTP/1.1 404 ERROR"));
-  httpClient.println(F("Content-Type: text/html"));
-  httpClient.println();
-  httpClient.print(F("<html>"));
-  httpClient.print(F("<head>"));
-  httpClient.print(F("<title>Error 404</title>"));
-  httpClient.print(F("</head>"));
-  httpClient.print(F("<body>"));
-  httpClient.print(F("<p>Error 404</p>"));
-  httpClient.print(F("</body>"));
-  httpClient.print(F("</html>"));
-}
-
-void _serveCSS()
-{
-  httpClient.println(F("HTTP/1.1 200 OK"));
-  httpClient.println(F("Content-Type: text/css"));
-  httpClient.println();
-
-  httpClient.println(cssSTYLE);
-}
-
-void _serveMAIN()
-{
-  String html;
-
-  httpClient.println(F("HTTP/1.1 200 OK"));
-  httpClient.println(F("Content-Type: text/html"));
-  httpClient.println();
-
-  httpClient.print(F("<!DOCTYPE HTML><html>"));
-  httpClient.print("<title>" + String(PROJECT) + " Estado</title>");
-
-  httpClient.print(F("<head>"));
-  httpClient.print(F("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"/>"));
-  httpClient.print(F("<link rel=\"stylesheet\" type=\"text/css\" href=\"style.css\" />"));
-  httpClient.print(F("</head>"));
-
-  httpClient.print(F("<body>"));
-  httpClient.print(F("<div class=\"myform\">"));
-  html = "<h1>" + String(PROJECT) + " #Estado<span>" + String(TECHNOLOGY) + "</span><span align=\"right\"> " + String(compdate) + " " + String(comptime) + "</span></h1>";
-  httpClient.print(html);
-
-  httpClient.print(F("<div class=\"section\">Estados</div>"));
-  httpClient.print(F("<p class=\"sansserif\" id=\"STATUSid\">...</p>"));
-
-  httpClient.print(F("<div class=\"section\">Control</div>"));
-  httpClient.print(F("<p>"));
-  httpClient.print(F("  <input type=\"button\" value=\"Cambiar Modo\" onclick=\"sendOUT(0)\">"));
-  httpClient.print(F("</p>"));
-
-  httpClient.print(F("<div class=\"section\">Watchdog</div>"));
-  httpClient.print(F("<p>"));
-  httpClient.print(F("  <input type=\"button\" value=\"Reset\" onclick=\"sendOUT(1)\">"));
-  httpClient.print(F("</p>"));
-
-  httpClient.print(F("<div class=\"section\">Configuraci&oacuten</div>"));
-  httpClient.print(F("<p>"));
-  httpClient.print(F("  <a href=\"nwset.htm\"><input type=\"button\" value=\"Red\"></a>"));
-  httpClient.print(F("  <a href=\"cfg.htm\"><input type=\"button\" value=\"Config\"></a>"));
-  httpClient.print(F("  <input type=\"button\" value=\"Restauracion\" onclick=\"sendOUT(20)\">"));
-  httpClient.print(F("</p>"));
-
-  httpClient.print(F("</div>"));
-
-  httpClient.print(F("<script>"));
+  String html = "";
   
-  httpClient.print(F("function sendOUT(out) {"));
-  httpClient.print(F("  var xhttp = new XMLHttpRequest();"));
-  httpClient.print(F("  xhttp.open(\"GET\", \"setOUTS?OUTNumber=\"+out, true);"));
-  httpClient.print(F("  xhttp.send();"));
-  httpClient.print(F("}"));
-  
-  httpClient.print(F("setInterval(function() {"));
-  httpClient.print(F("  getSTATUS();"));
-  httpClient.print(F("}, 1000);"));
+  html = "<!DOCTYPE HTML><html>";
+  html = html + "<title>" + PROJECT + " Red Config</title>";
+  html = html + "<head>";
+  html = html + "<link rel=\"icon\" href=\"data:,\">";
+  html = html + "<link rel=\"stylesheet\" type=\"text/css\" href=\"style.css\" />";
+  html = html + "</head>";
 
-  httpClient.print(F("function getSTATUS() {"));
-  httpClient.print(F("  var xhttp = new XMLHttpRequest();"));
-  httpClient.print(F("  xhttp.onreadystatechange = function() {"));
-  httpClient.print(F("    if (this.readyState == 4 && this.status == 200) {"));
-  httpClient.print(F("      document.getElementById(\"STATUSid\").innerHTML = this.responseText;"));
-  httpClient.print(F("   }"));
-  httpClient.print(F("  };"));
-  httpClient.print(F("  xhttp.open(\"GET\", \"readSTATUS\", true);"));
-  httpClient.print(F("  xhttp.send();"));
-  httpClient.print(F("}"));
-
-  httpClient.print(F("</script>"));
-  
-  httpClient.print(F("</form>"));
-  httpClient.print(F("</div>"));
-  
-  httpClient.print(F("</body> "));
-  httpClient.print(F("</html>"));
-}
-
-void _serveNetwork()
-{
-  String html;
-
-  httpClient.println(F("HTTP/1.1 200 OK"));
-  httpClient.println(F("Content-Type: text/html"));
-  httpClient.println();
-
-  httpClient.print(F("<!DOCTYPE HTML><html>"));
-  httpClient.print("<title>" + String(PROJECT) + " Red Config</title>");
-  
-  httpClient.print(F("<head>"));
-  httpClient.print(F("<link rel=\"stylesheet\" type=\"text/css\" href=\"style.css\" />"));
-  httpClient.print(F("</head>"));
-
-  httpClient.print(F("<body>"));
-  httpClient.print(F("<div class=\"myform\">"));
-  html = "<h1>" + String(PROJECT) + " #Red Config<span>" + String(TECHNOLOGY) + "</span><span align=\"right\"> " + String(compdate) + " " + String(comptime) + "</span></h1>";
-  httpClient.print(html);
-  httpClient.print(F("<form method='get' action='setNetwork'>"));
+  html = html + "<body>";
+  html = html + "<div class=\"myform\">";
+  html = html + "<h1>" + PROJECT + " #Red<span>" + TECHNOLOGY + "</span><span align=\"right\"> " + compdate + " " + comptime + "</span></h1>";
+  //html = html + "<form method=\"post\">";
+  html = html + "<form method='get' action='networkSet'>";
 
   // Red
-  httpClient.print(F("<div class=\"section\"><span>1</span>IP Config</div>"));
-  httpClient.print(F("<div class=\"inner-wrap\">"));
+  html = html + "<div class=\"section\"><span>2</span>IP</div>";
+  html = html + "<div class=\"inner-wrap\">";
 
   if (ipMode == DHCP_MODE)
   {
-    httpClient.print(F("<label><input type=\"radio\" name=\"ipmode\" value=\"dhcp\" checked> DHCP</label>"));
-    httpClient.print(F("<label><input type=\"radio\" name=\"ipmode\" value=\"ipfx\"> Fix IP</label>"));
+    html = html + "<label><input type=\"radio\" name=\"ipmode\" value=\"dhcp\" checked> DHCP</label>";
+    html = html + "<label><input type=\"radio\" name=\"ipmode\" value=\"ipfx\"> Fix IP</label>";
   }
   else
   {
-    httpClient.print(F("<label><input type=\"radio\" name=\"ipmode\" value=\"dhcp\"> DHCP</label>"));
-    httpClient.print(F("<label><input type=\"radio\" name=\"ipmode\" value=\"ipfx\" checked> Fix IP</label>"));
+    html = html + "<label><input type=\"radio\" name=\"ipmode\" value=\"dhcp\"> DHCP</label>";
+    html = html + "<label><input type=\"radio\" name=\"ipmode\" value=\"ipfx\" checked> Fix IP</label>";
   }
-  html = String(ipAddress[0]) + "." + String(ipAddress[1]) + "." + String(ipAddress[2]) + "." + String(ipAddress[3]); 
-  httpClient.print(("<label>IP Address <input type=\"text\"  maxlength=\"16\" value=\"" + html + "\" name=\"ipaddress\"/></label>"));
-  html = String(netMask[0]) + "." + String(netMask[1]) + "." + String(netMask[2]) + "." + String(netMask[3]); 
-  httpClient.print(("<label>Mask <input type=\"text\" maxlength=\"16\" value=\"" + html + "\" name=\"mask\"/></label>"));
-  html = String(gateWay[0]) + "." + String(gateWay[1]) + "." + String(gateWay[2]) + "." + String(gateWay[3]); 
-  httpClient.print(("<label>Gateway <input type=\"text\" maxlength=\"16\" value=\"" + html + "\" name=\"gateway\"/></label>"));
-
-  httpClient.print(F("</div>"));
+  
+  html = html + "<label>IP Address <input type=\"text\"  maxlength=\"16\" value=\"" + String(ipAddress.toString()) + "\" name=\"ipaddress\"/></label>";
+  html = html + "<label>Mask <input type=\"text\" maxlength=\"16\" value=\"" + String(netMask.toString()) + "\" name=\"mask\"/></label>";
+  html = html + "<label>Gateway <input type=\"text\" maxlength=\"16\" value=\"" + String(gateWay.toString()) + "\" name=\"gateway\"/></label>";
+  
+  html = html + "</div>";
   // End
 
   #if (_USE_MQTT_ == 1)
   // Broker
-  httpClient.print(F("<div class=\"section\"><span>2</span>Broker </div>"));
-  httpClient.print(F("<div class=\"inner-wrap\">"));
+  html = html + "<div class=\"section\"><span>3</span>Broker </div>";
+  html = html + "<div class=\"inner-wrap\">";
 
-  httpClient.print("<label>URL <input type=\"text\" maxlength=\"30\" value=\"" + String(brokerUrl) + "\" name=\"brokerurl\"/></label>");
-  httpClient.print("<label>Port <input type=\"text\" maxlength=\"16\" value=\"" + String(brokerPort) + "\" name=\"brokerport\"/></label>");
+  html = html + "<label>Url <input type=\"text\" maxlength=\"30\" value=\"" + String(brokerUrl) + "\" name=\"brokerurl\"/></label>";
+  html = html + "<label>Port <input type=\"text\" maxlength=\"16\" value=\"" + String(brokerPort) + "\" name=\"brokerport\"/></label>";
+  html = html + "<label>User <input type=\"text\" maxlength=\"30\" value=\"" + String(brokerUser) + "\" name=\"brokeruser\"/></label>";
+  html = html + "<label>Pswd <input type=\"text\" maxlength=\"30\" value=\"" + String(brokerPswd) + "\" name=\"brokerpswd\"/></label>";
 
-  httpClient.print(F("</div>"));
+  html = html + "</div>";
   // End
   #endif
 
-  httpClient.print(F("<div class=\"button-section\">"));
-  httpClient.print(F("  <input type=\"submit\" value=\"Guardar\">"));
-  httpClient.print(F("  <a href=\"index.htm\"><input type=\"button\" value=\"Volver\"></a>"));
-  httpClient.print(F("</div>"));
+  html = html + "<div class=\"button-section\">";
+  html = html + "  <input type=\"submit\" value=\"Guardar\">";
+  html = html + "  <a href=\"index.htm\"><input type=\"button\" value=\"Volver\"></a>";
+  html = html + "</div>";
   
-  httpClient.print(F("</div>"));
-  httpClient.print(F("</div>"));
-  httpClient.print(F("</form>"));
-  httpClient.print(F("</div>"));
+  html = html + "</div>";
+  html = html + "</div>";
+  html = html + "</form>";
+  html = html + "</div>";
 
-  httpClient.print(F("</body>"));
-  httpClient.print(F("</html>"));
+  html = html + "</body> ";
+  html = html + "</html>";
+
+  httpServer.send (200, "text/html", html);  
 }
 
-void _serveCfg()
+void _setNETWORK()
 {
-  String html;
-
-  httpClient.println(F("HTTP/1.1 200 OK"));
-  httpClient.println(F("Content-Type: text/html"));
-  httpClient.println();
-
-  httpClient.print(F("<!DOCTYPE HTML><html>"));
-  httpClient.print("<title>" + String(PROJECT) + " Config</title>");
+  String ripmode = httpServer.arg("ipmode");
+  String ripaddress = httpServer.arg("ipaddress");
+  String rmask = httpServer.arg("mask");
+  String rgate = httpServer.arg("gateway");
   
-  httpClient.print(F("<head>"));
-  httpClient.print(F("<link rel=\"stylesheet\" type=\"text/css\" href=\"style.css\" />"));
-  httpClient.print(F("</head>"));
-
-  httpClient.print(F("<body>"));
-  httpClient.print(F("<div class=\"myform\">"));
-  html = "<h1>" + String(PROJECT) + " #Config<span>" + String(TECHNOLOGY) + "</span><span align=\"right\"> " + String(compdate) + " " + String(comptime) + "</span></h1>";
-  httpClient.print(html);
-  httpClient.print(F("<form method='get' action='setCfg'>"));
-
-  httpClient.print(F("<div class=\"section\"><span>1</span>Control</div>"));
-  httpClient.print(F("<div class=\"inner-wrap\">"));
-  httpClient.print("<label> Tension Principal (Voltios)<input type=\"text\"  maxlength=\"16\" value=\""  + String(cfgResPrimVout)     + "\" name=\"cfgResPrimVout\"/></label>");
-  httpClient.print("<label> Tension Inyectior (Voltios)<input type=\"text\"  maxlength=\"16\" value=\""  + String(cfgResInyeVout)     + "\" name=\"cfgResInyeVout\"/></label>");
-  httpClient.print("<label> Temp Arranque Inyectior (ºC)<input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgResPrimInyeTemp) + "\" name=\"cfgResPrimInyeTemp\"/></label>");
-  httpClient.print("<label> Temp Consigna Principal (ºC)<input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgResPrimConsTemp) + "\" name=\"cfgResPrimConsTemp\"/></label>");
-  httpClient.print("<label> Temp Hist Principal (ºC)<input type=\"text\"  maxlength=\"16\" value=\""     + String(cfgResPrimHystTemp) + "\" name=\"cfgResPrimHystTemp\"/></label>");
-  httpClient.print("<label> Temp Consigna Inyectior (ºC)<input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgResInyeConsTemp) + "\" name=\"cfgResInyeConsTemp\"/></label>");
-  httpClient.print("<label> Temp Hist Inyectior (ºC)<input type=\"text\"  maxlength=\"16\" value=\""     + String(cfgResInyeHystTemp) + "\" name=\"cfgResInyeHystTemp\"/></label>");
-  httpClient.print("<label> Temp Consigna Agua (ºC)<input type=\"text\"  maxlength=\"16\" value=\""      + String(cfgAguaConsTemp)    + "\" name=\"cfgAguaConsTemp\"/></label>");
-  httpClient.print("<label> Temp Hist Agua (ºC)<input type=\"text\"  maxlength=\"16\" value=\""          + String(cfgAguaHystTemp)    + "\" name=\"cfgAguaHystTemp\"/></label>");
-  httpClient.print(F("</div>"));
-
-  httpClient.print(F("<div class=\"section\"><span>2</span>Alarmas</div>"));
-  httpClient.print(F("<div class=\"inner-wrap\">"));
-  httpClient.print("<label> Alarma Principal (Minutos)<input type=\"text\"  maxlength=\"3\" value=\""  + String(cfgResPrimAlarMin)    + "\" name=\"cfgResPrimAlarMin\"/></label>");
-  httpClient.print("<label> Alarma Inyectior (Minutos)<input type=\"text\"  maxlength=\"3\" value=\""  + String(cfgResInyeAlarMin)    + "\" name=\"cfgResInyeAlarMin\"/></label>");
-  httpClient.print("<label> Alarma Agua (Minutos)<input type=\"text\"  maxlength=\"3\" value=\""       + String(cfgAguaAlarMin)       + "\" name=\"cfgAguaAlarMin\"/></label>");
-  httpClient.print(F("</div>"));
-
-  httpClient.print(F("<div class=\"section\"><span>3</span>Logica</div>"));
-  httpClient.print(F("<div class=\"inner-wrap\">"));
-  httpClient.print("<label> Entradas ON <input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgLogicIns) + "\" name=\"cfgLogicIns\"/></label>");
-  httpClient.print("<label> Salidas ON <input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgLogicOuts) + "\" name=\"cfgLogicOuts\"/></label>");
-  httpClient.print(F("</div>"));
-
-  httpClient.print(F("<div class=\"button-section\">"));
-  httpClient.print(F("  <input type=\"submit\" value=\"Guardar\">"));
-  httpClient.print(F("  <a href=\"index.htm\"><input type=\"button\" value=\"Volver\"></a>"));
-  httpClient.print(F("</div>"));
-  
-  httpClient.print(F("</div>"));
-  httpClient.print(F("</div>"));
-  httpClient.print(F("</form>"));
-  httpClient.print(F("</div>"));
-
-  httpClient.print(F("</body>"));
-  httpClient.print(F("</html>"));
-}
-
-String _httpArg(String data, char separator, int index)
-{
-  int found = 0;
-  int strIndex[] = {0, -1};
-  int maxIndex = data.length() - 1;
-
-  for (int i = 0; i <= maxIndex && found <= index; i++)
-  {
-    if(data.charAt(i) == separator || i == maxIndex){
-        found++;
-        strIndex[0] = strIndex[1] + 1;
-        strIndex[1] = (i == maxIndex) ? i + 1 : i;
-    }
-  }
-  
-  return found > index ? data.substring(strIndex[0], strIndex[1]) : "";
-}
-
-void _setNetwork()
-{
-  bool error = 0;
-  int i = 0, j, k, m;
-  String subStr, paramStr;
-  String ripmode, ripaddress, rmask, rgate;
-
+  #if (_USE_MQTT_ == 1)
+  String rbrokerurl = httpServer.arg("brokerurl");
+  String rbrokerport = httpServer.arg("brokerport");
+  String rbrokeruser = httpServer.arg("brokeruser");
+  String rbrokerpswd = httpServer.arg("brokerpswd");
+  #endif
+ 
+  String html = "";
+  int i, j, k, m;
+  int error = 0;
   char schar;
   char sbuf[4];
   byte val[4];
@@ -444,394 +403,277 @@ void _setNetwork()
   IPAddress localip;
   IPAddress localmask;
   IPAddress localgate;
-  
-  // Get params  
-  i = httpRxString.indexOf('?');
-  if (i != -1)
-  {
-    subStr = httpRxString.substring(i + 1);
-    i = subStr.indexOf(' ');
-    if (i != -1)
-      subStr = subStr.substring(0, i);
-    else
-      error = 1;
-  }
-  else
-    error = 1;
 
-  if (error == 0)
-  {
-    for (i = 0; i < HTTP_NUM_NETWORK_PARAMS; i++)
-    {
-      //Get param
-      paramStr = _httpArg(subStr, '&', i);
-      #if (_HTTP_SERIAL_DEBUG_ == 1)
-      Serial.println (paramStr);
-      #endif
-
-      if (paramStr.indexOf("ipmode=") != -1)
-        ripmode = _httpArg(paramStr, '=', 1);
-      else if (paramStr.indexOf("ipaddress=") != -1)
-        ripaddress = _httpArg(paramStr, '=', 1);
-      else if (paramStr.indexOf("mask=") != -1)
-        rmask = _httpArg(paramStr, '=', 1);
-      else if (paramStr.indexOf("gateway=") != -1)
-        rgate = _httpArg(paramStr, '=', 1);
-    }
-  }
-
-  // must have a value
-  if (ripmode == "ipfx")
-  {
-    // Must be 
-    if ((ripaddress.length() == 0) ||
-        (rmask.length() == 0)      ||
-        (rgate.length() == 0))
-      error = 1;
-  }
-  // DHCP mode
-  //else {}
-  
+  #if (_USE_MQTT_ == 1)
   // Check broker error
-  //if ((rbrokerurl.length() == 0) ||
-  //    (rbrokerport.length() == 0))
-  //  error |= 1;
+  if ((rbrokerurl.length() == 0)  ||
+      (rbrokerport.length() == 0) ||
+      (rbrokeruser.length() == 0) ||
+      (rbrokerpswd.length() == 0))
+    error = 1;
+  #endif
 
   // If no error on data...
   if (error == 0)
   {
-    /*
-    ////////////
-    // Broker //
-    ////////////
-    for (i = 0; i < BROKER_MAX; i++)
+    #if (_USE_MQTT_ == 1)
+    // Broker Url
+    for (i = 0; i < MQTT_URL_MAX; i++)
       EEPROM.write(EEPROM_ADD_BROKER + i, 0);
     j = rbrokerurl.length();
     for (i = 0; i < j; i++)
       EEPROM.write(EEPROM_ADD_BROKER + i, rbrokerurl[i]);
-      
+    // Broker Port   
     brokerPort = rbrokerport.toInt();
     eeprom_value_lo = brokerPort & 0x00FF;
     EEPROM.write(EEPROM_ADD_BROKER_PORT, eeprom_value_lo);
     eeprom_value_hi = (brokerPort & 0xFF00)>>8;
     EEPROM.write(EEPROM_ADD_BROKER_PORT + 1, eeprom_value_hi);
-    */   
-       
+    // Broker User
+    for (i = 0; i < MQTT_USER_MAX; i++)
+      EEPROM.write(EEPROM_ADD_MQTT_USER + i, 0);
+    j = rbrokeruser.length();
+    for (i = 0; i < j; i++)
+      EEPROM.write(EEPROM_ADD_MQTT_USER + i, rbrokeruser[i]);
+    // Broker Password
+    for (i = 0; i < MQTT_PSWD_MAX; i++)
+      EEPROM.write(EEPROM_ADD_MQTT_PSWD + i, 0);
+    j = rbrokerpswd.length();
+    for (i = 0; i < j; i++)
+      EEPROM.write(EEPROM_ADD_MQTT_PSWD + i, rbrokerpswd[i]);
+
+    #if (_HTTP_SERIAL_DEBUG_ == 1)
+    Serial.print("---->Broker Url: ");
+    Serial.println(rbrokerurl);
+    Serial.print("---->Broker Port: ");
+    Serial.println(rbrokerport);     
+    #endif
+
+    #endif // _USE_MQTT_
+     
     /////////////
     // IP Mpde //
     /////////////
-    #if (_HTTP_SERIAL_DEBUG_ == 1)
-    Serial.println("IP 2 eeprom:");
-    #endif
-    // mode
-    if (ripmode == "dhcp")
-      EEPROM.write(EEPROM_ADD_IP_MODE, DHCP_MODE);
-    else
+    // IP
+    j = ripaddress.length();
+    k = 0;
+    m = 0;
+    for (i = 0; i < j; i++)
     {
-      EEPROM.write(EEPROM_ADD_IP_MODE, FIXIP_MODE);
-  
-      // IP
-      j = ripaddress.length();
-      k = 0;
-      m = 0;
-      for (i = 0; i < j; i++)
-      {
-        schar = ripaddress[i];
-        if (schar == '.')
-        {        
-          sbuf[k] = 0;  // end of buffer
-          val[m] = (byte)(atoi(sbuf)); // change to int
-          k = 0;
-          m++;
-        }
-        else
-        {
-          sbuf[k] = schar;
-          k++;
-        }
+      schar = ripaddress[i];
+      if (schar == '.')
+      {        
+        sbuf[k] = 0;  // end of buffer
+        val[m] = (byte)(atoi(sbuf)); // change to int
+        k = 0;
+        m++;
       }
-      // last IP value
-      sbuf[k] = 0;  // end of buffer
-      val[m] = (byte)(atoi(sbuf)); // change to int
-      localip = IPAddress(val[0], val[1], val[2], val[3]);
-    
-      EEPROM.write(EEPROM_ADD_IP1, val[0]);
-      EEPROM.write(EEPROM_ADD_IP2, val[1]);
-      EEPROM.write(EEPROM_ADD_IP3, val[2]);
-      EEPROM.write(EEPROM_ADD_IP4, val[3]);
-         
-      // Mask
-      j = rmask.length();
-      k = 0;
-      m = 0;
-      for (i = 0; i < j; i++)
+      else
       {
-        schar = rmask[i];
-        if (schar == '.')
-        {
-          sbuf[k] = 0;  // end of buffer
-          val[m] = (byte)(atoi(sbuf)); // change to int
-          k = 0;
-          m++;
-        }
-        else
-        {
-          sbuf[k] = schar;
-          k++;
-        }
+        sbuf[k] = schar;
+        k++;
       }
-      // last IP value
-      sbuf[k] = 0;  // end of buffer
-      val[m] = (byte)(atoi(sbuf)); // change to int
-      localmask = IPAddress(val[0], val[1], val[2], val[3]);
-    
-      EEPROM.write(EEPROM_ADD_MASK1, val[0]);
-      EEPROM.write(EEPROM_ADD_MASK2, val[1]);
-      EEPROM.write(EEPROM_ADD_MASK3, val[2]);
-      EEPROM.write(EEPROM_ADD_MASK4, val[3]);
-    
-      // Gateway
-      j = rgate.length();
-      k = 0;
-      m = 0;
-      for (i = 0; i < j; i++)
-      {
-        schar = rgate[i];
-        if (schar == '.')
-        {
-          sbuf[k] = 0;  // end of buffer
-          val[m] = (byte)(atoi(sbuf)); // change to int
-          k = 0;
-          m++;
-        }
-        else
-        {
-          sbuf[k] = schar;
-          k++;
-        }
-      }
-      // last IP value
-      sbuf[k] = 0;  // end of buffer
-      val[m] = (byte)(atoi(sbuf)); // change to int
-      localgate = IPAddress(val[0], val[1], val[2], val[3]);
-    
-      EEPROM.write(EEPROM_ADD_GATE1, val[0]);
-      EEPROM.write(EEPROM_ADD_GATE2, val[1]);
-      EEPROM.write(EEPROM_ADD_GATE3, val[2]);
-      EEPROM.write(EEPROM_ADD_GATE4, val[3]);
     }
+    // last IP value
+    sbuf[k] = 0;  // end of buffer
+    val[m] = (byte)(atoi(sbuf)); // change to int
+    localip = IPAddress(val[0], val[1], val[2], val[3]);
+    
+    EEPROM.write(EEPROM_ADD_IP1, val[0]);
+    EEPROM.write(EEPROM_ADD_IP2, val[1]);
+    EEPROM.write(EEPROM_ADD_IP3, val[2]);
+    EEPROM.write(EEPROM_ADD_IP4, val[3]);
+         
+    // Mask
+    j = rmask.length();
+    k = 0;
+    m = 0;
+    for (i = 0; i < j; i++)
+    {
+      schar = rmask[i];
+      if (schar == '.')
+      {
+        sbuf[k] = 0;  // end of buffer
+        val[m] = (byte)(atoi(sbuf)); // change to int
+        k = 0;
+        m++;
+      }
+      else
+      {
+        sbuf[k] = schar;
+        k++;
+      }
+    }
+    // last IP value
+    sbuf[k] = 0;  // end of buffer
+    val[m] = (byte)(atoi(sbuf)); // change to int
+    localmask = IPAddress(val[0], val[1], val[2], val[3]);
+    
+    EEPROM.write(EEPROM_ADD_MASK1, val[0]);
+    EEPROM.write(EEPROM_ADD_MASK2, val[1]);
+    EEPROM.write(EEPROM_ADD_MASK3, val[2]);
+    EEPROM.write(EEPROM_ADD_MASK4, val[3]);
+    
+    // Gateway
+    j = rgate.length();
+    k = 0;
+    m = 0;
+    for (i = 0; i < j; i++)
+    {
+      schar = rgate[i];
+      if (schar == '.')
+      {
+        sbuf[k] = 0;  // end of buffer
+        val[m] = (byte)(atoi(sbuf)); // change to int
+        k = 0;
+        m++;
+      }
+      else
+      {
+        sbuf[k] = schar;
+        k++;
+      }
+    }
+    // last IP value
+    sbuf[k] = 0;  // end of buffer
+    val[m] = (byte)(atoi(sbuf)); // change to int
+    localgate = IPAddress(val[0], val[1], val[2], val[3]);
+    
+    EEPROM.write(EEPROM_ADD_GATE1, val[0]);
+    EEPROM.write(EEPROM_ADD_GATE2, val[1]);
+    EEPROM.write(EEPROM_ADD_GATE3, val[2]);
+    EEPROM.write(EEPROM_ADD_GATE4, val[3]);
+
+    // OK
+    i = 200;
 
     #if (_HTTP_SERIAL_DEBUG_ == 1)
-    
-     // IP configuration
-     Serial.print("---->Local IP: ");
-     Serial.println(localip);
-     Serial.print("---->Local mask: ");
-     Serial.println(localmask);
-     Serial.print("---->Local gateway: ");
-     Serial.println(localgate);
-     /*
-     // Broker configuration
-     Serial.print("---->Broker Url: ");
-     Serial.println(rbrokerurl);
-     Serial.print("---->Broker Port: ");
-     Serial.println(rbrokerport);     
-     */
-     #endif
-     
-     //EEPROM.commit();
+    // IP configuration
+    Serial.print("---->Local IP: ");
+    Serial.println(localip);
+    Serial.print("---->Local mask: ");
+    Serial.println(localmask);
+    Serial.print("---->Local gateway: ");
+    Serial.println(localgate);
+    #endif // (_HTTP_SERIAL_DEBUG_ == 1)
 
-     #if (_READ_EEPROM_ == 1)
-     _ReadEEPROM();
-     delay(1000);
-     #endif
-    
-     // Read config from EEPROM
-     _readCONFIG();
+    EEPROM.commit();
 
-    #if (_HTTP_SERIAL_DEBUG_ == 1)
-    Serial.println("Sending 200");
+    #if (_READ_EEPROM_ == 1)
+    _ReadEEPROM();
+    delay(1000);
     #endif
-  }
+    
+    // Read config from EEPROM
+    _readCONFIG();
+  }  
   else
   {
     #if (_HTTP_SERIAL_DEBUG_ == 1)
     Serial.println("Sending 404");
     #endif
+
+    // Error
+    i = 404;
   }
 
-  httpClient.println(F("HTTP/1.1 200 OK"));
-  httpClient.println(F("Content-Type: text/html"));
-  httpClient.println();
+  html = "<!DOCTYPE HTML><html>";
+  html = html + "<title>" + PROJECT + " Config</title>";
+  html = html + "<head>";
+  html = html + "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"/>";
+  html = html + "<link rel=\"icon\" href=\"data:,\">";
+  html = html + "<link rel=\"stylesheet\" type=\"text/css\" href=\"style.css\" />";
+  html = html + "</head>";
 
-  httpClient.print(F("<!DOCTYPE HTML><html>"));
-  httpClient.print("<title>" + String(PROJECT) + " + Red Config</title>");
+  html = html + "<body>";
+
+  html = html + "<div class=\"myform\">";
+  html = html + "<h1>" + PROJECT + " #Config<span>" + TECHNOLOGY + "</span><span align=\"right\"> " + compdate + " " + comptime + "</span></h1>";
   
-  httpClient.print(F("<head>"));
-  httpClient.print(F("<link rel=\"stylesheet\" type=\"text/css\" href=\"style.css\" />"));
-  httpClient.print(F("</head>"));
-
   if (error == 0)
-    httpClient.print(F("<p class=\"sansserif\">Configuraci&oacuten guardada correctamente.</p>"));
+    html += "<p class=\"sansserif\">Configuraci&oacuten guardada correctamente.</p>";
   else
-    httpClient.print(F("<p class=\"sansserif\">Error el guardar la configuraci&oacuten. Revise los datos introducidos.</p>"));
+    html += "<p class=\"sansserif\">Error el guardar la configuraci&oacuten. Revise los datos introducidos.</p>";
 
-  httpClient.print(F("<div class=\"button-section\">"));
-  httpClient.print(F("  <a href=\"index.htm\"><input type=\"button\" value=\"Volver\"></a>"));
-  httpClient.print(F("</div>"));
-  
-  httpClient.print(F("</div>"));
-  httpClient.print(F("</div>"));
-  httpClient.print(F("</form>"));
-  httpClient.print(F("</div>"));
+  html = html + "<div class=\"button-section\">";
+  html = html + "  <a href=\"index.htm\"><input type=\"button\" value=\"Volver\"></a>";
+  html = html + "</div>";
 
-  httpClient.print(F("</body>"));
-  httpClient.print(F("</html>"));
-}
+  html = html + "</div>";
 
-void _setCfg()
-{
-  bool error = 0;
-  /*
-  int i = 0;
-  String subStr, paramStr;
+  html = html + "</body> ";
+  html = html + "</html>";
 
-  String scfgLogicIns;
-  String scfgLogicOuts;
-
-  String scfgResPrimVout;
-  String scfgResInyeVout;
-  String scfgResPrimInyeTemp;
-  String scfgResPrimConsTemp;
-  String scfgResPrimHystTemp;
-  String scfgResInyeConsTemp;
-  String scfgResInyeHystTemp;
-  String scfgAguaConsTemp;
-  String scfgAguaHystTemp;
-
-  String scfgResPrimAlarMin;
-  String scfgResInyeAlarMin;
-  String scfgAguaAlarMin;
-
- // Get params  
-  i = httpRxString.indexOf('?');
-  if (i != -1)
-  {
-    subStr = httpRxString.substring(i + 1);
-    i = subStr.indexOf(' ');
-    if (i != -1)
-      subStr = subStr.substring(0, i);
-    else
-      error = 1;
-  }
-  else
-    error = 1;
-
-  if (error == 0)
-  {
-    for (i = 0; i < HTTP_NUM_CFG_PARAMS; i++)
-    {
-      //Get param
-      paramStr = _httpArg(subStr, '&', i);
-      #if (_HTTP_SERIAL_DEBUG_ == 1)
-      Serial.println (paramStr);
-      #endif
-
-      if (paramStr.indexOf("cfgResInyeVout=") != -1)
-        scfgLogicIns = _httpArg(paramStr, '=', 1);
-      else if (paramStr.indexOf("cfgLogicOuts=") != -1)
-        scfgLogicOuts = _httpArg(paramStr, '=', 1);
-
-      else if (paramStr.indexOf("cfgResPrimVout=") != -1)
-        scfgResPrimVout = _httpArg(paramStr, '=', 1);
-      else if (paramStr.indexOf("cfgResInyeVout=") != -1)
-        scfgResInyeVout = _httpArg(paramStr, '=', 1);
-      else if (paramStr.indexOf("cfgResPrimInyeTemp=") != -1)
-        scfgResPrimInyeTemp = _httpArg(paramStr, '=', 1);
-      else if (paramStr.indexOf("cfgResPrimConsTemp=") != -1)
-        scfgResPrimConsTemp = _httpArg(paramStr, '=', 1);
-      else if (paramStr.indexOf("cfgResPrimHystTemp=") != -1)
-        scfgResPrimHystTemp = _httpArg(paramStr, '=', 1);
-      else if (paramStr.indexOf("cfgResInyeConsTemp=") != -1)
-        scfgResInyeConsTemp = _httpArg(paramStr, '=', 1);
-      else if (paramStr.indexOf("cfgResInyeHystTemp=") != -1)
-        scfgResInyeHystTemp = _httpArg(paramStr, '=', 1);
-      else if (paramStr.indexOf("cfgAguaConsTemp=") != -1)
-        scfgAguaConsTemp = _httpArg(paramStr, '=', 1);
-      else if (paramStr.indexOf("scfgAguaHystTemp=") != -1)
-        scfgAguaHystTemp = _httpArg(paramStr, '=', 1);
-
-      else if (paramStr.indexOf("cfgResPrimAlarMin=") != -1)
-        scfgResPrimAlarMin = _httpArg(paramStr, '=', 1);
-      else if (paramStr.indexOf("cfgResInyeAlarMin=") != -1)
-        scfgResInyeAlarMin = _httpArg(paramStr, '=', 1);
-      else if (paramStr.indexOf("cfgAguaAlarMin=") != -1)
-        scfgAguaAlarMin = _httpArg(paramStr, '=', 1);
-    }
-  }
-
-  // Must be 
-  if ((scfgLogicIns.length() == 0)        ||
-      (scfgLogicOuts.length() == 0)       ||
-
-      (scfgResPrimVout.length() == 0)     ||
-      (scfgResInyeVout.length() == 0)     ||
-      (scfgResPrimInyeTemp.length() == 0) ||
-      (scfgResPrimConsTemp.length() == 0) ||
-      (scfgResPrimHystTemp.length() == 0) ||
-      (scfgResInyeConsTemp.length() == 0) ||
-      (scfgAguaConsTemp.length() == 0)    ||
-      (scfgAguaHystTemp.length() == 0)    ||
-
-      (scfgResPrimAlarMin.length() == 0)  ||
-      (scfgResInyeAlarMin.length() == 0)  ||
-      (scfgAguaAlarMin.length() == 0))
-    error = 1;
-  */
-
-  httpClient.println(F("HTTP/1.1 200 OK"));
-  httpClient.println(F("Content-Type: text/html"));
-  httpClient.println();
-
-  httpClient.print(F("<!DOCTYPE HTML><html>"));
-  httpClient.print("<title>" + String(PROJECT) + " + Config</title>");
-  
-  httpClient.print(F("<head>"));
-  httpClient.print(F("<link rel=\"stylesheet\" type=\"text/css\" href=\"style.css\" />"));
-  httpClient.print(F("</head>"));
-
-  if (error == 0)
-    httpClient.print(F("<p class=\"sansserif\">Configuraci&oacuten guardada correctamente.</p>"));
-  else
-    httpClient.print(F("<p class=\"sansserif\">Error el guardar la configuraci&oacuten. Revise los datos introducidos.</p>"));
-
-  httpClient.print(F("<div class=\"button-section\">"));
-  httpClient.print(F("  <a href=\"index.htm\"><input type=\"button\" value=\"Volver\"></a>"));
-  httpClient.print(F("</div>"));
-  
-  httpClient.print(F("</div>"));
-  httpClient.print(F("</div>"));
-  httpClient.print(F("</form>"));
-  httpClient.print(F("</div>"));
-
-  httpClient.print(F("</body>"));
-  httpClient.print(F("</html>"));
+  httpServer.send (200, "text/html", html);
 }
 
 /////////////
 // Actions //
 /////////////
+void _readCTR()
+{
+  String html = "";
+  int aux;
+
+  html = "<table style=\"width:100%\">";
+
+  html = html + "<tr>";
+  html = html + "<td>Modo</td>";
+  if (ctrMode == MODE_AUTO)
+   html = html + "<td><font style=\"color:blue\">Autom&aacutetico</font></td>";
+  else
+   html = html + "<td><font style=\"color:red\">Test</font></td>";
+  html = html + "</tr>";
+
+  html = html + "</table>";
+  
+  httpServer.send(200, "text/plane", html);
+}
+
+void _readINS()
+{ 
+  String html = "";
+
+  html = "<table style=\"width:100%\">";
+
+  html = html + "<tr>";
+  html = html + "<td>Boards Ins</td>";
+  html = html + "<td>" + String(InDig[0]) + "-" + String(InDig[1]) + "</td>";
+  html = html + "</tr>";
+  
+  html = html + "</table>";
+  
+  httpServer.send(200, "text/plane", html);
+}
+
+void _readOUTS()
+{
+  String html = "";
+
+  html = "<table style=\"width:100%\">";
+  
+  html = html + "<tr>";
+  html = html + "<td>Boards Outs</td>";
+  html = html + "<td>" + String(OutDig[0]) + "-" + String(OutDig[1]) + "</td>";
+  html = html + "</tr>";
+
+  html = html + "</table>";
+  
+  httpServer.send(200, "text/plane", html);
+}
+
 void _setOUTS()
 {
-  String html;
-  int outNumber = 0;
+  String out_number = httpServer.arg("OUTNumber");
+  String html = "";
+ 
+  #if (_HTTP_SERIAL_DEBUG_ == 1)
+  Serial.print("Change stats out: ");
+  Serial.println(out_number);
+  #endif
 
-  httpClient.println(F("HTTP/1.1 200 OK"));
-  httpClient.println(F("Content-Type: text/plane"));
-  httpClient.println();
-  
   // Cambiar Modo
-  if (httpRxString.indexOf("OUTNumber=0 HTTP") != -1)
+  if(out_number == "0")
   {
     if (ctrMode == MODE_TEST)
     {
@@ -850,9 +692,9 @@ void _setOUTS()
       html = "Mode Test";
     }
   }
-  
+
   // Reset
-  if (httpRxString.indexOf("OUTNumber=1 HTTP") != -1)
+  if(out_number == "1")
   {
     #if (_USE_WDE_ == 1)
     wdeForceReset = 1;
@@ -862,333 +704,135 @@ void _setOUTS()
     Serial.println("Watchdog reset");
     #endif
   }
-  /*
-  // OutOpen
-  if(out_number == "10")
-  {
-    if (OutOpen == OUT_ON)
-    {
-      OutOpen = OUT_OFF;
-      #if (_HTTP_SERIAL_DEBUG_ == 1)
-      Serial.println("OutOpen OFF");
-      #endif
-      html = "OutOpen OFF";
-    }
-    else
-    {
-      OutOpen = OUT_ON;
-      #if (_HTTP_SERIAL_DEBUG_ == 1)
-      Serial.println("OutOpen ON");
-      #endif
-      html = "OutOpen ON";
-    }
-  }
-  */
+
   // Restore
-  if (httpRxString.indexOf("OUTNumber=20 HTTP") != -1)
+  if(out_number == "2")
   {
     _ResetEEPROM();
-    #if (_HTTP_SERIAL_DEBUG_ == 1)
-    Serial.println("Restore");
-    #endif
     html = "Restore";
   }
 
-  httpClient.print(html);
-}
-
-void _serveSTATUS()
-{
-  String html;
-
-  httpClient.println(F("HTTP/1.1 200 OK"));
-  httpClient.println(F("Content-Type: text/plane"));
-  httpClient.println();
-
-  httpClient.print(F("<table style=\"width:100%\">"));
-
-  httpClient.print(F("<tr>"));
-  httpClient.print(F("<td>Tiempo ON </td>"));
-  httpClient.print("<td>" + timeOnString + "</td>");
-  httpClient.print(F("</tr>"));
-
-  httpClient.print(F("<tr>"));
-  httpClient.print(F("<td>Control Modo </td>"));
-  if (ctrMode == MODE_AUTO)
-   httpClient.print(F("<td><font style=\"color:green\">AUTO</font></td>"));
-  else
-   httpClient.print(F("<td><font style=\"color:grey\">TEST</font></td>"));
-  httpClient.print(F("</tr>"));
-  /*
-  httpClient.print(F("<tr>"));
-  httpClient.print(F("<td>MQTT Estado </td>"));
-  httpClient.print("<td>" + String(mqttStatus) + "</td>");
-  httpClient.print(F("</tr>"));
-
-  httpClient.print(F("<tr>"));
-  httpClient.print(F("<td>-----------------</td>"));
-  httpClient.print(F("</tr>"));
- 
-  httpClient.print(F("<tr>"));
-  httpClient.print(F("<td>Ventilador</td>"));
-  if (OutFan == OUT_ON)
-   httpClient.print(F("<td><font style=\"color:green\">ON</font></td>"));
-  else
-   httpClient.print(F("<td><font style=\"color:grey\">OFF</font></td>"));
-  httpClient.print(F("</tr>"));
-  */
-  
-  httpClient.print(F("</table>"));
-}
-
-void _HttpSetup(void)
-{
-  httpServerStatus = HTTP_SERVER_INIT;
-
-  httpClientStatus = HTTP_CLIENT_INIT;
-  httpClientConnected = false;
-
-  http1stline = 0;
-  httpRxString = "";
-  httpRxTick = millis();
-}
-
-void _HttpLoop()
-{ 
-  switch (httpServerStatus)
-  {
-    case HTTP_SERVER_INIT:
-      httpServer.begin(80);
-
-      #if (_MBTCP_SERIAL_DEBUG_ == 1)
-      Serial.println("Http server started");
-      #endif
-      httpServerStatus = HTTP_SERVER_ON;
-      break;
-
-    case HTTP_SERVER_ON:
-      _httpClientLoop();
-      break;
+  // Solo en modo Test
+  if (ctrMode == MODE_TEST)
+  {   
+    // Out 0
+    if(out_number == "10")
+    {
+      if (OutDig[0] == OUT_ON)
+      {
+        OutDig[0] = OUT_OFF;
+        html = "Out 0 OFF";
+      }
+      else
+      {
+        OutDig[0] = OUT_ON;
+        html = "Out 0 ON";
+      }
+    }
+    // Out 1
+    else if(out_number == "11")
+    {
+      if (OutDig[1] == OUT_ON)
+      {
+        OutDig[1] = OUT_OFF;
+        html = "Out 1 OFF";
+      }
+      else
+      {
+        OutDig[1] = OUT_ON;
+        html = "Out 1 ON";
+      }
+    }
   }
+  else
+    html = "NO Outs";
+  
+  httpServer.send(200, "text/plane", html);
 }
 
-void _httpClientLoop ()
+void _readSTATUS()
+{ 
+  String html = "";
+
+  html = "<table style=\"width:100%\">";
+  
+  html = html + "<tr>";
+  html = html + "<td>Tiempo Encendio</td>";
+  html = html + "<td>" + String(timeDay) + "d " + timeOnString + "</td>";
+  html = html + "</tr>";
+  
+  #if (_USE_NTP_ == 1)
+  html = html + "<tr>";
+  html = html + "<td>Fecha NTP</td>";
+  html = html + "<td>" + mntpTimeString + "</td>";
+  html = html + "</tr>";
+  #endif
+  
+  #if (_USE_MQTT_ == 1)
+  html = html + "<tr>";
+  html = html + "<td>MQTT </td>";
+  html = html + "<td>" + String(mqttStatus) + "</td>";
+  html = html + "</tr>";
+  #endif
+
+  html = html + "</table>";
+  
+  httpServer.send(200, "text/plane", html);
+}
+
+void _pageNotFound() {
+  httpServer.send(404, "text/plain", "404: No found");
+}
+
+///////////////
+// Http loop //
+///////////////
+void _HTTPLoop()
 {
-  switch (httpClientStatus)
+  switch (httpStatus)
   {
-    case HTTP_CLIENT_INIT:
-      httpClient = httpServer.available();
-      if (httpClient)
-      {
-        #if (_HTTP_SERIAL_DEBUG_ == 1)
-        Serial.println(">>");
-        Serial.print("http client connected: "); Serial.println(httpClient);
-        #endif
+    case HTTP_START:
 
-        httpClientStatus = HTTP_CLIENT_CONNECTED;
-        httpClientConnected = true;
+      // css Style
+      httpServer.on("/style.css",   _serveCSS);
 
-        http1stline = 0;
-        httpRxString = "";
-        httpRxTick = millis();
-      }
-      break;
+      // html pages
+      httpServer.on("/",             _serveMAIN);
+      httpServer.on("/index.htm",    _serveMAIN);
+      httpServer.on("/network.htm",  _serveNETWORK);
+      httpServer.on("/settings.htm", _serveSETTINGS);
 
-    case HTTP_CLIENT_CONNECTED:
-      // Client connected....
-      if (httpClient.connected())
-      {
-        if (httpClient.available())
-        {
-          #if (_HTTP_SERIAL_DEBUG_ == 1)
-          Serial.println("http request start");
-          #endif
+      // config
+      httpServer.on("/networkSet",   _setNETWORK);
+      httpServer.on("/settingsSet",  _setSETTINGS);
 
-          httpClientStatus = HTTP_CLIENT_ON_RX;
-          
-          http1stline = 0;
-          httpRxString = "";
-          httpRxTick = millis();
-        }
-        else
-        {
-          // Time out no RX...
-          if (millis() - httpRxTick >= HTTP_CONNECTION_TIMEOUT)
-          {
-            #if (_HTTP_SERIAL_DEBUG_ == 1)
-            Serial.print("httpClient.available() timeout");
-            #endif
+      // acctions
+      httpServer.on("/readCTR",      _readCTR);
+      httpServer.on("/setOUTS",      _setOUTS);      
+      httpServer.on("/readOUTS",     _readOUTS);
+      httpServer.on("/readINS",      _readINS);
+      httpServer.on("/readSTATUS",   _readSTATUS);
 
-            httpClientStatus = HTTP_CLIENT_INIT;
-            httpClient.stop();
-            httpClientConnected = false;
-          }
-        }
-      }
-      // Client time out disconnected...
-      else
-      {
-        if (millis() - httpRxTick >= HTTP_CONNECTION_TIMEOUT)
-        {
-          #if (_HTTP_SERIAL_DEBUG_ == 1)
-          Serial.println("httpClient.connected() timeout");
-          #endif
+      // Error
+      httpServer.onNotFound(_pageNotFound);
 
-          httpClientStatus = HTTP_CLIENT_INIT;
-          httpClient.stop();
-          httpClientConnected = false;
-        }
-      }
-      break;
+      httpServer.begin();
 
-    case HTTP_CLIENT_ON_RX:
-      // Client connected...
-      if (httpClient.connected())
-      {
-        if (httpClient.available())
-        {
-          char newChar = httpClient.read();
-          
-          if (newChar == '\n')
-            http1stline = 1;
-
-          if (http1stline == 0)
-            httpRxString += newChar;
-          
-          httpRxTick = millis();
-        }
-        else
-        {
-          // RX Time out...
-          if (millis() - httpRxTick >= HTTP_RX_TIMEOUT)
-          {
-             #if (_HTTP_SERIAL_DEBUG_ == 1)
-             Serial.println ("http request rx");
-             Serial.println(httpRxString);
-             #endif
-
-             httpClientStatus = HTTP_CLIENT_ON_ANALYSIS;
-          }
-        }
-      }
-      // Client disconnected...
-      else
-      {
-        #if (_HTTP_SERIAL_DEBUG_ == 1)
-        Serial.println("httpClient.connected() disconnected");
-        #endif
-
-        httpClientStatus = HTTP_CLIENT_INIT;
-        httpClient.stop();
-        httpClientConnected = false;
-      }
+      #if (_HTTP_SERIAL_DEBUG_ == 1)
+      Serial.print("HTTP server started on ");
+      Serial.print(HTTP_PORT);
+      Serial.println(" port");      
+      #endif
+      httpStatus = HTTP_ONSERVE;
       break;
     
-    case HTTP_CLIENT_ON_ANALYSIS:
-      // Client connected...
-      if (httpClient.connected())
-      {
-        #if (_HTTP_SERIAL_DEBUG_ == 1)
-        Serial.println("http analysis");
-        #endif
-        
-        if (httpRxString.indexOf("GET /favicon") != -1)
-          httpTxPage = 0; // 1;
-        else if (httpRxString.indexOf("GET /style.css") != -1)
-          httpTxPage = 3;
-        else if (httpRxString.indexOf("GET /readSTATUS") != -1)
-          httpTxPage = 4;
-        else if (httpRxString.indexOf("GET /setOUTS") != -1)
-          httpTxPage = 5;
-        else if (httpRxString.indexOf("GET /nwset.htm") != -1)
-          httpTxPage = 6;
-        else if (httpRxString.indexOf("GET /setNetwork") != -1)
-          httpTxPage = 7;
-        else if (httpRxString.indexOf("GET /cfg.htm") != -1)
-          httpTxPage = 8;
-        else if (httpRxString.indexOf("GET /setCfg") != -1)
-          httpTxPage = 9;
-        else if ((httpRxString.indexOf("GET /index.htm") != -1) ||
-                 (httpRxString.indexOf("GET / HTTP") != -1))
-          httpTxPage = 2;
-        else
-        {
-          httpTxPage = 0;
-          #if (_HTTP_SERIAL_DEBUG_ == 1)
-          Serial.println("http ERROR 404");
-          #endif
-        }
-
-        httpClientStatus = HTTP_CLIENT_ON_TX;
-      }
-      // Client disconnected...
-      else
-      {
-        #if (_HTTP_SERIAL_DEBUG_ == 1)
-        Serial.println("httpClient.connected() disc in analysis");
-        #endif
-
-        httpClientStatus = HTTP_CLIENT_INIT;
-        httpClient.stop();
-        httpClientConnected = false;
-      }
+    case HTTP_ONSERVE:
+      httpServer.handleClient();
       break;
 
-    case HTTP_CLIENT_ON_TX:
-
-      httpClient.flush();
-
-      switch (httpTxPage)
-      {
-        // Error
-        case 0:
-          _serveERROR();
-          break;
-        
-        // favicon
-        //case 1:
-        //  _serveFavicon();
-        //  break;
-        
-        // index
-        case 2:
-          _serveMAIN();
-          break;
-
-        //style.css
-        case 3:
-          _serveCSS();
-          break;
-
-        case 4:
-          _serveSTATUS();
-          break;
-
-        case 5:
-          _setOUTS();
-          break;
-
-        case 6:
-          _serveNetwork();
-          break;
-
-        case 7:
-          _setNetwork();
-          break;
-
-        case 8:
-          _serveCfg();
-          break;
-
-        case 9:
-          _setCfg();
-          break;
-      }
-      
-      httpClient.stop();
-      httpClientStatus = HTTP_CLIENT_INIT;
+    case HTTP_STOP:
       break;
   }
 }
 
-#endif // (_USE_HTTP_ == 1)
+#endif

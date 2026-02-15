@@ -2,12 +2,70 @@
 
 #if (_USE_ETHERNET_ == 1)
 
+void onEvent(arduino_event_id_t event)
+{
+  switch (event)
+  {
+    case ARDUINO_EVENT_ETH_START:
+      #if (_ETH_SERIAL_DEBUG_ == 1)
+      Serial.println("ETH event: Iniciado");
+      #endif
+      ETH.setHostname("ES32-P4-ETH");
+      ethStatus = ETH_STARTED;
+      break;
+
+    case ARDUINO_EVENT_ETH_CONNECTED:
+      #if (_ETH_SERIAL_DEBUG_ == 1)
+      Serial.println("ETH event: Cable Conectado");
+      #endif
+      ethStatus = ETH_CONNECTED;
+      break;
+
+    case ARDUINO_EVENT_ETH_GOT_IP:
+      #if (_ETH_SERIAL_DEBUG_ == 1)   
+      Serial.println("ETH event: IP obtenida");
+      #endif
+      ethStatus = ETH_GOT_IP;
+      break;
+
+    case ARDUINO_EVENT_ETH_DISCONNECTED:
+      #if (_ETH_SERIAL_DEBUG_ == 1)
+      Serial.println("ETH event: Cable Desconectado");
+      #endif
+      #if (_USE_HTTP_ == 1)
+      _HTTPStop();
+      #endif
+      ethStatus = ETH_DISCONNECTED;
+      break;
+
+    default:
+      break;
+  }
+}
+
 ////////////////
 // ETH set up //
 ////////////////
 void _ETHSetup(void)
 {
   ethStatus = ETH_START;
+  Network.onEvent(onEvent);
+
+  // Inicio de hardware
+  if (!ETH.begin()) {
+    #if (_ETH_SERIAL_DEBUG_ == 1)
+    Serial.println("ETH: Error al iniciar hardware");
+    #endif
+  }
+ 
+  if (ipMode == FIXIP_MODE)
+  {
+    if (!ETH.config(ipAddress, gateWay, netMask, dnsAddress)) {
+      #if (_ETH_SERIAL_DEBUG_ == 1)
+      Serial.println("ETH: Error al configurar IP Fija");
+      #endif
+    }
+  }
 }
 
 /////////////////////////
@@ -15,137 +73,50 @@ void _ETHSetup(void)
 /////////////////////////
 void _ETHLoop()
 {
-  int status;
-
   //#if (_ETH_SERIAL_DEBUG_ == 1)
-  //Serial.print("Ethernet "); Serial.print(ethStatus); Serial.println(" ***");
+  //Serial.print("ETH: ethStatus "); Serial.println(ethStatus);
   //#endif
 
   switch (ethStatus)
   {
     case ETH_START:
-      if (ipMode == DHCP_MODE)
-      {
-        #if (_ETH_SERIAL_DEBUG_ == 1)
-        Serial.println("Ethernet DHCP Start");
-        #endif
-        Ethernet.init(PIN_SPI_CS); // Set the CS pin
-        status = Ethernet.begin(macAddress);
-      }
-      else
-      {
-        #if (_ETH_SERIAL_DEBUG_ == 1)
-        Serial.println("Ethernet FIX IP Start");
-        #endif
-        Ethernet.init(PIN_SPI_CS); // Set the CS pin
-        Ethernet.begin(macAddress, ipAddress, dnsAddress, gateWay, netMask);
-        //Ethernet.setRetransmissionCount(1);
-        status = 1;
-      }
-
-      // Check Link
-      if (Ethernet.linkStatus() == LinkOFF)
-      {
-        #if (_ETH_SERIAL_DEBUG_ == 1)
-        Serial.println("Ethernet Init Link OFF");
-        #endif
-        status = 0;
-      }
-
-      if (status == 0)
-      {
-        #if (_ETH_SERIAL_DEBUG_ == 1)
-        Serial.println("Failed to configure");
-        #endif
-        ethStatus = ETH_ERROR;
-      }
-      else
-      {
-        ethStatus = ETH_OK;
-
-        #if (_ETH_SERIAL_DEBUG_ == 1)
-        Serial.println("IP Settings: ");
-        Serial.println(Ethernet.localIP());
-        Serial.println(Ethernet.gatewayIP());
-        Serial.println(Ethernet.subnetMask());
-        Serial.print("HW: ");     Serial.println(Ethernet.hardwareStatus());
-        Serial.print("Link: ");   Serial.println(Ethernet.linkStatus());
-        #endif
-
-        #if (_USE_HTTP_ == 1)
-        _HttpSetup();
-        #endif
-
-        #if (_USE_MQTT_ == 1)
-        _MQTTSetup();
-        #endif
-
-        #if (_USE_NTP_ == 1)
-        _mNTPSetup();
-        #endif
-      }
+    case ETH_STARTED:
+    case ETH_CONNECTED:
       break;
 
-    case ETH_OK:
+    case ETH_GOT_IP:
 
-      // Check HW
-      if (Ethernet.hardwareStatus() == EthernetNoHardware)
-      {
-        #if (_ETH_SERIAL_DEBUG_ == 1)
-        Serial.println("HW ERROR: Ethernet shield not found");
-        #endif
-        ethStatus = ETH_ERROR;
-      }
-
-      // Check Link
-      if (Ethernet.linkStatus() == LinkOFF)
-      {
-        #if (_ETH_SERIAL_DEBUG_ == 1)
-        Serial.println("Ethernet Link OFF");
-        #endif
-        ethStatus = ETH_ERROR;
-      }
+      #if (_ETH_SERIAL_DEBUG_ == 1)
       
-      // Only DHCP
-      if (ipMode == DHCP_MODE)
-      {
-        status = Ethernet.maintain(); 
+      if (ipMode == FIXIP_MODE)
+        Serial.println("Fix IP");
+      else 
+        Serial.println("DHCP");
 
-        #if (_ETH_SERIAL_DEBUG_ == 1)
-        switch (status) 
-        {
-          case 1:
-            Serial.println("Error: renewed fail");
-            break;
-
-          case 2:
-            Serial.println("Renewed success");
-            Serial.println("IP Settings: ");
-            Serial.println(Ethernet.localIP());
-            Serial.println(Ethernet.gatewayIP());
-            Serial.println(Ethernet.subnetMask());
-            break;
-
-          case 3:
-            Serial.println("Error: rebind fail");
-            break;
-
-          case 4:
-            Serial.println("Rebind success");
-            Serial.println("IP Settings: ");
-            Serial.println(Ethernet.localIP());
-            Serial.println(Ethernet.gatewayIP());
-            Serial.println(Ethernet.subnetMask());
-            break;
-
-          default:
-            break;
-        }
-        #endif
-      }
+      Serial.println(ETH.localIP());
+      Serial.println(ETH.gatewayIP());
+      Serial.println(ETH.subnetMask());
+      #endif
 
       #if (_USE_HTTP_ == 1)
-      _HttpLoop();
+      _HTTPStart();
+      #endif
+
+      #if (_USE_MQTT_ == 1)
+      _MQTTStart();
+      #endif
+
+      #if (_USE_NTP_ == 1)
+      _mNTPStart();
+      #endif
+      
+      ethStatus = ETH_ON_SERVICE;
+      break;
+
+    case ETH_ON_SERVICE:
+
+      #if (_USE_HTTP_ == 1)
+      _HTTPLoop();
       #endif
 
       #if (_USE_MQTT_ == 1)
@@ -158,18 +129,7 @@ void _ETHLoop()
 
       break;
 
-    case ETH_ERROR:
-
-      // Check HW
-      if (Ethernet.hardwareStatus() == EthernetNoHardware)
-      {
-        #if (_ETH_SERIAL_DEBUG_ == 1)
-        Serial.println("HW ERROR: Ethernet shield not found");
-        #endif
-      }
-      else
-        ethStatus = ETH_START;  // TODO
-
+    case ETH_DISCONNECTED:
       break;
   }
 }

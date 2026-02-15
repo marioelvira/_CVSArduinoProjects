@@ -91,6 +91,10 @@ void _TimeLoop(void)
     Serial.print(timeDay); Serial.print("d "); Serial.print(timeOnString);
     Serial.println(" ");
 
+    Serial.print("ethStatus: ");
+    Serial.print(ethStatus);
+    Serial.println(" ");
+    /*
     Serial.print("ctrInState: ");
     Serial.print(ctrInState);
     Serial.println(" ");
@@ -98,7 +102,7 @@ void _TimeLoop(void)
     Serial.print("ctrOutState: ");
     Serial.print(ctrOutState);
     Serial.println(" ");
-
+    */
     /*
     // OUTs
     for (i = 0; i< OUT_NUMBER; i++)

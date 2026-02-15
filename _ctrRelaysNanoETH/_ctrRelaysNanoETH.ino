@@ -14,6 +14,10 @@
 #include <avr/wdt.h>
 #endif
 
+#if (_USE_UID_ == 1)
+#include <ArduinoUniqueID.h>
+#endif
+
 #include "adcs.h"
 #include "ctr.h"
 #include "e2prom.h"
@@ -21,6 +25,7 @@
 #include "ip.h"
 #include "measures.h"
 #include "mEthernet.h"
+
 #if (_USE_MBTCP_ == 1)
 #include "modbusTCP.h"
 #endif
@@ -40,6 +45,9 @@
 // Get from compile time
 const char* compdate = __DATE__;
 const char* comptime = __TIME__;
+#if (_USE_UID_ == 1)
+String UniqueIdStr;
+#endif
 
 //////////
 // ADCs //
@@ -200,7 +208,7 @@ NTPClient mNtpClient(mNtpUDP, "pool.ntp.org", 3600);
 EthernetClient ethClient;
 PubSubClient mqttClient(ethClient);
 
-String mqttClientId = "relesMQTT-INIT";
+String mqttClientId;
 
 int mqttStatus;
 unsigned long mqttTick = 0;
@@ -269,6 +277,19 @@ void setup(void)
   Serial.println(compdate);
   Serial.print("Time: ");
   Serial.println(comptime);
+  #endif
+
+  #if (_USE_UID_ == 1)
+  UniqueIdStr = "";
+  for (size_t i = 0; i < UniqueIDsize; i++) {
+    if (UniqueID[i] < 0x10) UniqueIdStr += "0";
+    UniqueIdStr += String(UniqueID[i], HEX);
+  }
+
+  #if (_SERIAL_DEBUG_ == 1)
+  Serial.print("UniqueID: ");
+  Serial.println(UniqueIdStr);
+  #endif
   #endif
 
   // Config setup

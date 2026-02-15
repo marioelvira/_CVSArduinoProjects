@@ -18,9 +18,12 @@ extern "C" {
 //////////////
 // Ethernet //
 //////////////
-#define ETH_START       0
-#define ETH_OK          1
-#define ETH_ERROR	      2
+#define ETH_START         0
+#define ETH_STARTED       1
+#define ETH_CONNECTED     2
+#define ETH_GOT_IP        3
+#define ETH_ON_SERVICE    4
+#define ETH_DISCONNECTED  5
 
 #endif // _METH_H_
 

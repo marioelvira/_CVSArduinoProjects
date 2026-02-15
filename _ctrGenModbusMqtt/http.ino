@@ -624,13 +624,7 @@ void _serveSETTINGS()
     html = html + "<label><input type=\"radio\" name=\"wifimode\" value=\"ap\" checked> Access Point</label>";
     html = html + "<label><input type=\"radio\" name=\"wifimode\" value=\"st\"> Station</label>";
   }
-  
-  //html = html + "<label>SSID">
-  //html = html + "<select id='wifi' name='wifi'>";
-  //html = html + " <option value=\"\" selected>Selet</option>";
-  //for (int i = 0; i < n; ++i)
-  //  html = html + " <option value=\"" + (String)(WiFi.SSID(i)) + "\">" + (String)(WiFi.SSID(i)) + "</option>";    
-  //html = html + "</select></label>";
+
 
   html = html + "<label>SSID <input type=\"text\" maxlength=\"30\" value=\"" + String(ssid) + "\" name=\"ssid\"/></label>";
   html = html + "<label>Password <input type=\"text\" maxlength=\"30\" value=\"" + String(password) + "\" name=\"pass\"/></label>";

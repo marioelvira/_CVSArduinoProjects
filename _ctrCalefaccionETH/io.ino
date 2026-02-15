@@ -5,13 +5,8 @@
 void _IOSetup()
 { 
   // No bigger than OUT_NUMBER
-  OutPin[0] = PIN_OUTB;
-  OutPin[1] = PIN_OUTC;
-  OutPin[2] = PIN_OUTD;
-  OutPin[3] = PIN_OUTE;
-  OutPin[4] = PIN_OUTF;
-  
-  OutPin[5] = PIN_OUTA;
+  OutPin[0] = PIN_OUT0;
+  OutPin[1] = PIN_OUT1;
   
   // No bigger than IN_NUMBER
   InPin[0] = PIN_IN0;

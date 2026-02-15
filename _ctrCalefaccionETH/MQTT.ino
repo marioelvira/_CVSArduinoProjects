@@ -202,18 +202,28 @@ void _MQTTSend(int itopic)
 // MQTT set up //
 /////////////////
 void _MQTTSetup(void)
-{ 
-  String rIdStr((char*)compdate);
-
+{
   mqttClient.setServer(MQTT_BROKER, MQTT_BROKER_PORT);
   
   mqttClient.setCallback(mqttDataCallback);
 
+  #if (_USE_UID_ == 1)
   mqttClientId = "caleMQTT-" + UniqueIdStr;
+  #else
+  String rIdStr((char*)compdate);
+  mqttClientId = "caleMQTT-" + rIdStr;
+  #endif
+
   #if (_MQTT_SERIAL_DEBUG_ == 1)
   Serial.print("MQTT Client ID: "); Serial.println(mqttClientId);
   #endif
 
+  mqttStatus = MQTT_NOT_CONNECTED;
+  mqttTopic = 0;
+}
+
+void _MQTTStart(void)
+{
   mqttStatus = MQTT_NOT_CONNECTED;
   mqttTopic = 0;
 }

@@ -1,3 +1,4 @@
+#include "e2prom.h"
 
 void _ConfigSetup(void)
 {
@@ -23,14 +24,23 @@ void _ConfigSetup(void)
 
 void _readCONFIG (void)
 {
-  bool ok;
+  byte ok;
   int i, j;
   int eeprom_value_hi, eeprom_value_lo;
   
-  //EEPROM.begin(512);  // ESPXX
-    
+  if (!EEPROM.begin(512)) { // ESPXX
+    #if (_EEPROM_SERIAL_DEBUG_ == 1)
+    Serial.println("Error al inicializar EEPROM");
+    #endif
+    return;
+  }
+
   ok = EEPROM.read(EEPROM_ADD_OK);
   
+  #if (_EEPROM_SERIAL_DEBUG_ == 1)
+  Serial.print("EEPROM Value: "); Serial.println(ok, HEX);
+  #endif
+
   // Si NO esta grabada la configuracion...
   if (ok != EEPROM_VAL_OK)
   {
@@ -100,7 +110,7 @@ void _readCONFIG (void)
     EEPROM.write(EEPROM_ADD_RES_INYE_ALAR_MIN,  EEPROM_VAL_RES_INYE_ALAR_MIN);
     EEPROM.write(EEPROM_ADD_AGUA_ALAR_MIN,      EEPROM_VAL_AGUA_ALAR_MIN);
     
-    //EEPROM.commit();    // ESPXX Store data to EEPROM
+    EEPROM.commit();    // ESPXX Store data to EEPROM
   }
   else
   {
@@ -112,34 +122,15 @@ void _readCONFIG (void)
   _eeprom2ramCONFIG();
 }
 
-/*
 void _ram2eepromCONFIG (void)
 {
   int eeprom_value_hi, eeprom_value_lo;
-
-  #if (_USE_ETHERNET_ == 1)
-  // IP Mode
-  EEPROM.write(EEPROM_ADD_IP_MODE, (byte)ipMode);
-  EEPROM.write(EEPROM_ADD_IP1,     (byte)ipAddress[0]);
-  EEPROM.write(EEPROM_ADD_IP2,     (byte)ipAddress[1]);
-  EEPROM.write(EEPROM_ADD_IP3,     (byte)ipAddress[2]);
-  EEPROM.write(EEPROM_ADD_IP4,     (byte)ipAddress[3]);
-  EEPROM.write(EEPROM_ADD_MASK1,   (byte)netMask[0]);
-  EEPROM.write(EEPROM_ADD_MASK2,   (byte)netMask[1]);
-  EEPROM.write(EEPROM_ADD_MASK3,   (byte)netMask[2]);
-  EEPROM.write(EEPROM_ADD_MASK4,   (byte)netMask[3]);
-  EEPROM.write(EEPROM_ADD_GATE1,   (byte)gateWay[0]);
-  EEPROM.write(EEPROM_ADD_GATE2,   (byte)gateWay[1]);
-  EEPROM.write(EEPROM_ADD_GATE3,   (byte)gateWay[2]);
-  EEPROM.write(EEPROM_ADD_GATE4,   (byte)gateWay[3]);
-  #endif
 
   // Data Data
   EEPROM.write(EEPROM_ADD_LOGIC_INS,  (byte)cfgLogicIns);
   EEPROM.write(EEPROM_ADD_LOGIC_OUTS, (byte)cfgLogicOuts);
 
-  EEPROM.write(EEPROM_ADD_RES_PRIM1_VOUT,     (byte)cfgResPrim1Vout);
-  EEPROM.write(EEPROM_ADD_RES_PRIM2_VOUT,     (byte)cfgResPrim2Vout);
+  EEPROM.write(EEPROM_ADD_RES_PRIM_VOUT,      (byte)cfgResPrimVout);
   EEPROM.write(EEPROM_ADD_RES_INYE_VOUT,      (byte)cfgResInyeVout);
   EEPROM.write(EEPROM_ADD_RES_PRIM_INYE_TEMP, (byte)cfgResPrimInyeTemp);
   EEPROM.write(EEPROM_ADD_RES_PRIM_CONS_TEMP, (byte)cfgResPrimConsTemp);
@@ -151,8 +142,26 @@ void _ram2eepromCONFIG (void)
   EEPROM.write(EEPROM_ADD_RES_PRIM_ALAR_MIN,  (byte)cfgResPrimAlarMin);
   EEPROM.write(EEPROM_ADD_RES_INYE_ALAR_MIN,  (byte)cfgResInyeAlarMin);
   EEPROM.write(EEPROM_ADD_AGUA_ALAR_MIN,      (byte)cfgAguaAlarMin);
+
+  EEPROM.commit();    //Store data to EEPROM
+
+  #if (_EEPROM_SERIAL_DEBUG_ == 1)
+  Serial.print("cfgLogicIns: ");        Serial.println (cfgLogicIns);
+  Serial.print("cfgLogicOuts: ");       Serial.println (cfgLogicOuts);
+  Serial.print("cfgResPrimVout: ");     Serial.println (cfgResPrimVout);
+  Serial.print("cfgResInyeVout: ");     Serial.println (cfgResInyeVout);
+  Serial.print("cfgResPrimInyeTemp: "); Serial.println (cfgResPrimInyeTemp);
+  Serial.print("cfgResPrimConsTemp: "); Serial.println (cfgResPrimConsTemp);
+  Serial.print("cfgResPrimHystTemp: "); Serial.println (cfgResPrimHystTemp);
+  Serial.print("cfgResInyeConsTemp: "); Serial.println (cfgResInyeConsTemp);
+  Serial.print("cfgResInyeHystTemp: "); Serial.println (cfgResInyeHystTemp);
+  Serial.print("cfgAguaConsTemp: ");    Serial.println (cfgAguaConsTemp);
+  Serial.print("cfgAguaHystTemp: ");    Serial.println (cfgAguaHystTemp);
+  Serial.print("cfgResPrimAlarMin: ");  Serial.println (cfgResPrimAlarMin);
+  Serial.print("cfgResInyeAlarMin: ");  Serial.println (cfgResInyeAlarMin);
+  Serial.print("cfgAguaAlarMin: ");     Serial.println (cfgAguaAlarMin);
+  #endif
 }
-*/
 
 void _eeprom2ramCONFIG (void)
 {
@@ -231,8 +240,8 @@ void _eeprom2ramCONFIG (void)
 
   #endif
 
-  cfgLogicIns       = (int)EEPROM.read(EEPROM_ADD_LOGIC_INS);
-  cfgLogicOuts      = (int)EEPROM.read(EEPROM_ADD_LOGIC_OUTS); 
+  cfgLogicIns         = (int)EEPROM.read(EEPROM_ADD_LOGIC_INS);
+  cfgLogicOuts        = (int)EEPROM.read(EEPROM_ADD_LOGIC_OUTS); 
 
   cfgResPrimVout      = (int)EEPROM.read(EEPROM_ADD_RES_PRIM_VOUT);
   cfgResInyeVout      = (int)EEPROM.read(EEPROM_ADD_RES_INYE_VOUT);
@@ -250,8 +259,7 @@ void _eeprom2ramCONFIG (void)
   #if (_EEPROM_SERIAL_DEBUG_ == 1)
   Serial.print("cfgLogicIns: ");        Serial.println (cfgLogicIns);
   Serial.print("cfgLogicOuts: ");       Serial.println (cfgLogicOuts);
-  Serial.print("cfgResPrim1Vout: ");    Serial.println (cfgResPrim1Vout);
-  Serial.print("cfgResPrim2Vout: ");    Serial.println (cfgResPrim2Vout);
+  Serial.print("cfgResPrimVout: ");     Serial.println (cfgResPrimVout);
   Serial.print("cfgResInyeVout: ");     Serial.println (cfgResInyeVout);
   Serial.print("cfgResPrimInyeTemp: "); Serial.println (cfgResPrimInyeTemp);
   Serial.print("cfgResPrimConsTemp: "); Serial.println (cfgResPrimConsTemp);
@@ -265,7 +273,6 @@ void _eeprom2ramCONFIG (void)
   Serial.print("cfgAguaAlarMin: ");     Serial.println (cfgAguaAlarMin);
 
   delay(1000);  // 100ms
-
   #endif
 }
 
@@ -280,7 +287,7 @@ void _ResetEEPROM() {
     EEPROM.write(i, 0xFF);
   }
   
-  //EEPROM.commit();    // ESPXX Store data to EEPROM
+  EEPROM.commit();    // ESPXX Store data to EEPROM
 }
 
 void _ReadEEPROM() {
@@ -291,7 +298,7 @@ void _ReadEEPROM() {
   Serial.println("Reading E2PROM 512 size... ");
   #endif
 
-  //EEPROM.begin(512);
+  EEPROM.begin(512);
    
   for (int i = 0; i < 512; i++) {
 

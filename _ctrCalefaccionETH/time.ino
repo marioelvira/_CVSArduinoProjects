@@ -75,6 +75,10 @@ void _TimeLoop(void)
     _WDELoop();
     #endif
 
+    #if (_USE_PWM_ == 1)
+    _PWMLoop();
+    #endif
+
     #if (_USE_LED_ == 1)
     if (boardLed == OUT_OFF)
       boardLed = OUT_ON;

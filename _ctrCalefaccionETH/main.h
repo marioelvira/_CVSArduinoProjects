@@ -25,6 +25,7 @@ extern "C" {
 #define _USE_RS485_                0 //1
 #define _USE_UID_                  1
 #define _USE_TRIAC_                1
+#define _USE_PWM_                  1
 
 #if (_USE_ETHERNET_ == 1)
 #define _USE_HTTP_                 1

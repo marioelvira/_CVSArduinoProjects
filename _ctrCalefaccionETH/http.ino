@@ -629,6 +629,13 @@ void _readCTR()
   html = html + "</tr>";
   #endif
 
+  #if (_USE_PWM_ == 1)
+  html = html + "<tr>";
+  html = html + "<td style=\"width:60%\">PWM duty cycle</td>";
+  html = html + "<td style=\"width:40%\">" + pwmDutyCycle + "</td>";
+  html = html + "</tr>";
+  #endif
+
   html = html + "</table>";
   
   httpServer.send(200, "text/plane", html);

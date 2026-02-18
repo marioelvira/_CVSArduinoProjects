@@ -25,7 +25,7 @@ extern "C" {
  *                       -| GPIO14      GPIO22 |-
  *                       -| GPIO06      GPIO23 |-
  *                       -| GPIO05         RUN |- System Control
- *                       -| GPIO04      GPIO26 |-
+ *               PWM0 <- -| GPIO04      GPIO26 |-
  *                       -| GND            GND |-
  *                TR0 <- -| GPIO03      GPIO27 |-
  *                 ZC -> -| GPIO02      GPIO32 |-
@@ -55,9 +55,11 @@ extern "C" {
 #define PIN_OUT0        54
 #define PIN_OUT1        19
 
-#define PIN_TR0         3                
+#define PIN_TR0         3
 
-//#define PIN_RS485_RXTX  4
+#define PIN_PWM0        4
+
+//#define PIN_RS485_RXTX  X
 
 // INs
 #define IN_NUMBER       2

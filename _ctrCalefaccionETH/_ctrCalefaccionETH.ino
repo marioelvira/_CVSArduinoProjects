@@ -54,6 +54,10 @@
 #include "triac.h"
 #endif
 
+#if (_USE_PWM_ == 1)
+#include "pwm.h"
+#endif
+
 #if (_USE_WDE_ == 1)
 #include "wde.h"
 #endif
@@ -110,6 +114,18 @@ volatile uint32_t triacDimming = 5000; // Microsegundos
 
 unsigned long triacTick = 0;
 int triacZCPeriod;
+#endif
+
+/////////
+// PWM //
+/////////
+#if (_USE_PWM_ == 1)
+const int pwmPin = PIN_PWM0; 
+
+const int pwmFreq = 5000;     // Frecuencia de 5000 Hz
+const int pwmResolution = 8;  // Resolución de 8 bits (valores de 0 a 255)
+
+int pwmDutyCycle = 125;       // 50%
 #endif
 
 /////////////
@@ -332,6 +348,10 @@ void setup(void)
 
   #if (_USE_TRIAC_ == 1)
   _TRIACSetup();
+  #endif
+
+  #if (_USE_PWM_ == 1)
+  _PWMSetup();
   #endif
 
   // Time setup

@@ -50,6 +50,10 @@
 #include "modbusRTU.h"
 #endif
 
+#if (_USE_TRIAC_ == 1)
+#include "triac.h"
+#endif
+
 #if (_USE_WDE_ == 1)
 #include "wde.h"
 #endif
@@ -70,11 +74,6 @@ String UniqueIdStr;
 #if (_USE_LED_ == 1)
 int   boardLed;
 #endif
-
-/////////////
-// IO Tick //
-/////////////
-//unsigned long ioTick = 0;
 
 //////////
 // OUTs //
@@ -98,6 +97,20 @@ int timeSec = 0;
 int timeMin = 0;
 int timeHour = 0;
 int timeDay = 0;
+
+///////////
+// TRIAC //
+///////////
+#if (_USE_TRIAC_ == 1)
+const int triacZCPin = PIN_ZC;    
+const int triacCtrPin = PIN_TR0;
+
+hw_timer_t * triacTimer = NULL;
+volatile uint32_t triacDimming = 5000; // Microsegundos
+
+unsigned long triacTick = 0;
+int triacZCPeriod;
+#endif
 
 /////////////
 // Control //
@@ -316,6 +329,10 @@ void setup(void)
   // PIN & IO Setup
   _IOSetup();
   _PINSetup();
+
+  #if (_USE_TRIAC_ == 1)
+  _TRIACSetup();
+  #endif
 
   // Time setup
   _TimeSetup();

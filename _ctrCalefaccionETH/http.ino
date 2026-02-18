@@ -41,35 +41,36 @@ void _serveMAIN()
   html = html + "<div class=\"myform\">";
   html = html + "<h1>" + PROJECT + " #Estado<span>" + TECHNOLOGY + "</span><span align=\"right\"> " + compdate + " " + comptime + "</span></h1>";
 
-  html = html + "<div class=\"section\"><span>1</span>Sistema</div>";
+  html = html + "<div class=\"section\"><span>1</span>Control</div>";
+  html = html + "<p class=\"sansserif\" id=\"CTRid\">...</p>";
+  
+  html = html + "<div class=\"section\"><span>2</span>Entradas</div>";
+  html = html + "<p class=\"sansserif\" id=\"INSid\">...</p>";
+  
+  html = html + "<div class=\"section\"><span>3</span>Salidas</div>";
+  html = html + "<p class=\"sansserif\" id=\"OUTSid\">...</p>";
+
+  html = html + "<div class=\"section\"><span>4</span>Modo</div>";
+  html = html + "<p>";
+  html = html + "  <input type=\"button\" value=\"Cambiar\" onclick=\"sendOUT(0)\">";
+  html = html + "</p><p>";
+  html = html + "  <input type=\"button\" value=\"0\" onclick=\"sendOUT(10)\">";
+  html = html + "  <input type=\"button\" value=\"1\" onclick=\"sendOUT(11)\">";
+  html = html + "</p>";
+
+  html = html + "<div class=\"section\"><span>5</span>Sistema</div>";
   html = html + "<p class=\"sansserif\" id=\"STATUSSid\">...</p>";
   html = html + "<p>";
   html = html + "  <input type=\"button\" value=\"Reset\" onclick=\"sendOUT(1)\">";
   html = html + "  <input type=\"button\" value=\"Restore\" onclick=\"sendOUT(2)\">";
   html = html + "</p>";
 
-  html = html + "<div class=\"section\"><span>2</span>Control</div>";
-  html = html + "<p class=\"sansserif\" id=\"CTRid\">...</p>";
-  
-  html = html + "<div class=\"section\"><span>3</span>Entradas</div>";
-  html = html + "<p class=\"sansserif\" id=\"INSid\">...</p>";
-  
-  html = html + "<div class=\"section\"><span>4</span>Salidas</div>";
-  html = html + "<p class=\"sansserif\" id=\"OUTSid\">...</p>";
-
-  html = html + "<div class=\"section\"><span>5</span>Test</div>";
-  html = html + "<p>";
-  html = html + "  <input type=\"button\" value=\"Cambiar Modo\" onclick=\"sendOUT(0)\">";
-  html = html + "</p><p>";
-  html = html + "  <input type=\"button\" value=\"0\" onclick=\"sendOUT(10)\">";
-  html = html + "  <input type=\"button\" value=\"1\" onclick=\"sendOUT(11)\">";
-  html = html + "</p>";
-
   html = html + "<div class=\"section\"><span>6</span>Configuraci&oacuten</div>";
   html = html + "<p>";
   html = html + "  <a href=\"network.htm\"><input type=\"button\" value=\"Red\"></a>";
   html = html + "  <a href=\"settings.htm\"><input type=\"button\" value=\"Parametros\"></a>";
-  html = html + "</p>"; 
+  html = html + "</p>";
+ 
   html = html + "</div>";
 
   html = html + "<script>";
@@ -206,6 +207,7 @@ void _serveSETTINGS()
 void _setSETTINGS()
 {
   int eeprom_value_hi, eeprom_value_lo;
+  int response = 200;
     
   String html = "";
   
@@ -227,8 +229,6 @@ void _setSETTINGS()
 
   //String rdebugVal = httpServer.arg("tdebugVal");
   
-  int error = 0;
-
   if ((scfgResPrimVout.length() == 0)     ||
       (scfgResInyeVout.length() == 0)     ||
       (scfgResPrimInyeTemp.length() == 0) ||
@@ -247,14 +247,14 @@ void _setSETTINGS()
 
       //(rdebugVal.length() == 0))
   {
-    error = 1;  // falta un campo...
+    response = 400;  // Error...
     #if (_HTTP_SERIAL_DEBUG_ == 1)
     Serial.println("Error... parametro vacío.");
     #endif
   }
 
   // Si no hay error...
-  if (error == 0)
+  if (response == 200)
   {
     cfgResPrimVout     = scfgResPrimVout.toInt();
     cfgResInyeVout     = scfgResInyeVout.toInt();
@@ -290,7 +290,7 @@ void _setSETTINGS()
   html = html + "<div class=\"myform\">";
   html = html + "<h1>" + PROJECT + " #Config<span>" + TECHNOLOGY + "</span><span align=\"right\"> " + compdate + " " + comptime + "</span></h1>";
   
-  if (error == 0)
+  if (response == 200)
     html += "<p class=\"sansserif\">Configuraci&oacuten guardada correctamente.</p>";
   else
     html += "<p class=\"sansserif\">Error el guardar la configuraci&oacuten. Revise los datos introducidos.</p>";
@@ -304,7 +304,7 @@ void _setSETTINGS()
   html = html + "</body> ";
   html = html + "</html>";
 
-  httpServer.send (200, "text/html", html);
+  httpServer.send (response, "text/html", html);
 }
 
 // Network Settings
@@ -379,6 +379,15 @@ void _serveNETWORK()
 
 void _setNETWORK()
 {
+  int eeprom_value_hi, eeprom_value_lo;
+
+  String html = "";
+  int response = 200;
+  int i, j, k, m;
+  char schar;
+  char sbuf[4];
+  byte val[4];
+
   String ripmode = httpServer.arg("ipmode");
   String ripaddress = httpServer.arg("ipaddress");
   String rmask = httpServer.arg("mask");
@@ -390,15 +399,6 @@ void _setNETWORK()
   String rbrokeruser = httpServer.arg("brokeruser");
   String rbrokerpswd = httpServer.arg("brokerpswd");
   #endif
- 
-  String html = "";
-  int i, j, k, m;
-  int error = 0;
-  char schar;
-  char sbuf[4];
-  byte val[4];
-
-  int eeprom_value_hi, eeprom_value_lo;
 
   IPAddress localip;
   IPAddress localmask;
@@ -410,11 +410,11 @@ void _setNETWORK()
       (rbrokerport.length() == 0) ||
       (rbrokeruser.length() == 0) ||
       (rbrokerpswd.length() == 0))
-    error = 1;
+    response = 400;
   #endif
 
-  // If no error on data...
-  if (error == 0)
+  // If no error...
+  if (response == 200)
   {
     #if (_USE_MQTT_ == 1)
     // Broker Url
@@ -544,9 +544,6 @@ void _setNETWORK()
     EEPROM.write(EEPROM_ADD_GATE3, val[2]);
     EEPROM.write(EEPROM_ADD_GATE4, val[3]);
 
-    // OK
-    i = 200;
-
     #if (_HTTP_SERIAL_DEBUG_ == 1)
     // IP configuration
     Serial.print("---->Local IP: ");
@@ -574,7 +571,7 @@ void _setNETWORK()
     #endif
 
     // Error
-    i = 404;
+    response = 400;
   }
 
   html = "<!DOCTYPE HTML><html>";
@@ -590,7 +587,7 @@ void _setNETWORK()
   html = html + "<div class=\"myform\">";
   html = html + "<h1>" + PROJECT + " #Config<span>" + TECHNOLOGY + "</span><span align=\"right\"> " + compdate + " " + comptime + "</span></h1>";
   
-  if (error == 0)
+  if (response == 200)
     html += "<p class=\"sansserif\">Configuraci&oacuten guardada correctamente.</p>";
   else
     html += "<p class=\"sansserif\">Error el guardar la configuraci&oacuten. Revise los datos introducidos.</p>";
@@ -604,7 +601,7 @@ void _setNETWORK()
   html = html + "</body> ";
   html = html + "</html>";
 
-  httpServer.send (200, "text/html", html);
+  httpServer.send (response, "text/html", html);
 }
 
 /////////////
@@ -618,12 +615,19 @@ void _readCTR()
   html = "<table style=\"width:100%\">";
 
   html = html + "<tr>";
-  html = html + "<td>Modo</td>";
+  html = html + "<td style=\"width:60%\">Modo</td>";
   if (ctrMode == MODE_AUTO)
-   html = html + "<td><font style=\"color:blue\">Autom&aacutetico</font></td>";
+   html = html + "<td style=\"width:40%\"><font style=\"color:blue\">Autom&aacutetico</font></td>";
   else
-   html = html + "<td><font style=\"color:red\">Test</font></td>";
+   html = html + "<td style=\"width:40%\"><font style=\"color:red\">Test</font></td>";
   html = html + "</tr>";
+
+  #if (_USE_TRIAC_ == 1)
+  html = html + "<tr>";
+  html = html + "<td style=\"width:60%\">Periodo de Red</td>";
+  html = html + "<td style=\"width:40%\">" + triacZCPeriod + " ms</td>";
+  html = html + "</tr>";
+  #endif
 
   html = html + "</table>";
   
@@ -637,8 +641,8 @@ void _readINS()
   html = "<table style=\"width:100%\">";
 
   html = html + "<tr>";
-  html = html + "<td>Boards Ins</td>";
-  html = html + "<td>" + String(InDig[0]) + "-" + String(InDig[1]) + "</td>";
+  html = html + "<td style=\"width:60%\">Boards Ins</td>";
+  html = html + "<td style=\"width:40%\">" + String(InDig[0]) + "-" + String(InDig[1]) + "</td>";
   html = html + "</tr>";
   
   html = html + "</table>";
@@ -653,8 +657,8 @@ void _readOUTS()
   html = "<table style=\"width:100%\">";
   
   html = html + "<tr>";
-  html = html + "<td>Boards Outs</td>";
-  html = html + "<td>" + String(OutDig[0]) + "-" + String(OutDig[1]) + "</td>";
+  html = html + "<td style=\"width:60%\">Boards Outs</td>";
+  html = html + "<td style=\"width:40%\">" + String(OutDig[0]) + "-" + String(OutDig[1]) + "</td>";
   html = html + "</tr>";
 
   html = html + "</table>";
@@ -757,21 +761,21 @@ void _readSTATUS()
   html = "<table style=\"width:100%\">";
   
   html = html + "<tr>";
-  html = html + "<td>Tiempo Encendio</td>";
-  html = html + "<td>" + String(timeDay) + "d " + timeOnString + "</td>";
+  html = html + "<td style=\"width:60%\">Tiempo Encendio</td>";
+  html = html + "<td style=\"width:40%\">" + String(timeDay) + "d " + timeOnString + "</td>";
   html = html + "</tr>";
   
   #if (_USE_NTP_ == 1)
   html = html + "<tr>";
-  html = html + "<td>Fecha NTP</td>";
-  html = html + "<td>" + mntpTimeString + "</td>";
+  html = html + "<td style=\"width:60%\">Fecha NTP</td>";
+  html = html + "<td style=\"width:40%\">" + mntpTimeString + "</td>";
   html = html + "</tr>";
   #endif
   
   #if (_USE_MQTT_ == 1)
   html = html + "<tr>";
-  html = html + "<td>MQTT </td>";
-  html = html + "<td>" + String(mqttStatus) + "</td>";
+  html = html + "<td style=\"width:60%\">MQTT </td>";
+  html = html + "<td style=\"width:40%\">" + String(mqttStatus) + "</td>";
   html = html + "</tr>";
   #endif
 

@@ -30,7 +30,7 @@ void _TimeSetup(void)
   timeSec = 0;
   timeMin = 0;
   timeHour = 0;
-   timeDay = 0;
+  timeDay = 0;
   
   #if (_USE_FREERAM_ == 1)
   // RAM setup
@@ -95,15 +95,6 @@ void _TimeLoop(void)
     Serial.print(ethStatus);
     Serial.println(" ");
     /*
-    Serial.print("ctrInState: ");
-    Serial.print(ctrInState);
-    Serial.println(" ");
-
-    Serial.print("ctrOutState: ");
-    Serial.print(ctrOutState);
-    Serial.println(" ");
-    */
-    /*
     // OUTs
     for (i = 0; i< OUT_NUMBER; i++)
     {
@@ -120,24 +111,6 @@ void _TimeLoop(void)
       Serial.print(i);
       Serial.print(": ");
       Serial.println(InDig[i]);
-    }
-    
-    // I
-    for (i = 0; i< I_NUMBER; i++)
-    {
-      Serial.print("i");
-      Serial.print(i);
-      Serial.print(": ");
-      Serial.println(Ival[i]);
-    }
-
-    // V
-    for (i = 0; i< V_NUMBER; i++)
-    {
-      Serial.print("v");
-      Serial.print(i);
-      Serial.print(": ");
-      Serial.println(Vval[i]);
     }
     */
     Serial.println("<><><><><><><>");

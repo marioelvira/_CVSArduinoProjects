@@ -122,10 +122,10 @@ int triacZCPeriod;
 #if (_USE_PWM_ == 1)
 const int pwmPin = PIN_PWM0; 
 
-const int pwmFreq = 5000;     // Frecuencia de 5000 Hz
-const int pwmResolution = 8;  // Resolución de 8 bits (valores de 0 a 255)
+const int pwmFreq = 50; // Frecuencia (Hz)
+const int pwmResolution = 14;  // Resolución de 8 bits (valores de 0 a 255)
 
-int pwmDutyCycle = 125;       // 50%
+int pwmDutyCycle = 5000;       // 50%
 #endif
 
 /////////////
@@ -290,7 +290,7 @@ void _PINSetup(void)
   for (i = 0; i < OUT_NUMBER; i++)
   {
     pinMode(OutPin[i], OUTPUT);
-    digitalWrite(OutPin[i], !cfgLogicOuts /*PIN_OUT_OFF*/);
+    digitalWrite(OutPin[i], PIN_OUT_OFF /*!cfgLogicOuts*/);
     OutDig[i] = OUT_OFF;
   }
 
@@ -339,12 +339,12 @@ void setup(void)
   #endif
   #endif
 
-  // Config setup
-  _ConfigSetup();
-
   // PIN & IO Setup
   _IOSetup();
   _PINSetup();
+
+  // Config setup
+  _ConfigSetup();
 
   #if (_USE_TRIAC_ == 1)
   _TRIACSetup();

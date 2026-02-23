@@ -188,6 +188,13 @@ void _serveSETTINGS()
   html = html + "<label> Salidas ON <input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgLogicOuts) + "\" name=\"cfgLogicOuts\"/></label>";
   html = html + "</div>";
 
+  #if (_USE_PWM_ == 1)
+  html = html + "<div class=\"section\"><span>4</span>PWM</div>";
+  html = html + "<div class=\"inner-wrap\">";
+  html = html + "<label> Ciclo <input type=\"text\"  maxlength=\"16\" value=\"" + String(pwmDutyCycle) + "\" name=\"pwmDutyCycle\"/></label>";
+  html = html + "</div>";
+  #endif
+
   html = html + "<div class=\"button-section\">";
   html = html + "  <input type=\"submit\" value=\"Guardar\">";
   html = html + "  <a href=\"index.htm\"><input type=\"button\" value=\"Volver\"></a>";
@@ -224,8 +231,13 @@ void _setSETTINGS()
   String scfgResInyeAlarMin  = httpServer.arg("cfgResInyeAlarMin");
   String scfgAguaAlarMin     = httpServer.arg("cfgAguaAlarMin");
 
+  #if (_USE_PWM_ == 1)
+  String spwmDutyCycle       = httpServer.arg("pwmDutyCycle");
+  #endif
+
   String scfgLogicIns        = httpServer.arg("cfgLogicIns");
   String scfgLogicOuts       = httpServer.arg("cfgLogicOuts");
+
 
   //String rdebugVal = httpServer.arg("tdebugVal");
   
@@ -241,6 +253,10 @@ void _setSETTINGS()
       (scfgResPrimAlarMin.length() == 0)  ||
       (scfgResInyeAlarMin.length() == 0)  ||
       (scfgAguaAlarMin.length() == 0)     ||
+
+      #if (_USE_PWM_ == 1)
+      (spwmDutyCycle.length() == 0)       ||
+      #endif
 
       (scfgLogicIns.length() == 0)        ||
       (scfgLogicOuts.length() == 0))
@@ -269,6 +285,10 @@ void _setSETTINGS()
     cfgResInyeAlarMin  = scfgResInyeAlarMin.toInt();
     cfgAguaAlarMin     = scfgAguaAlarMin.toInt();
 
+    #if (_USE_PWM_ == 1)
+    pwmDutyCycle = spwmDutyCycle.toInt();
+    #endif
+    
     cfgLogicIns  = scfgLogicIns.toInt();
     cfgLogicOuts = scfgLogicOuts.toInt();
 
@@ -626,13 +646,6 @@ void _readCTR()
   html = html + "<tr>";
   html = html + "<td style=\"width:60%\">Periodo de Red</td>";
   html = html + "<td style=\"width:40%\">" + triacZCPeriod + " ms</td>";
-  html = html + "</tr>";
-  #endif
-
-  #if (_USE_PWM_ == 1)
-  html = html + "<tr>";
-  html = html + "<td style=\"width:60%\">PWM duty cycle</td>";
-  html = html + "<td style=\"width:40%\">" + pwmDutyCycle + "</td>";
   html = html + "</tr>";
   #endif
 

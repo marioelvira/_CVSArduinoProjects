@@ -19,8 +19,8 @@ void mqttDataCallback(char* rtopic, byte* rpayload, unsigned int rlength)
   #endif
 
   // Outs
-  if (rtopicStr.equals(TOPIC_RON) ||
-      rtopicStr.equals(TOPIC_ROFF))
+  if (rtopicStr.equals(TOPIC_CON) ||
+      rtopicStr.equals(TOPIC_COFF))
   {
 	/*
     // Value
@@ -44,7 +44,7 @@ void mqttDataCallback(char* rtopic, byte* rpayload, unsigned int rlength)
   */
   }
   // Watchdog
-  else if (rtopicStr.equals(TOPIC_RWD))
+  else if (rtopicStr.equals(TOPIC_CWD))
   {
     if(rpayloadStr.equals("1"))
     {
@@ -118,42 +118,6 @@ void _MQTTSend(int itopic)
   ////////////////
   else if (itopic == 1)
   {
-    /*
-    /////////
-    // ADC //
-    /////////
-    str = str + "\"i0\":\"";
-    str = str + Ival[0];
-    str = str + "\",\n";
-    
-    str = str + "\"i1\":\"";
-    str = str + Ival[1];
-    str = str + "\",\n";
-
-    str = str + "\"v0\":\"";
-    str = str + Vval[0];
-    str = str + "\",\n";
-    
-    str = str + "\"v1\":\"";
-    str = str + Vval[1];
-    str = str + "\",\n";
-
-    str = str + "\"v2\":\"";
-    str = str + Vval[2];
-    str = str + "\",\n";
-    
-    str = str + "\"v3\":\"";
-    str = str + Vval[3];
-    str = str + "\",\n";
-
-    str = str + "\"v4\":\"";
-    str = str + Vval[4];
-    str = str + "\",\n";
-    
-    str = str + "\"v5\":\"";
-    str = str + Vval[5];
-    str = str + "\",\n";
-    */
     /////////
     // IOs //
     /////////
@@ -179,9 +143,11 @@ void _MQTTSend(int itopic)
   str.toCharArray(spayload, str_len);
 
   if (itopic == 1)
-    str = TOPIC_RIOS;
+    str = TOPIC_CIOS;
+  //else if (itopic == 2)
+  //str = TOPIC_CXXX;
   else
-    str = TOPIC_RCTR;
+    str = TOPIC_CCTR;
   
   str_len = str.length() + 1;
   str.toCharArray(stopic, str_len);
@@ -286,10 +252,10 @@ void _MQTTLoop(void)
         
         mqttTick = millis();
         
-        if (mqttSubscribe(TOPIC_RON)       &&
-            mqttSubscribe(TOPIC_ROFF)      &&
+        if (mqttSubscribe(TOPIC_CON)       &&
+            mqttSubscribe(TOPIC_COFF)      &&
             
-            mqttSubscribe(TOPIC_RWD))
+            mqttSubscribe(TOPIC_CWD))
         {
           mqttStatus = MQTT_SUBSCRIBED;
         }
@@ -318,7 +284,7 @@ void _MQTTLoop(void)
         _MQTTSend(mqttTopic);
         
 		    mqttTopic++;
-		    if (mqttTopic > MQTT_NUM_TOPICS)
+		    if (mqttTopic > MQTT_LAST_TOPIC)
 		      mqttTopic = 0;
 
       }

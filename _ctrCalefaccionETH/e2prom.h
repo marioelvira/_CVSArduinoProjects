@@ -57,7 +57,7 @@ extern "C" {
 //#define EEPROM_ADD_MAX              0xFA // 250
 
 // Values
-#define EEPROM_VAL_OK                 0xAF
+#define EEPROM_VAL_OK                 0xAE
 
 #define EEPROM_VAL_IP_MODE        FIXIP_MODE // DHCP_MODE
 #define EEPROM_VAL_IP1            192
@@ -78,8 +78,8 @@ extern "C" {
 //#define EEPROM_ADD_MQTT_PSWD    
 //#define EEPROM_VAL_BROKER_PORT    7000
 
-#define EEPROM_VAL_LOGIC_INS            0     // Logica leer 1
-#define EEPROM_VAL_LOGIC_OUTS           0     // Logica activar out
+#define EEPROM_VAL_LOGIC_INS            1     // Logica Reposo
+#define EEPROM_VAL_LOGIC_OUTS           0     // Logica Reposo
 
 #define EEPROM_VAL_RES_PRIM_VOUT        110   // V
 #define EEPROM_VAL_RES_INYE_VOUT        110   // V

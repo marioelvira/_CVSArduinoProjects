@@ -7,6 +7,7 @@
 #endif
 
 #if (_USE_MQTT_ == 1)
+#include <NetworkClient.h>
 #include <PubSubClient.h>
 #endif
 #if (_USE_HTTP_ == 1)
@@ -24,6 +25,7 @@
 #include <ArduinoUniqueID.h>
 #endif
 
+#include "alarm.h"
 #include "ctr.h"
 #include "e2prom.h"
 #include "io.h"
@@ -103,10 +105,21 @@ int timeHour = 0;
 int timeDay = 0;
 
 ///////////
+// Alarm //
+///////////
+int    alState;
+int    alSecond;
+int    alNotify;
+int    alarmOn[AL_ARRAY_SIZE];
+int    alarmCpy[AL_ARRAY_SIZE];
+
+String alarmStr[AL_ARRAY_SIZE];
+
+///////////
 // TRIAC //
 ///////////
 #if (_USE_TRIAC_ == 1)
-const int triacZCPin = PIN_ZC;    
+const int triacZCPin = PIN_ZD0;    
 const int triacCtrPin = PIN_TR0;
 
 hw_timer_t * triacTimer = NULL;
@@ -200,7 +213,7 @@ char brokerUser[MQTT_USER_MAX];
 const char* brokerPswdSt = MQTT_PASSWORD;
 char brokerPswd[MQTT_PSWD_MAX];
 
-EthernetClient ethClient;
+NetworkClient  ethClient;
 PubSubClient mqttClient(ethClient);
 
 String mqttClientId;
@@ -305,7 +318,7 @@ void _PINSetup(void)
   //-----//
   for (i = 0; i < IN_NUMBER; i++)
   {
-    pinMode(InPin[i], INPUT);
+    pinMode(InPin[i], INPUT_PULLUP);
     InDig[i] = 0;
   }
 }
@@ -345,6 +358,8 @@ void setup(void)
 
   // Config setup
   _ConfigSetup();
+
+  _ALARMSetup();
 
   #if (_USE_TRIAC_ == 1)
   _TRIACSetup();

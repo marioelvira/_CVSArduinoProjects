@@ -6,9 +6,9 @@ extern "C" {
 #define _CTR_H_
 
 /*
-  Arrancque
-  ---------
-  Cuando la entrada IN_TERMO está a ON
+  Arranque
+  --------
+  Cuando la entrada TERMO_ON_IN está a ON
   -> Salida RES_PRIN_OUT a ON una tensión RES_PRIN_VOUT ... La temperatura RES_PRIN_TEMP commienza a subir.
   Cuando RES_PRIN_TEMP sube a RES_PRIN_TEMP_INYE_ON
   -> Salida RES_INYE_OUT a ON una tensión RES_INYE_VOUT ... La temperatura RES_INYE_TEMP commienza a subir.
@@ -65,6 +65,19 @@ extern "C" {
   Si la RES_INYE_TEMP no alcanza RES_INYE_CONSIG_TEMP en RES_INYE_CONSIG_MIN minutos - Se para el sistema y se indica ALARM_RES_INYE
   Si la BOM_AGUA_TEMP no alcanza BOM_AGUA_CONSIG_TEMP en BOM_AGUA_CONSIG_MIN minutos - Se para el sistema y se indica ALARM_BOM_AGUA
 
+  Entradas
+  --------
+  - Encendido     TERMO_ON_IN     DIO
+  - Quemador      ACT_QUEM_IN     DIO
+  - Frecuencia    FREC_IN         INT
+
+  Salidas
+  -------
+  - Resistencia principal   RES_PRIN_OUT    TRIAK
+  - Resistencia inyector    RES_INYE_OUT    TRIAK
+  - Quemador                ACT_QUEM_OUT    DIO
+  - Bomba                   BOM_AGUA_OUT    DIO
+  - Achique                 ACT_ACHI_OUT    DIO
 */
 
 #define MODE_TEST   1

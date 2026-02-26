@@ -29,7 +29,7 @@ extern "C" {
 
 #if (_USE_ETHERNET_ == 1)
 #define _USE_HTTP_                 1
-#define _USE_MQTT_                 0
+#define _USE_MQTT_                 1
 #define _USE_NTP_                  0
 #endif
 
@@ -41,6 +41,7 @@ extern "C" {
 #endif
 
 #if (_SERIAL_DEBUG_ == 1)
+#define _ALARM_SERIAL_DEBUG_       0
 #define _EEPROM_SERIAL_DEBUG_      1
 #define _STATUS_SERIAL_DEBUG_      0
 #define _HTTP_SERIAL_DEBUG_        1

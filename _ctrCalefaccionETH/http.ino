@@ -44,28 +44,28 @@ void _serveMAIN()
   html = html + "<div class=\"section\"><span>1</span>Control</div>";
   html = html + "<p class=\"sansserif\" id=\"CTRid\">...</p>";
   
-  html = html + "<div class=\"section\"><span>2</span>Entradas</div>";
-  html = html + "<p class=\"sansserif\" id=\"INSid\">...</p>";
-  
-  html = html + "<div class=\"section\"><span>3</span>Salidas</div>";
-  html = html + "<p class=\"sansserif\" id=\"OUTSid\">...</p>";
-
-  html = html + "<div class=\"section\"><span>4</span>Modo</div>";
+  html = html + "<div class=\"section\"><span>2</span>Modo</div>";
   html = html + "<p>";
   html = html + "  <input type=\"button\" value=\"Cambiar\" onclick=\"sendOUT(0)\">";
   html = html + "</p><p>";
   html = html + "  <input type=\"button\" value=\"0\" onclick=\"sendOUT(10)\">";
   html = html + "  <input type=\"button\" value=\"1\" onclick=\"sendOUT(11)\">";
+  html = html + "  <input type=\"button\" value=\"2\" onclick=\"sendOUT(12)\">";
+  html = html + "  <input type=\"button\" value=\"3\" onclick=\"sendOUT(13)\">";
   html = html + "</p>";
 
-  html = html + "<div class=\"section\"><span>5</span>Sistema</div>";
+  html = html + "<div class=\"section\"><span>3</span>Estado</div>";
+  html = html + "<p class=\"sansserif\" id=\"INSid\">...</p>";
+  html = html + "<p class=\"sansserif\" id=\"OUTSid\">...</p>";
+
+  html = html + "<div class=\"section\"><span>4</span>Sistema</div>";
   html = html + "<p class=\"sansserif\" id=\"STATUSSid\">...</p>";
   html = html + "<p>";
   html = html + "  <input type=\"button\" value=\"Reset\" onclick=\"sendOUT(1)\">";
   html = html + "  <input type=\"button\" value=\"Restore\" onclick=\"sendOUT(2)\">";
   html = html + "</p>";
 
-  html = html + "<div class=\"section\"><span>6</span>Configuraci&oacuten</div>";
+  html = html + "<div class=\"section\"><span>5</span>Configuraci&oacuten</div>";
   html = html + "<p>";
   html = html + "  <a href=\"network.htm\"><input type=\"button\" value=\"Red\"></a>";
   html = html + "  <a href=\"settings.htm\"><input type=\"button\" value=\"Parametros\"></a>";
@@ -184,8 +184,8 @@ void _serveSETTINGS()
 
   html = html + "<div class=\"section\"><span>3</span>Logica</div>";
   html = html + "<div class=\"inner-wrap\">";
-  html = html + "<label> Entradas ON <input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgLogicIns) + "\" name=\"cfgLogicIns\"/></label>";
-  html = html + "<label> Salidas ON <input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgLogicOuts) + "\" name=\"cfgLogicOuts\"/></label>";
+  html = html + "<label> Entradas Reposo <input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgLogicIns) + "\" name=\"cfgLogicIns\"/></label>";
+  html = html + "<label> Salidas Reposo <input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgLogicOuts) + "\" name=\"cfgLogicOuts\"/></label>";
   html = html + "</div>";
 
   #if (_USE_PWM_ == 1)
@@ -346,7 +346,7 @@ void _serveNETWORK()
   html = html + "<form method='get' action='networkSet'>";
 
   // Red
-  html = html + "<div class=\"section\"><span>2</span>IP</div>";
+  html = html + "<div class=\"section\"><span>1</span>IP</div>";
   html = html + "<div class=\"inner-wrap\">";
 
   if (ipMode == DHCP_MODE)
@@ -369,7 +369,7 @@ void _serveNETWORK()
 
   #if (_USE_MQTT_ == 1)
   // Broker
-  html = html + "<div class=\"section\"><span>3</span>Broker </div>";
+  html = html + "<div class=\"section\"><span>2</span>Broker </div>";
   html = html + "<div class=\"inner-wrap\">";
 
   html = html + "<label>Url <input type=\"text\" maxlength=\"30\" value=\"" + String(brokerUrl) + "\" name=\"brokerurl\"/></label>";
@@ -662,7 +662,7 @@ void _readINS()
 
   html = html + "<tr>";
   html = html + "<td style=\"width:60%\">Boards Ins</td>";
-  html = html + "<td style=\"width:40%\">" + String(InDig[0]) + "-" + String(InDig[1]) + "</td>";
+  html = html + "<td style=\"width:40%\">" + String(InDig[0]) + "-" + String(InDig[1]) + "-" + String(InDig[2]) + "-" + String(InDig[3]) + "</td>";
   html = html + "</tr>";
   
   html = html + "</table>";
@@ -678,7 +678,7 @@ void _readOUTS()
   
   html = html + "<tr>";
   html = html + "<td style=\"width:60%\">Boards Outs</td>";
-  html = html + "<td style=\"width:40%\">" + String(OutDig[0]) + "-" + String(OutDig[1]) + "</td>";
+  html = html + "<td style=\"width:40%\">" + String(OutDig[0]) + "-" + String(OutDig[1]) + "-" + String(OutDig[2]) + "-" + String(OutDig[3]) + "</td>";
   html = html + "</tr>";
 
   html = html + "</table>";
@@ -765,6 +765,34 @@ void _setOUTS()
       {
         OutDig[1] = OUT_ON;
         html = "Out 1 ON";
+      }
+    }
+    // Out 2
+    else if(out_number == "12")
+    {
+      if (OutDig[2] == OUT_ON)
+      {
+        OutDig[2] = OUT_OFF;
+        html = "Out 2 OFF";
+      }
+      else
+      {
+        OutDig[2] = OUT_ON;
+        html = "Out 2 ON";
+      }
+    }
+    // Out 3
+    else if(out_number == "13")
+    {
+      if (OutDig[3] == OUT_ON)
+      {
+        OutDig[3] = OUT_OFF;
+        html = "Out 3 OFF";
+      }
+      else
+      {
+        OutDig[3] = OUT_ON;
+        html = "Out 3 ON";
       }
     }
   }

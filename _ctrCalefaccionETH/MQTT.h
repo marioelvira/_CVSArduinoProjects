@@ -23,14 +23,16 @@ extern "C" {
 #define MQTT_PASSWORD       "MQTTSup3rP@@sw0rd"
 
 // MQTT Topics
-#define MQTT_NUM_TOPICS    2
-#define TOPIC_RCTR         "sdpelicanos@gmail.com/cal_ctr"   // 0
-#define TOPIC_RIOS         "sdpelicanos@gmail.com/cal_ios"   // 1
+#define MQTT_LAST_TOPIC    2
+#define TOPIC_CCTR         "sdpelicanos@gmail.com/cal_ctr"   // 0
+#define TOPIC_CIOS         "sdpelicanos@gmail.com/cal_ios"   // 1
 
-#define TOPIC_RON          "sdpelicanos@gmail.com/cal_ron"
-#define TOPIC_ROFF         "sdpelicanos@gmail.com/cal_roff"
+#define TOPIC_CALARM       "sdpelicanos@gmail.com/cal_al"    // Siempre el último
 
-#define TOPIC_RWD          "sdpelicanos@gmail.com/rwd"
+#define TOPIC_CON          "sdpelicanos@gmail.com/cal_ron"
+#define TOPIC_COFF         "sdpelicanos@gmail.com/cal_roff"
+
+#define TOPIC_CWD          "sdpelicanos@gmail.com/rwd"
 
 #define MQTT_BLINK_CONNECTING   3000
 

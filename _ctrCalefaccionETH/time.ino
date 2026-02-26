@@ -67,6 +67,8 @@ void _TimeLoop(void)
 
     timeTick = millis();
 
+    _ALARMLoop();
+
     #if (_USE_NTP_ == 1)
     _mNTPfakeSec();
     #endif

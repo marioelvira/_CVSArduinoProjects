@@ -169,7 +169,8 @@ void _MQTTSend(int itopic)
 /////////////////
 void _MQTTSetup(void)
 {
-  mqttClient.setServer(MQTT_BROKER, MQTT_BROKER_PORT);
+  //mqttClient.setServer(MQTT_BROKER, MQTT_BROKER_PORT);
+  mqttClient.setServer(brokerUrl, brokerPort);
   
   mqttClient.setCallback(mqttDataCallback);
 
@@ -222,7 +223,8 @@ void _MQTTLoop(void)
         #endif
       
         mqttTick = millis();
-        if (mqttClient.connect(mqttClientId.c_str(), MQTT_USERNAME, MQTT_PASSWORD))
+        //if (mqttClient.connect(mqttClientId.c_str(), MQTT_USERNAME, MQTT_PASSWORD))
+        if (mqttClient.connect(mqttClientId.c_str(), brokerUser, brokerPswd))
         {
           #if (_MQTT_SERIAL_DEBUG_ == 1)
           Serial.println("MQTT connected!!!...");

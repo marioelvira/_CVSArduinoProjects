@@ -172,6 +172,9 @@ int cfgResPrimAlarMin;
 int cfgResInyeAlarMin;
 int cfgAguaAlarMin;
 
+byte cfgMB1Add = 1; // TODO
+byte cfgMB2Add = 2; // TODO
+
 //////////////
 // Ethernet //
 //////////////
@@ -248,7 +251,7 @@ int             OutRS485rxtx;
 ////////////////
 // Modbus RTU //
 ////////////////
-#if (_USE_MB_ == 1)
+#if (_USE_MBRTU_ == 1)
 int mbState;
 int mbSWake;
 unsigned long mbTick;
@@ -394,6 +397,13 @@ void setup(void)
   _mNTPSetup();
   #endif
 
+  #if (_USE_RS485_ == 1)
+  _RS485Setup();
+  #if (_USE_MBRTU_ == 1)
+  _MBSetup();
+  #endif
+  #endif
+
   #endif // _USE_ETHERNET_
 }
 
@@ -459,4 +469,13 @@ void loop()
   #if (_USE_ETHERNET_ == 1)
   _ETHLoop();
   #endif
+
+  #if (_USE_RS485_ == 1)
+  _RS485Loop();
+  #if (_USE_MBRTU_ == 1)
+  _MBLoop();
+  #endif
+  #endif
+
+  //_ALARMLoop();
 }

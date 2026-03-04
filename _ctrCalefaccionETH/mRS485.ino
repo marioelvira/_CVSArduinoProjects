@@ -1,4 +1,5 @@
 #include "main.h"
+#include "io.h"
 
 #if (_USE_RS485_ == 1)
 
@@ -12,10 +13,9 @@
 void _RS485Setup(void)
 {
   delay(100);  // 100ms
-  Serial.begin(9600);
-
-  //Serial.begin(baud, config, rxPin, txPin); TODO
-
+  
+  Serial2.begin(9600, SERIAL_8N1, PIN_RS485_RX, PIN_RS485_TX);
+  
   mrs485State = MRS485_STANDBY;
   mrs485RxBuffer.reserve(MRS485_ARRAY_SIZE);
   //mrs485TxBuffer.reserve(MRS485_ARRAY_SIZE);
@@ -35,11 +35,11 @@ void _RS485Loop(void)
   switch (mrs485State)
   {
     case MRS485_STANDBY:
-	    if (Serial.available())
+	    if (Serial2.available())
       {
         mrs485State = MRS485_ONRX;
 	      mrs485tick = millis();
-		    inChar = (char)Serial.read();
+		    inChar = (char)Serial2.read();
 		    mrs485RxBuffer += inChar;
 	    }
       OutRS485rxtx = OUT_RS485_RX;
@@ -47,11 +47,11 @@ void _RS485Loop(void)
 	    break;
 	  
 	  case MRS485_ONRX:
-	    if (Serial.available())
+	    if (Serial2.available())
       {
         mrs485State = MRS485_ONRX;
 	      mrs485tick = millis();
-		    inChar = (char)Serial.read();
+		    inChar = (char)Serial2.read();
 		    mrs485RxBuffer += inChar;
 	    }
       OutRS485rxtx = OUT_RS485_RX;
@@ -90,7 +90,7 @@ void _RS485Loop(void)
       // Send buffer
       if (mrs485TxNumBytes > MRS485_ARRAY_SIZE)
         mrs485TxNumBytes = MRS485_ARRAY_SIZE;
-      Serial.write(mrs485TxBuffer, mrs485TxNumBytes);
+      Serial2.write(mrs485TxBuffer, mrs485TxNumBytes);
 
       mrs485tick = millis();  
 	    mrs485State = MRS485_ENDTX;

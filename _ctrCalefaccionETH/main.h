@@ -22,7 +22,7 @@ extern "C" {
 #define _USE_LED_                  1
 #define _USE_WDE_                  0 //1
 #define _USE_ETHERNET_             1
-#define _USE_RS485_                0 //1
+#define _USE_RS485_                1
 #define _USE_UID_                  1
 #define _USE_TRIAC_                1
 #define _USE_PWM_                  1
@@ -34,11 +34,10 @@ extern "C" {
 #endif
 
 #if (_USE_RS485_ == 1)
-#define _SERIAL_DEBUG_             0
-#define _USE_MBRTU_                0 //1
-#else
-#define _SERIAL_DEBUG_             1
+#define _USE_MBRTU_                1
 #endif
+
+#define _SERIAL_DEBUG_             1
 
 #if (_SERIAL_DEBUG_ == 1)
 #define _ALARM_SERIAL_DEBUG_       0

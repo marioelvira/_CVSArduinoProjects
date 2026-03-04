@@ -22,8 +22,9 @@ extern "C" {
 #define MB_RXLOOP     500
 #define MB_RXTOUT	    1000
 
-#define MB_NUM_IOS    8
 #define MB_NUM_BRS    2
+
+#define MB_NUM_IOS    8
 
 #define MB_OUT1       0
 #define MB_OUT2       1

@@ -57,12 +57,12 @@ extern "C" {
 //#define EEPROM_ADD_MAX              0xFA // 250
 
 // Values
-#define EEPROM_VAL_OK                 0xAD
+#define EEPROM_VAL_OK                 0xAE
 
-#define EEPROM_VAL_IP_MODE        DHCP_MODE // FIXIP_MODE 
+#define EEPROM_VAL_IP_MODE        FIXIP_MODE // DHCP_MODE
 #define EEPROM_VAL_IP1            192
 #define EEPROM_VAL_IP2            168
-#define EEPROM_VAL_IP3            1
+#define EEPROM_VAL_IP3            5
 #define EEPROM_VAL_IP4            50
 #define EEPROM_VAL_MASK1          255
 #define EEPROM_VAL_MASK2          255
@@ -70,7 +70,7 @@ extern "C" {
 #define EEPROM_VAL_MASK4          0
 #define EEPROM_VAL_GATE1          192
 #define EEPROM_VAL_GATE2          168
-#define EEPROM_VAL_GATE3          1
+#define EEPROM_VAL_GATE3          5
 #define EEPROM_VAL_GATE4          1
 
 //#define EEPROM_VAL_BROKER  

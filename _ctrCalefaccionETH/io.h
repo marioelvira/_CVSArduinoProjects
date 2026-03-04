@@ -32,8 +32,8 @@ extern "C" {
  *                       -| SCL/GPIO08  GPIO33 |- -> TR0
  *                       -| SCL/GPIO07  GPIO46 |- -> RTS_RS485
  *                       -| GND            GND |-
- *                       -| DM/GPIO24   GPIO47 |- <- RX_RS485
- *                       -| DP/GPIO25   GPIO48 |- -> TX_RS485
+ *                       -| DM/GPIO24   GPIO47 |- -> TX_RS485
+ *                       -| DP/GPIO25   GPIO48 |- <- RX_RS485
  *                       -|                    |-
  *                       -|    ------------    |-
  *                       -|    |          |    |-
@@ -73,9 +73,10 @@ extern "C" {
 #define PIN_ZD0         22
 //#define PIN_ZD1         23
 
-//#define PIN_RS485_RXTX  46
-//#define PIN_RS485_RX    47
-//#define PIN_RS485_RX    48
+// RS485
+#define PIN_RS485_RX    48
+#define PIN_RS485_TX    47
+#define PIN_RS485_RXTX  46
 
 // PWM
 #define PIN_PWM0        21

@@ -1,4 +1,5 @@
 #include "main.h"
+#include "io.h"
 
 #if (_USE_MBRTU_ == 1)
 
@@ -121,44 +122,44 @@ int _mbAnalyseIns(char address)
 void _mbUdateIns (int board)
 {
   if ((mrs485RxBuffer[3] & 0x01) != 0)
-    mbIns[0][board] = IO_ON;
+    mbIns[0][board] = IN_ON;
   else
-    mbIns[0][board] = IO_OFF;
+    mbIns[0][board] = IN_OFF;
 
   if ((mrs485RxBuffer[3] & 0x02) != 0)
-    mbIns[1][board] = IO_ON;
+    mbIns[1][board] = IN_ON;
   else
-    mbIns[1][board] = IO_OFF;
+    mbIns[1][board] = IN_OFF;
 
   if ((mrs485RxBuffer[3] & 0x04) != 0)
-    mbIns[2][board] = IO_ON;
+    mbIns[2][board] = IN_ON;
   else
-    mbIns[2][board] = IO_OFF;
+    mbIns[2][board] = IN_OFF;
 
   if ((mrs485RxBuffer[3] & 0x08) != 0)
-    mbIns[3][board] = IO_ON;
+    mbIns[3][board] = IN_ON;
   else
-    mbIns[3][board] = IO_OFF;
+    mbIns[3][board] = IN_OFF;
 
   if ((mrs485RxBuffer[3] & 0x10) != 0)
-    mbIns[4][board] = IO_ON;
+    mbIns[4][board] = IN_ON;
   else
-    mbIns[4][board] = IO_OFF;
+    mbIns[4][board] = IN_OFF;
 
   if ((mrs485RxBuffer[3] & 0x20) != 0)
-    mbIns[5][board] = IO_ON;
+    mbIns[5][board] = IN_ON;
   else
-    mbIns[5][board] = IO_OFF;
+    mbIns[5][board] = IN_OFF;
 
   if ((mrs485RxBuffer[3] & 0x40) != 0)
-    mbIns[6][board] = IO_ON;
+    mbIns[6][board] = IN_ON;
   else
-    mbIns[6][board] = IO_OFF;
+    mbIns[6][board] = IN_OFF;
 
   if ((mrs485RxBuffer[3] & 0x80) != 0)
-    mbIns[7][board] = IO_ON;
+    mbIns[7][board] = IN_ON;
   else
-    mbIns[7][board] = IO_OFF;
+    mbIns[7][board] = IN_OFF;
 }
 
 // Tx: FF 01 00 00 00 08 28 12
@@ -203,44 +204,44 @@ void _mbUdateOuts (int board)
 {
  
   if (mrs485RxBuffer[3] & 0x01)
-    mbROuts[0][board] = IO_ON;
+    mbROuts[0][board] = OUT_ON;
   else
-    mbROuts[0][board] = IO_OFF;
+    mbROuts[0][board] = OUT_OFF;
 
   if (mrs485RxBuffer[3] & 0x02)
-    mbROuts[1][board] = IO_ON;
+    mbROuts[1][board] = OUT_ON;
   else
-    mbROuts[1][board] = IO_OFF;
+    mbROuts[1][board] = OUT_OFF;
 
   if (mrs485RxBuffer[3] & 0x04)
-    mbROuts[2][board] = IO_ON;
+    mbROuts[2][board] = OUT_ON;
   else
-    mbROuts[2][board] = IO_OFF;
+    mbROuts[2][board] = OUT_OFF;
 
   if (mrs485RxBuffer[3] & 0x08)
-    mbROuts[3][board] = IO_ON;
+    mbROuts[3][board] = OUT_ON;
   else
-    mbROuts[3][board] = IO_OFF;
+    mbROuts[3][board] = OUT_OFF;
 
   if (mrs485RxBuffer[3] & 0x10)
-    mbROuts[4][board] = IO_ON;
+    mbROuts[4][board] = OUT_ON;
   else
-    mbROuts[4][board] = IO_OFF;
+    mbROuts[4][board] = OUT_OFF;
 
   if (mrs485RxBuffer[3] & 0x20)
-    mbROuts[5][board] = IO_ON;
+    mbROuts[5][board] = OUT_ON;
   else
-    mbROuts[5][board] = IO_OFF;
+    mbROuts[5][board] = OUT_OFF;
 
   if (mrs485RxBuffer[3] & 0x40)
-    mbROuts[6][board] = IO_ON;
+    mbROuts[6][board] = OUT_ON;
   else
-    mbROuts[6][board] = IO_OFF;
+    mbROuts[6][board] = OUT_OFF;
 
   if (mrs485RxBuffer[3] & 0x80)
-    mbROuts[7][board] = IO_ON;
+    mbROuts[7][board] = OUT_ON;
   else
-    mbROuts[7][board] = IO_OFF;
+    mbROuts[7][board] = IN_OFF;
 }
 
 // Tx: FF 05 00 01 FF 00 C8 24 - Rele 2 a ON
@@ -347,9 +348,9 @@ void _mbInsAlarmCheck (void)
     for (i = 0; i < MB_NUM_IOS; i++)
     {
       if (mbIns[i][j] == mbInsAlarm[i][j])
-        alarm[8*(j + 1) + i] = 1;
+        alarmOn[8*(j + 1) + i] = 1;
       else
-        alarm[8*(j + 1) + i] = 0;
+        alarmOn[8*(j + 1) + i] = 0;
     }
   }
 }
@@ -418,7 +419,6 @@ void _MBLoop(void)
       break;
 
     case MB_INSSTATUS:
-
       // wait for response
       if (millis() - mbTick >= MB_RXTOUT)
       {   
@@ -430,12 +430,12 @@ void _MBLoop(void)
         // Alarm
         if (mbInNBoard == 0)
         {
-          alarm[AL_ERROR0] = 1;
+          alarmOn[AL_ERROR0] = 1;
           mbInNBoard = 1;
         }
         else
         {
-          alarm[AL_ERROR1] = 1;
+          alarmOn[AL_ERROR1] = 1;
           mbInNBoard = 0;
         }
       }
@@ -449,7 +449,7 @@ void _MBLoop(void)
           if (_mbAnalyseIns((char)cfgMB1Add) == MB_RX_OK)
           {
             _mbUdateIns(mbInNBoard);
-            alarm[AL_ERROR0] = 0;
+            alarmOn[AL_ERROR0] = 0;
           }
           else
             mbNError++;
@@ -463,7 +463,7 @@ void _MBLoop(void)
           if (_mbAnalyseIns((char)cfgMB2Add) == MB_RX_OK)
           {
             _mbUdateIns(mbInNBoard);
-            alarm[AL_ERROR1] = 0;
+            alarmOn[AL_ERROR1] = 0;
           }
           else
             mbNError++;;
@@ -497,7 +497,6 @@ void _MBLoop(void)
       break;
 
     case MB_OUTSSTATUS:
-
       // wait for response
       if (millis() - mbTick >= MB_RXTOUT)
       {   
@@ -547,10 +546,7 @@ void _MBLoop(void)
     // Write Out
 	  case MB_WRITEOUT:
       // select board
-      if (mbOutBoard == 0)
-	      _mbWriteOut((char)cfgMB1Add, mbOutNum, mbOutVal);
-      else
-       _mbWriteOut((char)cfgMB2Add, mbOutNum, mbOutVal);
+      _mbWriteOut((char)cfgMB1Add, mbOutNum, mbOutVal);
 
       // Analyse Response
       mbTick = millis();
@@ -637,7 +633,6 @@ void _MBLoop(void)
         mbState = mbSWake;
 
       break;
-      
   }
 }
 

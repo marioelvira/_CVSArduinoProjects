@@ -827,6 +827,13 @@ void _readSTATUS()
   html = html + "</tr>";
   #endif
 
+  #if (_USE_MBRTU_ == 1)
+  html = html + "<tr>";
+  html = html + "<td style=\"width:60%\">Modbus RTU</td>";
+  html = html + "<td style=\"width:40%\">" + String(mbState) + "</td>";
+  html = html + "</tr>";
+  #endif
+
   html = html + "</table>";
   
   httpServer.send(200, "text/plane", html);

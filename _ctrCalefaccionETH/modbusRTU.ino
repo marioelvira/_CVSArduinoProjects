@@ -393,6 +393,8 @@ void _MBLoop(void)
       
       if (millis() - mbTick >= MB_RXLOOP)
       {
+        mbState = MB_READINS;
+        /*
         if (mbWhat2read < NUM_W2R)
           mbState = MB_READINS;
         else
@@ -401,6 +403,7 @@ void _MBLoop(void)
         mbWhat2read++;
         if (mbWhat2read > NUM_W2R)
           mbWhat2read = 0;
+        */
       }
     
 	    break;

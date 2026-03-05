@@ -19,10 +19,10 @@ extern "C" {
 #define CRCSIZE       2
 
 #define MB_TSLEEP     5
-#define MB_RXLOOP     500
-#define MB_RXTOUT	    1000
+#define MB_RXLOOP     2000 //500
+#define MB_RXTOUT	    5000 //1000
 
-#define MB_NUM_BRS    2
+#define MB_NUM_BRS    1//2
 
 #define MB_NUM_IOS    8
 

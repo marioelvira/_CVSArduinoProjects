@@ -665,6 +665,13 @@ void _readINS()
   html = html + "<td style=\"width:40%\">" + String(InDig[0]) + "-" + String(InDig[1]) + "-" + String(InDig[2]) + "-" + String(InDig[3]) + "</td>";
   html = html + "</tr>";
   
+  #if (_USE_MBRTU_ == 1)
+  html = html + "<tr>";
+  html = html + "<td style=\"width:60%\">Modbus Ins</td>";
+  html = html + "<td style=\"width:40%\">" + String(mbIns[0][0]) + "-" + String(mbIns[1][0]) + "-" + String(mbIns[2][0]) + "-" + String(mbIns[3][0]) + "-" + String(mbIns[4][0]) + "-" + String(mbIns[5][0]) + "-" + String(mbIns[6][0]) + "-" + String(mbIns[7][0]) + "</td>";
+  html = html + "</tr>";
+  #endif
+
   html = html + "</table>";
   
   httpServer.send(200, "text/plane", html);

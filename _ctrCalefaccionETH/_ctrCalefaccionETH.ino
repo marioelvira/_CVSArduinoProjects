@@ -120,13 +120,14 @@ String alarmStr[AL_ARRAY_SIZE];
 ///////////
 #if (_USE_TRIAC_ == 1)
 const int triacZCPin = PIN_ZD1;
-const int triacCtrPin = PIN_TR1;
-
-hw_timer_t * triacTimer = NULL;
-volatile uint32_t triacDimming = 5000; // Microsegundos
-
-unsigned long triacTick = 0;
 int triacZCPeriod;
+unsigned long triacTick = 0;
+
+int triacCtr1 = 0;
+const int triacPin1 = PIN_TRIAC1;
+hw_timer_t * triacTimer1 = NULL;
+int timeDelay1 = 0;
+int triacCicle1 = 50;
 #endif
 
 /////////
@@ -460,6 +461,10 @@ void _PINLoop()
 void loop()
 {
   _PINLoop();
+
+  #if (_USE_TRIAC_ == 1)
+  _TRIACLoop();
+  #endif
 
   if (ctrMode == MODE_AUTO)
     _CtrLoop();

@@ -58,10 +58,10 @@ extern "C" {
 #define PIN_OUT5        19 // Bomba Achique
 #define PIN_OUT6        54 // Out Quemador
 
-#define TR_NUMBER       3
-#define PIN_TR1         33
-#define PIN_TR2         32
-#define PIN_TR3         27
+#define TRIAC_NUMBER    3
+#define PIN_TRIAC1      33
+#define PIN_TRIAC2      32
+#define PIN_TRIAC3      27
 
 // INs
 #define IN_NUMBER       4

@@ -687,7 +687,7 @@ void _readOUTS()
   
   html = html + "<tr>";
   html = html + "<td style=\"width:60%\">Boards Outs</td>";
-  html = html + "<td style=\"width:40%\">" + String(OutDig[0]) + "-" + String(OutDig[1]) + "-" + String(OutDig[2]) + "-" + String(OutDig[3]) + "</td>";
+  html = html + "<td style=\"width:40%\">" + String(OutDig[0]) + "-" + String(OutDig[1]) + "-" + String(OutDig[2]) + "-" + String(OutDig[3]) + "-" + String(OutDig[4]) + "-" + String(OutDig[5]) + "</td>";
   html = html + "</tr>";
 
   html = html + "</table>";

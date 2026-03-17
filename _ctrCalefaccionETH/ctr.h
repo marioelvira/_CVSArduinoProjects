@@ -85,14 +85,18 @@ extern "C" {
 #define MODE_AUTO   0
 
 // OUTs Index
-#define AGUA_OUT    4
-#define ACHI_OUT    5
-#define QUEM_OUT    6
+#define AGUA_OUT    3
+#define ACHI_OUT    4
+#define QUEM_OUT    5
 
 // TRIAC Index
-#define RES_PRIN_TRC  1
-#define RES_INYE_TRC  2
-#define RES_AUX_TRC   3
+#define RES_PRIN_TRC  0
+#define RES_INYE_TRC  1
+#define RES_AUX_TRC   2
+
+// INs Index
+#define TERMO_ON_IN   2
+#define ACT_QUEM_IN   3
 
 #endif // _CTR_H_
 

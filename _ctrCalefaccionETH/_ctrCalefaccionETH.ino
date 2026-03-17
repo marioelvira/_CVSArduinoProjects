@@ -119,8 +119,8 @@ String alarmStr[AL_ARRAY_SIZE];
 // TRIAC //
 ///////////
 #if (_USE_TRIAC_ == 1)
-const int triacZCPin = PIN_ZD0;    
-const int triacCtrPin = PIN_TR0;
+const int triacZCPin = PIN_ZD1;
+const int triacCtrPin = PIN_TR1;
 
 hw_timer_t * triacTimer = NULL;
 volatile uint32_t triacDimming = 5000; // Microsegundos

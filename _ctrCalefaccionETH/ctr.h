@@ -73,15 +73,26 @@ extern "C" {
 
   Salidas
   -------
-  - Resistencia principal   RES_PRIN_OUT    TRIAK
-  - Resistencia inyector    RES_INYE_OUT    TRIAK
-  - Quemador                ACT_QUEM_OUT    DIO
-  - Bomba                   BOM_AGUA_OUT    DIO
-  - Achique                 ACT_ACHI_OUT    DIO
+  - Resistencia principal   RES_PRIN_TRC
+  - Resistencia inyector    RES_INYE_TRC
+  - Quemador                ACT_QUEM_OUT
+  - Bomba                   BOM_AGUA_OUT
+  - Achique                 ACT_ACHI_OUT
 */
 
+// Modos de Operación
 #define MODE_TEST   1
 #define MODE_AUTO   0
+
+// OUTs Index
+#define AGUA_OUT    4
+#define ACHI_OUT    5
+#define QUEM_OUT    6
+
+// TRIAC Index
+#define RES_PRIN_TRC  1
+#define RES_INYE_TRC  2
+#define RES_AUX_TRC   3
 
 #endif // _CTR_H_
 

@@ -10,36 +10,36 @@ extern "C" {
 // IO definition //
 ///////////////////
 /* Strapping: GPIO34, 35, 36, 37 y 38 */
-/*                              |--------|
- *                        ------| USB  C |------
- *                        |     |--------|     |
- *                        |                    |
- *               OUT0 <- -| GPIO54        VUBS |-
- *               OUT1 <- -| GPIO19        VSYS |-
- *                       -| GND            GND |-
- *                ADC IO -| GPIO18          EN |-
- *                ADC IO -| GPIO17         3V3 |-
- *                ADC IO -| GPIO16      GPIO20 |- IO ADC
- *               OUT3 <- -| GPIO15      GPIO21 |- IO ADC -> PWM DBG
- *                       -| GND            GND |-
- *               OUT4 <- -| GPIO14      GPIO22 |- IO ADC <- ZD0
- *                       -| GPIO06      GPIO23 |- IO ADC <- ZD1
- *                IN3 -> -| GPIO05*        RUN |- System Control
- *                IN2 -> -| GPIO04*     GPIO26 |- -> LED
- *                       -| GND            GND |-
- *                IN1 -> -| GPIO03*     GPIO27 |- -> TR2
- *                IN0 -> -| GPIO02*     GPIO32 |- -> TR1
- *                       -| SCL/GPIO08  GPIO33 |- -> TR0
- *                       -| SCL/GPIO07  GPIO46 |- -> RTS_RS485
- *                       -| GND            GND |-
- *                       -| DM/GPIO24   GPIO47 |- -> TX_RS485
- *                       -| DP/GPIO25   GPIO48 |- <- RX_RS485
- *                       -|                    |-
- *                       -|    ------------    |-
- *                       -|    |          |    |-
- *                       -|    |   ETH    |    |-
- *                       -|    |          |    |-
- *                        ----------------------
+/*                                 |--------|
+ *                           ------| USB  C |------
+ *                           |     |--------|     |
+ *                           |                    |
+ *   (Out Quemador) OUT6 <- -| GPIO54        VUBS |-
+ *  (Bomba Achique) OUT5 <- -| GPIO19        VSYS |-
+ *                          -| GND            GND |-
+ *                    AUX # -| GPIO18          EN |-
+ *                    AUX # -| GPIO17         3V3 |-
+ *                    AUX # -| GPIO16      GPIO20 |- # AUX
+ *   (Bomba Recirc) OUT4 <- -| GPIO15      GPIO21 |- # AUX
+ *                          -| GND            GND |-
+ *       (Out Aux3) OUT3 <- -| GPIO14      GPIO22 |- <- ZD1 (Detector de paso por cero)
+ *                          -| GPIO06      GPIO23 |- # AUX
+ *         (In Aux1) IN1 -> -| GPIO05*        RUN |- System Control
+ *         (In Aux2) IN2 -> -| GPIO04*     GPIO26 |- -> LED (Estado)
+ *                          -| GND            GND |-
+ *      (In On Fire) IN3 -> -| GPIO03*     GPIO27 |- -> TR3 (Res. Auxiliar)
+ *   (In Termostato) IN4 -> -| GPIO02*     GPIO32 |- -> TR2 (Res. Inyector)
+ *                    DIO # -| SCL/GPIO08  GPIO33 |- -> TR1 (Res. Principal)
+ *                    DIO # -| SCL/GPIO07  GPIO46 |- -> RTS_RS485
+ *                          -| GND            GND |-
+ *       (Out Aux1) OUT1 <- -| DM/GPIO24   GPIO47 |- -> TX_RS485
+ *       (Out Aux2) OUT2 <- -| DP/GPIO25   GPIO48 |- <- RX_RS485
+ *                          -|                    |-
+ *                          -|    ------------    |-
+ *                          -|    |          |    |-
+ *                          -|    |   ETH    |    |-
+ *                          -|    |          |    |-
+ *                           ----------------------
  */
 
 ////////////////////
@@ -50,28 +50,28 @@ extern "C" {
 #define PIN_LED         26
 
 // OUTs
-#define OUT_NUMBER      4
-#define PIN_OUT0        54
-#define PIN_OUT1        19
-#define PIN_OUT2        15
+#define OUT_NUMBER      6
+#define PIN_OUT1        24
+#define PIN_OUT2        25
 #define PIN_OUT3        14
+#define PIN_OUT4        15 // Bomba Recirc
+#define PIN_OUT5        19 // Bomba Achique
+#define PIN_OUT6        54 // Out Quemador
 
-//#define TR_NUMBER       3
-#define PIN_TR0         33
-//#define PIN_TR1         32
-//#define PIN_TR2         27
+#define TR_NUMBER       3
+#define PIN_TR1         33
+#define PIN_TR2         32
+#define PIN_TR3         27
 
 // INs
 #define IN_NUMBER       4
-#define PIN_IN0         2
-#define PIN_IN1         3
+#define PIN_IN1         5
 #define PIN_IN2         4
-#define PIN_IN3         5
+#define PIN_IN3         3
+#define PIN_IN4         2
 
 // ZDs
-#define ZD_NUMBER       2
-#define PIN_ZD0         22
-//#define PIN_ZD1         23
+#define PIN_ZD1         22
 
 // RS485
 #define PIN_RS485_RX    48

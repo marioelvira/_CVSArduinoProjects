@@ -46,12 +46,14 @@ void _serveMAIN()
   
   html = html + "<div class=\"section\"><span>2</span>Modo</div>";
   html = html + "<p>";
-  html = html + "  <input type=\"button\" value=\"Cambiar\" onclick=\"sendOUT(0)\">";
+  html = html + "  <input type=\"button\" value=\"Cambiar\" onclick=\"sendOUT(10)\">";
   html = html + "</p><p>";
-  html = html + "  <input type=\"button\" value=\"0\" onclick=\"sendOUT(10)\">";
-  html = html + "  <input type=\"button\" value=\"1\" onclick=\"sendOUT(11)\">";
-  html = html + "  <input type=\"button\" value=\"2\" onclick=\"sendOUT(12)\">";
-  html = html + "  <input type=\"button\" value=\"3\" onclick=\"sendOUT(13)\">";
+  html = html + "  <input type=\"button\" value=\"1\" onclick=\"sendOUT(1)\">";
+  html = html + "  <input type=\"button\" value=\"2\" onclick=\"sendOUT(2)\">";
+  html = html + "  <input type=\"button\" value=\"3\" onclick=\"sendOUT(3)\">";
+  html = html + "  <input type=\"button\" value=\"4\" onclick=\"sendOUT(4)\">";
+  html = html + "  <input type=\"button\" value=\"5\" onclick=\"sendOUT(5)\">";
+  html = html + "  <input type=\"button\" value=\"6\" onclick=\"sendOUT(6)\">";
   html = html + "</p>";
 
   html = html + "<div class=\"section\"><span>3</span>Estado</div>";
@@ -61,8 +63,8 @@ void _serveMAIN()
   html = html + "<div class=\"section\"><span>4</span>Sistema</div>";
   html = html + "<p class=\"sansserif\" id=\"STATUSSid\">...</p>";
   html = html + "<p>";
-  html = html + "  <input type=\"button\" value=\"Reset\" onclick=\"sendOUT(1)\">";
-  html = html + "  <input type=\"button\" value=\"Restore\" onclick=\"sendOUT(2)\">";
+  html = html + "  <input type=\"button\" value=\"Reset\" onclick=\"sendOUT(11)\">";
+  html = html + "  <input type=\"button\" value=\"Restore\" onclick=\"sendOUT(12)\">";
   html = html + "</p>";
 
   html = html + "<div class=\"section\"><span>5</span>Configuraci&oacuten</div>";
@@ -704,7 +706,7 @@ void _setOUTS()
   #endif
 
   // Cambiar Modo
-  if(out_number == "0")
+  if(out_number == "10")
   {
     if (ctrMode == MODE_TEST)
     {
@@ -725,7 +727,7 @@ void _setOUTS()
   }
 
   // Reset
-  if(out_number == "1")
+  if(out_number == "11")
   {
     #if (_USE_WDE_ == 1)
     wdeForceReset = 1;
@@ -737,7 +739,7 @@ void _setOUTS()
   }
 
   // Restore
-  if(out_number == "2")
+  if(out_number == "12")
   {
     _ResetEEPROM();
     html = "Restore";
@@ -746,60 +748,88 @@ void _setOUTS()
   // Solo en modo Test
   if (ctrMode == MODE_TEST)
   {   
-    // Out 0
-    if(out_number == "10")
+    // Out 1
+    if(out_number == "1")
     {
       if (OutDig[0] == OUT_ON)
       {
         OutDig[0] = OUT_OFF;
-        html = "Out 0 OFF";
-      }
-      else
-      {
-        OutDig[0] = OUT_ON;
-        html = "Out 0 ON";
-      }
-    }
-    // Out 1
-    else if(out_number == "11")
-    {
-      if (OutDig[1] == OUT_ON)
-      {
-        OutDig[1] = OUT_OFF;
         html = "Out 1 OFF";
       }
       else
       {
-        OutDig[1] = OUT_ON;
+        OutDig[0] = OUT_ON;
         html = "Out 1 ON";
       }
     }
     // Out 2
-    else if(out_number == "12")
+    else if(out_number == "2")
     {
-      if (OutDig[2] == OUT_ON)
+      if (OutDig[1] == OUT_ON)
       {
-        OutDig[2] = OUT_OFF;
+        OutDig[1] = OUT_OFF;
         html = "Out 2 OFF";
       }
       else
       {
-        OutDig[2] = OUT_ON;
+        OutDig[1] = OUT_ON;
         html = "Out 2 ON";
       }
     }
     // Out 3
-    else if(out_number == "13")
+    else if(out_number == "3")
     {
-      if (OutDig[3] == OUT_ON)
+      if (OutDig[2] == OUT_ON)
       {
-        OutDig[3] = OUT_OFF;
+        OutDig[2] = OUT_OFF;
         html = "Out 3 OFF";
       }
       else
       {
-        OutDig[3] = OUT_ON;
+        OutDig[2] = OUT_ON;
         html = "Out 3 ON";
+      }
+    }
+    // Out 4
+    else if(out_number == "4")
+    {
+      if (OutDig[3] == OUT_ON)
+      {
+        OutDig[3] = OUT_OFF;
+        html = "Out 4 OFF";
+      }
+      else
+      {
+        OutDig[3] = OUT_ON;
+        html = "Out 4 ON";
+      }
+    }
+    // Out 5
+    else if(out_number == "5")
+    {
+      if (OutDig[4] == OUT_ON)
+      {
+        OutDig[4] = OUT_OFF;
+        html = "Out 5 OFF";
+      }
+      else
+      {
+        OutDig[4] = OUT_ON;
+        html = "Out 5 ON";
+      }
+    }
+    // Out 6
+    else if(out_number == "6")
+    {
+      if (OutDig[5] == OUT_ON)
+      {
+        OutDig[5] = OUT_OFF;
+        html = "Out 6 OFF";
+      }
+      else
+      {
+        OutDig[5] = OUT_ON;
+        html = "Out 6 ON";
       }
     }
   }

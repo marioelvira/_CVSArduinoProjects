@@ -5,6 +5,14 @@ extern "C" {
 #ifndef _CTR_H_
 #define _CTR_H_
 
+extern String ctrStateString;
+extern int ctrMode;
+extern int ctrInState;
+extern int ctrOutState;
+
+extern int ctrTempPrin;
+extern int ctrTemp;
+
 /*
   Arranque
   --------

@@ -1,4 +1,36 @@
+#include "main.h"
 #include "e2prom.h"
+
+// Libraries
+#include <EEPROM.h>
+
+#if (_USE_ETHERNET_ == 1)
+#include "mEthernet.h"
+#endif
+
+///////////////
+// Variables //
+///////////////
+bool cfgLogicIns;
+bool cfgLogicOuts;
+
+int cfgResPrimVout;
+int cfgResInyeVout;
+int cfgResPrimInyeTemp;
+int cfgResPrimConsTemp;
+int cfgResPrimHystTemp;
+int cfgResInyeConsTemp;
+int cfgResInyeHystTemp;
+int cfgAguaConsTemp;
+int cfgAguaHystTemp;
+
+int cfgResPrimAlarMin;
+int cfgResInyeAlarMin;
+int cfgAguaAlarMin;
+
+byte cfgMB1Add = 1; // TODO
+byte cfgMB2Add = 2; // TODO
+
 
 void _ConfigSetup(void)
 {

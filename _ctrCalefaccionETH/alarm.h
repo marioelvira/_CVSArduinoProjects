@@ -31,6 +31,14 @@ extern "C" {
 #define STATE_AL_ON_NOTIFY    2
 #define STATE_AL_OFF_NOTIFY   3
 
+extern int    alState;
+extern int    alSecond;
+extern int    alNotify;
+extern int    alarmOn[AL_ARRAY_SIZE];
+extern int    alarmCpy[AL_ARRAY_SIZE];
+
+extern String alarmStr[AL_ARRAY_SIZE];
+
 #endif // _ALARM_H_
 
 #ifdef __cplusplus

@@ -1,6 +1,20 @@
-#include "main.h" 
+#include "main.h"
+#include "triac.h"
 
 #if (_USE_TRIAC_ == 1)
+
+///////////////
+// Variables //
+///////////////
+const int triacZCPin = PIN_ZD1;
+int triacZCPeriod;
+unsigned long triacTick = 0;
+
+int triacCtr1 = 0;
+const int triacPin1 = PIN_TRIAC1;
+hw_timer_t * triacTimer1 = NULL;
+int timeDelay1 = 0;
+int triacCicle1 = 50;
 
 ////////////////
 // Interrupts //

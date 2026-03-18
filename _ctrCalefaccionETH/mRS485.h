@@ -23,6 +23,14 @@ extern "C" {
 #define OUT_RS485_RX      0
 #define OUT_RS485_TX      1
 
+extern int             mrs485State;
+extern String          mrs485RxBuffer;
+extern unsigned long   mrs485tick;
+extern char            mrs485TxBuffer[MRS485_ARRAY_SIZE];
+extern int             mrs485TxNumBytes;
+
+extern int             OutRS485rxtx;
+
 #endif // _MRS485_H_
 
 #ifdef __cplusplus

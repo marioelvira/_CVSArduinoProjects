@@ -1,11 +1,23 @@
 #include "main.h"
+#include "mRS485.h"
 #include "io.h"
 
 #if (_USE_RS485_ == 1)
 
-#if (_USE_RS485_ == 1)
+#if (_USE_MBRTU_ == 1)
 #include "modbusRTU.h"
 #endif
+
+///////////////
+// Variables //
+///////////////
+int             mrs485State;
+String          mrs485RxBuffer = "";
+unsigned long   mrs485tick;
+char            mrs485TxBuffer[MRS485_ARRAY_SIZE];
+int             mrs485TxNumBytes;
+
+int             OutRS485rxtx;
 
 ///////////////////
 // MRS485 set up //

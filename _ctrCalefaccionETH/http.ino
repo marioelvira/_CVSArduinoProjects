@@ -1,6 +1,22 @@
 #include "main.h"
+#include "http.h"
+
+#include "mTime.h"
 
 #if (_USE_HTTP_ == 1)
+// Libraries
+#include <ETH.h>
+#include <WebServer.h>
+#if (_USE_ETHERNET_ == 1)
+#include "mEthernet.h"
+#endif
+
+///////////////
+// Variables //
+///////////////
+WebServer httpServer(HTTP_PORT);
+int httpStatus;
+
 void _HTTPSetup(void)
 {
   httpStatus = HTTP_STOP;

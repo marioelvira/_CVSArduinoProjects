@@ -5,9 +5,9 @@ extern "C" {
 #ifndef _WDE_H_
 #define _WDE_H_
 
-#include "main.h"
-
 #define WTE_TIMEOUT   3000
+
+extern int wdeForceReset;
 
 #endif // _WDE_H_
 

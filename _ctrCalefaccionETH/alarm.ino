@@ -1,3 +1,17 @@
+#include "main.h"
+#include "alarm.h"
+
+///////////////
+// Variables //
+///////////////
+int    alState;
+int    alSecond;
+int    alNotify;
+int    alarmOn[AL_ARRAY_SIZE];
+int    alarmCpy[AL_ARRAY_SIZE];
+
+String alarmStr[AL_ARRAY_SIZE];
+
 
 /////////////////////////
 // ALARM state machine //

@@ -1,4 +1,38 @@
-void _timeOnString(void)
+#include "main.h"
+#include "alarm.h"
+#include "mTime.h"
+
+#if (_USE_MQTT_ == 1)
+#include "MQTT.h"
+#endif
+
+#if (_USE_NTP_ == 1)
+#include "mNTP.h"
+#endif
+
+#if (_USE_WDE_ == 1)
+#include "wde.h"
+#endif
+
+#if (_USE_PWM_ == 1)
+#include "pwm.h"
+#endif
+
+// Librerias
+#include <WString.h>
+
+///////////////
+// Variables //
+///////////////
+String timeOnString;
+unsigned long timeTick = 0;
+unsigned long timeSecTick = 0;
+int timeSec = 0;
+int timeMin = 0;
+int timeHour = 0;
+int timeDay = 0;
+
+void _timeOn2String(void)
 {
     if (timeHour < 10)
       timeOnString = "0" + String(timeHour);
@@ -59,7 +93,7 @@ void _TimeLoop(void)
       }
     }
     
-    _timeOnString();
+    _timeOn2String();
     
     #if (_USE_MQTT_ == 1)
     _ctrStateString();

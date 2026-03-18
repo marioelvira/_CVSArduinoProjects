@@ -5,11 +5,9 @@ extern "C" {
 #ifndef _MQTT_H_
 #define _MQTT_H_
 
-#include "main.h"
-
 #define MQTT_NOT_CONNECTED   0
 #define MQTT_CONNECTING      1
-#define MQTT_CONNECTED       2
+#define MQTT_CONNECTED_OK    2
 #define MQTT_SUBSCRIBED      3
 
 #define MQTT_CONNECTION_TIMEOUT       120000    // 2 min
@@ -35,6 +33,19 @@ extern "C" {
 #define TOPIC_CWD          "sdpelicanos@gmail.com/rwd"
 
 #define MQTT_BLINK_CONNECTING   3000
+
+
+extern const char* brokerUrlSt;
+extern char brokerUrl[];
+extern int brokerPort;
+extern const char* brokerUserSt;
+extern char brokerUser[];
+extern const char* brokerPswdSt;
+extern char brokerPswd[];
+
+extern String mqttClientId;
+
+extern int mqttStatus;
 
 #endif // _MQTT_H_
 

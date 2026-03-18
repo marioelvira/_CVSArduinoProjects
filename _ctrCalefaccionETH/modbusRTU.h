@@ -58,6 +58,31 @@ extern "C" {
 #define MB_IN_AL_VAL_1		1
 #define MB_IN_AL_DISABLE	2
 
+extern int mbState;
+extern int mbSWake;
+extern unsigned long mbTick;
+//extern byte mbCRC[2];
+
+// Modbus DIOs
+extern int mbInNBoard;
+extern int mbIns[MB_NUM_IOS][MB_NUM_BRS];
+extern int mbOutNBoard;
+extern int mbOuts[MB_NUM_IOS][MB_NUM_BRS];
+extern int mbROuts[MB_NUM_IOS][MB_NUM_BRS];
+
+extern int mbOutBoard;
+extern int mbOutNum;
+extern int mbOutVal;
+
+extern int mbNError;
+extern int mbNReply;
+extern int mbNRetry;
+extern int mbRetry;
+
+extern int mbWhat2read;
+
+extern int mbInsAlarm[MB_NUM_IOS][MB_NUM_BRS];
+
 extern void _MBCRC(void);
 
 #endif // _MBRTU_H_

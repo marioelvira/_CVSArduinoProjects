@@ -100,6 +100,15 @@ extern "C" {
 #define OUT_OFF           0
 #define OUT_ON            1
 
+#if (_USE_LED_ == 1)
+extern int   boardLed;
+#endif
+
+extern int   OutPin[];
+extern int   OutDig[];
+extern int   InPin[];
+extern int   InDig[];
+
 #endif // _IO_H_
 
 #ifdef __cplusplus

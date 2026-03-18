@@ -1,7 +1,25 @@
 #include "main.h"
+#include "mNTP.h"
 
 #if (_USE_NTP_ == 1)
-	
+// Libraries
+#include <NTPClient.h>
+#include <WString.h>
+
+///////////////
+// Variables //
+///////////////
+String mntpTimeString;
+int mntpSec = 0;
+int mntpMin = 0;
+int mntpHour = 0;
+
+int mntpStatus;
+int mntpUpdated = 0;
+EthernetUDP mNtpUDP;
+NTPClient mNtpClient(mNtpUDP, "pool.ntp.org", 3600);
+
+
 void _ntpTimeString(void)
 {
     if (mntpHour < 10)

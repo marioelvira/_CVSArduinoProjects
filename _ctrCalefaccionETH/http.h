@@ -5,8 +5,6 @@ extern "C" {
 #ifndef _HTTP_H_
 #define _HTTP_H_
 
-#include "main.h"
-
 #define HTTP_PORT      80
 
 #define HTTP_START     0
@@ -32,6 +30,9 @@ const char cssSTYLE[] =
   ".myform input[type='button']:hover, .myform input[type='submit']:hover{background: #2A6881;-moz-box-shadow: inset 0px 2px 2px 0px rgba(255, 255, 255, 0.28);-webkit-box-shadow: inset 0px 2px 2px 0px rgba(255, 255, 255, 0.28);box-shadow: inset 0px 2px 2px 0px rgba(255, 255, 255, 0.28);}"
   ".myform .privacy-policy{float: right;width: 250px;font: 12px Arial, Helvetica, sans-serif;color: #4D4D4D;margin-top: 10px;text-align: right;}"
   ".sansserif {font-family: Arial, Helvetica, sans-serif;}";
+
+//extern WebServer httpServer(HTTP_PORT);
+extern int httpStatus;
 
 #endif // _HTTP_H_
 

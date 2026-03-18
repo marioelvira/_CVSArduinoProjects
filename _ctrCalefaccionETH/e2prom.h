@@ -5,8 +5,25 @@ extern "C" {
 #ifndef _E2PROM_H_
 #define _E2PROM_H_
 
-#include "main.h"
-#include "mEthernet.h"
+extern bool cfgLogicIns;
+extern bool cfgLogicOuts;
+
+extern int cfgResPrimVout;
+extern int cfgResInyeVout;
+extern int cfgResPrimInyeTemp;
+extern int cfgResPrimConsTemp;
+extern int cfgResPrimHystTemp;
+extern int cfgResInyeConsTemp;
+extern int cfgResInyeHystTemp;
+extern int cfgAguaConsTemp;
+extern int cfgAguaHystTemp;
+
+extern int cfgResPrimAlarMin;
+extern int cfgResInyeAlarMin;
+extern int cfgAguaAlarMin;
+
+extern byte cfgMB1Add;
+extern byte cfgMB2Add;
 
 #define _ERASE_EEPROM_        0
 #define _READ_EEPROM_         0

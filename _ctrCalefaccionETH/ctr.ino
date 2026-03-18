@@ -1,6 +1,19 @@
+#include "main.h"
+#include "ctr.h"
+
+///////////////
+// Variables //
+///////////////
+String ctrStateString;
+int ctrMode;
+int ctrInState;
+int ctrOutState;
+
+int ctrTempPrin = 0;
+int ctrTemp = 0;
+
 void _ctrStateString(void)
 {
-
 }
 
 ////////////////

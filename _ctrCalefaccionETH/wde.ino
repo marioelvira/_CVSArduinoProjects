@@ -1,6 +1,12 @@
 #include "main.h"
+#include "wde.h"
 
 #if (_USE_WDE_ == 1)
+
+///////////////
+// Variables //
+///////////////
+int wdeForceReset;
 
 #if (_WD_SERIAL_DEBUG_ == 1)
 void printResetFlagRegister()

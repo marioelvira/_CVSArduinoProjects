@@ -1,8 +1,32 @@
 #include "main.h"
+#include "MQTT.h"
+#include "mTime.h"
 
 #if (_USE_MQTT_ == 1)
+// Libraries
+#include <NetworkClient.h>
+#include <PubSubClient.h>
 
-#include "MQTT.h"
+///////////////
+// Variables //
+///////////////
+const char* brokerUrlSt = MQTT_BROKER;
+char brokerUrl[MQTT_URL_MAX];
+int brokerPort;
+const char* brokerUserSt = MQTT_USERNAME;
+char brokerUser[MQTT_USER_MAX];
+const char* brokerPswdSt = MQTT_PASSWORD;
+char brokerPswd[MQTT_PSWD_MAX];
+
+NetworkClient  ethClient;
+PubSubClient mqttClient(ethClient);
+
+String mqttClientId;
+
+int mqttStatus;
+unsigned long mqttTick = 0;
+
+int mqttTopic;
 
 void mqttDataCallback(char* rtopic, byte* rpayload, unsigned int rlength)
 {
@@ -230,7 +254,7 @@ void _MQTTLoop(void)
           Serial.println("MQTT connected!!!...");
           #endif
           
-          mqttStatus = MQTT_CONNECTED;
+          mqttStatus = MQTT_CONNECTED_OK;
         }
         else
         {        
@@ -246,7 +270,7 @@ void _MQTTLoop(void)
       }
       break;
       
-    case MQTT_CONNECTED:
+    case MQTT_CONNECTED_OK:
       if (mqttClient.connected())
       {
         if (millis() - mqttTick < MQTT_SUBSCRIBE_TIMEOUT)
@@ -325,7 +349,7 @@ void _MQTTLedLoop()
       } 
       break;
 
-    case MQTT_CONNECTED:
+    case MQTT_CONNECTED_OK:
     case MQTT_SUBSCRIBED:
     
       outLed = IO_ON;

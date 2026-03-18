@@ -1,6 +1,22 @@
 #include "main.h"
+#include "mEthernet.h"
 
 #if (_USE_ETHERNET_ == 1)
+// Libraries
+#include <ETH.h>
+#include <WebServer.h>
+
+//////////////
+// Ethernet //
+//////////////
+int ipMode;
+int ethStatus;
+
+//uint8_t macAddress[6] = {0xF8, 0xDC, 0x7A, 0x00, 0x02, 0x04};
+IPAddress ipAddress  (192, 168, 1, 200);
+IPAddress gateWay    (192, 168, 1, 1);
+IPAddress netMask    (255, 255, 255, 0);
+IPAddress dnsAddress;  // No incializar
 
 void onEvent(arduino_event_id_t event)
 {

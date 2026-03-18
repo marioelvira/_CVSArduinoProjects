@@ -1,10 +1,39 @@
 #include "main.h"
+#include "modbusRTU.h"
 #include "io.h"
 
 #if (_USE_MBRTU_ == 1)
 
+///////////////
+// Variables //
+///////////////
+int mbState;
+int mbSWake;
+unsigned long mbTick;
+byte mbCRC[2];
+
+// Modbus DIOs
+int mbInNBoard = 0;
+int mbIns[MB_NUM_IOS][MB_NUM_BRS];
+int mbOutNBoard = 0;
+int mbOuts[MB_NUM_IOS][MB_NUM_BRS];
+int mbROuts[MB_NUM_IOS][MB_NUM_BRS];
+
+int mbOutBoard = 0;
+int mbOutNum = 0;
+int mbOutVal = 0x00;
+
+int mbNError = 0;
+int mbNReply = 0;
+int mbNRetry = 0;
+int mbRetry = 0;
+
+int mbWhat2read = 0;
+
+int mbInsAlarm[MB_NUM_IOS][MB_NUM_BRS];
+
 /**********************************************************************
-*    6.-  MODULE PRIVATE VARIABLES.
+*    MODULE PRIVATE VARIABLES.
 ***********************************************************************/
 static const char aucCRCHi[] =
 {

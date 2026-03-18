@@ -7,8 +7,6 @@ extern "C" {
 
 // https://www.simplymodbus.ca/index.html
 
-#include "main.h"
-
 //////////////
 // IP Modes //
 //////////////
@@ -24,6 +22,14 @@ extern "C" {
 #define ETH_GOT_IP        3
 #define ETH_ON_SERVICE    4
 #define ETH_DISCONNECTED  5
+
+extern int ipMode;
+extern int ethStatus;
+
+extern IPAddress ipAddress;
+extern IPAddress gateWay;
+extern IPAddress netMask;
+extern IPAddress dnsAddress;
 
 #endif // _METH_H_
 

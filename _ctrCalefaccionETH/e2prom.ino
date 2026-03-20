@@ -13,6 +13,7 @@
 ///////////////
 bool cfgLogicIns;
 bool cfgLogicOuts;
+byte cfgMB1Add;
 
 int cfgResPrimVout;
 int cfgResInyeVout;
@@ -28,9 +29,9 @@ int cfgResPrimAlarMin;
 int cfgResInyeAlarMin;
 int cfgAguaAlarMin;
 
-byte cfgMB1Add = 1; // TODO
-byte cfgMB2Add = 2; // TODO
-
+#if (_USE_TRIAC_ == 1)
+int cfgTriacVout[3];
+#endif
 
 void _ConfigSetup(void)
 {
@@ -125,9 +126,10 @@ void _readCONFIG (void)
       EEPROM.write(EEPROM_ADD_MQTT_PSWD + i, brokerPswdSt[i]);
     #endif
 
-    // Logic
+    // Other data
     EEPROM.write(EEPROM_ADD_LOGIC_INS,  EEPROM_VAL_LOGIC_INS);
     EEPROM.write(EEPROM_ADD_LOGIC_OUTS, EEPROM_VAL_LOGIC_OUTS);
+    EEPROM.write(EEPROM_ADD_MBADD1,     EEPROM_VAL_MBADD1);
 
     EEPROM.write(EEPROM_ADD_RES_PRIM_VOUT,      EEPROM_VAL_RES_PRIM_VOUT);
     EEPROM.write(EEPROM_ADD_RES_INYE_VOUT,      EEPROM_VAL_RES_INYE_VOUT);
@@ -141,6 +143,12 @@ void _readCONFIG (void)
     EEPROM.write(EEPROM_ADD_RES_PRIM_ALAR_MIN,  EEPROM_VAL_RES_PRIM_ALAR_MIN);
     EEPROM.write(EEPROM_ADD_RES_INYE_ALAR_MIN,  EEPROM_VAL_RES_INYE_ALAR_MIN);
     EEPROM.write(EEPROM_ADD_AGUA_ALAR_MIN,      EEPROM_VAL_AGUA_ALAR_MIN);
+
+    #if (_USE_TRIAC_ == 1)
+    EEPROM.write(EEPROM_ADD_TRIAC1,      EEPROM_VAL_TRIAC1);
+    EEPROM.write(EEPROM_ADD_TRIAC2,      EEPROM_VAL_TRIAC2);
+    EEPROM.write(EEPROM_ADD_TRIAC3,      EEPROM_VAL_TRIAC3);
+    #endif
     
     EEPROM.commit();    // ESPXX Store data to EEPROM
   }
@@ -158,9 +166,10 @@ void _ram2eepromCONFIG (void)
 {
   int eeprom_value_hi, eeprom_value_lo;
 
-  // Data Data
+  // Other data
   EEPROM.write(EEPROM_ADD_LOGIC_INS,  (byte)cfgLogicIns);
   EEPROM.write(EEPROM_ADD_LOGIC_OUTS, (byte)cfgLogicOuts);
+  EEPROM.write(EEPROM_ADD_MBADD1,     (byte)cfgMB1Add);
 
   EEPROM.write(EEPROM_ADD_RES_PRIM_VOUT,      (byte)cfgResPrimVout);
   EEPROM.write(EEPROM_ADD_RES_INYE_VOUT,      (byte)cfgResInyeVout);
@@ -174,6 +183,12 @@ void _ram2eepromCONFIG (void)
   EEPROM.write(EEPROM_ADD_RES_PRIM_ALAR_MIN,  (byte)cfgResPrimAlarMin);
   EEPROM.write(EEPROM_ADD_RES_INYE_ALAR_MIN,  (byte)cfgResInyeAlarMin);
   EEPROM.write(EEPROM_ADD_AGUA_ALAR_MIN,      (byte)cfgAguaAlarMin);
+
+  #if (_USE_TRIAC_ == 1)
+  EEPROM.write(EEPROM_ADD_TRIAC1,      (byte)cfgTriacVout[0]);
+  EEPROM.write(EEPROM_ADD_TRIAC2,      (byte)cfgTriacVout[1]);
+  EEPROM.write(EEPROM_ADD_TRIAC3,      (byte)cfgTriacVout[2]);
+  #endif
 
   EEPROM.commit();    //Store data to EEPROM
 
@@ -192,6 +207,13 @@ void _ram2eepromCONFIG (void)
   Serial.print("cfgResPrimAlarMin: ");  Serial.println (cfgResPrimAlarMin);
   Serial.print("cfgResInyeAlarMin: ");  Serial.println (cfgResInyeAlarMin);
   Serial.print("cfgAguaAlarMin: ");     Serial.println (cfgAguaAlarMin);
+
+  #if (_USE_TRIAC_ == 1)
+  Serial.print("cfgTriacVout[0]: ");     Serial.println (cfgTriacVout[0]);
+  Serial.print("cfgTriacVout[1]: ");     Serial.println (cfgTriacVout[1]);
+  Serial.print("cfgTriacVout[2]: ");     Serial.println (cfgTriacVout[2]);
+  #endif
+
   #endif
 }
 
@@ -274,6 +296,7 @@ void _eeprom2ramCONFIG (void)
 
   cfgLogicIns         = (int)EEPROM.read(EEPROM_ADD_LOGIC_INS);
   cfgLogicOuts        = (int)EEPROM.read(EEPROM_ADD_LOGIC_OUTS); 
+  cfgMB1Add           = (int)EEPROM.read(EEPROM_ADD_MBADD1);
 
   cfgResPrimVout      = (int)EEPROM.read(EEPROM_ADD_RES_PRIM_VOUT);
   cfgResInyeVout      = (int)EEPROM.read(EEPROM_ADD_RES_INYE_VOUT);
@@ -287,10 +310,17 @@ void _eeprom2ramCONFIG (void)
   cfgResPrimAlarMin   = (int)EEPROM.read(EEPROM_ADD_RES_PRIM_ALAR_MIN);
   cfgResInyeAlarMin   = (int)EEPROM.read(EEPROM_ADD_RES_INYE_ALAR_MIN);
   cfgAguaAlarMin      = (int)EEPROM.read(EEPROM_ADD_AGUA_ALAR_MIN);
- 
+
+  #if (_USE_TRIAC_ == 1)
+  cfgTriacVout[0] = (int)EEPROM.read(EEPROM_ADD_TRIAC1);
+  cfgTriacVout[1] = (int)EEPROM.read(EEPROM_ADD_TRIAC2);
+  cfgTriacVout[2] = (int)EEPROM.read(EEPROM_ADD_TRIAC3);
+  #endif
+
   #if (_EEPROM_SERIAL_DEBUG_ == 1)
   Serial.print("cfgLogicIns: ");        Serial.println (cfgLogicIns);
   Serial.print("cfgLogicOuts: ");       Serial.println (cfgLogicOuts);
+  Serial.print("Modbus Add1: ");        Serial.println (cfgMB1Add);
   Serial.print("cfgResPrimVout: ");     Serial.println (cfgResPrimVout);
   Serial.print("cfgResInyeVout: ");     Serial.println (cfgResInyeVout);
   Serial.print("cfgResPrimInyeTemp: "); Serial.println (cfgResPrimInyeTemp);
@@ -303,6 +333,12 @@ void _eeprom2ramCONFIG (void)
   Serial.print("cfgResPrimAlarMin: ");  Serial.println (cfgResPrimAlarMin);
   Serial.print("cfgResInyeAlarMin: ");  Serial.println (cfgResInyeAlarMin);
   Serial.print("cfgAguaAlarMin: ");     Serial.println (cfgAguaAlarMin);
+
+  #if (_USE_TRIAC_ == 1)
+  Serial.print("cfgTriacVout[0]: ");     Serial.println (cfgTriacVout[0]);
+  Serial.print("cfgTriacVout[1]: ");     Serial.println (cfgTriacVout[1]);
+  Serial.print("cfgTriacVout[2]: ");     Serial.println (cfgTriacVout[2]);
+  #endif
 
   delay(1000);  // 100ms
   #endif

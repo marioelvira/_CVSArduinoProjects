@@ -7,6 +7,7 @@ extern "C" {
 
 extern bool cfgLogicIns;
 extern bool cfgLogicOuts;
+extern byte cfgMB1Add;
 
 extern int cfgResPrimVout;
 extern int cfgResInyeVout;
@@ -22,8 +23,9 @@ extern int cfgResPrimAlarMin;
 extern int cfgResInyeAlarMin;
 extern int cfgAguaAlarMin;
 
-extern byte cfgMB1Add;
-extern byte cfgMB2Add;
+#if (_USE_TRIAC_ == 1)
+extern int cfgTriacVout[];
+#endif
 
 #define _ERASE_EEPROM_        0
 #define _READ_EEPROM_         0
@@ -57,19 +59,24 @@ extern byte cfgMB2Add;
 
 #define EEPROM_ADD_LOGIC_INS          0xA0
 #define EEPROM_ADD_LOGIC_OUTS         0xA1
+#define EEPROM_ADD_MBADD1             0xA2
 
-#define EEPROM_ADD_RES_PRIM_VOUT      0xA2
-#define EEPROM_ADD_RES_INYE_VOUT      0xA3
-#define EEPROM_ADD_RES_PRIM_INYE_TEMP 0xA4
-#define EEPROM_ADD_RES_PRIM_CONS_TEMP 0xA5
-#define EEPROM_ADD_RES_PRIM_HYST_TEMP 0xA6
-#define EEPROM_ADD_RES_INYE_CONS_TEMP 0xA7
-#define EEPROM_ADD_RES_PRIM_HYST_TEMP 0xA8
-#define EEPROM_ADD_AGUA_CONS_TEMP     0xA9
-#define EEPROM_ADD_AGUA_HYST_TEMP     0xAA
-#define EEPROM_ADD_RES_PRIM_ALAR_MIN  0xAB
-#define EEPROM_ADD_RES_INYE_ALAR_MIN  0xAC
-#define EEPROM_ADD_AGUA_ALAR_MIN      0xAD
+#define EEPROM_ADD_RES_PRIM_VOUT      0xB0
+#define EEPROM_ADD_RES_INYE_VOUT      0xB1
+#define EEPROM_ADD_RES_PRIM_INYE_TEMP 0xB2
+#define EEPROM_ADD_RES_PRIM_CONS_TEMP 0xB3
+#define EEPROM_ADD_RES_PRIM_HYST_TEMP 0xB4
+#define EEPROM_ADD_RES_INYE_CONS_TEMP 0xB5
+#define EEPROM_ADD_RES_PRIM_HYST_TEMP 0xB6
+#define EEPROM_ADD_AGUA_CONS_TEMP     0xB7
+#define EEPROM_ADD_AGUA_HYST_TEMP     0xB8
+#define EEPROM_ADD_RES_PRIM_ALAR_MIN  0xB9
+#define EEPROM_ADD_RES_INYE_ALAR_MIN  0xBA
+#define EEPROM_ADD_AGUA_ALAR_MIN      0xBB
+
+#define EEPROM_ADD_TRIAC1             0xBC
+#define EEPROM_ADD_TRIAC2             0xBD
+#define EEPROM_ADD_TRIAC3             0xBE
 
 //#define EEPROM_ADD_MAX              0xFA // 250
 
@@ -97,6 +104,7 @@ extern byte cfgMB2Add;
 
 #define EEPROM_VAL_LOGIC_INS            1     // Logica Reposo
 #define EEPROM_VAL_LOGIC_OUTS           0     // Logica Reposo
+#define EEPROM_VAL_MBADD1               1
 
 #define EEPROM_VAL_RES_PRIM_VOUT        110   // V
 #define EEPROM_VAL_RES_INYE_VOUT        110   // V
@@ -110,6 +118,10 @@ extern byte cfgMB2Add;
 #define EEPROM_VAL_RES_PRIM_ALAR_MIN    30
 #define EEPROM_VAL_RES_INYE_ALAR_MIN    30
 #define EEPROM_VAL_AGUA_ALAR_MIN        30
+
+#define EEPROM_VAL_TRIAC1               230
+#define EEPROM_VAL_TRIAC2               230
+#define EEPROM_VAL_TRIAC3               230
 
 #endif // _E2PROM_H_
 

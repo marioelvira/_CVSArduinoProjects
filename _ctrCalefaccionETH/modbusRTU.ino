@@ -8,29 +8,16 @@
 // Variables //
 ///////////////
 int mbState;
-int mbSWake;
 unsigned long mbTick;
 byte mbCRC[2];
 
-// Modbus DIOs
-int mbInNBoard = 0;
-int mbIns[MB_NUM_IOS][MB_NUM_BRS];
-int mbOutNBoard = 0;
-int mbOuts[MB_NUM_IOS][MB_NUM_BRS];
-int mbROuts[MB_NUM_IOS][MB_NUM_BRS];
-
-int mbOutBoard = 0;
-int mbOutNum = 0;
-int mbOutVal = 0x00;
+// Modbus TEMPs
+int mbTemp[MB_NUM_TEMPS];
 
 int mbNError = 0;
 int mbNReply = 0;
 int mbNRetry = 0;
 int mbRetry = 0;
-
-int mbWhat2read = 0;
-
-int mbInsAlarm[MB_NUM_IOS][MB_NUM_BRS];
 
 /**********************************************************************
 *    MODULE PRIVATE VARIABLES.
@@ -109,19 +96,19 @@ void _mbCRC(void)
   mbCRC[0] = (ucCRCLo & 0xFF);   // lowbyte
 }
 
-// Tx: FF 02 00 00 00 08 6C 12
-// Rx: FF 02 01 01 51 A0
-void _mbReadIns(char address)
+// Tx: AD 03 00 00 00 04 XX XX
+// Rx: AD 03 00 00 XX XX
+void _mbReadTemps(char address)
 {
   // Num Bytes
   mrs485TxNumBytes = 8;
 
   mrs485TxBuffer[0] = (char)address;
-  mrs485TxBuffer[1] = 0x02;
+  mrs485TxBuffer[1] = 0x03;
   mrs485TxBuffer[2] = 0x00;
   mrs485TxBuffer[3] = 0x00;
   mrs485TxBuffer[4] = 0x00;
-  mrs485TxBuffer[5] = 0x08;
+  mrs485TxBuffer[5] = 0x04;
   // Crc
   _mbCRC();
   mrs485TxBuffer[6] = mbCRC[0];
@@ -131,14 +118,14 @@ void _mbReadIns(char address)
   mrs485State = MRS485_INITTX;
 }
 
-// Rx: FF 02 01 01 51 A0
-int _mbAnalyseIns(char address)
+// Rx: AD 03 08 T1 T1 T2 T2 T3 T3 T4 T4 XX XX
+int _mbAnalyseTemps(char address)
 {
   int error = 0;
 
   if ((mrs485RxBuffer[0] == (char)address) &&
-      (mrs485RxBuffer[1] == 0x02) &&
-      (mrs485RxBuffer[2] == 0x01))
+      (mrs485RxBuffer[1] == 0x03) &&
+      (mrs485RxBuffer[2] == 0x08))
   {
     // check CRC (TODO)
   }
@@ -148,240 +135,12 @@ int _mbAnalyseIns(char address)
   return error;
 }
 
-void _mbUdateIns (int board)
+void _mbUdateTemps()
 {
-  if ((mrs485RxBuffer[3] & 0x01) != 0)
-    mbIns[0][board] = IN_ON;
-  else
-    mbIns[0][board] = IN_OFF;
-
-  if ((mrs485RxBuffer[3] & 0x02) != 0)
-    mbIns[1][board] = IN_ON;
-  else
-    mbIns[1][board] = IN_OFF;
-
-  if ((mrs485RxBuffer[3] & 0x04) != 0)
-    mbIns[2][board] = IN_ON;
-  else
-    mbIns[2][board] = IN_OFF;
-
-  if ((mrs485RxBuffer[3] & 0x08) != 0)
-    mbIns[3][board] = IN_ON;
-  else
-    mbIns[3][board] = IN_OFF;
-
-  if ((mrs485RxBuffer[3] & 0x10) != 0)
-    mbIns[4][board] = IN_ON;
-  else
-    mbIns[4][board] = IN_OFF;
-
-  if ((mrs485RxBuffer[3] & 0x20) != 0)
-    mbIns[5][board] = IN_ON;
-  else
-    mbIns[5][board] = IN_OFF;
-
-  if ((mrs485RxBuffer[3] & 0x40) != 0)
-    mbIns[6][board] = IN_ON;
-  else
-    mbIns[6][board] = IN_OFF;
-
-  if ((mrs485RxBuffer[3] & 0x80) != 0)
-    mbIns[7][board] = IN_ON;
-  else
-    mbIns[7][board] = IN_OFF;
-}
-
-// Tx: FF 01 00 00 00 08 28 12
-// Rx: FF 01 01 A1 AO
-void _mbReadOuts(char address)
-{
-  // Num Bytes
-  mrs485TxNumBytes = 8;
-
-  mrs485TxBuffer[0] = (char)address;
-  mrs485TxBuffer[1] = 0x01;
-  mrs485TxBuffer[2] = 0x00;
-  mrs485TxBuffer[3] = 0x00;
-  mrs485TxBuffer[4] = 0x00;
-  mrs485TxBuffer[5] = 0x08;
-  _mbCRC();
-  mrs485TxBuffer[6] = mbCRC[0];
-  mrs485TxBuffer[7] = mbCRC[1];
-  
-  // Init RS485 Transmit
-  mrs485State = MRS485_INITTX;
-}
-
-// Rx: FF 02 01 01 51 A0
-int _mbAnalyseOuts(char address)
-{
-  int error = 0;
-
-  if ((mrs485RxBuffer[0] == (char)address) &&
-      (mrs485RxBuffer[1] == 0x01) &&
-      (mrs485RxBuffer[2] == 0x01))
-  {
-    // check CRC (TODO)
-  }
-  else
-    error = 1;
-
-  return error;
-}
-
-void _mbUdateOuts (int board)
-{
- 
-  if (mrs485RxBuffer[3] & 0x01)
-    mbROuts[0][board] = OUT_ON;
-  else
-    mbROuts[0][board] = OUT_OFF;
-
-  if (mrs485RxBuffer[3] & 0x02)
-    mbROuts[1][board] = OUT_ON;
-  else
-    mbROuts[1][board] = OUT_OFF;
-
-  if (mrs485RxBuffer[3] & 0x04)
-    mbROuts[2][board] = OUT_ON;
-  else
-    mbROuts[2][board] = OUT_OFF;
-
-  if (mrs485RxBuffer[3] & 0x08)
-    mbROuts[3][board] = OUT_ON;
-  else
-    mbROuts[3][board] = OUT_OFF;
-
-  if (mrs485RxBuffer[3] & 0x10)
-    mbROuts[4][board] = OUT_ON;
-  else
-    mbROuts[4][board] = OUT_OFF;
-
-  if (mrs485RxBuffer[3] & 0x20)
-    mbROuts[5][board] = OUT_ON;
-  else
-    mbROuts[5][board] = OUT_OFF;
-
-  if (mrs485RxBuffer[3] & 0x40)
-    mbROuts[6][board] = OUT_ON;
-  else
-    mbROuts[6][board] = OUT_OFF;
-
-  if (mrs485RxBuffer[3] & 0x80)
-    mbROuts[7][board] = OUT_ON;
-  else
-    mbROuts[7][board] = IN_OFF;
-}
-
-// Tx: FF 05 00 01 FF 00 C8 24 - Rele 2 a ON
-// Rx: FF 05 00 01 FF 00 C8 24
-// out: 0 to 7; 8 all relays
-// val: 0 OFF, 1 ON
-void _mbWriteOut (char address, int out, int val)
-{
-  // Num Bytes
-  mrs485TxNumBytes = 8;
-      
-  mrs485TxBuffer[0] = (char)address;
-  mrs485TxBuffer[1] = 0x05;
-  mrs485TxBuffer[2] = 0x00;
-  mrs485TxBuffer[3] = out;
-  if (val == 0)
-    mrs485TxBuffer[4] = 0x00;
-  else
-    mrs485TxBuffer[4] = 0xFF;
-  mrs485TxBuffer[5] = 0x00;
-  // Crc
-  _mbCRC();
-  mrs485TxBuffer[6] = mbCRC[0];
-  mrs485TxBuffer[7] = mbCRC[1];
-
-  // Init RS485 Transmit
-  mrs485State = MRS485_INITTX;
-}
-
-// Rx: FF 05 00 01 FF 00 C8 24
-int _mbAnalyseOut (char address, int out) //, int val)
-{
-  int error = 0;
-
-  if ((mrs485RxBuffer[0] == (char)address) &&
-      (mrs485RxBuffer[1] == 0x05) &&
-	    (mrs485RxBuffer[2] == 0x00) &&
-	    (mrs485TxBuffer[3] == out))
-	    //(mrs485TxBuffer[3] == val))
-  {
-    // check CRC (TODO)
-  }
-  else
-    error = 1;
-
-  return error;
-}
-
-int _MBOutCheck(void)
-{
-  int i, j;
-
-  // num boards
-  for (j = 0; j < MB_NUM_BRS; j++)
-  {
-    // num outs
-    for (i = 0; i < MB_NUM_IOS; i++)
-    {
-      if (mbOuts[i][j] != mbROuts[i][j])
-      {
-        mbOutBoard = j;
-        mbOutNum = i;
-        mbOutVal = mbOuts[i][j];
-        
-        // Write Out
-        if (mbState == MB_STANDBY)
-          mbState = MB_WRITEOUT;
-        // Salimos
-        return 1;
-      }
-    }
-  }
-
-  return 0;
-}
-
-void _mbInsAlarmInit (void)
-{
-  mbInsAlarm[0][0] = MB_IN_AL_VAL_0;
-  mbInsAlarm[1][0] = MB_IN_AL_VAL_0;
-  mbInsAlarm[2][0] = MB_IN_AL_DISABLE;
-  mbInsAlarm[3][0] = MB_IN_AL_DISABLE;
-  mbInsAlarm[4][0] = MB_IN_AL_DISABLE;
-  mbInsAlarm[5][0] = MB_IN_AL_DISABLE;
-  mbInsAlarm[6][0] = MB_IN_AL_DISABLE;
-  mbInsAlarm[7][0] = MB_IN_AL_DISABLE;
-
-  mbInsAlarm[0][1] = MB_IN_AL_DISABLE;
-  mbInsAlarm[1][1] = MB_IN_AL_DISABLE;
-  mbInsAlarm[2][1] = MB_IN_AL_DISABLE;
-  mbInsAlarm[3][1] = MB_IN_AL_DISABLE;
-  mbInsAlarm[4][1] = MB_IN_AL_DISABLE;
-  mbInsAlarm[5][1] = MB_IN_AL_DISABLE;
-  mbInsAlarm[6][1] = MB_IN_AL_DISABLE;
-  mbInsAlarm[7][1] = MB_IN_AL_DISABLE;
-}
-
-void _mbInsAlarmCheck (void)
-{
-  int i, j;
-
-  for (j = 0; j < MB_NUM_BRS; j++)
-  {
-    for (i = 0; i < MB_NUM_IOS; i++)
-    {
-      if (mbIns[i][j] == mbInsAlarm[i][j])
-        alarmOn[8*(j + 1) + i] = 1;
-      else
-        alarmOn[8*(j + 1) + i] = 0;
-    }
-  }
+  mbTemp[0] = ((mrs485RxBuffer[3] & 0x00FF)<<8)|(mrs485RxBuffer[4] & 0x00FF);  // 0.1ºC
+  mbTemp[1] = ((mrs485RxBuffer[5] & 0x00FF)<<8)|(mrs485RxBuffer[6] & 0x00FF);  // 0.1ºC
+  mbTemp[2] = ((mrs485RxBuffer[7] & 0x00FF)<<8)|(mrs485RxBuffer[8] & 0x00FF);  // 0.1ºC
+  mbTemp[3] = ((mrs485RxBuffer[9] & 0x00FF)<<8)|(mrs485RxBuffer[10] & 0x00FF); // 0.1ºC
 }
 
 ////////////////////
@@ -389,24 +148,11 @@ void _mbInsAlarmCheck (void)
 ////////////////////
 void _MBSetup(void)
 {
-  int i, j;
   mbState = MB_STANDBY;
   mbTick = millis();
 
-  mbInNBoard = 0;
-  mbOutBoard = 0;
-
-  // Modbus DIOs reset
-  for (j = 0; j < MB_NUM_BRS; j++)
-  {
-    for (i = 0; i < MB_NUM_IOS; i++)
-    {
-      mbIns[i][j] = 0;
-      mbOuts[i][j] = 0;
-    }
-  }
-
-  _mbInsAlarmInit();
+  for (int i = 0; i < MB_NUM_TEMPS; i++)
+    mbTemp[i] = 0;
 }
 
 //////////////////
@@ -421,238 +167,41 @@ void _MBLoop(void)
     case MB_STANDBY:
       
       if (millis() - mbTick >= MB_RXLOOP)
-      {
-        mbState = MB_READINS;
-        /*
-        if (mbWhat2read < NUM_W2R)
-          mbState = MB_READINS;
-        else
-          mbState = MB_READOUTS;
-
-        mbWhat2read++;
-        if (mbWhat2read > NUM_W2R)
-          mbWhat2read = 0;
-        */
-      }
+        mbState = MB_READTEMPS;
     
 	    break;
 
     // Read Ins
-    case MB_READINS:
-      if (mbInNBoard == 0)
-        _mbReadIns((char)cfgMB1Add);
-      else
-        _mbReadIns((char)cfgMB2Add);      
+    case MB_READTEMPS:
+      _mbReadTemps((char)cfgMB1Add);  
 
       // Analyse Response
       mbTick = millis();
-      mbState = MB_INSSTATUS;
+      mbState = MB_TEMPSTATUS;
       
       break;
 
-    case MB_INSSTATUS:
+    case MB_TEMPSTATUS:
       // wait for response
       if (millis() - mbTick >= MB_RXTOUT)
       {   
         mbTick = millis();
-        mbState = MB_SLEEP; //MB_STANDBY;
-        mbSWake = MB_STANDBY;
+        mbState = MB_SLEEP;
         mbNReply++;
-
-        // Alarm
-        if (mbInNBoard == 0)
-        {
-          alarmOn[AL_ERROR0] = 1;
-          mbInNBoard = 1;
-        }
-        else
-        {
-          alarmOn[AL_ERROR1] = 1;
-          mbInNBoard = 0;
-        }
-      }
-
-      // if response received
-      if (mrs485State == MRS485_FRAME_RX)
-      {
-        if (mbInNBoard == 0)
-        {
-          // Analyse response
-          if (_mbAnalyseIns((char)cfgMB1Add) == MB_RX_OK)
-          {
-            _mbUdateIns(mbInNBoard);
-            alarmOn[AL_ERROR0] = 0;
-          }
-          else
-            mbNError++;
-          
-          // Next board
-          mbInNBoard = 1;
-        }
-        else
-        {
-          // Analyse response
-          if (_mbAnalyseIns((char)cfgMB2Add) == MB_RX_OK)
-          {
-            _mbUdateIns(mbInNBoard);
-            alarmOn[AL_ERROR1] = 0;
-          }
-          else
-            mbNError++;;
-          
-          // Next board
-          mbInNBoard = 0;
-        }
-                
-        mbTick = millis();
-        mbState = MB_SLEEP; //MB_STANDBY;
-        mbSWake = MB_STANDBY;
-                
-        // clear Rx buffer
-        mrs485RxBuffer = "";
-        mrs485State = MRS485_STANDBY;
-      }
-
-      break;
-
-    // Read Outs
-    case MB_READOUTS:
-      if (mbOutNBoard == 0)
-        _mbReadOuts((char)cfgMB1Add);
-      else
-        _mbReadOuts((char)cfgMB2Add);      
-
-      // Analyse Response
-      mbTick = millis();
-      mbState = MB_OUTSSTATUS;
-      
-      break;
-
-    case MB_OUTSSTATUS:
-      // wait for response
-      if (millis() - mbTick >= MB_RXTOUT)
-      {   
-        mbTick = millis();
-        mbState = MB_SLEEP; //MB_STANDBY;
-        mbSWake = MB_STANDBY;
-        mbNReply++;
-      }
-
-      // if response received
-      if (mrs485State == MRS485_FRAME_RX)
-      {
-        if (mbOutNBoard == 0)
-        {
-          // Analyse response
-          if (_mbAnalyseOuts((char)cfgMB1Add) == MB_RX_OK)
-            _mbUdateOuts(mbOutNBoard);
-          else
-            mbNError++;
-          
-          // Next board
-          mbOutNBoard = 1;
-        }
-        else
-        {
-          // Analyse response
-          if (_mbAnalyseOuts((char)cfgMB2Add) == MB_RX_OK)
-            _mbUdateOuts(mbOutNBoard);
-          else
-            mbNError++;;
-          
-          // Next board
-          mbOutNBoard = 0;
-        }
-
-        mbTick = millis();
-        mbState = MB_SLEEP; //MB_STANDBY;
-        mbSWake = MB_STANDBY;
-                
-        // clear Rx buffer
-        mrs485RxBuffer = "";
-        mrs485State = MRS485_STANDBY;
-      }
-
-      break;
-
-    // Write Out
-	  case MB_WRITEOUT:
-      // select board
-      _mbWriteOut((char)cfgMB1Add, mbOutNum, mbOutVal);
-
-      // Analyse Response
-      mbTick = millis();
-      mbState = MB_OUTSTATUS;
-	  
-	    break;
-
-    case MB_OUTSTATUS:
-
-      // wait for response
-      if (millis() - mbTick >= MB_RXTOUT)
-      {
-        mbNReply++;
-        
-        // Retry ??
-        if (mbRetry < MB_NUM_RETRY)
-        {
-          mbNRetry++;
-          mbTick = millis();
-          mbState = MB_SLEEP; //MB_WRITEOUT;
-          mbSWake = MB_WRITEOUT;
-          mbRetry++;
-        }
-        else
-        {
-          mbTick = millis();
-          mbState = MB_SLEEP; //MB_STANDBY;
-          mbSWake = MB_STANDBY;
-          mbRetry = 0;
-        }
       }
 
       // if response received
       if (mrs485State == MRS485_FRAME_RX)
       {
         // Analyse response
-        if (mbOutBoard == 0)
-          error = _mbAnalyseOut((char)cfgMB1Add, mbOutNum); //, mbOutVal);
-        else 
-          error = _mbAnalyseOut((char)cfgMB2Add, mbOutNum); //, mbOutVal);
-
-        // If NO error
-        if (error == 0)
-        {
-          if (mbOutVal == OUT_OFF)
-            mbOuts[mbOutNum][mbOutBoard] = OUT_OFF;
-          else
-            mbOuts[mbOutNum][mbOutBoard] = OUT_ON;   
-
-          mbTick = millis();
-          mbState = MB_SLEEP; //MB_STANDBY;
-          mbSWake = MB_STANDBY;      
-        }
+        if (_mbAnalyseTemps((char)cfgMB1Add) == MB_RX_OK)
+          _mbUdateTemps();
         else
-        {
-          mbNError++;
-          // Retry ??
-          if (mbRetry < MB_NUM_RETRY)
-          {
-            mbNRetry++;
-            mbTick = millis();
-            mbState = MB_SLEEP; //MB_WRITEOUT;
-            mbSWake = MB_WRITEOUT;
-            mbRetry++;
-          }
-          else
-          {
-            mbTick = millis();
-            mbState = MB_SLEEP; //MB_STANDBY;
-            mbSWake = MB_STANDBY;      
-            mbRetry = 0;
-          }
-        }
-
+          mbNError++;;
+                        
+        mbTick = millis();
+        mbState = MB_SLEEP;
+                
         // clear Rx buffer
         mrs485RxBuffer = "";
         mrs485State = MRS485_STANDBY;
@@ -662,7 +211,7 @@ void _MBLoop(void)
 
     case MB_SLEEP:
       if (millis() - mbTick >= MB_TSLEEP)
-        mbState = mbSWake;
+        mbState = MB_STANDBY;
 
       break;
   }

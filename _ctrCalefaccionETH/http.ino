@@ -200,10 +200,11 @@ void _serveSETTINGS()
   html = html + "<label> Alarma Agua (Minutos)<input type=\"text\"  maxlength=\"3\" value=\""       + String(cfgAguaAlarMin)       + "\" name=\"cfgAguaAlarMin\"/></label>";
   html = html + "</div>";
 
-  html = html + "<div class=\"section\"><span>3</span>Logica</div>";
+  html = html + "<div class=\"section\"><span>3</span>Otros</div>";
   html = html + "<div class=\"inner-wrap\">";
   html = html + "<label> Entradas Reposo <input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgLogicIns) + "\" name=\"cfgLogicIns\"/></label>";
   html = html + "<label> Salidas Reposo <input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgLogicOuts) + "\" name=\"cfgLogicOuts\"/></label>";
+  html = html + "<label> Modbus ID Temp <input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgMB1Add) + "\" name=\"cfgMB1Add\"/></label>";
   html = html + "</div>";
 
   #if (_USE_PWM_ == 1)
@@ -256,7 +257,8 @@ void _setSETTINGS()
   String scfgLogicIns        = httpServer.arg("cfgLogicIns");
   String scfgLogicOuts       = httpServer.arg("cfgLogicOuts");
 
-
+  String scfgMB1Add       = httpServer.arg("cfgMB1Add");
+  
   //String rdebugVal = httpServer.arg("tdebugVal");
   
   if ((scfgResPrimVout.length() == 0)     ||
@@ -277,7 +279,8 @@ void _setSETTINGS()
       #endif
 
       (scfgLogicIns.length() == 0)        ||
-      (scfgLogicOuts.length() == 0))
+      (scfgLogicOuts.length() == 0)       ||
+      (scfgMB1Add.length() == 0))
 
       //(rdebugVal.length() == 0))
   {
@@ -309,6 +312,7 @@ void _setSETTINGS()
     
     cfgLogicIns  = scfgLogicIns.toInt();
     cfgLogicOuts = scfgLogicOuts.toInt();
+    cfgMB1Add = scfgMB1Add.length();
 
     //DebugVal = rdebugVal.toInt();
     
@@ -685,8 +689,23 @@ void _readINS()
   
   #if (_USE_MBRTU_ == 1)
   html = html + "<tr>";
-  html = html + "<td style=\"width:60%\">Modbus Ins</td>";
-  html = html + "<td style=\"width:40%\">" + String(mbIns[0][0]) + "-" + String(mbIns[1][0]) + "-" + String(mbIns[2][0]) + "-" + String(mbIns[3][0]) + "-" + String(mbIns[4][0]) + "-" + String(mbIns[5][0]) + "-" + String(mbIns[6][0]) + "-" + String(mbIns[7][0]) + "</td>";
+  html = html + "<td style=\"width:60%\">Modbus Temp 1</td>";
+  html = html + "<td style=\"width:40%\">" + String(mbTemp[0]) + "</td>";
+  html = html + "</tr>";
+
+  html = html + "<tr>";
+  html = html + "<td style=\"width:60%\">Modbus Temp 2</td>";
+  html = html + "<td style=\"width:40%\">" + String(mbTemp[1]) + "</td>";
+  html = html + "</tr>";
+
+  html = html + "<tr>";
+  html = html + "<td style=\"width:60%\">Modbus Temp 3</td>";
+  html = html + "<td style=\"width:40%\">" + String(mbTemp[2]) + "</td>";
+  html = html + "</tr>";
+
+  html = html + "<tr>";
+  html = html + "<td style=\"width:60%\">Modbus Temp 4</td>";
+  html = html + "<td style=\"width:40%\">" + String(mbTemp[3]) + "</td>";
   html = html + "</tr>";
   #endif
 

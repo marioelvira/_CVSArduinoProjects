@@ -64,12 +64,16 @@ void _serveMAIN()
   html = html + "<p>";
   html = html + "  <input type=\"button\" value=\"Cambiar\" onclick=\"sendOUT(10)\">";
   html = html + "</p><p>";
-  html = html + "  <input type=\"button\" value=\"1\" onclick=\"sendOUT(1)\">";
-  html = html + "  <input type=\"button\" value=\"2\" onclick=\"sendOUT(2)\">";
-  html = html + "  <input type=\"button\" value=\"3\" onclick=\"sendOUT(3)\">";
-  html = html + "  <input type=\"button\" value=\"4\" onclick=\"sendOUT(4)\">";
-  html = html + "  <input type=\"button\" value=\"5\" onclick=\"sendOUT(5)\">";
-  html = html + "  <input type=\"button\" value=\"6\" onclick=\"sendOUT(6)\">";
+  html = html + "  <input type=\"button\" value=\"O1\" onclick=\"sendOUT(1)\">";
+  html = html + "  <input type=\"button\" value=\"O2\" onclick=\"sendOUT(2)\">";
+  html = html + "  <input type=\"button\" value=\"O3\" onclick=\"sendOUT(3)\">";
+  html = html + "  <input type=\"button\" value=\"O4\" onclick=\"sendOUT(4)\">";
+  html = html + "  <input type=\"button\" value=\"O5\" onclick=\"sendOUT(5)\">";
+  html = html + "  <input type=\"button\" value=\"O6\" onclick=\"sendOUT(6)\">";
+  html = html + "</p><p>";
+  html = html + "  <input type=\"button\" value=\"T1\" onclick=\"sendOUT(31)\">";
+  html = html + "  <input type=\"button\" value=\"T2\" onclick=\"sendOUT(32)\">";
+  html = html + "  <input type=\"button\" value=\"T3\" onclick=\"sendOUT(33)\">";
   html = html + "</p>";
 
   html = html + "<div class=\"section\"><span>3</span>Estado</div>";
@@ -200,6 +204,15 @@ void _serveSETTINGS()
   html = html + "<label> Alarma Agua (Minutos)<input type=\"text\"  maxlength=\"3\" value=\""       + String(cfgAguaAlarMin)       + "\" name=\"cfgAguaAlarMin\"/></label>";
   html = html + "</div>";
 
+  #if (_USE_TRIAC_ == 1)
+  html = html + "<div class=\"section\"><span>3</span>Triac Vout</div>";
+  html = html + "<div class=\"inner-wrap\">";
+  html = html + "<label> Triac Vout 1 <input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgTriacVout[0]) + "\" name=\"cfgTriacVout0\"/></label>";
+  html = html + "<label> Triac Vout 2 <input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgTriacVout[1]) + "\" name=\"cfgTriacVout1\"/></label>";
+  html = html + "<label> Triac Vout 3 <input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgTriacVout[2]) + "\" name=\"cfgTriacVout2\"/></label>";
+  html = html + "</div>";
+  #endif
+
   html = html + "<div class=\"section\"><span>3</span>Otros</div>";
   html = html + "<div class=\"inner-wrap\">";
   html = html + "<label> Entradas Reposo <input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgLogicIns) + "\" name=\"cfgLogicIns\"/></label>";
@@ -208,7 +221,7 @@ void _serveSETTINGS()
   html = html + "</div>";
 
   #if (_USE_PWM_ == 1)
-  html = html + "<div class=\"section\"><span>4</span>PWM</div>";
+  html = html + "<div class=\"section\"><span>5</span>PWM</div>";
   html = html + "<div class=\"inner-wrap\">";
   html = html + "<label> Ciclo <input type=\"text\"  maxlength=\"16\" value=\"" + String(pwmDutyCycle) + "\" name=\"pwmDutyCycle\"/></label>";
   html = html + "</div>";
@@ -250,14 +263,19 @@ void _setSETTINGS()
   String scfgResInyeAlarMin  = httpServer.arg("cfgResInyeAlarMin");
   String scfgAguaAlarMin     = httpServer.arg("cfgAguaAlarMin");
 
+  #if (_USE_TRIAC_ == 1)
+  String scfgTriacVout0     = httpServer.arg("cfgTriacVout0");
+  String scfgTriacVout1     = httpServer.arg("cfgTriacVout1");
+  String scfgTriacVout2     = httpServer.arg("cfgTriacVout2");
+  #endif
+
   #if (_USE_PWM_ == 1)
   String spwmDutyCycle       = httpServer.arg("pwmDutyCycle");
   #endif
 
   String scfgLogicIns        = httpServer.arg("cfgLogicIns");
   String scfgLogicOuts       = httpServer.arg("cfgLogicOuts");
-
-  String scfgMB1Add       = httpServer.arg("cfgMB1Add");
+  String scfgMB1Add          = httpServer.arg("cfgMB1Add");
   
   //String rdebugVal = httpServer.arg("tdebugVal");
   
@@ -273,6 +291,12 @@ void _setSETTINGS()
       (scfgResPrimAlarMin.length() == 0)  ||
       (scfgResInyeAlarMin.length() == 0)  ||
       (scfgAguaAlarMin.length() == 0)     ||
+
+      #if (_USE_TRIAC_ == 1)
+      (scfgTriacVout0.length() == 0)      ||
+      (scfgTriacVout1.length() == 0)      ||
+      (scfgTriacVout2.length() == 0)      ||
+      #endif
 
       #if (_USE_PWM_ == 1)
       (spwmDutyCycle.length() == 0)       ||
@@ -305,6 +329,12 @@ void _setSETTINGS()
     cfgResPrimAlarMin  = scfgResPrimAlarMin.toInt();
     cfgResInyeAlarMin  = scfgResInyeAlarMin.toInt();
     cfgAguaAlarMin     = scfgAguaAlarMin.toInt();
+
+    #if (_USE_TRIAC_ == 1)
+    cfgTriacVout[0]  = scfgTriacVout0.toInt();
+    cfgTriacVout[1]  = scfgTriacVout1.toInt();
+    cfgTriacVout[2]  = scfgTriacVout2.toInt();
+    #endif
 
     #if (_USE_PWM_ == 1)
     pwmDutyCycle = spwmDutyCycle.toInt();
@@ -725,6 +755,13 @@ void _readOUTS()
   html = html + "<td style=\"width:40%\">" + String(OutDig[0]) + "-" + String(OutDig[1]) + "-" + String(OutDig[2]) + "-" + String(OutDig[3]) + "-" + String(OutDig[4]) + "-" + String(OutDig[5]) + "</td>";
   html = html + "</tr>";
 
+  #if (_USE_TRIAC_ == 1)
+  html = html + "<tr>";
+  html = html + "<td style=\"width:60%\">Triac Outs</td>";
+  html = html + "<td style=\"width:40%\">" + String(TriacDig[0]) + "-" + String(TriacDig[1]) + "-" + String(TriacDig[2]) + "</td>";
+  html = html + "</tr>";
+  #endif
+
   html = html + "</table>";
   
   httpServer.send(200, "text/plane", html);
@@ -868,6 +905,51 @@ void _setOUTS()
       }
     }
   }
+  #if (_USE_TRIAC_ == 1)
+  // Triac 1
+  else if(out_number == "31")
+  {
+    if (TriacDig[0] == OUT_ON)
+    {
+      TriacDig[0] = OUT_OFF;
+      html = "Triac 1 OFF";
+    }
+    else
+    {
+      TriacDig[0] = OUT_ON;
+      html = "Triac 1 ON";
+    }
+  }
+  // Triac 2
+  else if(out_number == "32")
+  {
+    if (TriacDig[1] == OUT_ON)
+    {
+      TriacDig[1] = OUT_OFF;
+      html = "Triac 2 OFF";
+    }
+    else
+    {
+      TriacDig[1] = OUT_ON;
+      html = "Triac 2 ON";
+    }
+  }
+  // Triac 3
+  else if(out_number == "33")
+  {
+    if (TriacDig[2] == OUT_ON)
+    {
+      TriacDig[2] = OUT_OFF;
+      html = "Triac 3 OFF";
+    }
+    else
+    {
+      TriacDig[2] = OUT_ON;
+      html = "Triac 3 ON";
+    }
+  }
+  #endif
+  
   else
     html = "NO Outs";
   

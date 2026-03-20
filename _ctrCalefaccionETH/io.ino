@@ -25,6 +25,9 @@ int   InDig[IN_NUMBER];
 ///////////////
 void _IOSetup()
 { 
+  int i;
+
+  // Pin definition
   // No bigger than OUT_NUMBER
   OutPin[0] = PIN_OUT1;
   OutPin[1] = PIN_OUT2;
@@ -38,21 +41,6 @@ void _IOSetup()
   InPin[1] = PIN_IN2;
   InPin[2] = PIN_IN3;
   InPin[3] = PIN_IN4;
-
-  // No bigger than TRIAC_NUMBER
-  /*
-  TriacPin[0] = PIN_TRIAC1;
-  TriacPin[1] = PIN_TRIAC2;
-  TriacPin[2] = PIN_TRIAC3;
-  */
-}
-
-///////////////
-// PIN steup //
-///////////////
-void _PINSetup(void)
-{
-  int i;
 
   // Ledboard
   #if (_USE_LED_ == 1)
@@ -87,11 +75,10 @@ void _PINSetup(void)
   }
 }
 
-
-///////////////////////
-// PIN state machine //
-///////////////////////
-void _PINLoop()
+//////////////////////
+// HW state machine //
+//////////////////////
+void _IOLoop()
 {
   int i;
 

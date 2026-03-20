@@ -5,6 +5,11 @@ extern "C" {
 #ifndef _TRIAC_H_
 #define _TRIAC_H_
 
+#define TRIAC_NUMBER  3
+
+extern int   TriacPin[];
+extern int   TriacDig[];
+
 extern const int triacZCPin;
 extern int triacZCPeriod;
 extern unsigned long triacTick;

@@ -29,6 +29,10 @@ int cfgResPrimAlarMin;
 int cfgResInyeAlarMin;
 int cfgAguaAlarMin;
 
+int cfgTriacVout0;
+int cfgTriacVout1;
+int cfgTriacVout2;
+
 #if (_USE_TRIAC_ == 1)
 int cfgTriacVout[3];
 #endif

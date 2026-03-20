@@ -7,6 +7,9 @@
 // Variables //
 ///////////////
 const int triacZCPin = PIN_ZD1;
+int   TriacPin[TRIAC_NUMBER];
+int   TriacDig[TRIAC_NUMBER];
+
 int triacZCPeriod;
 unsigned long triacTick = 0;
 
@@ -21,7 +24,7 @@ int triacCicle1 = 50;
 ////////////////
 void IRAM_ATTR isrZeroCross()
 { 
-  if (triacCtr1 == 1)
+  if (triacCtr1 == OUT_ON)
   {
     timerRestart(triacTimer1);
     // timerAlarm(timer, valor_alarma, autoreload, reload_count)
@@ -45,6 +48,13 @@ void IRAM_ATTR isrTriacTimer1()
 //////////////////
 void _TRIACSetup()
 {
+  // Pin definition
+  //triacZCPin = PIN_ZD1;
+
+  TriacPin[0] = PIN_TRIAC1;
+  TriacPin[1] = PIN_TRIAC2;
+  TriacPin[2] = PIN_TRIAC3;
+
   // TRIAC
   pinMode(triacPin1, OUTPUT);
 
@@ -64,12 +74,25 @@ void _TRIACSetup()
 
 void _TRIACLoop()
 {
-  if (triacCtr1 == 1)
+  // TODO a CFG
+  if (triacCtr1 == OUT_ON)
   {
     // En v3.0, el tiempo se maneja según la frecuencia configurada en timerBegin
     // Si configuramos 1,000,000 Hz, 1 tick = 1 microsegundo.
     timeDelay1 = map(triacCicle1, 0, 100, 8000, 100); 
   }
+
+  /*
+  int i;
+
+  for (i = 0; i < TRIAC_NUMBER; i++)
+  {
+    if (TriacDig[i] == OUT_ON)
+      // TODO
+    else
+      // TODO
+  }
+  */
 }
 
 #endif // (_USE_TRIAC_ == 1)

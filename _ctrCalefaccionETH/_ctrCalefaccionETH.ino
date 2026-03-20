@@ -82,9 +82,8 @@ void setup(void)
   #endif
   #endif
 
-  // PIN & IO Setup
+  // IO Setup
   _IOSetup();
-  _PINSetup();
 
   // Config setup
   _ConfigSetup();
@@ -139,7 +138,7 @@ void setup(void)
 //===========//
 void loop()
 {
-  _PINLoop();
+  _IOLoop();
 
   #if (_USE_TRIAC_ == 1)
   _TRIACLoop();

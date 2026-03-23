@@ -97,7 +97,7 @@ void _mbCRC(void)
 }
 
 // Tx: AD 03 00 00 00 04 XX XX
-// Rx: AD 03 00 00 XX XX
+// Rx: AD 03 08 T1 T1 T2 T2 T3 T3 T4 T4 XX XX
 void _mbReadTemps(char address)
 {
   // Num Bytes
@@ -135,6 +135,7 @@ int _mbAnalyseTemps(char address)
   return error;
 }
 
+// 0103 08 FF76 FF7E FF7A 00D4 E083
 void _mbUdateTemps()
 {
   mbTemp[0] = ((mrs485RxBuffer[3] & 0x00FF)<<8)|(mrs485RxBuffer[4] & 0x00FF);  // 0.1ºC

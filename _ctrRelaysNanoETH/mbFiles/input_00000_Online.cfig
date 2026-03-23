@@ -22,3 +22,4 @@ U16#0021 Out 5 A - No usada#
 U16#0022 Modo#0->Auto; 1->Test
 U16#0023 Modbus Client#
 U16#0024 Modbus Errors#
+U16#0025 MQTT Estado#

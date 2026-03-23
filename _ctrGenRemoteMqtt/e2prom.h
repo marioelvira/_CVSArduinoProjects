@@ -84,12 +84,12 @@ extern "C" {
 
 #define EEPROM_VAL_RPUSL_MSEC     10  // 1 Sec
 #define EEPROM_VAL_LUZOFF_15M     16  // 4 h
-#define EEPROM_VAL_LOGIC_INS      0
-#define EEPROM_VAL_LOGIC_OUTS     1
+#define EEPROM_VAL_LOGIC_INS      1   // Valor campo 22/03/2026
+#define EEPROM_VAL_LOGIC_OUTS     1   // Valor campo 22/03/2026
 #define EEPROM_VAL_GENON_PIN      1
 
-#define EEPROM_VAL_ADC_M          153
-#define EEPROM_VAL_ADC_B          0
+#define EEPROM_VAL_ADC_M          333 // Valor campo 22/03/2026
+#define EEPROM_VAL_ADC_B          0   // Valor campo 22/03/2026
 #define EEPROM_VAL_ADC_P          10000
 #define EEPROM_VAL_ADC_S          0   // +/-  1/0
 #define EEPROM_VAL_ADC_F          0   // si/no 1/0

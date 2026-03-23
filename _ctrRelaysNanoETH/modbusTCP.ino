@@ -669,6 +669,9 @@ void _mbReadInput()
     mbTcpTxArray[MB_TCP_REGS + 45]  = (char)(mbTcpClientConnected);
     mbTcpTxArray[MB_TCP_REGS + 46]  = (char)((mbTcpRxError & 0xFF00)>>8);
     mbTcpTxArray[MB_TCP_REGS + 47]  = (char)(mbTcpRxError & 0x00FF);
+
+    mbTcpTxArray[MB_TCP_REGS + 48]  = 0x00;
+    mbTcpTxArray[MB_TCP_REGS + 49]  = (char)(mqttStatus);
   }
   else if ((addr == MB_IR_ADD_INS) && (nregs == MB_IR_NREG_INS))
   {

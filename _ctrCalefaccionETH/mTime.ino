@@ -1,6 +1,9 @@
 #include "main.h"
-#include "alarm.h"
 #include "mTime.h"
+
+#if (_USE_ALARM_ == 1)
+#include "alarm.h"
+#endif
 
 #if (_USE_MQTT_ == 1)
 #include "MQTT.h"
@@ -101,7 +104,9 @@ void _TimeLoop(void)
 
     timeTick = millis();
 
+    #if (_USE_ALARM_ == 1)
     _ALARMLoop();
+    #endif
 
     #if (_USE_NTP_ == 1)
     _mNTPfakeSec();

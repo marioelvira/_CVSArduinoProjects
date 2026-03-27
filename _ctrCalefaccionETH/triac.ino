@@ -6,29 +6,45 @@
 ///////////////
 // Variables //
 ///////////////
-const int triacZCPin = PIN_ZD1;
-int   TriacPin[TRIAC_NUMBER];
-int   TriacDig[TRIAC_NUMBER];
+int   TriacCtr[TRIAC_NUMBER];
+hw_timer_t * triac1Timer = NULL;
+hw_timer_t * triac2Timer = NULL;
+hw_timer_t * triac3Timer = NULL;
 
 int triacZCPeriod;
 unsigned long triacTick = 0;
 
-int triacCtr1 = 0;
-const int triacPin1 = PIN_TRIAC1;
-hw_timer_t * triacTimer1 = NULL;
-int timeDelay1 = 0;
-int triacCicle1 = 50;
+int triac1Delay = 0;
+int triac1Cicle = 50;
+int triac2Delay = 0;
+int triac2Cicle = 50;
+int triac3Delay = 0;
+int triac3Cicle = 50;
 
 ////////////////
 // Interrupts //
 ////////////////
 void IRAM_ATTR isrZeroCross()
 { 
-  if (triacCtr1 == OUT_ON)
+  if (TriacCtr[0] == TRIAC_ON)
   {
-    timerRestart(triacTimer1);
+    timerRestart(triac1Timer);
     // timerAlarm(timer, valor_alarma, autoreload, reload_count)
-    timerAlarm(triacTimer1, timeDelay1, false, 0);
+    timerAlarm(triac1Timer, triac1Delay, false, 0);
+  }
+
+  if (TriacCtr[1] == TRIAC_ON)
+  {
+    timerRestart(triac2Timer);
+    // timerAlarm(timer, valor_alarma, autoreload, reload_count)
+    timerAlarm(triac2Timer, triac2Delay, false, 0);
+  }
+
+  if (TriacCtr[2] == TRIAC_ON)
+  {
+    timerRestart(triac3Timer);
+    // timerAlarm(timer, valor_alarma, autoreload, reload_count)
+    timerAlarm(triac3Timer, triac3Delay, false, 0);
   }
 
   // ZC Periodo
@@ -36,11 +52,25 @@ void IRAM_ATTR isrZeroCross()
   triacTick = millis();
 }
 
-void IRAM_ATTR isrTriacTimer1()
+void IRAM_ATTR isrTriac1Timer()
 {
-  digitalWrite(triacPin1, HIGH);
+  digitalWrite(PIN_TRIAC1, PIN_TRIAC_ON);
   delayMicroseconds(10);
-  digitalWrite(triacPin1, LOW);
+  digitalWrite(PIN_TRIAC1, PIN_TRIAC_OFF);
+}
+
+void IRAM_ATTR isrTriac2Timer()
+{
+  digitalWrite(PIN_TRIAC2, PIN_TRIAC_ON);
+  delayMicroseconds(10);
+  digitalWrite(PIN_TRIAC2, PIN_TRIAC_OFF);
+}
+
+void IRAM_ATTR isrTriac3Timer()
+{
+  digitalWrite(PIN_TRIAC3, PIN_TRIAC_ON);
+  delayMicroseconds(10);
+  digitalWrite(PIN_TRIAC3, PIN_TRIAC_OFF);
 }
 
 //////////////////
@@ -48,51 +78,42 @@ void IRAM_ATTR isrTriacTimer1()
 //////////////////
 void _TRIACSetup()
 {
-  // Pin definition
-  //triacZCPin = PIN_ZD1;
-
-  TriacPin[0] = PIN_TRIAC1;
-  TriacPin[1] = PIN_TRIAC2;
-  TriacPin[2] = PIN_TRIAC3;
-
   // TRIAC
-  pinMode(triacPin1, OUTPUT);
+  pinMode(PIN_TRIAC1, OUTPUT);
+  pinMode(PIN_TRIAC2, OUTPUT);
+  pinMode(PIN_TRIAC3, OUTPUT);
 
+  digitalWrite(PIN_TRIAC1, PIN_TRIAC_OFF);
+  digitalWrite(PIN_TRIAC2, PIN_TRIAC_OFF);
+  digitalWrite(PIN_TRIAC3, PIN_TRIAC_OFF);
+  
+  for (int i = 0; i < TRIAC_NUMBER; i++)
+    TriacCtr[i] = TRIAC_OFF;
+  
   // NUEVA API v3.0: timerBegin solo recibe la FRECUENCIA en Hz
   // Configuramos 1MHz para que cada "tick" sea de 1 microsegundo
-  triacTimer1 = timerBegin(1000000);
-  timerAttachInterrupt(triacTimer1, &isrTriacTimer1);
+  triac1Timer = timerBegin(1000000);
+  timerAttachInterrupt(triac1Timer, &isrTriac1Timer);
+  triac2Timer = timerBegin(1000000);
+  timerAttachInterrupt(triac2Timer, &isrTriac2Timer);
+  triac3Timer = timerBegin(1000000);
+  timerAttachInterrupt(triac3Timer, &isrTriac3Timer);
 
-  // ZERO detector
-  pinMode(triacZCPin, INPUT_PULLUP);
-  attachInterrupt(digitalPinToInterrupt(triacZCPin), isrZeroCross, RISING);
+  // En v3.0, el tiempo se maneja según la frecuencia configurada en timerBegin
+  // Si configuramos 1,000,000 Hz, 1 tick = 1 microsegundo.
+  triac1Delay = map(triac1Cicle, 0, 100, 8000, 100); 
+  triac2Delay = map(triac2Cicle, 0, 100, 8000, 100);
+  triac3Delay = map(triac3Cicle, 0, 100, 8000, 100);
+  
+  /////////////////
+  // ZC detector //
+  /////////////////
+  pinMode(PIN_ZD1, INPUT_PULLUP);
+  attachInterrupt(digitalPinToInterrupt(PIN_ZD1), isrZeroCross, RISING);
 
   // Cálculo del periodo
   triacZCPeriod = 0;
   triacTick = millis();
-}
-
-void _TRIACLoop()
-{
-  // TODO a CFG
-  if (triacCtr1 == OUT_ON)
-  {
-    // En v3.0, el tiempo se maneja según la frecuencia configurada en timerBegin
-    // Si configuramos 1,000,000 Hz, 1 tick = 1 microsegundo.
-    timeDelay1 = map(triacCicle1, 0, 100, 8000, 100); 
-  }
-
-  /*
-  int i;
-
-  for (i = 0; i < TRIAC_NUMBER; i++)
-  {
-    if (TriacDig[i] == OUT_ON)
-      // TODO
-    else
-      // TODO
-  }
-  */
 }
 
 #endif // (_USE_TRIAC_ == 1)

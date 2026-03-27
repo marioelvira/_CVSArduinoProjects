@@ -1,8 +1,16 @@
 #include "main.h"
 #include "MQTT.h"
-#include "mTime.h"
 
 #if (_USE_MQTT_ == 1)
+#include "mTime.h"
+
+#if (_USE_ALARM_ == 1)
+#include "alarm.h"
+#endif
+#if (_USE_NTP_ == 1)
+#include "mNTP.h"
+#endif
+
 // Libraries
 #include <NetworkClient.h>
 #include <PubSubClient.h>
@@ -48,7 +56,7 @@ void mqttDataCallback(char* rtopic, byte* rpayload, unsigned int rlength)
   {
 	/*
     // Value
-    if (rtopicStr.equals(TOPIC_RON))
+    if (rtopicStr.equals(TOPIC_CON))
       outVal = OUT_ON;
     else
       outVal = OUT_OFF;
@@ -108,9 +116,67 @@ void _MQTTSend(int itopic)
   str = "{\n";
   
   ////////////////
-  // TOPIC_RCTR //
+  // TOPIC_RIOS //
   ////////////////
-  if (itopic == 0)
+  if (itopic == 1)
+  {
+    /////////
+    // IOs //
+    /////////
+    str = str + "\"bO\":\"";
+    for (i = 0; i < OUT_NUMBER; i++)
+      str = str + String(OutDig[i]);
+    str = str + "\",\n";
+
+    str = str + "\"bI\":\"";
+    for (i = 0; i < IN_NUMBER; i++)
+      str = str + String(InDig[i]);
+    str = str + "\",\n";
+  }
+  ///////////
+  // Alarm //
+  ///////////
+  #if (_USE_ALARM_ == 1)
+  else if (itopic == 2)
+  {
+    int balarm = 0;
+
+    str = str + "\"time\":\"";
+    #if (_USE_NTP_ == 1)
+    str = str + mntpTimeString;
+    #else
+    str = str + timeOnString;
+    #endif
+    str = str + "\",\n";
+
+    for (i = 0; i < AL_ARRAY_SIZE; i++)
+    {
+      if (alarmOn[i] == 1)
+      {
+        str = str + "\"bit";
+        str = str + String(i + 1);
+        str = str + "\":\"";
+        str = str + alarmStr[i];
+        str = str + "\",\n";
+
+        balarm = 1;
+      }
+    }
+
+    if (balarm == 0)
+      str = str + "\"status\":\"Todo OK\",\n";
+
+    str = str + "\"a1\":\"";
+    str = str + String(alarmOn[7]) + String(alarmOn[6]) + String(alarmOn[5]) + String(alarmOn[4]);
+    str = str + String(alarmOn[3]) + String(alarmOn[2]) + String(alarmOn[1]) + String(alarmOn[0]);
+    str = str + "\",\n";
+    
+  }
+  #endif // (_USE_ALARM_ == 1)
+  /////////////
+  // Control //
+  /////////////
+  else // (itopic == 0)
   {
     str = str + "\"ctr\":\"";
     str = str + "Calef";
@@ -130,29 +196,17 @@ void _MQTTSend(int itopic)
     str = str + ctrStateString;
     str = str + "\",\n";
 
+    #if (_USE_MBRTU_ == 1)
+    str = str + "\"mer\":\"";
+    str = str + String(mbNError) + "-" + String(mbNReply) + "-" + String(mbNRetry);
+    str = str + "\",\n";
+    #endif
+
     str = str + "\"ip\":\"";
     str = str + String(ipAddress[3]); str = str + ".";
     str = str + String(ipAddress[2]); str = str + ".";
     str = str + String(ipAddress[1]); str = str + ".";
     str = str + String(ipAddress[0]);
-    str = str + "\",\n";
-  }
-  ////////////////
-  // TOPIC_RIOS //
-  ////////////////
-  else if (itopic == 1)
-  {
-    /////////
-    // IOs //
-    /////////
-    str = str + "\"bO\":\"";
-    for (i = 0; i < OUT_NUMBER; i++)
-      str = str + String(OutDig[i]);
-    str = str + "\",\n";
-
-    str = str + "\"bI\":\"";
-    for (i = 0; i < IN_NUMBER; i++)
-      str = str + String(InDig[i]);
     str = str + "\",\n";
   }
 
@@ -168,8 +222,10 @@ void _MQTTSend(int itopic)
 
   if (itopic == 1)
     str = TOPIC_CIOS;
-  //else if (itopic == 2)
-  //str = TOPIC_CXXX;
+  #if (_USE_ALARM_ == 1)
+  else if (itopic == 2)
+    str = TOPIC_CALARM;  // Last one always
+  #endif
   else
     str = TOPIC_CCTR;
   

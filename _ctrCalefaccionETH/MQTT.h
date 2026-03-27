@@ -20,13 +20,12 @@ extern "C" {
 #define MQTT_USERNAME       "sdpelicanos@gmail.com"
 #define MQTT_PASSWORD       "MQTTSup3rP@@sw0rd"
 
-// MQTT Topics
-#define MQTT_LAST_TOPIC    2
+// MQTT Topics publish
+#define MQTT_LAST_TOPIC    3
 #define TOPIC_CCTR         "sdpelicanos@gmail.com/cal_ctr"   // 0
 #define TOPIC_CIOS         "sdpelicanos@gmail.com/cal_ios"   // 1
-
-#define TOPIC_CALARM       "sdpelicanos@gmail.com/cal_al"    // Siempre el último
-
+#define TOPIC_CALARM       "sdpelicanos@gmail.com/cal_al"    // Last one always
+// MQTT Topics subscribe
 #define TOPIC_CON          "sdpelicanos@gmail.com/cal_ron"
 #define TOPIC_COFF         "sdpelicanos@gmail.com/cal_roff"
 

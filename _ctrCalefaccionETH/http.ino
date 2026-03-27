@@ -184,36 +184,53 @@ void _serveSETTINGS()
 
   html = html + "<form method='get' action='settingsSet'>";
 
-  html = html + "<div class=\"section\"><span>1</span>Control</div>";
+  html = html + "<div class=\"section\"><span>1.1</span>Temperaturas de Control</div>";
   html = html + "<div class=\"inner-wrap\">";
-  html = html + "<label> Tension Principal (Voltios)<input type=\"text\"  maxlength=\"16\" value=\""  + String(cfgResPrimVout)     + "\" name=\"cfgResPrimVout\"/></label>";
-  html = html + "<label> Tension Inyectior (Voltios)<input type=\"text\"  maxlength=\"16\" value=\""  + String(cfgResInyeVout)     + "\" name=\"cfgResInyeVout\"/></label>";
-  html = html + "<label> Temp Arranque Inyectior (ºC)<input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgResPrimInyeTemp) + "\" name=\"cfgResPrimInyeTemp\"/></label>";
-  html = html + "<label> Temp Consigna Principal (ºC)<input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgResPrimConsTemp) + "\" name=\"cfgResPrimConsTemp\"/></label>";
-  html = html + "<label> Temp Hist Principal (ºC)<input type=\"text\"  maxlength=\"16\" value=\""     + String(cfgResPrimHystTemp) + "\" name=\"cfgResPrimHystTemp\"/></label>";
-  html = html + "<label> Temp Consigna Inyectior (ºC)<input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgResInyeConsTemp) + "\" name=\"cfgResInyeConsTemp\"/></label>";
-  html = html + "<label> Temp Hist Inyectior (ºC)<input type=\"text\"  maxlength=\"16\" value=\""     + String(cfgResInyeHystTemp) + "\" name=\"cfgResInyeHystTemp\"/></label>";
-  html = html + "<label> Temp Consigna Agua (ºC)<input type=\"text\"  maxlength=\"16\" value=\""      + String(cfgAguaConsTemp)    + "\" name=\"cfgAguaConsTemp\"/></label>";
-  html = html + "<label> Temp Hist Agua (ºC)<input type=\"text\"  maxlength=\"16\" value=\""          + String(cfgAguaHystTemp)    + "\" name=\"cfgAguaHystTemp\"/></label>";
+  html = html + "<label> Arranque Inyectior (ºC)<input type=\"text\"  maxlength=\"16\" value=\""  + String(cfgResPrimInyeTemp) + "\" name=\"cfgResPrimInyeTemp\"/></label>";
+  html = html + "<label> Consigna Principal (ºC)<input type=\"text\"  maxlength=\"16\" value=\""  + String(cfgResPrimConsTemp) + "\" name=\"cfgResPrimConsTemp\"/></label>";
+  html = html + "<label> Histereis Principal (ºC)<input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgResPrimHystTemp) + "\" name=\"cfgResPrimHystTemp\"/></label>";
+  html = html + "<label> Consigna Inyectior (ºC)<input type=\"text\"  maxlength=\"16\" value=\""  + String(cfgResInyeConsTemp) + "\" name=\"cfgResInyeConsTemp\"/></label>";
+  html = html + "<label> Histereis Inyectior (ºC)<input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgResInyeHystTemp) + "\" name=\"cfgResInyeHystTemp\"/></label>";
+  html = html + "<label> Consigna Agua (ºC)<input type=\"text\"  maxlength=\"16\" value=\""       + String(cfgAguaConsTemp)    + "\" name=\"cfgAguaConsTemp\"/></label>";
+  html = html + "<label> Histereis Agua (ºC)<input type=\"text\"  maxlength=\"16\" value=\""      + String(cfgAguaHystTemp)    + "\" name=\"cfgAguaHystTemp\"/></label>";
   html = html + "</div>";
 
-  html = html + "<div class=\"section\"><span>2</span>Alarmas</div>";
+  #if (_USE_MBRTU_ == 1)
+  html = html + "<div class=\"section\"><span>1.2</span>Sondas Temperatura</div>";
+  html = html + "<div class=\"inner-wrap\">";
+  html = html + "<label> 0->No usado, 1-> Temp. Principal, 2-> Temp. Inyector, 3-> Temp. Agua</label>";
+  html = html + "<label> Temp 1 Uso <input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgTempUse[0]) + "\" name=\"cfgTempUse0\"/></label>";
+  html = html + "<label> Temp 2 Uso <input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgTempUse[1]) + "\" name=\"cfgTempUse1\"/></label>";
+  html = html + "<label> Temp 3 Uso <input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgTempUse[2]) + "\" name=\"cfgTempUse2\"/></label>";
+  html = html + "<label> Temp 4 Uso <input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgTempUse[3]) + "\" name=\"cfgTempUse3\"/></label>";
+  html = html + "</div>";
+  #endif
+
+  #if (_USE_TRIAC_ == 1)
+  html = html + "<div class=\"section\"><span>2.1</span>Triac tension salida (Vac)</div>";
+  html = html + "<div class=\"inner-wrap\">";
+  html = html + "<label> Triac 1 <input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgTriacVout[0]) + "\" name=\"cfgTriacVout0\"/></label>";
+  html = html + "<label> Triac 2 <input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgTriacVout[1]) + "\" name=\"cfgTriacVout1\"/></label>";
+  html = html + "<label> Triac 3 <input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgTriacVout[2]) + "\" name=\"cfgTriacVout2\"/></label>";
+  html = html + "</div>";
+
+  html = html + "<div class=\"section\"><span>2.2</span>Triac Uso</div>";
+  html = html + "<div class=\"inner-wrap\">";
+  html = html + "<label> 0->No usado, 1-> Res. Principal, 2-> Res. Inyector</label>";
+  html = html + "<label> Triac 1 <input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgTriacUse[0]) + "\" name=\"cfgTriacUse0\"/></label>";
+  html = html + "<label> Triac 2 <input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgTriacUse[1]) + "\" name=\"cfgTriacUse1\"/></label>";
+  html = html + "<label> Triac 3 <input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgTriacUse[2]) + "\" name=\"cfgTriacUse2\"/></label>";
+  html = html + "</div>";
+  #endif
+
+  html = html + "<div class=\"section\"><span>3.1</span>Alarmas</div>";
   html = html + "<div class=\"inner-wrap\">";
   html = html + "<label> Alarma Principal (Minutos)<input type=\"text\"  maxlength=\"3\" value=\""  + String(cfgResPrimAlarMin)    + "\" name=\"cfgResPrimAlarMin\"/></label>";
   html = html + "<label> Alarma Inyectior (Minutos)<input type=\"text\"  maxlength=\"3\" value=\""  + String(cfgResInyeAlarMin)    + "\" name=\"cfgResInyeAlarMin\"/></label>";
   html = html + "<label> Alarma Agua (Minutos)<input type=\"text\"  maxlength=\"3\" value=\""       + String(cfgAguaAlarMin)       + "\" name=\"cfgAguaAlarMin\"/></label>";
   html = html + "</div>";
 
-  #if (_USE_TRIAC_ == 1)
-  html = html + "<div class=\"section\"><span>3</span>Triac Vout</div>";
-  html = html + "<div class=\"inner-wrap\">";
-  html = html + "<label> Triac Vout 1 <input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgTriacVout[0]) + "\" name=\"cfgTriacVout0\"/></label>";
-  html = html + "<label> Triac Vout 2 <input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgTriacVout[1]) + "\" name=\"cfgTriacVout1\"/></label>";
-  html = html + "<label> Triac Vout 3 <input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgTriacVout[2]) + "\" name=\"cfgTriacVout2\"/></label>";
-  html = html + "</div>";
-  #endif
-
-  html = html + "<div class=\"section\"><span>3</span>Otros</div>";
+  html = html + "<div class=\"section\"><span>X</span>Otros</div>";
   html = html + "<div class=\"inner-wrap\">";
   html = html + "<label> Entradas Reposo <input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgLogicIns) + "\" name=\"cfgLogicIns\"/></label>";
   html = html + "<label> Salidas Reposo <input type=\"text\"  maxlength=\"16\" value=\"" + String(cfgLogicOuts) + "\" name=\"cfgLogicOuts\"/></label>";
@@ -221,7 +238,7 @@ void _serveSETTINGS()
   html = html + "</div>";
 
   #if (_USE_PWM_ == 1)
-  html = html + "<div class=\"section\"><span>5</span>PWM</div>";
+  html = html + "<div class=\"section\"><span>X</span>PWM</div>";
   html = html + "<div class=\"inner-wrap\">";
   html = html + "<label> Ciclo <input type=\"text\"  maxlength=\"16\" value=\"" + String(pwmDutyCycle) + "\" name=\"pwmDutyCycle\"/></label>";
   html = html + "</div>";
@@ -250,8 +267,6 @@ void _setSETTINGS()
     
   String html = "";
   
-  String scfgResPrimVout     = httpServer.arg("cfgResPrimVout");
-  String scfgResInyeVout     = httpServer.arg("cfgResInyeVout");
   String scfgResPrimInyeTemp = httpServer.arg("cfgResPrimInyeTemp");
   String scfgResPrimConsTemp = httpServer.arg("cfgResPrimConsTemp");
   String scfgResPrimHystTemp = httpServer.arg("cfgResPrimHystTemp");
@@ -267,6 +282,17 @@ void _setSETTINGS()
   String scfgTriacVout0     = httpServer.arg("cfgTriacVout0");
   String scfgTriacVout1     = httpServer.arg("cfgTriacVout1");
   String scfgTriacVout2     = httpServer.arg("cfgTriacVout2");
+
+  String scfgTriacUse0      = httpServer.arg("cfgTriacUse0");
+  String scfgTriacUse1      = httpServer.arg("cfgTriacUse1");
+  String scfgTriacUse2      = httpServer.arg("cfgTriacUse2");
+  #endif
+
+  #if (_USE_MBRTU_ == 1)
+  String scfgTempUse0       = httpServer.arg("cfgTempUse0");
+  String scfgTempUse1       = httpServer.arg("cfgTempUse1");
+  String scfgTempUse2       = httpServer.arg("cfgTempUse2");
+  String scfgTempUse3       = httpServer.arg("cfgTempUse3");
   #endif
 
   #if (_USE_PWM_ == 1)
@@ -279,9 +305,7 @@ void _setSETTINGS()
   
   //String rdebugVal = httpServer.arg("tdebugVal");
   
-  if ((scfgResPrimVout.length() == 0)     ||
-      (scfgResInyeVout.length() == 0)     ||
-      (scfgResPrimInyeTemp.length() == 0) ||
+  if ((scfgResPrimInyeTemp.length() == 0) ||
       (scfgResPrimConsTemp.length() == 0) ||
       (scfgResPrimHystTemp.length() == 0) ||
       (scfgResInyeHystTemp.length() == 0) ||
@@ -296,6 +320,17 @@ void _setSETTINGS()
       (scfgTriacVout0.length() == 0)      ||
       (scfgTriacVout1.length() == 0)      ||
       (scfgTriacVout2.length() == 0)      ||
+
+      (scfgTriacUse0.length() == 0)       ||
+      (scfgTriacUse1.length() == 0)       ||
+      (scfgTriacUse2.length() == 0)       ||
+      #endif
+
+      #if (_USE_MBRTU_ == 1)
+      (scfgTempUse0.length() == 0)        ||
+      (scfgTempUse1.length() == 0)        ||
+      (scfgTempUse2.length() == 0)        ||
+      (scfgTempUse3.length() == 0)        ||
       #endif
 
       #if (_USE_PWM_ == 1)
@@ -316,9 +351,11 @@ void _setSETTINGS()
 
   // Si no hay error...
   if (response == 200)
-  {
-    cfgResPrimVout     = scfgResPrimVout.toInt();
-    cfgResInyeVout     = scfgResInyeVout.toInt();
+  {    
+    cfgLogicIns  = scfgLogicIns.toInt();
+    cfgLogicOuts = scfgLogicOuts.toInt();
+    cfgMB1Add    = scfgMB1Add.length();
+
     cfgResPrimInyeTemp = scfgResPrimInyeTemp.toInt();
     cfgResPrimConsTemp = scfgResPrimConsTemp.toInt();
     cfgResPrimHystTemp = scfgResPrimHystTemp.toInt();
@@ -334,16 +371,23 @@ void _setSETTINGS()
     cfgTriacVout[0]  = scfgTriacVout0.toInt();
     cfgTriacVout[1]  = scfgTriacVout1.toInt();
     cfgTriacVout[2]  = scfgTriacVout2.toInt();
+
+    cfgTriacUse[0]  = scfgTriacUse0.toInt();
+    cfgTriacUse[1]  = scfgTriacUse1.toInt();
+    cfgTriacUse[2]  = scfgTriacUse2.toInt();
+    #endif
+
+    #if (_USE_MBRTU_ == 1)
+    cfgTempUse[0]  = scfgTempUse0.toInt();
+    cfgTempUse[1]  = scfgTempUse1.toInt();
+    cfgTempUse[2]  = scfgTempUse2.toInt();
+    cfgTempUse[3]  = scfgTempUse3.toInt();
     #endif
 
     #if (_USE_PWM_ == 1)
     pwmDutyCycle = spwmDutyCycle.toInt();
     #endif
     
-    cfgLogicIns  = scfgLogicIns.toInt();
-    cfgLogicOuts = scfgLogicOuts.toInt();
-    cfgMB1Add = scfgMB1Add.length();
-
     //DebugVal = rdebugVal.toInt();
     
     _ram2eepromCONFIG();
@@ -694,6 +738,13 @@ void _readCTR()
    html = html + "<td style=\"width:40%\"><font style=\"color:red\">Test</font></td>";
   html = html + "</tr>";
 
+  #if (_USE_ALARM_ == 1)
+  html = html + "<tr>";
+  html = html + "<td style=\"width:60%\">Alarmas</td>";
+  html = html + "<td style=\"width:40%\">" + String(alarmOn[7]) + "-" + String(alarmOn[6]) + "-" + String(alarmOn[5]) + "-" + String(alarmOn[4]) + "-" + String(alarmOn[3]) + "-" + String(alarmOn[2]) + "-" + String(alarmOn[1]) + "-" + String(alarmOn[0]) + "</td>";
+  html = html + "</tr>";
+  #endif
+
   #if (_USE_TRIAC_ == 1)
   html = html + "<tr>";
   html = html + "<td style=\"width:60%\">Periodo de Red</td>";
@@ -713,28 +764,28 @@ void _readINS()
   html = "<table style=\"width:100%\">";
 
   html = html + "<tr>";
-  html = html + "<td style=\"width:60%\">Boards Ins</td>";
+  html = html + "<td style=\"width:60%\">Entradas</td>";
   html = html + "<td style=\"width:40%\">" + String(InDig[0]) + "-" + String(InDig[1]) + "-" + String(InDig[2]) + "-" + String(InDig[3]) + "</td>";
   html = html + "</tr>";
   
   #if (_USE_MBRTU_ == 1)
   html = html + "<tr>";
-  html = html + "<td style=\"width:60%\">Modbus Temp 1</td>";
+  html = html + "<td style=\"width:60%\">Temperatura 1</td>";
   html = html + "<td style=\"width:40%\">" + String(mbTemp[0]) + "</td>";
   html = html + "</tr>";
 
   html = html + "<tr>";
-  html = html + "<td style=\"width:60%\">Modbus Temp 2</td>";
+  html = html + "<td style=\"width:60%\">Temperatura 2</td>";
   html = html + "<td style=\"width:40%\">" + String(mbTemp[1]) + "</td>";
   html = html + "</tr>";
 
   html = html + "<tr>";
-  html = html + "<td style=\"width:60%\">Modbus Temp 3</td>";
+  html = html + "<td style=\"width:60%\">Temperatura 3</td>";
   html = html + "<td style=\"width:40%\">" + String(mbTemp[2]) + "</td>";
   html = html + "</tr>";
 
   html = html + "<tr>";
-  html = html + "<td style=\"width:60%\">Modbus Temp 4</td>";
+  html = html + "<td style=\"width:60%\">Temperatura 4</td>";
   html = html + "<td style=\"width:40%\">" + String(mbTemp[3]) + "</td>";
   html = html + "</tr>";
   #endif
@@ -751,14 +802,14 @@ void _readOUTS()
   html = "<table style=\"width:100%\">";
   
   html = html + "<tr>";
-  html = html + "<td style=\"width:60%\">Boards Outs</td>";
+  html = html + "<td style=\"width:60%\">Salidas</td>";
   html = html + "<td style=\"width:40%\">" + String(OutDig[0]) + "-" + String(OutDig[1]) + "-" + String(OutDig[2]) + "-" + String(OutDig[3]) + "-" + String(OutDig[4]) + "-" + String(OutDig[5]) + "</td>";
   html = html + "</tr>";
 
   #if (_USE_TRIAC_ == 1)
   html = html + "<tr>";
-  html = html + "<td style=\"width:60%\">Triac Outs</td>";
-  html = html + "<td style=\"width:40%\">" + String(TriacDig[0]) + "-" + String(TriacDig[1]) + "-" + String(TriacDig[2]) + "</td>";
+  html = html + "<td style=\"width:60%\">Triacs</td>";
+  html = html + "<td style=\"width:40%\">" + String(TriacCtr[0]) + "-" + String(TriacCtr[1]) + "-" + String(TriacCtr[2]) + "</td>";
   html = html + "</tr>";
   #endif
 
@@ -904,52 +955,51 @@ void _setOUTS()
         html = "Out 6 ON";
       }
     }
+    #if (_USE_TRIAC_ == 1)
+    // Triac 1
+    else if(out_number == "31")
+    {
+      if (TriacCtr[0] == OUT_ON)
+      {
+        TriacCtr[0] = OUT_OFF;
+        html = "Triac 1 OFF";
+      }
+      else
+      {
+        TriacCtr[0] = OUT_ON;
+        html = "Triac 1 ON";
+      }
+    }
+    // Triac 2
+    else if(out_number == "32")
+    {
+      if (TriacCtr[1] == OUT_ON)
+      {
+        TriacCtr[1] = OUT_OFF;
+        html = "Triac 2 OFF";
+      }
+      else
+      {
+        TriacCtr[1] = OUT_ON;
+        html = "Triac 2 ON";
+      }
+    }
+    // Triac 3
+    else if(out_number == "33")
+    {
+      if (TriacCtr[2] == OUT_ON)
+      {
+        TriacCtr[2] = OUT_OFF;
+        html = "Triac 3 OFF";
+      }
+      else
+      {
+        TriacCtr[2] = OUT_ON;
+        html = "Triac 3 ON";
+      }
+    }
+    #endif
   }
-  #if (_USE_TRIAC_ == 1)
-  // Triac 1
-  else if(out_number == "31")
-  {
-    if (TriacDig[0] == OUT_ON)
-    {
-      TriacDig[0] = OUT_OFF;
-      html = "Triac 1 OFF";
-    }
-    else
-    {
-      TriacDig[0] = OUT_ON;
-      html = "Triac 1 ON";
-    }
-  }
-  // Triac 2
-  else if(out_number == "32")
-  {
-    if (TriacDig[1] == OUT_ON)
-    {
-      TriacDig[1] = OUT_OFF;
-      html = "Triac 2 OFF";
-    }
-    else
-    {
-      TriacDig[1] = OUT_ON;
-      html = "Triac 2 ON";
-    }
-  }
-  // Triac 3
-  else if(out_number == "33")
-  {
-    if (TriacDig[2] == OUT_ON)
-    {
-      TriacDig[2] = OUT_OFF;
-      html = "Triac 3 OFF";
-    }
-    else
-    {
-      TriacDig[2] = OUT_ON;
-      html = "Triac 3 ON";
-    }
-  }
-  #endif
-  
   else
     html = "NO Outs";
   
@@ -984,7 +1034,7 @@ void _readSTATUS()
   #if (_USE_MBRTU_ == 1)
   html = html + "<tr>";
   html = html + "<td style=\"width:60%\">Modbus RTU</td>";
-  html = html + "<td style=\"width:40%\">" + String(mbState) + "</td>";
+  html = html + "<td style=\"width:40%\">" + String(mbState) + "-" + String(mbNError) + "-" + String(mbNReply) + "-" + String(mbNRetry) + "</td>";
   html = html + "</tr>";
   #endif
 

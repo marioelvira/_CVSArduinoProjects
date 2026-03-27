@@ -88,7 +88,9 @@ void setup(void)
   // Config setup
   _ConfigSetup();
 
+  #if (_USE_ALARM_ == 1)
   _ALARMSetup();
+  #endif
 
   #if (_USE_TRIAC_ == 1)
   _TRIACSetup();
@@ -140,10 +142,6 @@ void loop()
 {
   _IOLoop();
 
-  #if (_USE_TRIAC_ == 1)
-  _TRIACLoop();
-  #endif
-
   if (ctrMode == MODE_AUTO)
     _CtrLoop();
 
@@ -159,6 +157,4 @@ void loop()
   _MBLoop();
   #endif
   #endif
-
-  //_ALARMLoop();
 }

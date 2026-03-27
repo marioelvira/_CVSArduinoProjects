@@ -17,7 +17,7 @@ extern "C" {
 #define AL_ERROR4      4
 #define AL_ERROR5      5
 
-#define AL_ERROR0_STR   "ALARM ERROR 0"
+#define AL_ERROR0_STR   "Error Com Temps"
 #define AL_ERROR1_STR   "ALARM ERROR 1"
 #define AL_ERROR2_STR   "ALARM ERROR 2"
 #define AL_ERROR3_STR   "ALARM ERROR 3"

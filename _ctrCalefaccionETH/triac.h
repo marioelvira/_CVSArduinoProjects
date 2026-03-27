@@ -7,8 +7,13 @@ extern "C" {
 
 #define TRIAC_NUMBER  3
 
-extern int   TriacPin[];
-extern int   TriacDig[];
+#define PIN_TRIAC_OFF 0
+#define PIN_TRIAC_ON  1
+
+#define TRIAC_OFF     0
+#define TRIAC_ON      1
+
+extern int   TriacCtr[];
 
 extern const int triacZCPin;
 extern int triacZCPeriod;

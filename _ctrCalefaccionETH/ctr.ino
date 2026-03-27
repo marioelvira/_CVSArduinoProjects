@@ -29,4 +29,17 @@ void _CtrSetup(void)
 ///////////////////////
 void _CtrLoop(void)
 {
+  /*
+  #if (_USE_ALARM_ == 1)
+  // TODO
+  if (alarm[AL_ERROR0] == 1)
+  {
+    // Incremenetar timer
+  }
+  else
+  {
+    //Resetear timer
+  }
+  #endif
+  */
 }

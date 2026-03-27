@@ -1,8 +1,12 @@
 #include "main.h"
 #include "modbusRTU.h"
-#include "io.h"
 
 #if (_USE_MBRTU_ == 1)
+
+#if (_USE_ALARM_ == 1)
+#include "alarm.h"
+#endif
+#include "io.h"
 
 ///////////////
 // Variables //
@@ -124,10 +128,12 @@ int _mbAnalyseTemps(char address)
   int error = 0;
 
   if ((mrs485RxBuffer[0] == (char)address) &&
-      (mrs485RxBuffer[1] == 0x03) &&
-      (mrs485RxBuffer[2] == 0x08))
+      (mrs485RxBuffer[1] == 0x03)          &&
+      (mrs485RxBuffer[2] == 0x08))  // check CRC (TODO)
   {
-    // check CRC (TODO)
+    #if (_USE_ALARM_ == 1)
+    alarmOn[AL_ERROR0] = 0;
+    #endif
   }
   else
     error = 1;
@@ -189,6 +195,10 @@ void _MBLoop(void)
         mbTick = millis();
         mbState = MB_SLEEP;
         mbNReply++;
+
+        #if (_USE_ALARM_ == 1)
+        alarmOn[AL_ERROR0] = 1;
+        #endif
       }
 
       // if response received
@@ -198,8 +208,14 @@ void _MBLoop(void)
         if (_mbAnalyseTemps((char)cfgMB1Add) == MB_RX_OK)
           _mbUdateTemps();
         else
+        {
           mbNError++;;
-                        
+
+          #if (_USE_ALARM_ == 1)
+          alarmOn[AL_ERROR0] = 1;
+          #endif
+        }
+
         mbTick = millis();
         mbState = MB_SLEEP;
                 

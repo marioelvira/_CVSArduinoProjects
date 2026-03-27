@@ -15,8 +15,7 @@ bool cfgLogicIns;
 bool cfgLogicOuts;
 byte cfgMB1Add;
 
-int cfgResPrimVout;
-int cfgResInyeVout;
+// Temperaturas de Control
 int cfgResPrimInyeTemp;
 int cfgResPrimConsTemp;
 int cfgResPrimHystTemp;
@@ -29,12 +28,13 @@ int cfgResPrimAlarMin;
 int cfgResInyeAlarMin;
 int cfgAguaAlarMin;
 
-int cfgTriacVout0;
-int cfgTriacVout1;
-int cfgTriacVout2;
-
 #if (_USE_TRIAC_ == 1)
 int cfgTriacVout[3];
+int cfgTriacUse[3];
+#endif
+
+#if (_USE_MBRTU_ == 1)
+int cfgTempUse[4];
 #endif
 
 void _ConfigSetup(void)
@@ -58,6 +58,73 @@ void _ConfigSetup(void)
   _ReadEEPROM();
   #endif
 }
+
+#if (_EEPROM_SERIAL_DEBUG_ == 1)
+void _printNetworkCONFIG(void)
+{
+  #if (_USE_ETHERNET_ == 1)
+  if (ipMode == FIXIP_MODE)
+    Serial.println("IP Mode: FIX IP");
+  else
+    Serial.println("IP Mode: DHCP");
+  
+  Serial.print("IP: ");
+  Serial.print(ipAddress[0]); Serial.print(".");Serial.print(ipAddress[1]); Serial.print(".");Serial.print(ipAddress[2]); Serial.print(".");Serial.print(ipAddress[3]);
+  Serial.print(" Mask: ");
+  Serial.print(netMask[0]); Serial.print(".");Serial.print(netMask[1]); Serial.print(".");Serial.print(netMask[2]); Serial.print(".");Serial.print(netMask[3]);
+  Serial.print(" Gateway: ");
+  Serial.print(gateWay[0]); Serial.print(".");Serial.print(gateWay[1]); Serial.print(".");Serial.print(gateWay[2]); Serial.print(".");Serial.print(gateWay[3]);
+  Serial.println();
+  #endif
+
+  #if (_USE_MQTT_ == 1)
+  Serial.print("Broker URL: ");
+  Serial.println(brokerUrl);
+  Serial.print("Broker Port: ");
+  Serial.println(brokerPort);
+  Serial.print("Broker User: ");
+  Serial.println(brokerUser);
+  Serial.print("Broker Password: ");
+  Serial.println(brokerPswd);
+  #endif 
+}
+
+void _printCtrCONFIG(void)
+{  
+  Serial.print("cfgLogicIns: ");        Serial.println (cfgLogicIns);
+  Serial.print("cfgLogicOuts: ");       Serial.println (cfgLogicOuts);
+
+  Serial.print("cfgResPrimInyeTemp: "); Serial.println (cfgResPrimInyeTemp);
+  Serial.print("cfgResPrimConsTemp: "); Serial.println (cfgResPrimConsTemp);
+  Serial.print("cfgResPrimHystTemp: "); Serial.println (cfgResPrimHystTemp);
+  Serial.print("cfgResInyeConsTemp: "); Serial.println (cfgResInyeConsTemp);
+  Serial.print("cfgResInyeHystTemp: "); Serial.println (cfgResInyeHystTemp);
+  Serial.print("cfgAguaConsTemp: ");    Serial.println (cfgAguaConsTemp);
+  Serial.print("cfgAguaHystTemp: ");    Serial.println (cfgAguaHystTemp);
+  Serial.print("cfgResPrimAlarMin: ");  Serial.println (cfgResPrimAlarMin);
+  Serial.print("cfgResInyeAlarMin: ");  Serial.println (cfgResInyeAlarMin);
+  Serial.print("cfgAguaAlarMin: ");     Serial.println (cfgAguaAlarMin);
+
+  #if (_USE_TRIAC_ == 1)
+  Serial.print("cfgTriacVout[0]: ");    Serial.println (cfgTriacVout[0]);
+  Serial.print("cfgTriacVout[1]: ");    Serial.println (cfgTriacVout[1]);
+  Serial.print("cfgTriacVout[2]: ");    Serial.println (cfgTriacVout[2]);
+
+  Serial.print("cfgTriacUse[0]: ");     Serial.println (cfgTriacUse[0]);
+  Serial.print("cfgTriacUse[1]: ");     Serial.println (cfgTriacUse[1]);
+  Serial.print("cfgTriacUse[2]: ");     Serial.println (cfgTriacUse[2]);
+  #endif
+
+  #if (_USE_MBRTU_ == 1)
+  Serial.print("cfgTempUse[0]: ");      Serial.println (cfgTempUse[0]);
+  Serial.print("cfgTempUse[1]: ");      Serial.println (cfgTempUse[1]);
+  Serial.print("cfgTempUse[2]: ");      Serial.println (cfgTempUse[2]);
+  Serial.print("cfgTempUse[3]: ");      Serial.println (cfgTempUse[3]);
+  #endif
+
+  delay(1000);  // 100ms
+}
+#endif // _EEPROM_SERIAL_DEBUG_
 
 void _readCONFIG (void)
 {
@@ -128,15 +195,13 @@ void _readCONFIG (void)
     j = strlen(brokerPswdSt);
     for (i = 0; i < j; i++)
       EEPROM.write(EEPROM_ADD_MQTT_PSWD + i, brokerPswdSt[i]);
-    #endif
+    #endif // _USE_MQTT_
 
     // Other data
     EEPROM.write(EEPROM_ADD_LOGIC_INS,  EEPROM_VAL_LOGIC_INS);
     EEPROM.write(EEPROM_ADD_LOGIC_OUTS, EEPROM_VAL_LOGIC_OUTS);
     EEPROM.write(EEPROM_ADD_MBADD1,     EEPROM_VAL_MBADD1);
 
-    EEPROM.write(EEPROM_ADD_RES_PRIM_VOUT,      EEPROM_VAL_RES_PRIM_VOUT);
-    EEPROM.write(EEPROM_ADD_RES_INYE_VOUT,      EEPROM_VAL_RES_INYE_VOUT);
     EEPROM.write(EEPROM_ADD_RES_PRIM_INYE_TEMP, EEPROM_VAL_RES_PRIM_INYE_TEMP);
     EEPROM.write(EEPROM_ADD_RES_PRIM_CONS_TEMP, EEPROM_VAL_RES_PRIM_CONS_TEMP);
     EEPROM.write(EEPROM_ADD_RES_PRIM_HYST_TEMP, EEPROM_VAL_RES_PRIM_HYST_TEMP);
@@ -149,11 +214,22 @@ void _readCONFIG (void)
     EEPROM.write(EEPROM_ADD_AGUA_ALAR_MIN,      EEPROM_VAL_AGUA_ALAR_MIN);
 
     #if (_USE_TRIAC_ == 1)
-    EEPROM.write(EEPROM_ADD_TRIAC1,      EEPROM_VAL_TRIAC1);
-    EEPROM.write(EEPROM_ADD_TRIAC2,      EEPROM_VAL_TRIAC2);
-    EEPROM.write(EEPROM_ADD_TRIAC3,      EEPROM_VAL_TRIAC3);
+    EEPROM.write(EEPROM_ADD_TRIAC1_VOUT,        EEPROM_VAL_TRIAC1_VOUT);
+    EEPROM.write(EEPROM_ADD_TRIAC2_VOUT,        EEPROM_VAL_TRIAC2_VOUT);
+    EEPROM.write(EEPROM_ADD_TRIAC3_VOUT,        EEPROM_VAL_TRIAC3_VOUT);
+
+    EEPROM.write(EEPROM_ADD_TRIAC1_USE,         EEPROM_VAL_TRIAC1_USE);
+    EEPROM.write(EEPROM_ADD_TRIAC2_USE,         EEPROM_VAL_TRIAC2_USE);
+    EEPROM.write(EEPROM_ADD_TRIAC3_USE,         EEPROM_VAL_TRIAC3_USE);
     #endif
     
+    #if (_USE_MBRTU_ == 1)
+    EEPROM.write(EEPROM_ADD_TEMP1_USE,          EEPROM_VAL_TEMP1_USE);
+    EEPROM.write(EEPROM_ADD_TEMP2_USE,          EEPROM_VAL_TEMP2_USE);
+    EEPROM.write(EEPROM_ADD_TEMP3_USE,          EEPROM_VAL_TEMP3_USE);
+    EEPROM.write(EEPROM_ADD_TEMP4_USE,          EEPROM_VAL_TEMP4_USE);
+    #endif
+
     EEPROM.commit();    // ESPXX Store data to EEPROM
   }
   else
@@ -175,8 +251,6 @@ void _ram2eepromCONFIG (void)
   EEPROM.write(EEPROM_ADD_LOGIC_OUTS, (byte)cfgLogicOuts);
   EEPROM.write(EEPROM_ADD_MBADD1,     (byte)cfgMB1Add);
 
-  EEPROM.write(EEPROM_ADD_RES_PRIM_VOUT,      (byte)cfgResPrimVout);
-  EEPROM.write(EEPROM_ADD_RES_INYE_VOUT,      (byte)cfgResInyeVout);
   EEPROM.write(EEPROM_ADD_RES_PRIM_INYE_TEMP, (byte)cfgResPrimInyeTemp);
   EEPROM.write(EEPROM_ADD_RES_PRIM_CONS_TEMP, (byte)cfgResPrimConsTemp);
   EEPROM.write(EEPROM_ADD_RES_PRIM_HYST_TEMP, (byte)cfgResPrimHystTemp);
@@ -189,35 +263,27 @@ void _ram2eepromCONFIG (void)
   EEPROM.write(EEPROM_ADD_AGUA_ALAR_MIN,      (byte)cfgAguaAlarMin);
 
   #if (_USE_TRIAC_ == 1)
-  EEPROM.write(EEPROM_ADD_TRIAC1,      (byte)cfgTriacVout[0]);
-  EEPROM.write(EEPROM_ADD_TRIAC2,      (byte)cfgTriacVout[1]);
-  EEPROM.write(EEPROM_ADD_TRIAC3,      (byte)cfgTriacVout[2]);
+  EEPROM.write(EEPROM_ADD_TRIAC1_VOUT,      (byte)cfgTriacVout[0]);
+  EEPROM.write(EEPROM_ADD_TRIAC2_VOUT,      (byte)cfgTriacVout[1]);
+  EEPROM.write(EEPROM_ADD_TRIAC3_VOUT,      (byte)cfgTriacVout[2]);
+
+  EEPROM.write(EEPROM_ADD_TRIAC1_USE,       (byte)cfgTriacUse[0]);
+  EEPROM.write(EEPROM_ADD_TRIAC2_USE,       (byte)cfgTriacUse[1]);
+  EEPROM.write(EEPROM_ADD_TRIAC3_USE,       (byte)cfgTriacUse[2]);
+  #endif
+
+  #if (_USE_MBRTU_ == 1)
+  EEPROM.write(EEPROM_ADD_TEMP1_USE,        (byte)cfgTempUse[0]);
+  EEPROM.write(EEPROM_ADD_TEMP2_USE,        (byte)cfgTempUse[1]);
+  EEPROM.write(EEPROM_ADD_TEMP3_USE,        (byte)cfgTempUse[2]);
+  EEPROM.write(EEPROM_ADD_TEMP4_USE,        (byte)cfgTempUse[3]);
   #endif
 
   EEPROM.commit();    //Store data to EEPROM
 
   #if (_EEPROM_SERIAL_DEBUG_ == 1)
-  Serial.print("cfgLogicIns: ");        Serial.println (cfgLogicIns);
-  Serial.print("cfgLogicOuts: ");       Serial.println (cfgLogicOuts);
-  Serial.print("cfgResPrimVout: ");     Serial.println (cfgResPrimVout);
-  Serial.print("cfgResInyeVout: ");     Serial.println (cfgResInyeVout);
-  Serial.print("cfgResPrimInyeTemp: "); Serial.println (cfgResPrimInyeTemp);
-  Serial.print("cfgResPrimConsTemp: "); Serial.println (cfgResPrimConsTemp);
-  Serial.print("cfgResPrimHystTemp: "); Serial.println (cfgResPrimHystTemp);
-  Serial.print("cfgResInyeConsTemp: "); Serial.println (cfgResInyeConsTemp);
-  Serial.print("cfgResInyeHystTemp: "); Serial.println (cfgResInyeHystTemp);
-  Serial.print("cfgAguaConsTemp: ");    Serial.println (cfgAguaConsTemp);
-  Serial.print("cfgAguaHystTemp: ");    Serial.println (cfgAguaHystTemp);
-  Serial.print("cfgResPrimAlarMin: ");  Serial.println (cfgResPrimAlarMin);
-  Serial.print("cfgResInyeAlarMin: ");  Serial.println (cfgResInyeAlarMin);
-  Serial.print("cfgAguaAlarMin: ");     Serial.println (cfgAguaAlarMin);
-
-  #if (_USE_TRIAC_ == 1)
-  Serial.print("cfgTriacVout[0]: ");     Serial.println (cfgTriacVout[0]);
-  Serial.print("cfgTriacVout[1]: ");     Serial.println (cfgTriacVout[1]);
-  Serial.print("cfgTriacVout[2]: ");     Serial.println (cfgTriacVout[2]);
-  #endif
-
+  _printNetworkCONFIG();
+  _printCtrCONFIG();
   #endif
 }
 
@@ -229,14 +295,6 @@ void _eeprom2ramCONFIG (void)
   #if (_USE_ETHERNET_ == 1)
   // IP Mode
   ipMode = EEPROM.read(EEPROM_ADD_IP_MODE);
-  
-  #if (_EEPROM_SERIAL_DEBUG_ == 1)
-  if (ipMode == FIXIP_MODE)
-    Serial.println("IP Mode: FIX IP");
-  else
-    Serial.println("IP Mode: DHCP");
-  #endif
-  
   if (ipMode == FIXIP_MODE)
   {
     // Ip Address
@@ -257,17 +315,6 @@ void _eeprom2ramCONFIG (void)
     gateWay[2] = EEPROM.read(EEPROM_ADD_GATE3);
     gateWay[3] = EEPROM.read(EEPROM_ADD_GATE4);
   }
-
-  #if (_EEPROM_SERIAL_DEBUG_ == 1)
-  Serial.print("IP: ");
-  Serial.print(ipAddress[0]); Serial.print(".");Serial.print(ipAddress[1]); Serial.print(".");Serial.print(ipAddress[2]); Serial.print(".");Serial.print(ipAddress[3]);
-  Serial.print(" Mask: ");
-  Serial.print(netMask[0]); Serial.print(".");Serial.print(netMask[1]); Serial.print(".");Serial.print(netMask[2]); Serial.print(".");Serial.print(netMask[3]);
-  Serial.print(" Gateway: ");
-  Serial.print(gateWay[0]); Serial.print(".");Serial.print(gateWay[1]); Serial.print(".");Serial.print(gateWay[2]); Serial.print(".");Serial.print(gateWay[3]);
-  Serial.println();
-  #endif
-
   #endif // _USE_ETHERNET_
 
   #if (_USE_MQTT_ == 1)
@@ -284,26 +331,13 @@ void _eeprom2ramCONFIG (void)
   // Broker Pswd
   for (i = 0; i < MQTT_PSWD_MAX; i++)
     brokerPswd[i] = char(EEPROM.read(EEPROM_ADD_MQTT_PSWD + i));  
-
-  #if (_EEPROM_SERIAL_DEBUG_ == 1)
-  Serial.print("Broker URL: ");
-  Serial.println(brokerUrl);
-  Serial.print("Broker Port: ");
-  Serial.println(brokerPort);
-  Serial.print("Broker User: ");
-  Serial.println(brokerUser);
-  Serial.print("Broker Password: ");
-  Serial.println(brokerPswd);
-  #endif 
-
-  #endif
-
+  #endif // _USE_MQTT_
+  
+  // Rest of config
   cfgLogicIns         = (int)EEPROM.read(EEPROM_ADD_LOGIC_INS);
   cfgLogicOuts        = (int)EEPROM.read(EEPROM_ADD_LOGIC_OUTS); 
   cfgMB1Add           = (int)EEPROM.read(EEPROM_ADD_MBADD1);
 
-  cfgResPrimVout      = (int)EEPROM.read(EEPROM_ADD_RES_PRIM_VOUT);
-  cfgResInyeVout      = (int)EEPROM.read(EEPROM_ADD_RES_INYE_VOUT);
   cfgResPrimInyeTemp  = (int)EEPROM.read(EEPROM_ADD_RES_PRIM_INYE_TEMP);
   cfgResPrimConsTemp  = (int)EEPROM.read(EEPROM_ADD_RES_PRIM_CONS_TEMP);
   cfgResPrimHystTemp  = (int)EEPROM.read(EEPROM_ADD_RES_PRIM_HYST_TEMP);
@@ -316,35 +350,25 @@ void _eeprom2ramCONFIG (void)
   cfgAguaAlarMin      = (int)EEPROM.read(EEPROM_ADD_AGUA_ALAR_MIN);
 
   #if (_USE_TRIAC_ == 1)
-  cfgTriacVout[0] = (int)EEPROM.read(EEPROM_ADD_TRIAC1);
-  cfgTriacVout[1] = (int)EEPROM.read(EEPROM_ADD_TRIAC2);
-  cfgTriacVout[2] = (int)EEPROM.read(EEPROM_ADD_TRIAC3);
+  cfgTriacVout[0] = (int)EEPROM.read(EEPROM_ADD_TRIAC1_VOUT);
+  cfgTriacVout[1] = (int)EEPROM.read(EEPROM_ADD_TRIAC2_VOUT);
+  cfgTriacVout[2] = (int)EEPROM.read(EEPROM_ADD_TRIAC3_VOUT);
+
+  cfgTriacUse[0] = (int)EEPROM.read(EEPROM_ADD_TRIAC1_USE);
+  cfgTriacUse[1] = (int)EEPROM.read(EEPROM_ADD_TRIAC2_USE);
+  cfgTriacUse[2] = (int)EEPROM.read(EEPROM_ADD_TRIAC3_USE);
   #endif
 
+  #if (_USE_MBRTU_ == 1)
+  cfgTempUse[0] = (int)EEPROM.read(EEPROM_ADD_TEMP1_USE);
+  cfgTempUse[1] = (int)EEPROM.read(EEPROM_ADD_TEMP2_USE);
+  cfgTempUse[2] = (int)EEPROM.read(EEPROM_ADD_TEMP3_USE);
+  cfgTempUse[3] = (int)EEPROM.read(EEPROM_ADD_TEMP4_USE);
+  #endif
+  
   #if (_EEPROM_SERIAL_DEBUG_ == 1)
-  Serial.print("cfgLogicIns: ");        Serial.println (cfgLogicIns);
-  Serial.print("cfgLogicOuts: ");       Serial.println (cfgLogicOuts);
-  Serial.print("Modbus Add1: ");        Serial.println (cfgMB1Add);
-  Serial.print("cfgResPrimVout: ");     Serial.println (cfgResPrimVout);
-  Serial.print("cfgResInyeVout: ");     Serial.println (cfgResInyeVout);
-  Serial.print("cfgResPrimInyeTemp: "); Serial.println (cfgResPrimInyeTemp);
-  Serial.print("cfgResPrimConsTemp: "); Serial.println (cfgResPrimConsTemp);
-  Serial.print("cfgResPrimHystTemp: "); Serial.println (cfgResPrimHystTemp);
-  Serial.print("cfgResInyeConsTemp: "); Serial.println (cfgResInyeConsTemp);
-  Serial.print("cfgResInyeHystTemp: "); Serial.println (cfgResInyeHystTemp);
-  Serial.print("cfgAguaConsTemp: ");    Serial.println (cfgAguaConsTemp);
-  Serial.print("cfgAguaHystTemp: ");    Serial.println (cfgAguaHystTemp);
-  Serial.print("cfgResPrimAlarMin: ");  Serial.println (cfgResPrimAlarMin);
-  Serial.print("cfgResInyeAlarMin: ");  Serial.println (cfgResInyeAlarMin);
-  Serial.print("cfgAguaAlarMin: ");     Serial.println (cfgAguaAlarMin);
-
-  #if (_USE_TRIAC_ == 1)
-  Serial.print("cfgTriacVout[0]: ");     Serial.println (cfgTriacVout[0]);
-  Serial.print("cfgTriacVout[1]: ");     Serial.println (cfgTriacVout[1]);
-  Serial.print("cfgTriacVout[2]: ");     Serial.println (cfgTriacVout[2]);
-  #endif
-
-  delay(1000);  // 100ms
+  _printNetworkCONFIG();
+  _printCtrCONFIG();
   #endif
 }
 

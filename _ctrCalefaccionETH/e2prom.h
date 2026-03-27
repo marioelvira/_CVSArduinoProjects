@@ -9,8 +9,6 @@ extern bool cfgLogicIns;
 extern bool cfgLogicOuts;
 extern byte cfgMB1Add;
 
-extern int cfgResPrimVout;
-extern int cfgResInyeVout;
 extern int cfgResPrimInyeTemp;
 extern int cfgResPrimConsTemp;
 extern int cfgResPrimHystTemp;
@@ -25,6 +23,11 @@ extern int cfgAguaAlarMin;
 
 #if (_USE_TRIAC_ == 1)
 extern int cfgTriacVout[];
+extern int cfgTriacUse[];
+#endif
+
+#if (_USE_MBRTU_ == 1)
+extern int cfgTempUse[];
 #endif
 
 #define _ERASE_EEPROM_        0
@@ -61,27 +64,34 @@ extern int cfgTriacVout[];
 #define EEPROM_ADD_LOGIC_OUTS         0xA1
 #define EEPROM_ADD_MBADD1             0xA2
 
-#define EEPROM_ADD_RES_PRIM_VOUT      0xB0
-#define EEPROM_ADD_RES_INYE_VOUT      0xB1
-#define EEPROM_ADD_RES_PRIM_INYE_TEMP 0xB2
-#define EEPROM_ADD_RES_PRIM_CONS_TEMP 0xB3
+#define EEPROM_ADD_RES_PRIM_INYE_TEMP 0xB0
+#define EEPROM_ADD_RES_PRIM_CONS_TEMP 0xB1
+#define EEPROM_ADD_RES_PRIM_HYST_TEMP 0xB2
+#define EEPROM_ADD_RES_INYE_CONS_TEMP 0xB3
 #define EEPROM_ADD_RES_PRIM_HYST_TEMP 0xB4
-#define EEPROM_ADD_RES_INYE_CONS_TEMP 0xB5
-#define EEPROM_ADD_RES_PRIM_HYST_TEMP 0xB6
-#define EEPROM_ADD_AGUA_CONS_TEMP     0xB7
-#define EEPROM_ADD_AGUA_HYST_TEMP     0xB8
-#define EEPROM_ADD_RES_PRIM_ALAR_MIN  0xB9
-#define EEPROM_ADD_RES_INYE_ALAR_MIN  0xBA
-#define EEPROM_ADD_AGUA_ALAR_MIN      0xBB
+#define EEPROM_ADD_AGUA_CONS_TEMP     0xB5
+#define EEPROM_ADD_AGUA_HYST_TEMP     0xB6
+#define EEPROM_ADD_RES_PRIM_ALAR_MIN  0xB7
+#define EEPROM_ADD_RES_INYE_ALAR_MIN  0xB8
+#define EEPROM_ADD_AGUA_ALAR_MIN      0xB9
 
-#define EEPROM_ADD_TRIAC1             0xBC
-#define EEPROM_ADD_TRIAC2             0xBD
-#define EEPROM_ADD_TRIAC3             0xBE
+#define EEPROM_ADD_TRIAC1_VOUT        0xBA
+#define EEPROM_ADD_TRIAC2_VOUT        0xBB
+#define EEPROM_ADD_TRIAC3_VOUT        0xBC
+
+#define EEPROM_ADD_TRIAC1_USE         0xBD
+#define EEPROM_ADD_TRIAC2_USE         0xBE
+#define EEPROM_ADD_TRIAC3_USE         0xBF
+
+#define EEPROM_ADD_TEMP1_USE          0xC0
+#define EEPROM_ADD_TEMP2_USE          0xC1
+#define EEPROM_ADD_TEMP3_USE          0xC2
+#define EEPROM_ADD_TEMP4_USE          0xC3
 
 //#define EEPROM_ADD_MAX              0xFA // 250
 
 // Values
-#define EEPROM_VAL_OK                 0xAE
+#define EEPROM_VAL_OK                 0xA1
 
 #define EEPROM_VAL_IP_MODE        FIXIP_MODE // DHCP_MODE
 #define EEPROM_VAL_IP1            192
@@ -106,8 +116,6 @@ extern int cfgTriacVout[];
 #define EEPROM_VAL_LOGIC_OUTS           0     // Logica Reposo
 #define EEPROM_VAL_MBADD1               1
 
-#define EEPROM_VAL_RES_PRIM_VOUT        110   // V
-#define EEPROM_VAL_RES_INYE_VOUT        110   // V
 #define EEPROM_VAL_RES_PRIM_INYE_TEMP   70    //º
 #define EEPROM_VAL_RES_PRIM_CONS_TEMP   115   //º
 #define EEPROM_VAL_RES_PRIM_HYST_TEMP   1     //º
@@ -119,9 +127,18 @@ extern int cfgTriacVout[];
 #define EEPROM_VAL_RES_INYE_ALAR_MIN    30
 #define EEPROM_VAL_AGUA_ALAR_MIN        30
 
-#define EEPROM_VAL_TRIAC1               230
-#define EEPROM_VAL_TRIAC2               230
-#define EEPROM_VAL_TRIAC3               230
+#define EEPROM_VAL_TRIAC1_VOUT          110 // Vac
+#define EEPROM_VAL_TRIAC2_VOUT          110 // Vac
+#define EEPROM_VAL_TRIAC3_VOUT          230 // Vac
+
+#define EEPROM_VAL_TRIAC1_USE           1   // 1-> RES_PRIN_TRC
+#define EEPROM_VAL_TRIAC2_USE           2   // 2-> RES_INYE_TRC
+#define EEPROM_VAL_TRIAC3_USE           0   // 0-> Not used
+
+#define EEPROM_VAL_TEMP1_USE            1   // 1-> RES_PRIN_TEMP 
+#define EEPROM_VAL_TEMP2_USE            2   // 2-> RES_INYE_TEMP
+#define EEPROM_VAL_TEMP3_USE            3   // 3-> BOM_AGUA_TEMP
+#define EEPROM_VAL_TEMP4_USE            0   // 0-> Not used
 
 #endif // _E2PROM_H_
 

@@ -16,9 +16,9 @@ int mntpHour = 0;
 
 int mntpStatus;
 int mntpUpdated = 0;
-EthernetUDP mNtpUDP;
-NTPClient mNtpClient(mNtpUDP, "pool.ntp.org", 3600);
 
+NetworkUDP mNtpUDP;
+NTPClient mNtpClient(mNtpUDP, "pool.ntp.org", 3600);
 
 void _ntpTimeString(void)
 {

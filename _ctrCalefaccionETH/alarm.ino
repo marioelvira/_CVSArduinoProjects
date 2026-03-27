@@ -1,6 +1,7 @@
 #include "main.h"
 #include "alarm.h"
 
+#if (_USE_ALARM_ == 1)
 ///////////////
 // Variables //
 ///////////////
@@ -11,7 +12,6 @@ int    alarmOn[AL_ARRAY_SIZE];
 int    alarmCpy[AL_ARRAY_SIZE];
 
 String alarmStr[AL_ARRAY_SIZE];
-
 
 /////////////////////////
 // ALARM state machine //
@@ -169,3 +169,5 @@ void _ALARMLoop()
       break;   
   }   
 }
+
+#endif  // (_USE_MQTT_ == 1)

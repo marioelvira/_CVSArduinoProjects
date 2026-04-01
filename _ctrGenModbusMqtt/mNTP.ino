@@ -22,6 +22,12 @@ void _mNTPfakeSec(void)
   {
     mntpSec = 0;
     mntpMin++;
+    
+    #if (_USE_SOLAR_ == 1)
+    if (sCalculated == true)
+      _SolarDayNight();
+    #endif
+
     if (mntpMin >= 60)
     {
       mntpMin = 0;

@@ -668,18 +668,6 @@ void _serveSETTINGS()
   // End
   #endif
 
-  #if (_USE_MBTCP_ == 1)
-  // Modbus TCP
-  html = html + "<div class=\"section\"><span>4</span>Modbus TCP </div>";
-  html = html + "<div class=\"inner-wrap\">";
-
-  html = html + "<label>IP Address <input type=\"text\"  maxlength=\"16\" value=\"" + String(mbIpAddress.toString()) + "\" name=\"mbipaddress\"/></label>";
-  html = html + "<label>Port <input type=\"text\" maxlength=\"16\" value=\"" + String(mbPort) + "\" name=\"mbport\"/></label>";
-
-  html = html + "</div>";
-  // End
-  #endif
-
   html = html + "<div class=\"button-section\">";
   html = html + "  <input type=\"submit\" value=\"Guardar\">";
   html = html + "  <a href=\"index.htm\"><input type=\"button\" value=\"Volver\"></a>";
@@ -712,11 +700,6 @@ void _setSETTINGS()
   String rbrokerport = httpServer.arg("brokerport");
   String rbrokeruser = httpServer.arg("brokeruser");
   String rbrokerpswd = httpServer.arg("brokerpswd");
-  #endif
-
-  #if (_USE_MBTCP_ == 1)
-  String rmbipaddress = httpServer.arg("mbipaddress");
-  String rmbport = httpServer.arg("mbport");
   #endif
 
   String html = "";
@@ -771,12 +754,6 @@ void _setSETTINGS()
       (rbrokerport.length() == 0) ||
       (rbrokeruser.length() == 0) ||
       (rbrokerpswd.length() == 0))
-    error = 1;
-  #endif
-
-  #if (_USE_MBTCP_ == 1)
-  if ((rmbipaddress.length() == 0)  ||
-      (rmbport.length() == 0))
     error = 1;
   #endif
 
@@ -943,45 +920,6 @@ void _setSETTINGS()
        }
      }
      
-     #if (_USE_MBTCP_ == 1)
-     // Modbus IP
-     j = rmbipaddress.length();
-     k = 0;
-     m = 0;
-     for (i = 0; i < j; i++)
-     {
-       schar = rmbipaddress[i];
-       if (schar == '.')
-       {        
-         sbuf[k] = 0;  // end of buffer
-         val[m] = (byte)(atoi(sbuf)); // change to int
-         k = 0;
-         m++;
-       }
-       else
-       {
-         sbuf[k] = schar;
-         k++;
-       }
-     }
-     // last IP value
-     sbuf[k] = 0;  // end of buffer
-     val[m] = (byte)(atoi(sbuf)); // change to int
-     mbIpAddress = IPAddress(val[0], val[1], val[2], val[3]);
-    
-     EEPROM.write(EEPROM_ADD_MB_IP1, val[0]);
-     EEPROM.write(EEPROM_ADD_MB_IP2, val[1]);
-     EEPROM.write(EEPROM_ADD_MB_IP3, val[2]);
-     EEPROM.write(EEPROM_ADD_MB_IP4, val[3]);
-
-     // Modbus Port
-     mbPort = rmbport.toInt();
-     eeprom_value_lo = mbPort & 0x00FF;
-     EEPROM.write(EEPROM_ADD_MB_PORT, eeprom_value_lo);
-     eeprom_value_hi = (mbPort & 0xFF00)>>8;
-     EEPROM.write(EEPROM_ADD_MB_PORT + 1, eeprom_value_hi);
-     #endif
-
      #if (_HTTP_SERIAL_DEBUG_ == 1)
      // Wi-Fi configuration
      Serial.print("---->Wi-Fi mode: ");
@@ -1006,13 +944,6 @@ void _setSETTINGS()
      Serial.println(rbrokerurl);
      Serial.print("---->Broker Port: ");
      Serial.println(rbrokerport);     
-     #endif
-
-     #if (_USE_MBTCP_ == 1)
-     Serial.print("---->Modbus TCP IP: ");
-     Serial.println(mbIpAddress);
-     Serial.print("---->Modbus TCP Port: ");
-     Serial.println(mbPort);
      #endif
 
      #endif // (_HTTP_SERIAL_DEBUG_ == 1)
@@ -1178,77 +1109,7 @@ void _readCTR()
   else
    html = html + "<td><font style=\"color:grey\">Desactivado</font></td>";
   html = html + "</tr>";
-  
-  #if (_USE_MBTCP_ == 1)
-  html = html + "<tr>";
-  html = html + "<td>RELE: Control Estado</td>";
-  html = html + "<td>" + mbctrInState[1] + mbctrInState[0] + "</td>";
-  html = html + "</tr>";
-
-  html = html + "<tr>";
-  html = html + "<td>RELE: Salida Estado</td>";
-  html = html + "<td>" + mbctrOutState[1] + mbctrOutState[0] + "</td>";
-  html = html + "</tr>";
-
-  html = html + "<tr>";
-  html = html + "<td>RELE: Contador</td>";
-  html = html + "<td>" + String(mbctrOutTick) + "</td>";
-  html = html + "</tr>";
-
-  html = html + "<tr>";
-  html = html + "<td>Enchufes Estado</td>";
-  aux = mbRMState[0];
-  html = html + "<td>" + String(aux) + "</td>";
-  html = html + "</tr>";
-
-  html = html + "<tr>";
-  html = html + "<td>Enchufes Consumos</td>";
-  html = html + "<td>" + String(mbRMSval[0]) + "</td>";
-  html = html + "</tr>";
-
-  html = html + "<tr>";
-  html = html + "<td>Luminaria Estado</td>";
-  aux = mbRMState[1];
-  html = html + "<td>" + String(aux) + "</td>";
-  html = html + "</tr>";
-
-  html = html + "<tr>";
-  html = html + "<td>Luminiaria Consumos</td>";
-  html = html + "<td>" + String(mbRMSval[1]) + "</td>";
-  html = html + "</tr>";
-
-  html = html + "<tr>";
-  html = html + "<td>In DC2 </td>";
-  html = html + "<td>" + String(mbDCval[0]) + "</td>";
-  html = html + "</tr>";
-
-  html = html + "<tr>";
-  html = html + "<td>In DC3 </td>";
-  html = html + "<td>" + String(mbDCval[1]) + "</td>";
-  html = html + "</tr>";
-
-  html = html + "<tr>";
-  html = html + "<td>In DC4 Reserva</td>";
-  html = html + "<td>" + String(mbDCval[2]) + "</td>";
-  html = html + "</tr>";
-
-  html = html + "<tr>";
-  html = html + "<td>In DC5 Bateria 24Vdc</td>";
-  html = html + "<td>" + String(mbDCval[3]) + "</td>";
-  html = html + "</tr>";
-
-  html = html + "<tr>";
-  html = html + "<td>In DC6 Bateria Generador</td>";
-  html = html + "<td>" + String(mbDCval[4]) + "</td>";
-  html = html + "</tr>";
-
-  html = html + "<tr>";
-  html = html + "<td>In DC7 Alimentacion</td>";
-  html = html + "<td>" + String(mbDCval[5]) + "</td>";
-  html = html + "</tr>";
-
-  #endif // (_USE_MBTCP_ == 1)
-
+ 
   html = html + "</table>";
   
   httpServer.send(200, "text/plane", html);
@@ -1512,9 +1373,13 @@ void _readSTATUS()
 
   html = html + "<tr>";
   html = html + "<td>Solar</td>";
-  html = html + "<td>" + solarString + "</td>";
+  html = html + "<td>" + solarString;
+  if (solarDayNight == false)
+    html = html + ", noche</td>";
+  else
+    html = html + ", dia</td>";
   html = html + "</tr>";
-  
+ 
   html = html + "<tr>";
   html = html + "<td>Free RAM</td>";
   html = html + "<td>" + String(freeRam) + "</td>";

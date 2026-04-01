@@ -4,6 +4,17 @@
 
 #include <SolarCalculator.h>
 
+#if (_USE_NTP_ == 1)
+void _SolarDayNight(void)
+{
+  if (((mntpHour >= sunrise_h) && (mntpMin >= sunrise_m)) &&
+      ((mntpHour <= sunset_h)  && (mntpMin <= sunset_m)))
+    solarDayNight = true;   // Dia
+  else
+    solarDayNight = false;  // Noche
+}
+#endif
+
 void _SolarString(void)
 {
   char solarBuffer[40];

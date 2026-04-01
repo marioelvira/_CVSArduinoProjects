@@ -27,9 +27,6 @@
 #if (_USE_MQTT_ == 1)
 #include "MQTT.h"
 #endif
-#if (_USE_MBTCP_ == 1)
-#include "mModbusTCP.h"
-#endif
 #if (_USE_MB_ == 1)
 #include "mModbus.h"
 #endif
@@ -206,9 +203,10 @@ NTPClient mNtpClient(mNtpUDP, "pool.ntp.org", 3600);
 // Solar
 #if (_USE_SOLAR_ == 1)
 bool  sCalculated = false;
-String solarString;
+String solarString = "Iniciando...";
 int   sunrise_h = 0, sunrise_m = 0;
 int   sunset_h = 0, sunset_m = 0;
+bool  solarDayNight = false;
 #endif
 
 //////////
@@ -295,30 +293,6 @@ int mbWhat2read = 0;
 
 int mbInsAlarm[MB_NUM_IOS][MB_NUM_BRS];
 #endif
-#endif
-
-////////////
-// Modbus //
-////////////
-#if (_USE_MBTCP_ == 1)
-WiFiClient mbTCPclient;
-
-int mbTCPState;
-
-unsigned long mbTCPtick;
-
-char mbTCPRxBuffer[MBTCP_ARRAY_SIZE];
-int  mbTCPRxIndex = 0;
-
-int  mbTCPFunction;
-
-char mbctrInState[2];
-char mbctrOutState[2];
-int  mbctrOutTick;
-int  mbRMState[2];
-int  mbRMSval[MB_RMS_NUMBER];
-int  mbDCval[MB_DC_NUMBER];
-
 #endif
 
 ////////

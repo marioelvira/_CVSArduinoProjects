@@ -375,82 +375,11 @@ void _MQTTSend(int itopic)
     str = str + "\"adci\":";
     str = str + String(AdcIn);
     str = str + ",\n";
-  }
-
-  #if (_USE_MBTCP_ == 1)
-  ///////////////////
-  // Control Reles //
-  ///////////////////
-  else if (itopic == 3)
-  {
-    /////////////
-    // Control //
-    /////////////
-    str = str + "\"mbist\":\"";
-    str = str + mbctrInState[0] + mbctrInState[1];
-    str = str + "\",\n";
-
-    str = str + "\"mbost\":\"";
-    str = str + mbctrOutState[0] + mbctrOutState[1];
-    str = str + "\",\n";
-
-    str = str + "\"mbotc\":";
-    str = str + String(mbctrOutTick);
-    str = str + ",\n";
-    
-    //////////
-    // ADCs //
-    //////////
-    str = str + "\"i0st\":";
-    str = str + String(mbRMState[0]);
-    str = str + ",\n";
-
-    str = str + "\"i0\":";
-    str = str + String(mbRMSval[0]);
-    str = str + ",\n";
-    
-    str = str + "\"i1st\":";
-    str = str + String(mbRMState[1]);
-    str = str + ",\n";
-
-    str = str + "\"i1\":";
-    str = str + String(mbRMSval[1]);
-    str = str + ",\n";
-
-    str = str + "\"v0\":";
-    str = str + String(mbDCval[0]);
-    str = str + ",\n";
-    
-    str = str + "\"v1\":";
-    str = str + String(mbDCval[1]);
-    str = str + ",\n";
-
-    str = str + "\"v2\":";
-    str = str + String(mbDCval[2]);
-    str = str + ",\n";
-    
-    str = str + "\"v3\":";
-    str = str + String(mbDCval[3]);
-    str = str + ",\n";
-
-    str = str + "\"v4\":";
-    str = str + String(mbDCval[4]);
-    str = str + ",\n";
-
-    str = str + "\"v5\":";
-    str = str + String(mbDCval[5]);
-    str = str + ",\n";
-  }
-  #endif // (_USE_MBTCP_ == 1)
-  
+  }  
   ///////////
   // Alarm //
   ///////////
-  #if (_USE_MBTCP_ == 1)
-  else if (itopic == 4)
-  #else
   else if (itopic == 3)
-  #endif
   {
     int balarm = 0;
 
@@ -510,6 +439,10 @@ void _MQTTSend(int itopic)
     
     str = str + "\"sun\":\"";
     str = str + solarString;
+    if (solarDayNight == false)
+      str = str + ", noche";
+    else
+      str = str + ", dia";
     str = str + "\",\n";
 
     str = str + "\"ip\":\"";
@@ -604,8 +537,6 @@ void _MQTTSend(int itopic)
   else if (itopic == 2)
     str = TOPIC_TEST;
   else if (itopic == 3)
-    str = TOPIC_RCTR;
-  else if (itopic == 4)
     str = TOPIC_ALARM;
   else
     str = TOPIC_SCTR;

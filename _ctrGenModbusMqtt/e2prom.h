@@ -43,11 +43,6 @@ extern "C" {
 #define EEPROM_ADD_MQTT_PSWD      0x7D
 #define MQTT_PSWD_MAX             22 // max 24 char -> Next 0x95
 
-#define EEPROM_ADD_MB_IP1         0x93
-#define EEPROM_ADD_MB_IP2         0x94
-#define EEPROM_ADD_MB_IP3         0x95
-#define EEPROM_ADD_MB_IP4         0x96
-#define EEPROM_ADD_MB_PORT        0x97
 //#define BROKER_PORT_MAX         2
 
 #define EEPROM_ADD_LOGIC_INS      0x99
@@ -93,7 +88,7 @@ extern "C" {
 //#define EEPROM_ADD_MAX          0xFA // 250
 
 // Values
-#define EEPROM_VAL_OK             0xA1
+#define EEPROM_VAL_OK             0xA0
 
 #define EEPROM_VAL_IP_MODE        DHCP_MODE
 #define EEPROM_VAL_IP1            192
@@ -115,15 +110,8 @@ extern "C" {
 
 //#define EEPROM_VAL_BROKER  
 //#define EEPROM_VAL_MQTT_USER
-//#define EEPROM_ADD_MQTT_PSWD    
-//#define EEPROM_VAL_BROKER_PORT    7000
-
-#define EEPROM_VAL_MB_IP1         192
-#define EEPROM_VAL_MB_IP2         168
-#define EEPROM_VAL_MB_IP3         1
-#define EEPROM_VAL_MB_IP4         50
-#define EEPROM_VAL_MB_PORT        502
-//#define BROKER_PORT_MAX         2
+//#define EEPROM_VAL_MQTT_PSWD    
+//#define EEPROM_VAL_BROKER_PORT
 
 #define EEPROM_VAL_LOGIC_INS      1       // Valor Campo 22/03/2026
 #define EEPROM_VAL_LOGIC_OUTS     1       // Valor Campo 22/03/2026

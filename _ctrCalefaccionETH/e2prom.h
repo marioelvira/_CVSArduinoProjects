@@ -109,8 +109,8 @@ extern int cfgTempUse[];
 
 //#define EEPROM_VAL_BROKER  
 //#define EEPROM_VAL_MQTT_USER
-//#define EEPROM_ADD_MQTT_PSWD    
-//#define EEPROM_VAL_BROKER_PORT    7000
+//#define EEPROM_VAL_MQTT_PSWD
+//#define EEPROM_VAL_BROKER_PORT
 
 #define EEPROM_VAL_LOGIC_INS            1     // Logica Reposo
 #define EEPROM_VAL_LOGIC_OUTS           0     // Logica Reposo
@@ -119,10 +119,11 @@ extern int cfgTempUse[];
 #define EEPROM_VAL_RES_PRIM_INYE_TEMP   70    //º
 #define EEPROM_VAL_RES_PRIM_CONS_TEMP   115   //º
 #define EEPROM_VAL_RES_PRIM_HYST_TEMP   1     //º
-#define EEPROM_VAL_RES_INYE_CONS_TEMP   115
-#define EEPROM_VAL_RES_PRIM_HYST_TEMP   1
-#define EEPROM_VAL_AGUA_CONS_TEMP       60
-#define EEPROM_VAL_AGUA_HYST_TEMP       5
+#define EEPROM_VAL_RES_INYE_CONS_TEMP   115   //º
+#define EEPROM_VAL_RES_PRIM_HYST_TEMP   1     //º
+#define EEPROM_VAL_AGUA_CONS_TEMP       60    //º
+#define EEPROM_VAL_AGUA_HYST_TEMP       5     //º
+
 #define EEPROM_VAL_RES_PRIM_ALAR_MIN    30
 #define EEPROM_VAL_RES_INYE_ALAR_MIN    30
 #define EEPROM_VAL_AGUA_ALAR_MIN        30

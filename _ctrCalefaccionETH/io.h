@@ -10,36 +10,37 @@ extern "C" {
 // IO definition //
 ///////////////////
 /* Strapping: GPIO34, 35, 36, 37 y 38 */
-/*                                 |--------|
- *                           ------| USB  C |------
- *                           |     |--------|     |
- *                           |                    |
- *   (Out Quemador) OUT6 <- -| GPIO54        VUBS |-
- *  (Bomba Achique) OUT5 <- -| GPIO19        VSYS |-
- *                          -| GND            GND |-
- *                    AUX # -| GPIO18          EN |-
- *                    AUX # -| GPIO17         3V3 |-
- *                    AUX # -| GPIO16      GPIO20 |- # AUX
- *   (Bomba Recirc) OUT4 <- -| GPIO15      GPIO21 |- # AUX
- *                          -| GND            GND |-
- *       (Out Aux3) OUT3 <- -| GPIO14      GPIO22 |- <- ZD1 (Detector de paso por cero)
- *                          -| GPIO06      GPIO23 |- # AUX
- *         (In Aux1) IN1 -> -| GPIO05*        RUN |- System Control
- *         (In Aux2) IN2 -> -| GPIO04*     GPIO26 |- -> LED (Estado)
- *                          -| GND            GND |-
- *      (In On Fire) IN3 -> -| GPIO03*     GPIO27 |- -> TR3 (Res. Auxiliar)
- *   (In Termostato) IN4 -> -| GPIO02*     GPIO32 |- -> TR2 (Res. Inyector)
- *                    DIO # -| SCL/GPIO08  GPIO33 |- -> TR1 (Res. Principal)
- *                    DIO # -| SCL/GPIO07  GPIO46 |- -> RTS_RS485
- *                          -| GND            GND |-
- *       (Out Aux1) OUT1 <- -| DM/GPIO24   GPIO47 |- -> TX_RS485
- *       (Out Aux2) OUT2 <- -| DP/GPIO25   GPIO48 |- <- RX_RS485
- *                          -|                    |-
- *                          -|    ------------    |-
- *                          -|    |          |    |-
- *                          -|    |   ETH    |    |-
- *                          -|    |          |    |-
- *                           ----------------------
+
+/*                                    |--------|
+ *                              ------| USB  C |------
+ *                              |     |--------|     |
+ *                              |                    |
+ *    (Reset Quemador) OUT6 <- -| GPIO54        VUBS |-
+ *     (Bomba Achique) OUT5 <- -| GPIO19        VSYS |-
+ *                             -| GND            GND |-
+ *                       AUX # -| GPIO18          EN |-
+ *                       AUX # -| GPIO17         3V3 |-
+ *                       AUX # -| GPIO16      GPIO20 |- # AUX
+ * (Bomba Recirc Agua) OUT4 <- -| GPIO15      GPIO21 |- # AUX
+ *                             -| GND            GND |-
+ *          (Out Aux3) OUT3 <- -| GPIO14      GPIO22 |- <- ZD1 (Detector de paso por cero)
+ *                             -| GPIO06      GPIO23 |- # AUX
+ *            (In Aux1) IN1 -> -| GPIO05*        RUN |- System Control
+ *            (In Aux2) IN2 -> -| GPIO04*     GPIO26 |- -> LED (Estado)
+ *                             -| GND            GND |-
+ *         (In On Fire) IN3 -> -| GPIO03*     GPIO27 |- -> TR3 (Res. Auxiliar)
+ *      (In Termostato) IN4 -> -| GPIO02*     GPIO32 |- -> TR2 (Res. Inyector)
+ *                       DIO # -| SCL/GPIO08  GPIO33 |- -> TR1 (Res. Principal)
+ *                       DIO # -| SCL/GPIO07  GPIO46 |- -> RTS_RS485
+ *                             -| GND            GND |-
+ *          (Out Aux1) OUT1 <- -| DM/GPIO24   GPIO47 |- -> TX_RS485
+ *          (Out Aux2) OUT2 <- -| DP/GPIO25   GPIO48 |- <- RX_RS485
+ *                             -|                    |-
+ *                             -|    ------------    |-
+ *                             -|    |          |    |-
+ *                             -|    |   ETH    |    |-
+ *                             -|    |          |    |-
+ *                              ----------------------
  */
 
 ////////////////////
@@ -56,7 +57,7 @@ extern "C" {
 #define PIN_OUT3        14
 #define PIN_OUT4        15 // Bomba Recirc
 #define PIN_OUT5        19 // Bomba Achique
-#define PIN_OUT6        54 // Out Quemador
+#define PIN_OUT6        54 // Reset Quemador
 
 #define TRIAC_NUMBER    3
 #define PIN_TRIAC1      33

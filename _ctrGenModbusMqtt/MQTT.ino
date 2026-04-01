@@ -508,6 +508,10 @@ void _MQTTSend(int itopic)
     str = str + mntpTimeString;
     str = str + "\",\n";
     
+    str = str + "\"sun\":\"";
+    str = str + solarString;
+    str = str + "\",\n";
+
     str = str + "\"ip\":\"";
     str = str + String(ipAddress.toString());
     str = str + "\",\n";

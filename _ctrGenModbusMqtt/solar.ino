@@ -22,7 +22,7 @@ void _SolarString(void)
   if (sCalculated == true)
     sprintf(solarBuffer, "No Calculado");
   else
-    sprintf(solarBuffer, "de %02d:%02d a %02d:%02d", sunrise_h, sunrise_m, sunset_h, sunset_m);
+    sprintf(solarBuffer, " %02m %02s a %02m %02s", sunrise_h, sunrise_m, sunset_h, sunset_m);
   
   solarString = String(solarBuffer);
 }

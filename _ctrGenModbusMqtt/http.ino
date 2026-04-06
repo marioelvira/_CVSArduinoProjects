@@ -1007,7 +1007,6 @@ void _setSETTINGS()
 void _readCTR()
 {
   String html = "";
-  int aux;
 
   html = "<table style=\"width:100%\">";
 

@@ -233,10 +233,111 @@ void _MQTTSend(int itopic)
 
   str = "{\n";
   
+  /////////////
+  // Control //
+  /////////////
+  if (itopic == 0)
+  {
+    str = str + "\"tOn\":\"";
+    str = str + String(timeDay) + "d " + timeOnString;
+    str = str + "\",\n";
+    /*
+    str = str + "\"ram\":";
+    str = str + String(freeRam);
+    str = str + ",\n";
+    */
+    str = str + "\"tU\":\"";
+    str = str + mntpTimeString;
+    str = str + "\",\n";
+  
+    str = str + "\"sun\":\"";
+    str = str + solarString;
+    if (solarDayNight == false)
+      str = str + " noche";
+    else
+      str = str + " dia";
+    str = str + "\",\n";
+  
+    str = str + "\"ip\":\"";
+    str = str + String(ipAddress.toString());
+    str = str + "\",\n";
+    
+    #if (_USE_MB_ == 1)
+    str = str + "\"mer\":\"";
+    str = str + String(mbNError) + "-" + String(mbNReply) + "-" + String(mbNRetry);
+    str = str + "\",\n";
+    #endif (_USE_MB_ == 1)
+  
+    str = str + "\"md\":";
+    str = str + String(controlMode);
+    str = str + ",\n";
+    /*
+    str = str + "\"cSt\":";
+    str = str + String(ControlState);
+    str = str + ",\n";
+    */
+    str = str + "\"cSt\":";
+    if (ControlState == 1)
+      str = str + "START";
+    else if (ControlState == 2)
+      str = str + "GEN ON";
+    else if (ControlState == 3)
+      str = str + "ZUMB";
+    else if (ControlState == 4)
+      str = str + "GEN OFF";
+    else
+      str = str + "REPOSO";
+    str = str + ",\n";
+
+    str = str + "\"cSec\":";
+    str = str + String(TimeControlSec);
+    str = str + ",\n";
+
+    str = str + "\"us\":";
+    if (mqttLastCtr == 1)
+      str = str + "AL";
+    else if (mqttLastCtr == 2)
+      str = str + "MA";
+    else
+      str = str + "**";
+    str = str + ",\n";
+ 
+    if (OutGen == OUT_OFF)
+      str = str + "\"gSt\":0";
+    else
+      str = str + "\"gSt\":1";
+    str = str + ",\n";
+  
+    if (OutBomba == OUT_OFF)
+      str = str + "\"bSt\":0";
+    else
+      str = str + "\"bSt\":1";
+    str = str + ",\n";
+
+    str = str + "\"gD\":";
+    str = str + String(DisplayIndicador);
+    str = str + ",\n";
+        
+    str = str + "\"gOn\":\"";
+    str = str + String(genMinOn);
+    str = str + "m\",\n";
+    
+    str = str + "\"gOff\":\"";
+    str = str + String(genTimeDay) + "d " + genTimeOnString;
+    str = str + "\",\n";
+
+    str = str + "\"gR\":";
+    str = str + String(remAct);
+    str = str + ",\n";
+	    
+    str = str + "\"adc\":";
+    str = str + String(AdcVal);
+    str = str + ",\n";
+  }
   ///////////////////
   // Extra Control //
   ///////////////////
-  if (itopic == 1)
+  else if (itopic == 1)
   {
     #if (_USE_MB_ == 1)
         
@@ -420,107 +521,6 @@ void _MQTTSend(int itopic)
 	  str = str + "\",\n";
 
   }
-  /////////////
-  // Control //
-  /////////////
-  else // (itopic == 0)
-  {
-    str = str + "\"tOn\":\"";
-    str = str + String(timeDay) + "d " + timeOnString;
-    str = str + "\",\n";
-    /*
-    str = str + "\"ram\":";
-    str = str + String(freeRam);
-    str = str + ",\n";
-    */
-    str = str + "\"tU\":\"";
-    str = str + mntpTimeString;
-    str = str + "\",\n";
-    
-    str = str + "\"sun\":\"";
-    str = str + solarString;
-    if (solarDayNight == false)
-      str = str + ", noche";
-    else
-      str = str + ", dia";
-    str = str + "\",\n";
-
-    str = str + "\"ip\":\"";
-    str = str + String(ipAddress.toString());
-    str = str + "\",\n";
-    
-    #if (_USE_MB_ == 1)
-    str = str + "\"mer\":\"";
-    str = str + String(mbNError) + "-" + String(mbNReply) + "-" + String(mbNRetry);
-    str = str + "\",\n";
-    #endif (_USE_MB_ == 1)
-  
-    str = str + "\"md\":";
-    str = str + String(controlMode);
-    str = str + ",\n";
-    /*
-    str = str + "\"cSt\":";
-    str = str + String(ControlState);
-    str = str + ",\n";
-    */
-    str = str + "\"cSt\":";
-    if (ControlState == 1)
-      str = str + "START";
-    else if (ControlState == 2)
-      str = str + "GEN ON";
-    else if (ControlState == 3)
-      str = str + "ZUMB";
-    else if (ControlState == 4)
-      str = str + "GEN OFF";
-    else
-      str = str + "REPOSO";
-    str = str + ",\n";
-
-    str = str + "\"cSec\":";
-    str = str + String(TimeControlSec);
-    str = str + ",\n";
-
-    str = str + "\"us\":";
-    if (mqttLastCtr == 1)
-      str = str + "AL";
-    else if (mqttLastCtr == 2)
-      str = str + "MA";
-    else
-      str = str + "**";
-    str = str + ",\n";
- 
-    if (OutGen == OUT_OFF)
-      str = str + "\"gSt\":0";
-    else
-      str = str + "\"gSt\":1";
-    str = str + ",\n";
-  
-    if (OutBomba == OUT_OFF)
-      str = str + "\"bSt\":0";
-    else
-      str = str + "\"bSt\":1";
-    str = str + ",\n";
-
-    str = str + "\"gD\":";
-    str = str + String(DisplayIndicador);
-    str = str + ",\n";
-        
-    str = str + "\"gOn\":\"";
-    str = str + String(genMinOn);
-    str = str + "m\",\n";
-    
-    str = str + "\"gOff\":\"";
-    str = str + String(genTimeDay) + "d " + genTimeOnString;
-    str = str + "\",\n";
-
-    str = str + "\"gR\":";
-    str = str + String(remAct);
-    str = str + ",\n";
-	    
-    str = str + "\"adc\":";
-    str = str + String(AdcVal);
-    str = str + ",\n";
-  }
 
   str_len = str.length();
   str = str + "\"len\":";
@@ -545,16 +545,24 @@ void _MQTTSend(int itopic)
   str.toCharArray(stopic, str_len);
 
   if(mqttPublish((char*)stopic, (char*)spayload))
+  #if (_MQTT_SERIAL_DEBUG_ != 1)
+  {}
+  #else
   {
-    #if (_MQTT_SERIAL_DEBUG_ == 1)
     Serial.println(" ");
     Serial.println("TOPIC_STATE publish was succeeded");
-    Serial.println("$$$$$$$$$$$$$$$$ RX $$$$$$$$$$$$$$$$$$$$$");
-    Serial.println(stopic);
-    Serial.println(spayload);
-    Serial.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
-    #endif
-  } 
+  }
+  else
+  {
+    Serial.println(" ");
+    Serial.println("TOPIC_STATE publish NOT succeeded");
+  }
+
+  Serial.println("$$$$$$$$$$$$$$$$ TX $$$$$$$$$$$$$$$$$$$$$");
+  Serial.println(stopic);
+  Serial.println(spayload);
+  Serial.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+  #endif
 }
 
 /////////////////
@@ -665,12 +673,20 @@ void _MQTTLoop(void)
         mqttTick = millis();
 
         mqttClient.loop();
+
+        #if (_MQTT_SERIAL_DEBUG_ == 1)
+        Serial.printf("Topic in:  %d\n", mqttTopic);
+        #endif
+
         _MQTTSend(mqttTopic);
         
 		    mqttTopic++;	
 		    if (mqttTopic >= MQTT_LAST_TOPIC)
-		      mqttTopic = 0;
+          mqttTopic = 0;
 
+        #if (_MQTT_SERIAL_DEBUG_ == 1)
+        Serial.printf("Topic out:  %d\n", mqttTopic);
+        #endif
       }
       else
       {

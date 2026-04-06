@@ -305,9 +305,6 @@ int wdeForceReset;
 ////////////
 // Config //
 ////////////
-IPAddress mbIpAddress (192, 168, 0, 9);
-int mbPort;
-
 int cfgLogicIns;
 int cfgLogicOuts;
 int cfgMB1Add;
@@ -433,10 +430,6 @@ void setup(void)
   #endif
   #endif
 
-  #if (_USE_MBTCP_ == 1)
-  _mMBTCPSetup();
-  #endif
-
   // Ctr setup
   _CtrSetup();
 
@@ -526,13 +519,6 @@ void loop()
     _MQTTLoop();
   else
     mqttStatus = MQTT_NOT_CONNECTED;
-  #endif
-
-  #if (_USE_MBTCP_ == 1)
-  if (wifiStatus == WIFI_STATION_CONNECTED)
-    _mMBTCPloop();
-  else
-    mbTCPState = MBTCP_STOP;
   #endif
 
   if (controlMode == MODE_AUTO)

@@ -138,10 +138,6 @@ void _WifiLoop()
         #if (_USE_NTP_ == 1)
         _mNTPStart();
         #endif
-      
-        #if (_USE_MBTCP_ == 1)
-        _mMBTCPStart();
-        #endif
 
         wifiStatus = WIFI_STATION_CONNECTED;
       }
@@ -155,10 +151,6 @@ void _WifiLoop()
 
         #if (_USE_NTP_ == 1)
         _mNTPStop();
-        #endif
-        
-        #if (_USE_MBTCP_ == 1)
-        _mMBTCPStop();
         #endif
 
         wifiStatus = WIFI_START_STATION;

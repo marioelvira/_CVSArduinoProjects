@@ -249,7 +249,7 @@ void _MQTTSend(int itopic)
     str = str + "\"tU\":\"";
     str = str + mntpTimeString;
     str = str + "\",\n";
-  
+    /*
     str = str + "\"sun\":\"";
     str = str + solarString;
     if (solarDayNight == false)
@@ -257,7 +257,7 @@ void _MQTTSend(int itopic)
     else
       str = str + " dia";
     str = str + "\",\n";
-  
+    */
     str = str + "\"ip\":\"";
     str = str + String(ipAddress.toString());
     str = str + "\",\n";

@@ -24,9 +24,11 @@ extern "C" {
 #define MQTT_PASSWORD       "MQTTSup3rP@@sw0rd"
 
 // MQTT Topics publish
-#define MQTT_LAST_TOPIC   3
+#define MQTT_LAST_TOPIC     3
+//#define MQTT_LAST_TOPIC   1 // _MQTT_DEBUG_
 
 #define TOPIC_SCTR        "sdpelicanos@gmail.com/sctr"  //0
+//#define TOPIC_SCTR      "sdpelicanos@gmail.com/sdbg"  // _MQTT_DEBUG_
 #define TOPIC_SINS        "sdpelicanos@gmail.com/sins"  //1
 #define TOPIC_TEST        "sdpelicanos@gmail.com/test"  //2
 #define TOPIC_ALARM       "sdpelicanos@gmail.com/alarm" //3 - Siempre el último

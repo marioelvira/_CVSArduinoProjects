@@ -1370,6 +1370,7 @@ void _readSTATUS()
   html = html + "<td>" + mntpTimeString + "</td>";
   html = html + "</tr>";
 
+  #if (_USE_SOLAR_ == 1)
   html = html + "<tr>";
   html = html + "<td>Solar</td>";
   html = html + "<td>" + solarString;
@@ -1378,7 +1379,8 @@ void _readSTATUS()
   else
     html = html + ", dia</td>";
   html = html + "</tr>";
- 
+  #endif
+
   html = html + "<tr>";
   html = html + "<td>Free RAM</td>";
   html = html + "<td>" + String(freeRam) + "</td>";

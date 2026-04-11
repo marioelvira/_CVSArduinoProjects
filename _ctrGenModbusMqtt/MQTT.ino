@@ -249,15 +249,7 @@ void _MQTTSend(int itopic)
     str = str + "\"tU\":\"";
     str = str + mntpTimeString;
     str = str + "\",\n";
-    /*
-    str = str + "\"sun\":\"";
-    str = str + solarString;
-    if (solarDayNight == false)
-      str = str + " noche";
-    else
-      str = str + " dia";
-    str = str + "\",\n";
-    */
+    
     str = str + "\"ip\":\"";
     str = str + String(ipAddress.toString());
     str = str + "\",\n";
@@ -271,11 +263,7 @@ void _MQTTSend(int itopic)
     str = str + "\"md\":";
     str = str + String(controlMode);
     str = str + ",\n";
-    /*
-    str = str + "\"cSt\":";
-    str = str + String(ControlState);
-    str = str + ",\n";
-    */
+
     str = str + "\"cSt\":";
     if (ControlState == 1)
       str = str + "START";
@@ -333,6 +321,18 @@ void _MQTTSend(int itopic)
     str = str + "\"adc\":";
     str = str + String(AdcVal);
     str = str + ",\n";
+
+    #if (_USE_SOLAR_ == 1)
+    str = str + "\"sun\":\"";
+    str = str + solarString;
+    str = str + "\",\n";
+    str = str + "\"dn\":\"";
+    if (solarDayNight == false)
+      str = str + "noche";
+    else
+      str = str + "dia";
+    str = str + "\",\n";
+    #endif
   }
   ///////////////////
   // Extra Control //
@@ -674,19 +674,11 @@ void _MQTTLoop(void)
 
         mqttClient.loop();
 
-        #if (_MQTT_SERIAL_DEBUG_ == 1)
-        Serial.printf("Topic in:  %d\n", mqttTopic);
-        #endif
-
         _MQTTSend(mqttTopic);
         
 		    mqttTopic++;	
 		    if (mqttTopic >= MQTT_LAST_TOPIC)
           mqttTopic = 0;
-
-        #if (_MQTT_SERIAL_DEBUG_ == 1)
-        Serial.printf("Topic out:  %d\n", mqttTopic);
-        #endif
       }
       else
       {

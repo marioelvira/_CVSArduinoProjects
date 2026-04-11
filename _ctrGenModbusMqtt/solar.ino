@@ -17,14 +17,12 @@ void _SolarDayNight(void)
 
 void _SolarString(void)
 {
-  char solarBuffer[40];
+  solarString = String(sunrise_h) + ":" + String(sunrise_m) + " a " + String(sunset_h) + ":" + String(sunset_m);
 
-  if (sCalculated == true)
-    sprintf(solarBuffer, "No Calculado");
-  else
-    sprintf(solarBuffer, " %02m %02s a %02m %02s", sunrise_h, sunrise_m, sunset_h, sunset_m);
-  
-  solarString = String(solarBuffer);
+  #if (_SOLAR_SERIAL_DEBUG_ == 1)
+  Serial.println("Solar Calculated: ");
+  Serial.println(solarString); 
+  #endif
 }
 
 /////////////////////////
@@ -56,11 +54,6 @@ void _SolarSunriseSunset(void)
   sunset_m = m % 60;
 
   _SolarString();
-
-  #if (_SOLAR_SERIAL_DEBUG_ == 1)
-  Serial.print("Solar Calculated: ");
-  Serial.println(solarString); 
-  #endif
 }
 
 #endif

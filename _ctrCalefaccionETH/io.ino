@@ -29,13 +29,14 @@ void _IOSetup()
 
   // Pin definition
   // No bigger than OUT_NUMBER
-  OutPin[0] = PIN_OUT1;
-  OutPin[1] = PIN_OUT2;
-  OutPin[2] = PIN_OUT3;
-  OutPin[3] = PIN_OUT4;
-  OutPin[4] = PIN_OUT5;
-  OutPin[5] = PIN_OUT6;
-    
+  OutPin[0] = PIN_OUT1; // O1
+  OutPin[1] = PIN_OUT2; // O2
+  OutPin[2] = PIN_OUT3; // O3
+  OutPin[3] = PIN_OUT4; // O4
+  OutPin[4] = PIN_OUT5; // O5
+  OutPin[5] = PIN_OUT6; // RL1
+  OutPin[6] = PIN_OUT7; // RL2
+
   // No bigger than IN_NUMBER
   InPin[0] = PIN_IN1;
   InPin[1] = PIN_IN2;

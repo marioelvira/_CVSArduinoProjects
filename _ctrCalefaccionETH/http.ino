@@ -64,16 +64,18 @@ void _serveMAIN()
   html = html + "<p>";
   html = html + "  <input type=\"button\" value=\"Cambiar\" onclick=\"sendOUT(10)\">";
   html = html + "</p><p>";
+  html = html + "  <input type=\"button\" value=\"RL1\" onclick=\"sendOUT(6)\">";
+  html = html + "  <input type=\"button\" value=\"RL2\" onclick=\"sendOUT(7)\">";
+  html = html + "</p><p>";
   html = html + "  <input type=\"button\" value=\"O1\" onclick=\"sendOUT(1)\">";
   html = html + "  <input type=\"button\" value=\"O2\" onclick=\"sendOUT(2)\">";
   html = html + "  <input type=\"button\" value=\"O3\" onclick=\"sendOUT(3)\">";
   html = html + "  <input type=\"button\" value=\"O4\" onclick=\"sendOUT(4)\">";
   html = html + "  <input type=\"button\" value=\"O5\" onclick=\"sendOUT(5)\">";
-  html = html + "  <input type=\"button\" value=\"O6\" onclick=\"sendOUT(6)\">";
   html = html + "</p><p>";
-  html = html + "  <input type=\"button\" value=\"T1\" onclick=\"sendOUT(31)\">";
-  html = html + "  <input type=\"button\" value=\"T2\" onclick=\"sendOUT(32)\">";
-  html = html + "  <input type=\"button\" value=\"T3\" onclick=\"sendOUT(33)\">";
+  html = html + "  <input type=\"button\" value=\"TR3\" onclick=\"sendOUT(33)\">";
+  html = html + "  <input type=\"button\" value=\"TR2\" onclick=\"sendOUT(32)\">";
+  html = html + "  <input type=\"button\" value=\"TR1\" onclick=\"sendOUT(31)\">";
   html = html + "</p>";
 
   html = html + "<div class=\"section\"><span>3</span>Estado</div>";
@@ -802,14 +804,19 @@ void _readOUTS()
   html = "<table style=\"width:100%\">";
   
   html = html + "<tr>";
+  html = html + "<td style=\"width:60%\">Reles</td>";
+  html = html + "<td style=\"width:40%\">" + String(OutDig[5]) + "-" + String(OutDig[6]) + "</td>";
+  html = html + "</tr>";
+
+  html = html + "<tr>";
   html = html + "<td style=\"width:60%\">Salidas</td>";
-  html = html + "<td style=\"width:40%\">" + String(OutDig[0]) + "-" + String(OutDig[1]) + "-" + String(OutDig[2]) + "-" + String(OutDig[3]) + "-" + String(OutDig[4]) + "-" + String(OutDig[5]) + "</td>";
+  html = html + "<td style=\"width:40%\">" + String(OutDig[0]) + "-" + String(OutDig[1]) + "-" + String(OutDig[2]) + "-" + String(OutDig[3]) + "-" + String(OutDig[4]) + "</td>";
   html = html + "</tr>";
 
   #if (_USE_TRIAC_ == 1)
   html = html + "<tr>";
   html = html + "<td style=\"width:60%\">Triacs</td>";
-  html = html + "<td style=\"width:40%\">" + String(TriacCtr[0]) + "-" + String(TriacCtr[1]) + "-" + String(TriacCtr[2]) + "</td>";
+  html = html + "<td style=\"width:40%\">" + String(TriacCtr[2]) + "-" + String(TriacCtr[1]) + "-" + String(TriacCtr[0]) + "</td>";
   html = html + "</tr>";
   #endif
 
@@ -877,12 +884,12 @@ void _setOUTS()
       if (OutDig[0] == OUT_ON)
       {
         OutDig[0] = OUT_OFF;
-        html = "Out 1 OFF";
+        html = "O1 OFF";
       }
       else
       {
         OutDig[0] = OUT_ON;
-        html = "Out 1 ON";
+        html = "O1 ON";
       }
     }
     // Out 2
@@ -891,12 +898,12 @@ void _setOUTS()
       if (OutDig[1] == OUT_ON)
       {
         OutDig[1] = OUT_OFF;
-        html = "Out 2 OFF";
+        html = "O2 OFF";
       }
       else
       {
         OutDig[1] = OUT_ON;
-        html = "Out 2 ON";
+        html = "O2 ON";
       }
     }
     // Out 3
@@ -905,12 +912,12 @@ void _setOUTS()
       if (OutDig[2] == OUT_ON)
       {
         OutDig[2] = OUT_OFF;
-        html = "Out 3 OFF";
+        html = "O3 OFF";
       }
       else
       {
         OutDig[2] = OUT_ON;
-        html = "Out 3 ON";
+        html = "O3 ON";
       }
     }
     // Out 4
@@ -919,12 +926,12 @@ void _setOUTS()
       if (OutDig[3] == OUT_ON)
       {
         OutDig[3] = OUT_OFF;
-        html = "Out 4 OFF";
+        html = "O4 OFF";
       }
       else
       {
         OutDig[3] = OUT_ON;
-        html = "Out 4 ON";
+        html = "O4 ON";
       }
     }
     // Out 5
@@ -933,26 +940,40 @@ void _setOUTS()
       if (OutDig[4] == OUT_ON)
       {
         OutDig[4] = OUT_OFF;
-        html = "Out 5 OFF";
+        html = "O5 OFF";
       }
       else
       {
         OutDig[4] = OUT_ON;
-        html = "Out 5 ON";
+        html = "O5 ON";
       }
     }
-    // Out 6
+    // Out 6 - RL1
     else if(out_number == "6")
     {
       if (OutDig[5] == OUT_ON)
       {
         OutDig[5] = OUT_OFF;
-        html = "Out 6 OFF";
+        html = "O6 RL1 OFF";
       }
       else
       {
         OutDig[5] = OUT_ON;
-        html = "Out 6 ON";
+        html = "O6 RL1 ON";
+      }
+    }
+    // Out 7 - RL2
+    else if(out_number == "7")
+    {
+      if (OutDig[6] == OUT_ON)
+      {
+        OutDig[6] = OUT_OFF;
+        html = "O7 RL2 OFF";
+      }
+      else
+      {
+        OutDig[6] = OUT_ON;
+        html = "O7 RL2 ON";
       }
     }
     #if (_USE_TRIAC_ == 1)

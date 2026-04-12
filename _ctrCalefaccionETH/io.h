@@ -15,15 +15,15 @@ extern "C" {
  *                              ------| USB  C |------
  *                              |     |--------|     |
  *                              |                    |
- *    (Reset Quemador) OUT6 <- -| GPIO54        VUBS |-
- *     (Bomba Achique) OUT5 <- -| GPIO19        VSYS |-
+ *      (Reset Quemador) O5 <- -| GPIO54        VUBS |-
+ *       (Bomba Drenaje) O3 <- -| GPIO19        VSYS |-
  *                             -| GND            GND |-
  *                       AUX # -| GPIO18          EN |-
  *                       AUX # -| GPIO17         3V3 |-
  *                       AUX # -| GPIO16      GPIO20 |- # AUX
- * (Bomba Recirc Agua) OUT4 <- -| GPIO15      GPIO21 |- # AUX
+ *   (Bomba Recirc Agua) O4 <- -| GPIO15      GPIO21 |- # AUX
  *                             -| GND            GND |-
- *          (Out Aux3) OUT3 <- -| GPIO14      GPIO22 |- <- ZD1 (Detector de paso por cero)
+ *                 (RL1) O6 <- -| GPIO14      GPIO22 |- <- ZD1 (Detector de paso por cero)
  *                             -| GPIO06      GPIO23 |- # AUX
  *            (In Aux1) IN1 -> -| GPIO05*        RUN |- System Control
  *            (In Aux2) IN2 -> -| GPIO04*     GPIO26 |- -> LED (Estado)
@@ -33,8 +33,8 @@ extern "C" {
  *                       DIO # -| SCL/GPIO08  GPIO33 |- -> TR1 (Res. Principal)
  *                       DIO # -| SCL/GPIO07  GPIO46 |- -> RTS_RS485
  *                             -| GND            GND |-
- *          (Out Aux1) OUT1 <- -| DM/GPIO24   GPIO47 |- -> TX_RS485
- *          (Out Aux2) OUT2 <- -| DP/GPIO25   GPIO48 |- <- RX_RS485
+ *            (Out Aux1) O1 <- -| DM/GPIO24   GPIO47 |- -> TX_RS485
+ *            (Out Aux2) O2 <- -| DP/GPIO25   GPIO48 |- <- RX_RS485
  *                             -|                    |-
  *                             -|    ------------    |-
  *                             -|    |          |    |-
@@ -51,13 +51,14 @@ extern "C" {
 #define PIN_LED         26
 
 // OUTs
-#define OUT_NUMBER      6
-#define PIN_OUT1        24
-#define PIN_OUT2        25
-#define PIN_OUT3        14
-#define PIN_OUT4        15 // Bomba Recirc
-#define PIN_OUT5        19 // Bomba Achique
-#define PIN_OUT6        54 // Reset Quemador
+#define OUT_NUMBER      7
+#define PIN_OUT1        24  // O1 24
+#define PIN_OUT2        25  // O2 25
+#define PIN_OUT3        19  // O3 19 Bomba Achique
+#define PIN_OUT4        15  // O4 15 Bomba Recirc
+#define PIN_OUT5        54  // O5 54 
+#define PIN_OUT6        14  // RL1 14 Reset Quemador
+#define PIN_OUT7        6   // RL2 06
 
 #define TRIAC_NUMBER    3
 #define PIN_TRIAC1      33

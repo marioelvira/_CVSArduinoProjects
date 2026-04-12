@@ -253,13 +253,7 @@ void _MQTTSend(int itopic)
     str = str + "\"ip\":\"";
     str = str + String(ipAddress.toString());
     str = str + "\",\n";
-    
-    #if (_USE_MB_ == 1)
-    str = str + "\"mer\":\"";
-    str = str + String(mbNError) + "-" + String(mbNReply) + "-" + String(mbNRetry);
-    str = str + "\",\n";
-    #endif (_USE_MB_ == 1)
-  
+      
     str = str + "\"md\":";
     str = str + String(controlMode);
     str = str + ",\n";
@@ -326,11 +320,9 @@ void _MQTTSend(int itopic)
     str = str + "\"sun\":\"";
     str = str + solarString;
     str = str + "\",\n";
+
     str = str + "\"dn\":\"";
-    if (solarDayNight == false)
-      str = str + "noche";
-    else
-      str = str + "dia";
+    str = str + String (solarDayNight);
     str = str + "\",\n";
     #endif
   }
@@ -404,7 +396,11 @@ void _MQTTSend(int itopic)
     str = str + "\"i18\":";
     str = str + String(mbIns[7][1]);
     str = str + ",\n";
-        
+
+    str = str + "\"mer\":\"";
+    str = str + String(mbNError) + "-" + String(mbNReply) + "-" + String(mbNRetry);
+    str = str + "\",\n";
+  
     #endif // (_USE_MB_ == 1)
 
     str = str + "\"a1\":\"";

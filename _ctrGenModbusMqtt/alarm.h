@@ -15,6 +15,7 @@ extern "C" {
 #define AL_ERROR2      2
 #define AL_ERROR3      3
 #define AL_ERROR4      4
+#define AL_ERROR5      5
 
 #define AL_ERROR0_STR   "Com tarj MB1"
 #define AL_ERROR1_STR   "Com tarj MB2"

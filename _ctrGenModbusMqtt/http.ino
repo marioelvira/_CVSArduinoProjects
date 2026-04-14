@@ -39,7 +39,7 @@ void _serveMAIN()
   html = html + "<h1>" + PROJECT + " #Estado<span>ESP8266 tech</span><span align=\"right\"> Ver: " + compdate + " " + comptime + "</span></h1>";
 
   html = html + "<div class=\"section\"><span>1</span>Sistema</div>";
-  html = html + "<p class=\"sansserif\" id=\"STATUSSid\">...</p>";
+  html = html + "<p class=\"sansserif\" id=\"TEMPSid\">...</p>";
   html = html + "<p>";
   html = html + "  <input type=\"button\" value=\"Reset\" onclick=\"sendOUT(1)\">";
   html = html + "  <input type=\"button\" value=\"Restore\" onclick=\"sendOUT(2)\">";
@@ -143,7 +143,7 @@ void _serveMAIN()
   html = html + "  var xhttp = new XMLHttpRequest();";
   html = html + "  xhttp.onreadystatechange = function() {";
   html = html + "    if (this.readyState == 4 && this.status == 200) {";
-  html = html + "      document.getElementById(\"STATUSSid\").innerHTML = this.responseText;";
+  html = html + "      document.getElementById(\"TEMPSid\").innerHTML = this.responseText;";
   html = html + "   }";
   html = html + "  };";
   html = html + "  xhttp.open(\"GET\", \"readSTATUS\", true);";
@@ -453,7 +453,7 @@ void _setCtrSETTINGS()
   if ((rtimeBZ.length() == 0)    ||
       (rtimeStart.length() == 0) ||
       (rtimeStop.length() == 0)  ||
-      (rtimeGenAl.length() == 0) ||
+      (rtimeGenAl.length() == 0)  ||
 	  
       (rtime1.length() == 0)  ||
       (rtime2.length() == 0)  ||
@@ -624,7 +624,13 @@ void _serveSETTINGS()
     html = html + "<label><input type=\"radio\" name=\"wifimode\" value=\"ap\" checked> Access Point</label>";
     html = html + "<label><input type=\"radio\" name=\"wifimode\" value=\"st\"> Station</label>";
   }
-
+  
+  //html = html + "<label>SSID">
+  //html = html + "<select id='wifi' name='wifi'>";
+  //html = html + " <option value=\"\" selected>Selet</option>";
+  //for (int i = 0; i < n; ++i)
+  //  html = html + " <option value=\"" + (String)(WiFi.SSID(i)) + "\">" + (String)(WiFi.SSID(i)) + "</option>";    
+  //html = html + "</select></label>";
 
   html = html + "<label>SSID <input type=\"text\" maxlength=\"30\" value=\"" + String(ssid) + "\" name=\"ssid\"/></label>";
   html = html + "<label>Password <input type=\"text\" maxlength=\"30\" value=\"" + String(password) + "\" name=\"pass\"/></label>";
@@ -654,7 +660,6 @@ void _serveSETTINGS()
   html = html + "</div>";
   // End
 
-  #if (_USE_MQTT_ == 1)
   // Broker
   html = html + "<div class=\"section\"><span>3</span>Broker </div>";
   html = html + "<div class=\"inner-wrap\">";
@@ -666,8 +671,7 @@ void _serveSETTINGS()
 
   html = html + "</div>";
   // End
-  #endif
-
+                        
   html = html + "<div class=\"button-section\">";
   html = html + "  <input type=\"submit\" value=\"Guardar\">";
   html = html + "  <a href=\"index.htm\"><input type=\"button\" value=\"Volver\"></a>";
@@ -695,13 +699,11 @@ void _setSETTINGS()
   String rmask = httpServer.arg("mask");
   String rgate = httpServer.arg("gateway");
   
-  #if (_USE_MQTT_ == 1)
   String rbrokerurl = httpServer.arg("brokerurl");
   String rbrokerport = httpServer.arg("brokerport");
   String rbrokeruser = httpServer.arg("brokeruser");
   String rbrokerpswd = httpServer.arg("brokerpswd");
-  #endif
-
+      
   String html = "";
   int i, j, k, m;
   int error = 0;
@@ -748,19 +750,16 @@ void _setSETTINGS()
   else
     error = 1;
 
-  #if (_USE_MQTT_ == 1)
   // Check broker error
   if ((rbrokerurl.length() == 0)  ||
       (rbrokerport.length() == 0) ||
       (rbrokeruser.length() == 0) ||
       (rbrokerpswd.length() == 0))
-    error = 1;
-  #endif
+    error |= 1;
 
   // If no error on data...
   if (error == 0)
   {
-    #if (_USE_MQTT_ == 1)
      // Broker Url
      for (i = 0; i < MQTT_URL_MAX; i++)
        EEPROM.write(EEPROM_ADD_BROKER + i, 0);
@@ -785,8 +784,7 @@ void _setSETTINGS()
      j = rbrokerpswd.length();
      for (i = 0; i < j; i++)
        EEPROM.write(EEPROM_ADD_MQTT_PSWD + i, rbrokerpswd[i]);
-     #endif
-
+ 
      /////////////////////////
      // Wi-Fi configuration //
      /////////////////////////
@@ -938,15 +936,12 @@ void _setSETTINGS()
      Serial.print("---->Local gateway: ");
      Serial.println(localgate);
 
-     #if (_USE_MQTT_ == 1)
      // Broker configuration
      Serial.print("---->Broker Url: ");
      Serial.println(rbrokerurl);
      Serial.print("---->Broker Port: ");
      Serial.println(rbrokerport);     
      #endif
-
-     #endif // (_HTTP_SERIAL_DEBUG_ == 1)
      
      EEPROM.commit();
 
@@ -1108,7 +1103,7 @@ void _readCTR()
   else
    html = html + "<td><font style=\"color:grey\">Desactivado</font></td>";
   html = html + "</tr>";
- 
+  
   html = html + "</table>";
   
   httpServer.send(200, "text/plane", html);
@@ -1365,10 +1360,12 @@ void _readSTATUS()
   html = html + "<td>" + String(timeDay) + "d " + timeOnString + "</td>";
   html = html + "</tr>";
   
+  #if (_USE_NTP_ == 1)
   html = html + "<tr>";
   html = html + "<td>Fecha NTP</td>";
   html = html + "<td>" + mntpTimeString + "</td>";
   html = html + "</tr>";
+  #endif
 
   #if (_USE_SOLAR_ == 1)
   html = html + "<tr>";
@@ -1381,6 +1378,7 @@ void _readSTATUS()
   html = html + "</tr>";
   #endif
 
+
   html = html + "<tr>";
   html = html + "<td>Free RAM</td>";
   html = html + "<td>" + String(freeRam) + "</td>";
@@ -1391,12 +1389,10 @@ void _readSTATUS()
   html = html + "<td>" + String(wifiStatus) + "</td>";
   html = html + "</tr>";
 
-  #if (_USE_MQTT_ == 1)
   html = html + "<tr>";
   html = html + "<td>MQTT </td>";
   html = html + "<td>" + String(mqttStatus) + "</td>";
   html = html + "</tr>";
-  #endif
 
   html = html + "<tr>";
   html = html + "<td>Alarma </td>";
@@ -1408,10 +1404,10 @@ void _readSTATUS()
   httpServer.send(200, "text/plane", html);
 }
 
-///////////////
-// Http loop //
-///////////////
-void _HTTPLoop()
+////////////////////////
+// Http state machine //
+////////////////////////
+void _HttpLoop()
 {
   switch (httpStatus)
   {

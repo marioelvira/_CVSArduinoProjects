@@ -35,9 +35,10 @@ void _WifiLoop()
       Serial.println(wifiIP);
       #endif
 
+      // Http start
       _HTTPStart();
 
-       wifiAPTick = millis();
+      wifiAPTick = millis();
         
       wifiStatus = WIFI_ON_ACCESSPOINT;
       break;
@@ -63,7 +64,7 @@ void _WifiLoop()
     case WIFI_START_STATION:
     
       WiFi.begin(ssid, password);
-      WiFi.macAddress(macAddress);
+      WiFi.macAddress(mac);
      
       WiFi.disconnect();          // Prevent connecting to wifi based on previous configuration
       WiFi.hostname(deviceName);  // DHCP Hostname (useful for finding device for static lease)
@@ -98,12 +99,12 @@ void _WifiLoop()
       // If connected...
       else
       {
+
         ipAddress = WiFi.localIP();
         gateWay   = WiFi.gatewayIP();
         netMask   = WiFi.subnetMask();
                 
         #if (_WIFI_SERIAL_DEBUG_ == 1)
-        Serial.println(" ");
         Serial.println("*******************************************************");
         Serial.println("*******************************************************");
         Serial.println("*******************************************************");
@@ -120,25 +121,25 @@ void _WifiLoop()
         Serial.print("Gateway: ");
         Serial.println(gateWay);
         Serial.print("MAC: ");
-        Serial.print(macAddress[5],HEX);
+        Serial.print(mac[5],HEX);
         Serial.print(":");
-        Serial.print(macAddress[4],HEX);
+        Serial.print(mac[4],HEX);
         Serial.print(":");
-        Serial.print(macAddress[3],HEX);
+        Serial.print(mac[3],HEX);
         Serial.print(":");
-        Serial.print(macAddress[2],HEX);
+        Serial.print(mac[2],HEX);
         Serial.print(":");
-        Serial.print(macAddress[1],HEX);
+        Serial.print(mac[1],HEX);
         Serial.print(":");
-        Serial.println(macAddress[0],HEX);
+        Serial.println(mac[0],HEX);
         #endif
 
         _HTTPStart();
-        
+  
         #if (_USE_NTP_ == 1)
         _mNTPStart();
         #endif
-
+      
         wifiStatus = WIFI_STATION_CONNECTED;
       }
       break;
@@ -148,11 +149,11 @@ void _WifiLoop()
       if (WiFi.status() != WL_CONNECTED)
       {
         _HTTPStop();
-
+    
         #if (_USE_NTP_ == 1)
         _mNTPStop();
         #endif
-
+        
         wifiStatus = WIFI_START_STATION;
       }
 
@@ -206,10 +207,7 @@ void _WifiLedLoop()
       break;
 
     case WIFI_STATION_CONNECTED:
-      
-      #if (_USE_MQTT_ == 1)
-      _MQTTLedLoop();
-      #else
+      /*
       if (millis() - wifiLEDTick >= WIFI_BLINK_STATION)
       {
         //#if (_WIFI_SERIAL_DEBUG_ == 1)
@@ -219,8 +217,8 @@ void _WifiLedLoop()
         wifiLEDTick = millis();
       }      
       outLed = IO_ON;
-      #endif
-
+      */
+      _MQTTLedLoop();
       break;
   }
 }

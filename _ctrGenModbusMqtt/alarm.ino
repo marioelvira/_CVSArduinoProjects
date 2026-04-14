@@ -162,10 +162,10 @@ void _ALARMLoop()
 
     case STATE_AL_ON_NOTIFY:
     case STATE_AL_OFF_NOTIFY:
-      // MQTT
-      #if (_USE_MQTT_ == 1)
-      //mqttTopic = MQTT_LAST_TOPIC;  // Notify alarm
-      #endif
+      //#if (_USE_MQTT_ == 1)
+      mqttTopic = MQTT_LAST_TOPIC;  // Notify alarm
+      //#endif
+
       alSecond = 0;
       alNotify = 0;
       

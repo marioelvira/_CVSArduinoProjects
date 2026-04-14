@@ -35,15 +35,13 @@ extern "C" {
 #define WIFI_PSWD_MAX             32 // max 32 char -> Next 0x4F
 
 #define EEPROM_ADD_BROKER         0x4F
-#define MQTT_URL_MAX              22 // max 24 char -> Next 0x67
-#define EEPROM_ADD_BROKER_PORT    0x65
+#define MQTT_URL_MAX              24 // max 24 char -> Next 0x67
+#define EEPROM_ADD_BROKER_PORT    0x67
 #define BROKER_PORT_MAX           2
-#define EEPROM_ADD_MQTT_USER      0x67
-#define MQTT_USER_MAX             22 // max 22 char -> Next 0x7D
-#define EEPROM_ADD_MQTT_PSWD      0x7D
-#define MQTT_PSWD_MAX             22 // max 24 char -> Next 0x95
-
-//#define BROKER_PORT_MAX         2
+#define EEPROM_ADD_MQTT_USER      0x69
+#define MQTT_USER_MAX             24 // max 24 char -> Next 0x81
+#define EEPROM_ADD_MQTT_PSWD      0x81
+#define MQTT_PSWD_MAX             24 // max 24 char -> Next 0x99
 
 #define EEPROM_ADD_LOGIC_INS      0x99
 #define EEPROM_ADD_LOGIC_OUTS     0x9A
@@ -88,7 +86,7 @@ extern "C" {
 //#define EEPROM_ADD_MAX          0xFA // 250
 
 // Values
-#define EEPROM_VAL_OK             0xA0
+#define EEPROM_VAL_OK             0xAB
 
 #define EEPROM_VAL_IP_MODE        DHCP_MODE
 #define EEPROM_VAL_IP1            192
@@ -110,45 +108,45 @@ extern "C" {
 
 //#define EEPROM_VAL_BROKER  
 //#define EEPROM_VAL_MQTT_USER
-//#define EEPROM_VAL_MQTT_PSWD    
-//#define EEPROM_VAL_BROKER_PORT
+//#define EEPROM_ADD_MQTT_PSWD    
+//#define EEPROM_VAL_BROKER_PORT    7000
 
-#define EEPROM_VAL_LOGIC_INS      1       // Valor Campo 22/03/2026
-#define EEPROM_VAL_LOGIC_OUTS     1       // Valor Campo 22/03/2026
-#define EEPROM_VAL_MBADD1         1       // Valor Campo 22/03/2026
-#define EEPROM_VAL_MBADD2         2       // Valor Campo 22/03/2026
+#define EEPROM_VAL_LOGIC_INS      1
+#define EEPROM_VAL_LOGIC_OUTS     1
+#define EEPROM_VAL_MBADD1         1
+#define EEPROM_VAL_MBADD2         2
 
-#define EEPROM_VAL_ADC_M          333     // Valor Campo 22/03/2026
-#define EEPROM_VAL_ADC_B          0       // Valor Campo 22/03/2026
-#define EEPROM_VAL_ADC_P          10000   // Valor Campo 22/03/2026
-#define EEPROM_VAL_ADC_S          0       // +/-  1/0   // Valor Campo 22/03/2026
-#define EEPROM_VAL_ADC_F          0       // si/no 1/0  // Valor Campo 22/03/2026
-#define EEPROM_VAL_ADC_AL         240     // 24.0       // Valor Campo 22/03/2026
+#define EEPROM_VAL_ADC_M          333   // 360
+#define EEPROM_VAL_ADC_B          0
+#define EEPROM_VAL_ADC_P          10000
+#define EEPROM_VAL_ADC_S          0     // +/-  1/0
+#define EEPROM_VAL_ADC_F          0     // si/no 1/0
+#define EEPROM_VAL_ADC_AL         240   // 24.0
 
 // Control
-#define EEPROM_VAL_1P_TIMER_GEN   15  // Min    // Valor Campo 22/03/2026
-#define EEPROM_VAL_2P_TIMER_GEN   30  // Min    // Valor Campo 22/03/2026
-#define EEPROM_VAL_3P_TIMER_GEN   60  // Min    // Valor Campo 22/03/2026
-#define EEPROM_VAL_4P_TIMER_GEN   90  // Min    // Valor Campo 22/03/2026
-#define EEPROM_VAL_5P_TIMER_GEN   120 // Min    // Valor Campo 22/03/2026
-#define EEPROM_VAL_6P_TIMER_GEN   3   // Horas  // Valor Campo 22/03/2026
-#define EEPROM_VAL_7P_TIMER_GEN   4   // Horas  // Valor Campo 22/03/2026
-#define EEPROM_VAL_8P_TIMER_GEN   5   // Horas  // Valor Campo 22/03/2026
-#define EEPROM_VAL_9P_TIMER_GEN   7   // Horas  // Valor Campo 22/03/2026
+#define EEPROM_VAL_1P_TIMER_GEN   15  // Min
+#define EEPROM_VAL_2P_TIMER_GEN   30  // Min
+#define EEPROM_VAL_3P_TIMER_GEN   60  // Min
+#define EEPROM_VAL_4P_TIMER_GEN   90  // Min
+#define EEPROM_VAL_5P_TIMER_GEN   120 // Min
+#define EEPROM_VAL_6P_TIMER_GEN   3   // Horas
+#define EEPROM_VAL_7P_TIMER_GEN   4   // Horas
+#define EEPROM_VAL_8P_TIMER_GEN   5   // Horas
+#define EEPROM_VAL_9P_TIMER_GEN   7   // Horas
 
-#define EEPROM_VAL_BUZZER_ON      10  // Secs // Valor Campo 22/03/2026
-#define EEPROM_VAL_TSTART         10  // Secs // Valor Campo 22/03/2026
-#define EEPROM_VAL_TSTOP          20  // Secs // Valor Campo 22/03/2026
-#define EEPROM_VAL_GEN_AL         30  // Secs // Valor Campo 22/03/2026
+#define EEPROM_VAL_BUZZER_ON      10  // Secs
+#define EEPROM_VAL_TSTART         10  // Secs
+#define EEPROM_VAL_TSTOP          20  // Secs
+#define EEPROM_VAL_GEN_AL         30  // Secs
 
-#define EEPROM_VAL_O11_TIMER   	10  // Min    // Valor Campo 22/03/2026
-#define EEPROM_VAL_O12_TIMER   	20  // Min    // Valor Campo 22/03/2026
-#define EEPROM_VAL_O13_TIMER   	30  // Min    // Valor Campo 22/03/2026
-#define EEPROM_VAL_O14_TIMER   	50  // Min    // Valor Campo 22/03/2026
-#define EEPROM_VAL_O15_TIMER   	1  	// Horas  // Valor Campo 22/03/2026 
-#define EEPROM_VAL_O16_TIMER   	2  	// Horas  // Valor Campo 22/03/2026
-#define EEPROM_VAL_O17_TIMER   	3  	// Horas  // Valor Campo 22/03/2026
-#define EEPROM_VAL_O18_TIMER   	4  	// Horas  // Valor Campo 22/03/2026
+#define EEPROM_VAL_O11_TIMER   	10  // Min
+#define EEPROM_VAL_O12_TIMER   	20  // Min
+#define EEPROM_VAL_O13_TIMER   	30  // Min
+#define EEPROM_VAL_O14_TIMER   	40  // Min
+#define EEPROM_VAL_O15_TIMER   	1  	// Horas
+#define EEPROM_VAL_O16_TIMER   	2  	// Horas
+#define EEPROM_VAL_O17_TIMER   	3  	// Horas
+#define EEPROM_VAL_O18_TIMER   	4  	// Horas
 
 #define NUM_O1X_MAX		8
 

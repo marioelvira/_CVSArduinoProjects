@@ -11,8 +11,11 @@ hw_timer_t * triac1Timer = NULL;
 hw_timer_t * triac2Timer = NULL;
 hw_timer_t * triac3Timer = NULL;
 
-int triacZCPeriod;
-unsigned long triacTick = 0;
+const int triacZCPin = PIN_ZD1;
+int triacZCAlarmSec = 0;
+uint32_t triacZCTickUs = 0;
+int triacZCPeriodUs;
+float triacZCFrec = 0;
 
 int triac1Delay = 0;
 int triac1Cicle = 50;
@@ -24,8 +27,31 @@ int triac3Cicle = 50;
 ////////////////
 // Interrupts //
 ////////////////
+void IRAM_ATTR isrTriac1Timer()
+{
+  digitalWrite(PIN_TRIAC1, PIN_TRIAC_ON);
+  delayMicroseconds(10);
+  digitalWrite(PIN_TRIAC1, PIN_TRIAC_OFF);
+}
+
+void IRAM_ATTR isrTriac2Timer()
+{
+  digitalWrite(PIN_TRIAC2, PIN_TRIAC_ON);
+  delayMicroseconds(10);
+  digitalWrite(PIN_TRIAC2, PIN_TRIAC_OFF);
+}
+
+void IRAM_ATTR isrTriac3Timer()
+{
+  digitalWrite(PIN_TRIAC3, PIN_TRIAC_ON);
+  delayMicroseconds(10);
+  digitalWrite(PIN_TRIAC3, PIN_TRIAC_OFF);
+}
+
 void IRAM_ATTR isrZeroCross()
-{ 
+{
+  uint32_t nowUs = micros();
+
   if (TriacCtr[0] == TRIAC_ON)
   {
     timerRestart(triac1Timer);
@@ -47,30 +73,10 @@ void IRAM_ATTR isrZeroCross()
     timerAlarm(triac3Timer, triac3Delay, false, 0);
   }
 
-  // ZC Periodo
-  triacZCPeriod = int (millis() - triacTick);
-  triacTick = millis();
-}
-
-void IRAM_ATTR isrTriac1Timer()
-{
-  digitalWrite(PIN_TRIAC1, PIN_TRIAC_ON);
-  delayMicroseconds(10);
-  digitalWrite(PIN_TRIAC1, PIN_TRIAC_OFF);
-}
-
-void IRAM_ATTR isrTriac2Timer()
-{
-  digitalWrite(PIN_TRIAC2, PIN_TRIAC_ON);
-  delayMicroseconds(10);
-  digitalWrite(PIN_TRIAC2, PIN_TRIAC_OFF);
-}
-
-void IRAM_ATTR isrTriac3Timer()
-{
-  digitalWrite(PIN_TRIAC3, PIN_TRIAC_ON);
-  delayMicroseconds(10);
-  digitalWrite(PIN_TRIAC3, PIN_TRIAC_OFF);
+  // ZC Period
+  triacZCPeriodUs = int (nowUs - triacZCTickUs);
+  triacZCTickUs = nowUs;
+  triacZCAlarmSec = 0;
 }
 
 //////////////////
@@ -99,21 +105,66 @@ void _TRIACSetup()
   triac3Timer = timerBegin(1000000);
   timerAttachInterrupt(triac3Timer, &isrTriac3Timer);
 
-  // En v3.0, el tiempo se maneja según la frecuencia configurada en timerBegin
-  // Si configuramos 1,000,000 Hz, 1 tick = 1 microsegundo.
-  triac1Delay = map(triac1Cicle, 0, 100, 8000, 100); 
-  triac2Delay = map(triac2Cicle, 0, 100, 8000, 100);
-  triac3Delay = map(triac3Cicle, 0, 100, 8000, 100);
-  
-  /////////////////
-  // ZC detector //
-  /////////////////
-  pinMode(PIN_ZD1, INPUT_PULLUP);
-  attachInterrupt(digitalPinToInterrupt(PIN_ZD1), isrZeroCross, RISING);
+  _TRIACUpdate();
+
+  // ZC detector
+  pinMode(triacZCPin, INPUT_PULLUP);
+  attachInterrupt(digitalPinToInterrupt(triacZCPin), isrZeroCross, FALLING /*RISING*/);
 
   // Cálculo del periodo
-  triacZCPeriod = 0;
-  triacTick = millis();
+  triacZCFrec = 0;
+  triacZCPeriodUs = 0;
+  triacZCTickUs = micros();
+  triacZCAlarmSec = 0;
+}
+
+////////////////
+// TRIAC loop //
+////////////////
+void _TRIACLoop()
+{
+  // Check Alarm
+  triacZCAlarmSec++;
+  if (triacZCAlarmSec > TRIAC_ALARM_ZC_SEC)
+  {
+    triacZCFrec = 0;
+    triacZCPeriodUs = 0;
+    
+    #if (_USE_ALARM_ == 1)
+    alarmOn[AL_ERROR1] = 1;
+    #endif
+  }
+  else
+  {
+    triacZCFrec = 1000000.0 / (triacZCPeriodUs * 2.0);
+
+    #if (_USE_ALARM_ == 1)
+    alarmOn[AL_ERROR1] = 0;
+    #endif
+  } 
+}
+
+void _TRIACUpdate()
+{
+  triac1Cicle = (int)(cfgTriacVout[0]*100)/230;
+  triac2Cicle = (int)(cfgTriacVout[1]*100)/230;
+  triac3Cicle = (int)(cfgTriacVout[2]*100)/230;
+
+  // En v3.0, el tiempo se maneja según la frecuencia configurada en timerBegin
+  // Si configuramos 1,000,000 Hz, 1 tick = 1 microsegundo.
+  triac1Delay = map(triac1Cicle, 0, 100, 8000, 100);
+  triac2Delay = map(triac2Cicle, 0, 100, 8000, 100);
+  triac3Delay = map(triac3Cicle, 0, 100, 8000, 100);
+
+  #if (_TRIAC_SERIAL_DEBUG_ == 1)
+  Serial.print("triac1Cicle: ");     Serial.println (triac1Cicle);
+  Serial.print("triac2Cicle: ");     Serial.println (triac2Cicle);
+  Serial.print("triac3Cicle: ");     Serial.println (triac3Cicle);
+  
+  Serial.print("triac1Delay: ");     Serial.println (triac1Delay);
+  Serial.print("triac2Delay: ");     Serial.println (triac2Delay);
+  Serial.print("triac3Delay: ");     Serial.println (triac3Delay);
+  #endif
 }
 
 #endif // (_USE_TRIAC_ == 1)

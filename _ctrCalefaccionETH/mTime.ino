@@ -116,6 +116,10 @@ void _TimeLoop(void)
     _WDELoop();
     #endif
 
+    #if (_USE_TRIAC_ == 1)
+    _TRIACLoop();
+    #endif
+
     #if (_USE_PWM_ == 1)
     _PWMLoop();
     #endif

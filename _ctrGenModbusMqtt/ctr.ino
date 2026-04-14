@@ -162,13 +162,8 @@ void _CtrLoop(void)
 void ctrIOsLoop(void)
 {
   // Ins
-  InStartVal = ioInA;
-  InEndVal   = ioInB;
-  #if (_USE_MB_ == 1)
-  InPulsVal  = mbIns[0][0];
-  #else
-  InPulsVal  = IO_OFF;
-  #endif
+  InStartVal= ioInA;
+  InEndVal  = ioInB;
   InGen = ioInC;
 
   // Outs
@@ -180,6 +175,7 @@ void ctrIOsLoop(void)
     alarm[AL_ERROR2] = 0;
   else
     alarm[AL_ERROR2] = 1;
+
 
   #if (_USE_MB_ == 1)
   
@@ -282,34 +278,10 @@ void ctrInsLoop(void)
     InEndCounter = 0;
   }
 
-  // In Puls...
-  if (InPulsVal_ant == InPulsVal)
-    InPulsCounter++; // Incrementamos el contador.
-  else
-  {
-    // Si detectamos un flanco ...
-    if (InPulsVal_ant == FLANCO)
-    {
-      if (InPulsCounter > PULSACION_OK)
-      {
-        InPulsState = PULSACION_OK;
-      }
-
-      #if (_PULS_SERIAL_DEBUG_ == 1)
-      if (InPulsState == PULSACION_OK)
-        Serial.println(">> Puls Luz -> Pulsacion OK");
-      else
-        Serial.println(">> Puls Luz -> Error Pulsacion");
-      #endif
-    }
-
-    InPulsCounter = 0;
-  }
-
   // Almacenamos el valor anterior...
-  InStartVal_ant = InStartVal;
-  InEndVal_ant   = InEndVal;
-  InPulsVal_ant  = InPulsVal;
+  InStartVal_ant  = InStartVal;
+  InEndVal_ant  = InEndVal;
+
 }
 
 // Puls loop

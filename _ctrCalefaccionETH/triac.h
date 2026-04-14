@@ -5,19 +5,24 @@ extern "C" {
 #ifndef _TRIAC_H_
 #define _TRIAC_H_
 
-#define TRIAC_NUMBER  3
+#define TRIAC_NUMBER        3
 
-#define PIN_TRIAC_OFF 0
-#define PIN_TRIAC_ON  1
+#define TRIAC_ALARM_ZC_SEC  15
 
-#define TRIAC_OFF     0
-#define TRIAC_ON      1
+#define PIN_TRIAC_OFF       0
+#define PIN_TRIAC_ON        1
+
+#define TRIAC_OFF           0
+#define TRIAC_ON            1
 
 extern int   TriacCtr[];
 
 extern const int triacZCPin;
-extern int triacZCPeriod;
-extern unsigned long triacTick;
+
+extern int triacZCAlarmSec;
+extern uint32_t triacZCTickUs;
+extern int triacZCPeriodUs;
+extern float triacZCFrec;
 
 extern int triacCtr1;
 extern const int triacPin1;

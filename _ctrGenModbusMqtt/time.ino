@@ -35,7 +35,7 @@ void _TimeSetup(void)
   // NTP Stop
   _mNTPSetup();
   #endif
-
+  
   // RAM setup
   _RAMSetup();
 }
@@ -85,11 +85,11 @@ void _TimeLoop(void)
     // Gen control
     _GenTimeLoop();
 
-    #if (_USE_NTP_ == 1)
     // NTP fake clock
+    #if (_USE_NTP_ == 1)
     _mNTPfakeSec();
     #endif
-
+      
     _timeOnString();
     timeTick = millis();
 
@@ -103,72 +103,58 @@ void _TimeLoop(void)
     _WDELoop();
     #endif
     
-    #if (_TICK_SERIAL_DEBUG_ == 1)
+    #if (_STATUS_SERIAL_DEBUG_ == 1)
     
-    Serial.println(" ");
     Serial.println("<><><><><><><>");
-    
-    #if (_CTR_SERIAL_DEBUG_ == 1)
     Serial.print("Tiempo Encendio: ");
     Serial.print(timeDay); Serial.print("d "); Serial.print(timeOnString);
     Serial.println(" ");
-   
+
+    Serial.print("Tiempo NTP: ");
+    Serial.print(mntpTimeString);
+    Serial.println(" ");
+
+    Serial.print("Free RAM: ");
+    Serial.println(freeRam);
+    
     Serial.print("Indicador LCD: ");
-    Serial.println(DisplayIndicador);
+    Serial.print(DisplayIndicador);
+    Serial.println(" ");
     
     Serial.print("Control Status: ");
     Serial.println(ControlState);  
 
     Serial.print("Alarm Status: ");
-    Serial.print(alState); Serial.print(" "); Serial.print(alNotify); Serial.print("-"); Serial.println(AL_NOTIFY_CONT);
+    Serial.print(alState); Serial.print(" "); Serial.println(alNotify); Serial.print("-"); Serial.println(AL_NOTIFY_CONT);
     
-    Serial.println("Alarms: ");
-    Serial.print(alarm[0]); Serial.print(alarm[1]); Serial.print(alarm[2]); Serial.print(alarm[3]);Serial.print(alarm[4]); Serial.print(alarm[5]); Serial.print(alarm[6]); Serial.println(alarm[7]);
-    Serial.print(alarm[8]); Serial.print(alarm[9]); Serial.print(alarm[10]); Serial.print(alarm[11]);Serial.print(alarm[12]); Serial.print(alarm[13]); Serial.print(alarm[14]); Serial.println(alarm[15]);
-    Serial.print(alarm[16]); Serial.print(alarm[17]); Serial.print(alarm[18]); Serial.print(alarm[19]);Serial.print(alarm[20]); Serial.print(alarm[21]); Serial.print(alarm[22]); Serial.println(alarm[23]);
+    Serial.print("Alarm: ");
+    Serial.print(alarm[0]); Serial.print(alarm[1]); Serial.print(alarm[2]); Serial.print(alarm[3]);
+    Serial.print(alarm[4]); Serial.print(alarm[5]); Serial.print(alarm[6]); Serial.println(alarm[7]);
+    Serial.print(alarm[8]); Serial.print(alarm[9]); Serial.print(alarm[10]); Serial.print(alarm[11]);
+    Serial.print(alarm[12]); Serial.print(alarm[13]); Serial.print(alarm[14]); Serial.println(alarm[15]);
+    Serial.print(alarm[16]); Serial.print(alarm[17]); Serial.print(alarm[18]); Serial.print(alarm[19]);
+    Serial.print(alarm[20]); Serial.print(alarm[21]); Serial.print(alarm[22]); Serial.println(alarm[23]);
+    Serial.println(" ");
     
-    Serial.print("Gen Status: "); Serial.print(genMinOn); Serial.print("m "); Serial.print(genTimeDay); Serial.print("d "); Serial.println(genTimeOnString);
+    Serial.print("Gen Status: ");
+    Serial.print(genMinOn); Serial.println("m ");
+    Serial.print(genTimeDay); Serial.print("d "); Serial.print(genTimeOnString);
+    Serial.println(" ");
+
+    Serial.print("MQTT Status: ");
+    Serial.print(mqttStatus); Serial.print(" - pl ");Serial.println(mqttPayload);
+ 
+    Serial.print("Wi-Fi Status: ");
+    Serial.println(wifiStatus);
 
     Serial.print("AdcVal: ");
     Serial.println(AdcIn);
     Serial.print("AdcIn: ");
-    Serial.println(AdcVal);
-    #endif // _CTR_SERIAL_DEBUG_
-
-    #if (_FREERAM_SERIAL_DEBUG_ == 1)
-    Serial.print("Free RAM: ");
-    Serial.println(freeRam);
-    #endif
-
-    #if (_NTP_SERIAL_DEBUG_ == 1)
-    Serial.print("Tiempo NTP: ");
-    Serial.println(mntpTimeString);
-    #endif
-
-    #if (_SOLAR_SERIAL_DEBUG_ == 1)
-    Serial.println("Solar Data: ");
-    Serial.print("Sunrise: "); Serial.print(sunrise_h); Serial.print(":");Serial.println(sunrise_m);
-    Serial.print("Sunset:  "); Serial.print(sunset_h);  Serial.print(":");Serial.println(sunset_m);
-    #endif
-
-    #if (_MQTT_SERIAL_DEBUG_ == 1)
-    Serial.print("MQTT Status: ");
-    Serial.print(mqttStatus); Serial.print(" - pl ");Serial.println(mqttPayload);
-    #endif
-
-    #if (_MBTCP_SERIAL_DEBUG_ == 1)
-    Serial.print("Modbus TCP Status: ");
-    Serial.print(mbTCPState); Serial.print(" "); Serial.println((millis() - mbTCPtick));
-    #endif
-
-    #if (_WIFI_SERIAL_DEBUG_ == 1)
-    Serial.print("Wi-Fi Status: ");
-    Serial.println(wifiStatus);
-    #endif
+    Serial.println(AdcVal);    
 
     Serial.println("<><><><><><><>");
     Serial.println(" ");
 
-    #endif // (_TICK_SERIAL_DEBUG_ == 1)
+    #endif
   }
 }

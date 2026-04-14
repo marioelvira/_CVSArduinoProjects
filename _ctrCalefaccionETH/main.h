@@ -49,6 +49,7 @@ extern "C" {
 #define _MQTT_SERIAL_DEBUG_        1
 #define _NTP_SERIAL_DEBUG_         0
 #define _WD_SERIAL_DEBUG_          0
+#define _TRIAC_SERIAL_DEBUG_       1
 #endif
 
 #endif // _MAIN_H_

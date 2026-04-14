@@ -1,7 +1,4 @@
 #include "MQTT.h"
-#include "main.h"
-
-#if (_USE_MQTT_ == 1)
 
 void mqttDataCallback(char* rtopic, byte* rpayload, unsigned int rlength)
 {
@@ -237,27 +234,11 @@ void _MQTTSend(int itopic)
   // Control //
   /////////////
   if (itopic == 0)
-  {
-    str = str + "\"tOn\":\"";
-    str = str + String(timeDay) + "d " + timeOnString;
-    str = str + "\",\n";
-    /*
-    str = str + "\"ram\":";
-    str = str + String(freeRam);
-    str = str + ",\n";
-    */
-    str = str + "\"tU\":\"";
-    str = str + mntpTimeString;
-    str = str + "\",\n";
-    
-    str = str + "\"ip\":\"";
-    str = str + String(ipAddress.toString());
-    str = str + "\",\n";
-      
+  { 
     str = str + "\"md\":";
     str = str + String(controlMode);
     str = str + ",\n";
-
+    
     str = str + "\"cSt\":";
     if (ControlState == 1)
       str = str + "START";
@@ -315,16 +296,6 @@ void _MQTTSend(int itopic)
     str = str + "\"adc\":";
     str = str + String(AdcVal);
     str = str + ",\n";
-
-    #if (_USE_SOLAR_ == 1)
-    str = str + "\"sun\":\"";
-    str = str + solarString;
-    str = str + "\",\n";
-
-    str = str + "\"dn\":\"";
-    str = str + String (solarDayNight);
-    str = str + "\",\n";
-    #endif
   }
   ///////////////////
   // Extra Control //
@@ -332,7 +303,6 @@ void _MQTTSend(int itopic)
   else if (itopic == 1)
   {
     #if (_USE_MB_ == 1)
-        
     str = str + "\"i1\":";
     str = str + String(mbIns[0][0]);
     str = str + ",\n";
@@ -395,12 +365,7 @@ void _MQTTSend(int itopic)
 
     str = str + "\"i18\":";
     str = str + String(mbIns[7][1]);
-    str = str + ",\n";
-
-    str = str + "\"mer\":\"";
-    str = str + String(mbNError) + "-" + String(mbNReply) + "-" + String(mbNRetry);
-    str = str + "\",\n";
-  
+    str = str + ",\n";   
     #endif // (_USE_MB_ == 1)
 
     str = str + "\"a1\":\"";
@@ -435,7 +400,6 @@ void _MQTTSend(int itopic)
     str = str + "\",\n";
 
     #if (_USE_MB_ == 1)
-    
     str = str + "\"mbO1\":\"";
     str = str + String(mbOuts[0][0]) + String(mbOuts[1][0]) + String(mbOuts[2][0]) + String(mbOuts[3][0]);
     str = str + String(mbOuts[4][0]) + String(mbOuts[5][0]) + String(mbOuts[6][0]) + String(mbOuts[7][0]);
@@ -465,24 +429,60 @@ void _MQTTSend(int itopic)
     str = str + String(mbIns[0][1]) + String(mbIns[1][1]) + String(mbIns[2][1]) + String(mbIns[3][1]);
     str = str + String(mbIns[4][1]) + String(mbIns[5][1]) + String(mbIns[6][1]) + String(mbIns[7][1]);
     str = str + "\",\n";
-
     #endif // (_USE_MB_ == 1)
 
     // AdcIn
     str = str + "\"adci\":";
     str = str + String(AdcIn);
     str = str + ",\n";
-  }  
+  }
+  ///////////////////
+  // Time and COMs //
+  ///////////////////
+  else if (itopic == 3)
+  {
+    str = str + "\"tOn\":\"";
+    str = str + String(timeDay) + "d " + timeOnString;
+    str = str + "\",\n";
+    
+    #if (_USE_NTP_ == 1)
+    str = str + "\"tU\":\"";
+    str = str + mntpTimeString;
+    str = str + "\",\n";
+    #endif
+
+    #if (_USE_SOLAR_ == 1)
+    str = str + "\"dn\":";
+    str = str + String(solarDayNight);
+    str = str + ",\n";
+    
+    str = str + "\"sun\":\"";
+    str = str + solarString;
+    str = str + "\",\n";
+    #endif
+    
+    str = str + "\"ip\":\"";
+    str = str + String(ipAddress.toString());
+    str = str + "\",\n";
+    
+    #if (_USE_MB_ == 1)
+    str = str + "\"mer\":\"";
+    str = str + String(mbNError) + "-" + String(mbNReply) + "-" + String(mbNRetry);
+    str = str + "\",\n";
+    #endif (_USE_MB_ == 1)
+  }
   ///////////
   // Alarm //
   ///////////
-  else if (itopic == 3)
+  else if (itopic == 4)
   {
     int balarm = 0;
 
+    #if (_USE_NTP_ == 1)
     str = str + "\"time\":\"";
     str = str + mntpTimeString;
     str = str + "\",\n";
+    #endif
 
     for (i = 0; i < AL_ARRAY_SIZE; i++)
     {
@@ -533,6 +533,8 @@ void _MQTTSend(int itopic)
   else if (itopic == 2)
     str = TOPIC_TEST;
   else if (itopic == 3)
+    str = TOPIC_TIME;
+  else if (itopic == 4)
     str = TOPIC_ALARM;
   else
     str = TOPIC_SCTR;
@@ -541,24 +543,15 @@ void _MQTTSend(int itopic)
   str.toCharArray(stopic, str_len);
 
   if(mqttPublish((char*)stopic, (char*)spayload))
-  #if (_MQTT_SERIAL_DEBUG_ != 1)
-  {}
-  #else
   {
-    Serial.println(" ");
+    #if (_MQTT_SERIAL_DEBUG_ == 1)
     Serial.println("TOPIC_STATE publish was succeeded");
-  }
-  else
-  {
-    Serial.println(" ");
-    Serial.println("TOPIC_STATE publish NOT succeeded");
-  }
-
-  Serial.println("$$$$$$$$$$$$$$$$ TX $$$$$$$$$$$$$$$$$$$$$");
-  Serial.println(stopic);
-  Serial.println(spayload);
-  Serial.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
-  #endif
+    Serial.println("$$$$$$$$$$$$$$$$ RX $$$$$$$$$$$$$$$$$$$$$");
+    Serial.println(stopic);
+    Serial.println(spayload);
+    Serial.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+    #endif
+  } 
 }
 
 /////////////////
@@ -669,12 +662,12 @@ void _MQTTLoop(void)
         mqttTick = millis();
 
         mqttClient.loop();
-
         _MQTTSend(mqttTopic);
         
 		    mqttTopic++;	
 		    if (mqttTopic >= MQTT_LAST_TOPIC)
-          mqttTopic = 0;
+		      mqttTopic = 0;
+
       }
       else
       {
@@ -716,5 +709,3 @@ void _MQTTLedLoop()
       break;
   }
 }
-
-#endif // (_USE_MQTT_ == 1)

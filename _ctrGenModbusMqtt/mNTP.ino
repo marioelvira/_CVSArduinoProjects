@@ -9,8 +9,7 @@ void _ntpTimeString(void)
   if (mntpSync == false)
     sprintf(timeBuffer, "No Sincronizado");
   else
-    sprintf(timeBuffer, "%02d/%02d/%4d %02d:%02d:%02d", day(), month(), year(), mntpHour, mntpMin, mntpSec);
-    //sprintf(timeBuffer, "%02d/%02d/%4d %02d:%02d:%02d", day(), month(), year(), hour(), minute(), second());
+    sprintf(timeBuffer, "%02d/%02d/%4d %02d:%02d:%02d", mntpDay, mntpMonth, mntpYear, mntpHour, mntpMin, mntpSec);
   
   mntpTimeString = String(timeBuffer);
 }     
@@ -101,6 +100,13 @@ void _mNTPloop(void)
       mntpEpochTime = mNtpClient.getEpochTime();
       setTime(mntpEpochTime);
 
+      mntpYear  = year();
+      mntpMonth = month();
+      mntpDay   = day();
+      mntpHour  = hour();
+      mntpMin   = minute();
+      mntpSec   = second();
+
       #if (_NTP_SERIAL_DEBUG_ == 1)
       _ntpTimeString();
 
@@ -108,13 +114,6 @@ void _mNTPloop(void)
       Serial.println(mntpTimeString);
       Serial.println("TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT");
       #endif
-
-      mntpYear  = year();
-      mntpMonth = month();
-      mntpDay   = day();
-      mntpHour  = hour();
-      mntpMin   = minute();
-      mntpSec   = second();
       
       #if (_USE_SOLAR_ == 1)
       if (sCalculated == false)
@@ -130,5 +129,4 @@ void _mNTPloop(void)
       break;
   }
 }
-
-#endif // (_USE_MQTT_ == 1)
+#endif // (_USE_NTP_ == 1)

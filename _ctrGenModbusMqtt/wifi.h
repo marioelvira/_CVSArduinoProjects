@@ -2,22 +2,23 @@
 extern "C" {
 #endif
 
-#ifndef _WIFI_H_
-#define _WIFI_H_
+#ifndef _HTTP_H_
+#define _HTTP_H_
+
+#include "main.h"
 
 ///////////
 // Wi-Fi //
 ///////////
 #define WIFI_BLINK_ACCESSPOINT     1000
 #define WIFI_BLINK_CONNECTING      100
-#define WIFI_BLINK_STATION         2000
+//#define WIFI_BLINK_STATION       2000
 
-#define WIFI_ACCESSPOINT_TIMEOUT   30000 // 30 sec
+#define WIFI_ACCESSPOINT_TIMEOUT  60000 // 60 sec
 /*
 #define SSIDST   "SSID"
 #define PSKST    "password"
 */
-
 #define SSIDAP    "MBMQTT8266"
 #define PSKAP     "topsecret"
 
@@ -28,7 +29,7 @@ extern "C" {
 #define WIFI_STATION_CONNECTING    4
 #define WIFI_STATION_CONNECTED     5
 
-#endif // _WIFI_H_
+#endif // _HTTP_H_
 
 #ifdef __cplusplus
 } // extern "C"

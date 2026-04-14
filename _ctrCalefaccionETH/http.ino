@@ -393,6 +393,10 @@ void _setSETTINGS()
     //DebugVal = rdebugVal.toInt();
     
     _ram2eepromCONFIG();
+    
+    #if (_USE_TRIAC_ == 1)
+    _TRIACUpdate();
+    #endif
   }
 
   html = "<!DOCTYPE HTML><html>";
@@ -750,7 +754,7 @@ void _readCTR()
   #if (_USE_TRIAC_ == 1)
   html = html + "<tr>";
   html = html + "<td style=\"width:60%\">Periodo de Red</td>";
-  html = html + "<td style=\"width:40%\">" + triacZCPeriod + " ms</td>";
+  html = html + "<td style=\"width:40%\">" + triacZCFrec + " Hz " + triacZCPeriodUs + " us " + triacZCAlarmSec + "</td>";
   html = html + "</tr>";
   #endif
 

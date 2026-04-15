@@ -60,12 +60,6 @@ void _IOSetup()
     OutDig[i] = OUT_OFF;
   }
 
-  #if (_USE_RS485_RXTX_ == 1)
-  pinMode(PIN_RS485_RXTX, OUTPUT);
-  digitalWrite(PIN_RS485_RXTX, HIGH);
-  OutRS485rxtx = OUT_RS485_RX;
-  #endif
-
   //-----//
   // INS //
   //-----//
@@ -103,13 +97,6 @@ void _IOLoop()
     else
       digitalWrite(OutPin[i], cfgLogicOuts /*PIN_OUT_OFF*/);
   }
-
-  #if (_USE_RS485_RXTX_ == 1)
-  if (OutRS485rxtx == OUT_RS485_RX)
-    digitalWrite(PIN_RS485_RXTX, LOW);
-  else
-    digitalWrite(PIN_RS485_RXTX, HIGH);
-  #endif
 
   //-----//
   // INS //

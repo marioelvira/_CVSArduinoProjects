@@ -1063,6 +1063,13 @@ void _readSTATUS()
   html = html + "</tr>";
   #endif
 
+  #if (_USE_RS485_ == 1)
+  html = html + "<tr>";
+  html = html + "<td style=\"width:60%\">RS485 </td>";
+  html = html + "<td style=\"width:40%\">" + String(mrs485State) + " " + String(OutRS485rxtx) + "</td>";
+  html = html + "</tr>";
+  #endif
+
   html = html + "</table>";
   
   httpServer.send(200, "text/plane", html);

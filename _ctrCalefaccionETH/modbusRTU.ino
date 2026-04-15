@@ -172,7 +172,6 @@ void _MBLoop(void)
   switch (mbState)
   {
     case MB_STANDBY:
-      
       if (millis() - mbTick >= MB_RXLOOP)
         mbState = MB_READTEMPS;
     
@@ -185,7 +184,6 @@ void _MBLoop(void)
       // Analyse Response
       mbTick = millis();
       mbState = MB_TEMPSTATUS;
-      
       break;
 
     case MB_TEMPSTATUS:

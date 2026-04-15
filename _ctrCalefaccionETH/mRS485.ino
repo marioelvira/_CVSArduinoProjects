@@ -32,8 +32,10 @@ void _RS485Setup(void)
   mrs485RxBuffer.reserve(MRS485_ARRAY_SIZE);
   //mrs485TxBuffer.reserve(MRS485_ARRAY_SIZE);
 
+  pinMode(PIN_RS485_RXTX, OUTPUT);
+  digitalWrite(PIN_RS485_RXTX, LOW);
   OutRS485rxtx = OUT_RS485_RX;
-
+  
   mrs485tick = millis();
 }
 
@@ -47,18 +49,18 @@ void _RS485Loop(void)
   switch (mrs485State)
   {
     case MRS485_STANDBY:
+      OutRS485rxtx = OUT_RS485_RX;
 	    if (Serial2.available())
       {
         mrs485State = MRS485_ONRX;
 	      mrs485tick = millis();
 		    inChar = (char)Serial2.read();
 		    mrs485RxBuffer += inChar;
-	    }
-      OutRS485rxtx = OUT_RS485_RX;
-	    
+	    }    
 	    break;
 	  
 	  case MRS485_ONRX:
+      OutRS485rxtx = OUT_RS485_RX;
 	    if (Serial2.available())
       {
         mrs485State = MRS485_ONRX;
@@ -66,7 +68,6 @@ void _RS485Loop(void)
 		    inChar = (char)Serial2.read();
 		    mrs485RxBuffer += inChar;
 	    }
-      OutRS485rxtx = OUT_RS485_RX;
       
 	    // Rx Time Out
 	    if (millis() - mrs485tick >= MRS485_RX_TOUT_MS)
@@ -74,10 +75,10 @@ void _RS485Loop(void)
 		    mrs485State = MRS485_FRAME_RX;
         OutRS485rxtx = OUT_RS485_TX;
       }
-
 	    break;
 	  
 	  case MRS485_FRAME_RX:
+      OutRS485rxtx = OUT_RS485_RX;
       // Must back to standby other part...
       // Time Out just in case
       if (millis() - mrs485tick >= MRS485_BACK_TOUT_MS)
@@ -86,7 +87,6 @@ void _RS485Loop(void)
         mrs485RxBuffer = "";
         mrs485State = MRS485_STANDBY;
       }
-
 	    break;
 
     case MRS485_INITTX:
@@ -98,7 +98,7 @@ void _RS485Loop(void)
       break;
       
 	  case MRS485_ONTX:
-      
+      OutRS485rxtx = OUT_RS485_TX;
       // Send buffer
       if (mrs485TxNumBytes > MRS485_ARRAY_SIZE)
         mrs485TxNumBytes = MRS485_ARRAY_SIZE;
@@ -106,12 +106,10 @@ void _RS485Loop(void)
 
       mrs485tick = millis();  
 	    mrs485State = MRS485_ENDTX;
-     
 	    break;
 
     case MRS485_ENDTX:
-      OutRS485rxtx = OUT_RS485_TX;
-    
+      OutRS485rxtx = OUT_RS485_TX;   
       // TX Time Out
       if (millis() - mrs485tick >= MRS485_TX_TOUT_MS)
       {
@@ -121,6 +119,11 @@ void _RS485Loop(void)
       }      
       break;
    }
- }
+
+  if (OutRS485rxtx == OUT_RS485_RX)
+    digitalWrite(PIN_RS485_RXTX, LOW);
+  else
+    digitalWrite(PIN_RS485_RXTX, HIGH);
+}
 
 #endif

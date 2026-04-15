@@ -143,25 +143,7 @@ void _TimeLoop(void)
     Serial.print("ethStatus: ");
     Serial.print(ethStatus);
     Serial.println(" ");
-    /*
-    // OUTs
-    for (i = 0; i< OUT_NUMBER; i++)
-    {
-      Serial.print("OUT");
-      Serial.print(i);
-      Serial.print(": ");
-      Serial.println(OutDig[i]);
-    }
 
-    // INs
-    for (i = 0; i< IN_NUMBER; i++)
-    {
-      Serial.print("IN");
-      Serial.print(i);
-      Serial.print(": ");
-      Serial.println(InDig[i]);
-    }
-    */
     Serial.println("<><><><><><><>");
     Serial.println(" ");
 

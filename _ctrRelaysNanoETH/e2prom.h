@@ -127,14 +127,14 @@ extern "C" {
 #define EEPROM_VAL_ADC2_VDC_B          0                              // Valor Campo 22/03/2026
 #define EEPROM_VAL_ADC3_VDC_M          20000  // 5V -> 100A           // Valor Campo 22/03/2026
 #define EEPROM_VAL_ADC3_VDC_B          0                              // Valor Campo 22/03/2026
-#define EEPROM_VAL_ADC4_VDC_M          2500                           // Valor Campo 22/03/2026
-#define EEPROM_VAL_ADC4_VDC_B          0                              // Valor Campo 22/03/2026
-#define EEPROM_VAL_ADC5_VDC_M          540                            // Valor Campo 22/03/2026
-#define EEPROM_VAL_ADC5_VDC_B          18                             // Valor Campo 22/03/2026
-#define EEPROM_VAL_ADC6_VDC_M          2200                           // Valor Campo 22/03/2026
-#define EEPROM_VAL_ADC6_VDC_B          0                              // Valor Campo 22/03/2026
-#define EEPROM_VAL_ADC7_VDC_M          2200                           // Valor Campo 22/03/2026
-#define EEPROM_VAL_ADC7_VDC_B          0                              // Valor Campo 22/03/2026
+#define EEPROM_VAL_ADC4_VDC_M          2944                           // Valor Campo 18/04/2026
+#define EEPROM_VAL_ADC4_VDC_B          0                              // Valor Campo 18/04/2026
+#define EEPROM_VAL_ADC5_VDC_M          2944                           // Valor Campo 18/04/2026
+#define EEPROM_VAL_ADC5_VDC_B          0                              // Valor Campo 18/04/2026
+#define EEPROM_VAL_ADC6_VDC_M          1472                           // Valor Campo 18/04/2026
+#define EEPROM_VAL_ADC6_VDC_B          0                              // Valor Campo 18/04/2026
+#define EEPROM_VAL_ADC7_VDC_M          1472                           // Valor Campo 18/04/2026
+#define EEPROM_VAL_ADC7_VDC_B          0                              // Valor Campo 18/04/2026
 
 #define EEPROM_VAL_STATE0_0_1_SEC      1    // 1s                     // Valor Campo 22/03/2026
 #define EEPROM_VAL_STATE0_1_2_SEC      180  // 3m                     // Valor Campo 22/03/2026

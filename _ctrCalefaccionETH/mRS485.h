@@ -9,8 +9,8 @@ extern "C" {
 
 #define MRS485_BACK_TOUT_MS     500
 #define MRS485_RX_TOUT_MS       5
-#define MRS485_TX_TOUT_MS       10
-#define MRS485_INITTX_TOUT_MS   2
+#define MRS485_INIT_TX_MS       2
+#define MRS485_END_TX_MS        10//2
 
 // Status
 #define MRS485_STANDBY	  1

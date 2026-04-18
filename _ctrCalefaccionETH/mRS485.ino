@@ -92,7 +92,7 @@ void _RS485Loop(void)
     case MRS485_INITTX:
       OutRS485rxtx = OUT_RS485_TX;
       // Init Tx Time wait
-      if (millis() - mrs485tick >= MRS485_INITTX_TOUT_MS)
+      if (millis() - mrs485tick >= MRS485_INIT_TX_MS)
         mrs485State = MRS485_ONTX;
 
       break;
@@ -111,7 +111,7 @@ void _RS485Loop(void)
     case MRS485_ENDTX:
       OutRS485rxtx = OUT_RS485_TX;   
       // TX Time Out
-      if (millis() - mrs485tick >= MRS485_TX_TOUT_MS)
+      if (millis() - mrs485tick >= MRS485_END_TX_MS)
       {
         mrs485RxBuffer = "";
         mrs485State = MRS485_STANDBY;

@@ -136,8 +136,12 @@ int _mbAnalyseTemps(char address)
     #endif
   }
   else
+  {
+    #if (_USE_ALARM_ == 1)
+    alarmOn[AL_ERROR0] = 1;
+    #endif
     error = 1;
-
+  }
   return error;
 }
 
@@ -168,6 +172,10 @@ void _MBSetup(void)
 void _MBLoop(void)
 {
   int error = 0;
+  #if (_MBRTU_SERIAL_DEBUG_ == 1)
+  int i;
+  String textRx;
+  #endif
   
   switch (mbState)
   {
@@ -202,16 +210,19 @@ void _MBLoop(void)
       // if response received
       if (mrs485State == MRS485_FRAME_RX)
       {
+        #if (_MBRTU_SERIAL_DEBUG_ == 1)
+        Serial.println("-------------- MB RTU RX -----------------");
+        textRx = String(mrs485RxBuffer[0], HEX)  + "." + String(mrs485RxBuffer[1], HEX)  + "." + String(mrs485RxBuffer[2], HEX)  + "." + String(mrs485RxBuffer[3], HEX)  + "." + String(mrs485RxBuffer[4], HEX)  + "." + String(mrs485RxBuffer[5], HEX)  + "." + String(mrs485RxBuffer[6], HEX)  + "." + String(mrs485RxBuffer[7], HEX)  + "." + String(mrs485RxBuffer[8], HEX)  + "." + String(mrs485RxBuffer[9], HEX);
+        Serial.println(textRx);
+        Serial.println("------------------------------------------");
+        #endif
+
         // Analyse response
         if (_mbAnalyseTemps((char)cfgMB1Add) == MB_RX_OK)
           _mbUdateTemps();
         else
         {
-          mbNError++;;
-
-          #if (_USE_ALARM_ == 1)
-          alarmOn[AL_ERROR0] = 1;
-          #endif
+          mbNError++;
         }
 
         mbTick = millis();

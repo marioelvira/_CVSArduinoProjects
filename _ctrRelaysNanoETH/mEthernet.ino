@@ -16,6 +16,7 @@ void _ETHSetup(void)
 void _ETHLoop()
 {
   int status;
+  String ipStr;
 
   switch (ethStatus)
   {

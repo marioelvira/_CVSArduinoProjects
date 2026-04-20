@@ -212,7 +212,8 @@ void _MBLoop(void)
       {
         #if (_MBRTU_SERIAL_DEBUG_ == 1)
         Serial.println("-------------- MB RTU RX -----------------");
-        textRx = String(mrs485RxBuffer[0], HEX)  + "." + String(mrs485RxBuffer[1], HEX)  + "." + String(mrs485RxBuffer[2], HEX)  + "." + String(mrs485RxBuffer[3], HEX)  + "." + String(mrs485RxBuffer[4], HEX)  + "." + String(mrs485RxBuffer[5], HEX)  + "." + String(mrs485RxBuffer[6], HEX)  + "." + String(mrs485RxBuffer[7], HEX)  + "." + String(mrs485RxBuffer[8], HEX)  + "." + String(mrs485RxBuffer[9], HEX);
+        textRx = String(mrs485RxBuffer[0], HEX)  + "." + String(mrs485RxBuffer[1], HEX)  + "." + String(mrs485RxBuffer[2], HEX)  + "." + String(mrs485RxBuffer[3], HEX)  + "." + String(mrs485RxBuffer[4], HEX)  + "." + String(mrs485RxBuffer[5], HEX)  + "." + String(mrs485RxBuffer[6], HEX)  + "." + String(mrs485RxBuffer[7], HEX); 
+        textRx = textRx + "." + String(mrs485RxBuffer[8], HEX)  + "." + String(mrs485RxBuffer[9], HEX) + "." + String(mrs485RxBuffer[10], HEX) + "." + String(mrs485RxBuffer[11], HEX) + "." + String(mrs485RxBuffer[12], HEX); 
         Serial.println(textRx);
         Serial.println("------------------------------------------");
         #endif

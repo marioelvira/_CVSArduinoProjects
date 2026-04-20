@@ -50,7 +50,7 @@ extern "C" {
 #define _NTP_SERIAL_DEBUG_         0
 #define _WD_SERIAL_DEBUG_          0
 #define _TRIAC_SERIAL_DEBUG_       1
-#define _MBRTU_SERIAL_DEBUG_       1
+#define _MBRTU_SERIAL_DEBUG_       0
 #endif
 
 #endif // _MAIN_H_

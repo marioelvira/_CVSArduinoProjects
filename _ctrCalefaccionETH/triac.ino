@@ -109,7 +109,7 @@ void _TRIACSetup()
 
   // ZC detector
   pinMode(triacZCPin, INPUT_PULLUP);
-  attachInterrupt(digitalPinToInterrupt(triacZCPin), isrZeroCross, FALLING /*RISING*/);
+  attachInterrupt(digitalPinToInterrupt(triacZCPin), isrZeroCross, RISING);
 
   // Cálculo del periodo
   triacZCFrec = 0;

@@ -65,7 +65,7 @@ void _IOSetup()
   //-----//
   for (i = 0; i < IN_NUMBER; i++)
   {
-    pinMode(InPin[i], INPUT_PULLUP);
+    pinMode(InPin[i], INPUT /*INPUT_PULLUP*/);
     InDig[i] = 0;
   }
 }

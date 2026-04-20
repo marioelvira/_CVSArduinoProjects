@@ -55,7 +55,7 @@ void _RS485Loop(void)
         mrs485State = MRS485_ONRX;
 	      mrs485tick = millis();
 		    inChar = (char)Serial2.read();
-		    mrs485RxBuffer += inChar;
+		    mrs485RxBuffer = inChar;  // 1rst char
 	    }    
 	    break;
 	  
@@ -71,10 +71,8 @@ void _RS485Loop(void)
       
 	    // Rx Time Out
 	    if (millis() - mrs485tick >= MRS485_RX_TOUT_MS)
-      {
 		    mrs485State = MRS485_FRAME_RX;
-        OutRS485rxtx = OUT_RS485_TX;
-      }
+
 	    break;
 	  
 	  case MRS485_FRAME_RX:
@@ -82,14 +80,12 @@ void _RS485Loop(void)
       // Must back to standby other part...
       // Time Out just in case
       if (millis() - mrs485tick >= MRS485_BACK_TOUT_MS)
-      {
-        // clear Rx buffer
-        mrs485RxBuffer = "";
         mrs485State = MRS485_STANDBY;
-      }
+
 	    break;
 
     case MRS485_INITTX:
+
       OutRS485rxtx = OUT_RS485_TX;
       // Init Tx Time wait
       if (millis() - mrs485tick >= MRS485_INIT_TX_MS)
@@ -103,21 +99,21 @@ void _RS485Loop(void)
       if (mrs485TxNumBytes > MRS485_ARRAY_SIZE)
         mrs485TxNumBytes = MRS485_ARRAY_SIZE;
       Serial2.write(mrs485TxBuffer, mrs485TxNumBytes);
+      Serial2.flush(); // wait until finish tx
 
-      mrs485tick = millis();  
-	    mrs485State = MRS485_ENDTX;
+      //mrs485tick = millis();  
+	    //mrs485State = MRS485_ENDTX;
+      mrs485State = MRS485_STANDBY;
 	    break;
-
+    /*
     case MRS485_ENDTX:
       OutRS485rxtx = OUT_RS485_TX;   
       // TX Time Out
       if (millis() - mrs485tick >= MRS485_END_TX_MS)
-      {
-        mrs485RxBuffer = "";
         mrs485State = MRS485_STANDBY;
-        OutRS485rxtx = OUT_RS485_RX;
-      }      
+
       break;
+    */
    }
 
   if (OutRS485rxtx == OUT_RS485_RX)

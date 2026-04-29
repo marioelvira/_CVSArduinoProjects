@@ -28,11 +28,15 @@
 #include "wifi.h"
 #include "MQTT.h"
 #include "mModbus.h"
+#if (_USE_NTP_ == 1)
 #include "mNTP.h"
+#endif
 #include "mRAM.h"
 #include "mRS485.h"
 #include "wde.h"
+#if (_USE_SOLAR_ == 1)
 #include "solar.h"
+#endif
 
 /////////////
 // Version //
@@ -176,7 +180,7 @@ time_t mntpEpochTime;
 
 int mntpYear = 2026;
 int mntpMonth = 4;
-int mntpDay = 12;
+int mntpDay = 20;
 
 int mntpSec = 0;
 int mntpMin = 0;
@@ -199,6 +203,8 @@ unsigned long freeRam;
 ///////////
 #if (_USE_SOLAR_ == 1)
 bool  sCalculated = false;
+int   solarCount = 0;
+
 String solarString = "Iniciando...";
 int   sunrise_h = 0, sunrise_m = 0;
 int   sunset_h = 0, sunset_m = 0;

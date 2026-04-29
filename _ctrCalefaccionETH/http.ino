@@ -242,6 +242,7 @@ void _serveSETTINGS()
   #if (_USE_PWM_ == 1)
   html = html + "<div class=\"section\"><span>X</span>PWM</div>";
   html = html + "<div class=\"inner-wrap\">";
+  html = html + "<label> Frec (Hz) <input type=\"text\"  maxlength=\"16\" value=\"" + String(pwmFreq) + "\" name=\"pwmFreq\"/></label>";
   html = html + "<label> Ciclo <input type=\"text\"  maxlength=\"16\" value=\"" + String(pwmDutyCycle) + "\" name=\"pwmDutyCycle\"/></label>";
   html = html + "</div>";
   #endif
@@ -298,6 +299,7 @@ void _setSETTINGS()
   #endif
 
   #if (_USE_PWM_ == 1)
+  String spwmFreq            = httpServer.arg("pwmFreq");
   String spwmDutyCycle       = httpServer.arg("pwmDutyCycle");
   #endif
 
@@ -336,6 +338,7 @@ void _setSETTINGS()
       #endif
 
       #if (_USE_PWM_ == 1)
+      (spwmFreq.length() == 0)            ||
       (spwmDutyCycle.length() == 0)       ||
       #endif
 
@@ -387,7 +390,10 @@ void _setSETTINGS()
     #endif
 
     #if (_USE_PWM_ == 1)
+    pwmFreq = spwmFreq.toInt();
     pwmDutyCycle = spwmDutyCycle.toInt();
+
+    _PWMSetup();
     #endif
     
     //DebugVal = rdebugVal.toInt();
@@ -754,8 +760,14 @@ void _readCTR()
   #if (_USE_TRIAC_ == 1)
   html = html + "<tr>";
   html = html + "<td style=\"width:60%\">Periodo de Red</td>";
-  html = html + "<td style=\"width:40%\">" + triacZCFrec + " Hz " /*+ triacZCPeriodUs + " us " + triacZCAlarmSec*/ + "</td>";
+  html = html + "<td style=\"width:40%\">" + triacZCFrec + " Hz " + triacZCcount /*+ triacZCPeriodUs + " us " + triacZCAlarmSec*/ + "</td>";
   html = html + "</tr>";
+  /*
+  html = html + "<tr>";
+  html = html + "<td style=\"width:60%\">Periodo de Red 2</td>";
+  html = html + "<td style=\"width:40%\">" + triac2ZCFrec + " Hz " + triac2ZCcount + "</td>";
+  html = html + "</tr>";
+  */
   #endif
 
   html = html + "</table>";

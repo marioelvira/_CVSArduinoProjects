@@ -30,8 +30,9 @@ extern "C" {
 #define _SERIAL_DEBUG_             1
 #endif
 
-#if (_SERIAL_DEBUG_ == 1)
+#define _MQTT_TOPIC_DEBUG_         0//1
 
+#if (_SERIAL_DEBUG_ == 1)
 #define _ALARM_SERIAL_DEBUG_       1
 #define _PULS_SERIAL_DEBUG_        1
 #define _EEPROM_SERIAL_DEBUG_      1
@@ -41,9 +42,7 @@ extern "C" {
 #define _MQTT_SERIAL_DEBUG_        1
 #define _NTP_SERIAL_DEBUG_         1
 #define _FREERAM_SERIAL_DEBUG_     1
-
 #else
-
 #define _ALARM_SERIAL_DEBUG_       0
 #define _PULS_SERIAL_DEBUG_        0
 #define _EEPROM_SERIAL_DEBUG_      0
@@ -53,7 +52,6 @@ extern "C" {
 #define _MQTT_SERIAL_DEBUG_        0
 #define _NTP_SERIAL_DEBUG_         0
 #define _FREERAM_SERIAL_DEBUG_     0
-
 #endif
 
 #endif // _MAIN_H_

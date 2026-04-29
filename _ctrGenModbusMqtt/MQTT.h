@@ -26,18 +26,20 @@ extern "C" {
 // MQTT Topics publish
 #define MQTT_LAST_TOPIC     4
 
+#if (_MQTT_TOPIC_DEBUG_ == 1)
+#define TOPIC_SCTR        "sdpelicanos@gmail.com/dctr"
+#define TOPIC_SINS        "sdpelicanos@gmail.com/dins"
+#define TOPIC_TEST        "sdpelicanos@gmail.com/dest"
+#define TOPIC_TIME        "sdpelicanos@gmail.com/dtc"
+#define TOPIC_ALARM       "sdpelicanos@gmail.com/dlarm"
+#else
 #define TOPIC_SCTR        "sdpelicanos@gmail.com/sctr"
 #define TOPIC_SINS        "sdpelicanos@gmail.com/sins"
 #define TOPIC_TEST        "sdpelicanos@gmail.com/test"
 #define TOPIC_TIME        "sdpelicanos@gmail.com/tc"
 #define TOPIC_ALARM       "sdpelicanos@gmail.com/alarm"
-/*
-#define TOPIC_SCTR        "sdpelicanos@gmail.com/dctr"    // _MQTT_DEBUG_
-#define TOPIC_SINS        "sdpelicanos@gmail.com/dins"    // _MQTT_DEBUG_
-#define TOPIC_TEST        "sdpelicanos@gmail.com/dest"    // _MQTT_DEBUG_
-#define TOPIC_TIME        "sdpelicanos@gmail.com/dtc"     // _MQTT_DEBUG_
-#define TOPIC_ALARM       "sdpelicanos@gmail.com/dlarm"   // _MQTT_DEBUG_
-*/
+#endif
+
 #define TOPIC_OON         "sdpelicanos@gmail.com/Oon"
 #define TOPIC_OOFF        "sdpelicanos@gmail.com/Ooff"
 

@@ -1,17 +1,36 @@
-#include "main.h"
-
-#if (_USE_NTP_ == 1)
 
 void _ntpTimeString(void)
 {
-  char timeBuffer[40];
-
+  /*
   if (mntpSync == false)
     sprintf(timeBuffer, "No Sincronizado");
   else
     sprintf(timeBuffer, "%02d/%02d/%4d %02d:%02d:%02d", mntpDay, mntpMonth, mntpYear, mntpHour, mntpMin, mntpSec);
   
   mntpTimeString = String(timeBuffer);
+  */
+
+  if (mntpHour < 10)
+    mntpTimeString = "0" + String(mntpHour);
+  else
+    mntpTimeString = String(mntpHour);
+
+  mntpTimeString = mntpTimeString + ":";
+
+  if (mntpMin < 10)
+    mntpTimeString = mntpTimeString + "0" + String(mntpMin);
+  else
+    mntpTimeString = mntpTimeString + String(mntpMin);
+
+  mntpTimeString = mntpTimeString + ":";
+
+  if (mntpSec < 10)
+    mntpTimeString = mntpTimeString + "0" + String(mntpSec);
+  else
+    mntpTimeString = mntpTimeString + String(mntpSec);
+
+  if (mntpSync == false)
+    mntpTimeString = mntpTimeString + " NO Sync";
 }     
 
 void _mNTPfakeSec(void)
@@ -21,7 +40,7 @@ void _mNTPfakeSec(void)
   {
     mntpSec = 0;
     mntpMin++;
-    
+
     #if (_USE_SOLAR_ == 1)
     if (sCalculated == true)
       _SolarDayNight();
@@ -34,7 +53,7 @@ void _mNTPfakeSec(void)
       if (mntpHour >= 24)
       {
         mntpHour = 0;
-
+        
         // New day!!!
         #if (_USE_SOLAR_ == 1)
         sCalculated = false;
@@ -89,44 +108,42 @@ void _mNTPloop(void)
       {
         //mntpSync = false;
         #if (_NTP_SERIAL_DEBUG_ == 1)
-        Serial.println("TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT"); 
-        Serial.println("NTP Not updated");
+        Serial.println("TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT");
+        Serial.println("NTP NOT Update ");
         Serial.println("TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT");
         #endif
-        break;
       }
-
-      mntpSync = true;
-      mntpEpochTime = mNtpClient.getEpochTime();
-      setTime(mntpEpochTime);
-
-      mntpYear  = year();
-      mntpMonth = month();
-      mntpDay   = day();
-      mntpHour  = hour();
-      mntpMin   = minute();
-      mntpSec   = second();
-
-      #if (_NTP_SERIAL_DEBUG_ == 1)
-      _ntpTimeString();
-
-      Serial.println("TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT"); 
-      Serial.println(mntpTimeString);
-      Serial.println("TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT");
-      #endif
-      
-      #if (_USE_SOLAR_ == 1)
-      if (sCalculated == false)
+      else
       {
-        _SolarSunriseSunset();
-        sCalculated = true;
-      }
-      #endif
+        mntpSync = true;
+        mntpEpochTime = mNtpClient.getEpochTime();
+        setTime(mntpEpochTime);
 
+        mntpYear  = year();
+        mntpMonth = month();
+        mntpDay   = day();
+        mntpHour  = hour();
+        mntpMin   = minute();
+        mntpSec   = second();
+      
+        #if (_NTP_SERIAL_DEBUG_ == 1)
+        Serial.println("TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT");
+        Serial.println("NTP Time Update ");
+        Serial.println("TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT");
+        #endif
+
+        #if (_USE_SOLAR_ == 1)
+        if (sCalculated == false)
+        {
+          _SolarSunriseSunset();
+          solarCount++;
+          sCalculated = true;
+        }
+        #endif
+      }
       break;
 
     case MNTP_STOP:
       break;
   }
 }
-#endif // (_USE_NTP_ == 1)

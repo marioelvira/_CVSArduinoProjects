@@ -73,7 +73,8 @@ extern "C" {
 #define PIN_IN4         2
 
 // ZDs
-#define PIN_ZD1         22
+#define PIN_ZDA         22
+#define PIN_ZDB         21
 
 // RS485
 #define PIN_RS485_RX    48
@@ -81,7 +82,10 @@ extern "C" {
 #define PIN_RS485_RXTX  46
 
 // PWM
-#define PIN_PWM0        21
+#define PIN_PWM0        23
+
+// PIN DEBUG
+#define PIN_DEBUG       18
 
 ///////////////
 // PIN Logic //

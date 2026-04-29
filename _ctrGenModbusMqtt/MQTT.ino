@@ -234,11 +234,11 @@ void _MQTTSend(int itopic)
   // Control //
   /////////////
   if (itopic == 0)
-  { 
+  {  
     str = str + "\"md\":";
     str = str + String(controlMode);
     str = str + ",\n";
-    
+
     str = str + "\"cSt\":";
     if (ControlState == 1)
       str = str + "START";
@@ -296,6 +296,7 @@ void _MQTTSend(int itopic)
     str = str + "\"adc\":";
     str = str + String(AdcVal);
     str = str + ",\n";
+
   }
   ///////////////////
   // Extra Control //
@@ -303,6 +304,7 @@ void _MQTTSend(int itopic)
   else if (itopic == 1)
   {
     #if (_USE_MB_ == 1)
+        
     str = str + "\"i1\":";
     str = str + String(mbIns[0][0]);
     str = str + ",\n";
@@ -365,7 +367,8 @@ void _MQTTSend(int itopic)
 
     str = str + "\"i18\":";
     str = str + String(mbIns[7][1]);
-    str = str + ",\n";   
+    str = str + ",\n";
+        
     #endif // (_USE_MB_ == 1)
 
     str = str + "\"a1\":\"";
@@ -400,6 +403,7 @@ void _MQTTSend(int itopic)
     str = str + "\",\n";
 
     #if (_USE_MB_ == 1)
+    
     str = str + "\"mbO1\":\"";
     str = str + String(mbOuts[0][0]) + String(mbOuts[1][0]) + String(mbOuts[2][0]) + String(mbOuts[3][0]);
     str = str + String(mbOuts[4][0]) + String(mbOuts[5][0]) + String(mbOuts[6][0]) + String(mbOuts[7][0]);
@@ -429,6 +433,7 @@ void _MQTTSend(int itopic)
     str = str + String(mbIns[0][1]) + String(mbIns[1][1]) + String(mbIns[2][1]) + String(mbIns[3][1]);
     str = str + String(mbIns[4][1]) + String(mbIns[5][1]) + String(mbIns[6][1]) + String(mbIns[7][1]);
     str = str + "\",\n";
+
     #endif // (_USE_MB_ == 1)
 
     // AdcIn
@@ -459,6 +464,10 @@ void _MQTTSend(int itopic)
     str = str + "\"sun\":\"";
     str = str + solarString;
     str = str + "\",\n";
+
+    str = str + "\"sc\":";
+    str = str + String(solarCount);
+    str = str + ",\n";
     #endif
     
     str = str + "\"ip\":\"";
@@ -476,13 +485,12 @@ void _MQTTSend(int itopic)
   ///////////
   else if (itopic == 4)
   {
+
     int balarm = 0;
 
-    #if (_USE_NTP_ == 1)
     str = str + "\"time\":\"";
     str = str + mntpTimeString;
     str = str + "\",\n";
-    #endif
 
     for (i = 0; i < AL_ARRAY_SIZE; i++)
     {
@@ -667,7 +675,6 @@ void _MQTTLoop(void)
 		    mqttTopic++;	
 		    if (mqttTopic >= MQTT_LAST_TOPIC)
 		      mqttTopic = 0;
-
       }
       else
       {

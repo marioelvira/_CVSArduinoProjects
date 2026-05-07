@@ -24,13 +24,8 @@ extern uint32_t triacZCTickUs;
 extern int triacZCPeriodUs;
 extern float triacZCFrec;
 extern int triacZCcount;
-/*
-extern const int triac2ZCPin;
-extern uint32_t triac2ZCTickUs;
-extern int triac2ZCPeriodUs;
-extern float triac2ZCFrec;
-extern int triac2ZCcount;
-*/
+extern int triacZCerror;
+
 extern int triacCtr1;
 extern const int triacPin1;
 extern hw_timer_t * triacTimer1;

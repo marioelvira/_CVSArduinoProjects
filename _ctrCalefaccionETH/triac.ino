@@ -2,6 +2,8 @@
 #include "triac.h"
 
 #if (_USE_TRIAC_ == 1)
+#include "driver/gpio.h"
+#include "driver/gpio_filter.h"
 
 ///////////////
 // Variables //
@@ -11,12 +13,15 @@ hw_timer_t * triac1Timer = NULL;
 hw_timer_t * triac2Timer = NULL;
 hw_timer_t * triac3Timer = NULL;
 
-const int triacZCPin = PIN_ZDA;
+//const int triacZCPin = PIN_ZDA;
+const gpio_num_t PIN_ZC = GPIO_NUM_22;  // PIN_ZDA
+
 int triacZCAlarmSec = 0;
 uint32_t triacZCTickUs = 0;
 int triacZCPeriodUs;
 float triacZCFrec = 0;
 int triacZCcount = 0;
+int triacZCerror = 0;
 
 int triac1Delay = 0;
 int triac1Cicle = 50;
@@ -55,7 +60,7 @@ void IRAM_ATTR isrTriac3Timer()
 
 void IRAM_ATTR isrZeroCross()
 {
-  uint32_t nowUs = micros();
+  uint32_t periodUs, nowUs = micros();
 
   #if (_TRIAC_PIN_DEBUG_ == 1)
   if (triacZCdebug == false)
@@ -70,37 +75,40 @@ void IRAM_ATTR isrZeroCross()
   }
   #endif
 
-  if (TriacCtr[0] == TRIAC_ON)
-  {
-    timerRestart(triac1Timer);
-    // timerAlarm(timer, valor_alarma, autoreload, reload_count)
-    timerAlarm(triac1Timer, triac1Delay, false, 0);
-  }
-
-  if (TriacCtr[1] == TRIAC_ON)
-  {
-    timerRestart(triac2Timer);
-    // timerAlarm(timer, valor_alarma, autoreload, reload_count)
-    timerAlarm(triac2Timer, triac2Delay, false, 0);
-  }
-
-  if (TriacCtr[2] == TRIAC_ON)
-  {
-    timerRestart(triac3Timer);
-    // timerAlarm(timer, valor_alarma, autoreload, reload_count)
-    timerAlarm(triac3Timer, triac3Delay, false, 0);
-  }
-
   // ZC Period
-  triacZCPeriodUs = int (nowUs - triacZCTickUs);
+  periodUs = int (nowUs - triacZCTickUs);
 
   // Ruido
-  if (triacZCPeriodUs < 8000)
-    return;
+  if (periodUs < 10000)
+    triacZCerror++;
+  else
+  {
+    if (TriacCtr[0] == TRIAC_ON)
+    {
+      timerRestart(triac1Timer);
+      // timerAlarm(timer, valor_alarma, autoreload, reload_count)
+      timerAlarm(triac1Timer, triac1Delay, false, 0);
+    }
 
-  triacZCTickUs = nowUs;
-  triacZCAlarmSec = 0;
-  triacZCcount++;
+    if (TriacCtr[1] == TRIAC_ON)
+    {
+      timerRestart(triac2Timer);
+      // timerAlarm(timer, valor_alarma, autoreload, reload_count)
+      timerAlarm(triac2Timer, triac2Delay, false, 0);
+    }
+
+    if (TriacCtr[2] == TRIAC_ON)
+    {
+      timerRestart(triac3Timer);
+      // timerAlarm(timer, valor_alarma, autoreload, reload_count)
+      timerAlarm(triac3Timer, triac3Delay, false, 0);
+    }
+
+    triacZCPeriodUs = periodUs;
+    triacZCTickUs = nowUs;
+    triacZCAlarmSec = 0;
+    triacZCcount++;
+  }
 }
 
 //////////////////
@@ -134,23 +142,36 @@ void _TRIACSetup()
   /////////////////
   // ZC detector //
   /////////////////
-  pinMode(triacZCPin, INPUT_PULLUP);
-  attachInterrupt(digitalPinToInterrupt(triacZCPin), isrZeroCross, FALLING /*RISING*/);
+  gpio_config_t io_conf = {
+    .pin_bit_mask = (1ULL << PIN_ZC),
+    .mode = GPIO_MODE_INPUT,
+    .pull_up_en = GPIO_PULLUP_ENABLE,       // GPIO_PULLUP_DISABLE Tenemos Pull up externo
+    .pull_down_en = GPIO_PULLDOWN_DISABLE,  // Tenemos Pull up externo
+    .intr_type = GPIO_INTR_HIGH_LEVEL       // Interrupción en High Level
+  };
+  gpio_config(&io_conf);
+
+  gpio_flex_glitch_filter_config_t filter_config = {
+    .clk_src = GLITCH_FILTER_CLK_SRC_DEFAULT,
+    .gpio_num = PIN_ZC,
+    .window_width_ns = 1200000,  //10us 
+    .window_thres_ns = 1000000,  //8us
+  };
+
+  gpio_glitch_filter_handle_t filter_handle = NULL;
+  if (gpio_new_flex_glitch_filter(&filter_config, &filter_handle) == ESP_OK) {
+    gpio_glitch_filter_enable(filter_handle);
+  }
+
+  gpio_install_isr_service(0); 
+  gpio_isr_handler_add(PIN_ZC, (gpio_isr_t)isrZeroCross, NULL);
 
   triacZCFrec = 0;
   triacZCPeriodUs = 0;
   triacZCTickUs = micros();
   triacZCAlarmSec = 0;
   triacZCcount = 0;
-  /*
-  // ZC detector
-  pinMode(triac2ZCPin, INPUT_PULLUP);
-  attachInterrupt(digitalPinToInterrupt(triac2ZCPin), isr2ZeroCross, RISING);
-  triac2ZCFrec = 0;
-  triac2ZCPeriodUs = 0;
-  triac2ZCTickUs = micros();
-  triac2ZCcount = 0;
-  */
+
   #if (_TRIAC_PIN_DEBUG_ == 1)
   pinMode(PIN_DEBUG, OUTPUT);
   digitalWrite(PIN_DEBUG, PIN_OUT_OFF);
@@ -176,14 +197,12 @@ void _TRIACLoop()
   }
   else
   {
-    triacZCFrec = 1000000.0 / triacZCPeriodUs;
+    triacZCFrec = 500000.0 / triacZCPeriodUs;
 
     #if (_USE_ALARM_ == 1)
     alarmOn[AL_ERROR1] = 0;
     #endif
   }
-
-  //triac2ZCFrec = 1000000.0 / triac2ZCPeriodUs;
 }
 
 void _TRIACUpdate()

@@ -39,7 +39,7 @@ extern "C" {
 #endif
 
 #define _SERIAL_DEBUG_             1
-#define _TRIAC_PIN_DEBUG_          1
+#define _TRIAC_PIN_DEBUG_          0//1
 
 #if (_SERIAL_DEBUG_ == 1)
 #define _ALARM_SERIAL_DEBUG_       0
@@ -52,7 +52,7 @@ extern "C" {
 #define _WD_SERIAL_DEBUG_          0
 #define _TRIAC_SERIAL_DEBUG_       1
 #define _MBRTU_SERIAL_DEBUG_       0
-#define _PWM_SERIAL_DEBUG_         1
+#define _PWM_SERIAL_DEBUG_         0//1
 #endif
 
 #endif // _MAIN_H_

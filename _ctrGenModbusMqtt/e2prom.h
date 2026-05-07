@@ -12,7 +12,7 @@ extern "C" {
 #define _WRITE_SSID_EEPROM_   0
 
 // Address
-#define EEPROM_ADD_OK             0x00
+#define EEPROM_ADD_VER            0x00
 
 #define EEPROM_ADD_IP_MODE        0x01
 #define EEPROM_ADD_IP1            0x02
@@ -86,7 +86,7 @@ extern "C" {
 //#define EEPROM_ADD_MAX          0xFA // 250
 
 // Values
-#define EEPROM_VAL_OK             0xA4
+#define EEPROM_VAL_VER            0xA4
 
 #define EEPROM_VAL_IP_MODE        DHCP_MODE
 #define EEPROM_VAL_IP1            192

@@ -55,7 +55,7 @@ void _serveMAIN()
 
   html = html + "<body>";
   html = html + "<div class=\"myform\">";
-  html = html + "<h1>" + PROJECT + " #Estado<span>" + TECHNOLOGY + "</span><span align=\"right\"> " + compdate + " " + comptime + "</span></h1>";
+  html = html + "<h1>" + PROJECT + " #Estado<span> Comp: " + + compdate + " " + comptime + "</span><span align=\"right\"> Ver: 0x" + String(EEPROM_VAL_VER, HEX) + "</span></h1>";
 
   html = html + "<div class=\"section\"><span>1</span>Control</div>";
   html = html + "<p class=\"sansserif\" id=\"CTRid\">...</p>";
@@ -182,7 +182,7 @@ void _serveSETTINGS()
 
   html = html + "<body>";
   html = html + "<div class=\"myform\">";
-  html = html + "<h1>" + PROJECT + " #Config<span>" + TECHNOLOGY + "</span><span align=\"right\"> " + compdate + " " + comptime + "</span></h1>";
+  html = html + "<h1>" + PROJECT + " #Condig<span> Comp: " + + compdate + " " + comptime + "</span><span align=\"right\"> Ver: 0x" + String(EEPROM_VAL_VER, HEX) + "</span></h1>";
 
   html = html + "<form method='get' action='settingsSet'>";
 
@@ -416,7 +416,7 @@ void _setSETTINGS()
   html = html + "<body>";
 
   html = html + "<div class=\"myform\">";
-  html = html + "<h1>" + PROJECT + " #Config<span>" + TECHNOLOGY + "</span><span align=\"right\"> " + compdate + " " + comptime + "</span></h1>";
+  html = html + "<h1>" + PROJECT + " #Config<span> Comp: " + + compdate + " " + comptime + "</span><span align=\"right\"> Ver: 0x" + String(EEPROM_VAL_VER, HEX) + "</span></h1>";
   
   if (response == 200)
     html += "<p class=\"sansserif\">Configuraci&oacuten guardada correctamente.</p>";
@@ -449,8 +449,8 @@ void _serveNETWORK()
 
   html = html + "<body>";
   html = html + "<div class=\"myform\">";
-  html = html + "<h1>" + PROJECT + " #Red<span>" + TECHNOLOGY + "</span><span align=\"right\"> " + compdate + " " + comptime + "</span></h1>";
-  //html = html + "<form method=\"post\">";
+  html = html + "<h1>" + PROJECT + " #Red<span> Comp: " + + compdate + " " + comptime + "</span><span align=\"right\"> Ver: 0x" + String(EEPROM_VAL_VER, HEX) + "</span></h1>";
+
   html = html + "<form method='get' action='networkSet'>";
 
   // Red
@@ -713,7 +713,7 @@ void _setNETWORK()
   html = html + "<body>";
 
   html = html + "<div class=\"myform\">";
-  html = html + "<h1>" + PROJECT + " #Config<span>" + TECHNOLOGY + "</span><span align=\"right\"> " + compdate + " " + comptime + "</span></h1>";
+  html = html + "<h1>" + PROJECT + " #Red<span> Comp: " + + compdate + " " + comptime + "</span><span align=\"right\"> Ver: 0x" + String(EEPROM_VAL_VER, HEX) + "</span></h1>";
   
   if (response == 200)
     html += "<p class=\"sansserif\">Configuraci&oacuten guardada correctamente.</p>";
@@ -760,14 +760,9 @@ void _readCTR()
   #if (_USE_TRIAC_ == 1)
   html = html + "<tr>";
   html = html + "<td style=\"width:60%\">Periodo de Red</td>";
-  html = html + "<td style=\"width:40%\">" + triacZCFrec + " Hz " + triacZCcount /*+ triacZCPeriodUs + " us " + triacZCAlarmSec*/ + "</td>";
+  html = html + "<td style=\"width:40%\">" + triacZCFrec + " Hz</td>";
+  //html = html + "<td style=\"width:40%\">" + triacZCFrec + " Hz / " + triacZCPeriodUs + " us " + " / " + triacZCerror + "</td>";
   html = html + "</tr>";
-  /*
-  html = html + "<tr>";
-  html = html + "<td style=\"width:60%\">Periodo de Red 2</td>";
-  html = html + "<td style=\"width:40%\">" + triac2ZCFrec + " Hz " + triac2ZCcount + "</td>";
-  html = html + "</tr>";
-  */
   #endif
 
   html = html + "</table>";

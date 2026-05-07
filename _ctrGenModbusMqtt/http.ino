@@ -36,7 +36,7 @@ void _serveMAIN()
 
   html = html + "<body>";
   html = html + "<div class=\"myform\">";
-  html = html + "<h1>" + PROJECT + " #Estado<span>ESP8266 tech</span><span align=\"right\"> Ver: " + compdate + " " + comptime + "</span></h1>";
+  html = html + "<h1>" + PROJECT + " #Estado<span> Comp: " + + compdate + " " + comptime + "</span><span align=\"right\"> Ver: 0x" + String(EEPROM_VAL_VER, HEX) + "</span></h1>";
 
   html = html + "<div class=\"section\"><span>1</span>Sistema</div>";
   html = html + "<p class=\"sansserif\" id=\"TEMPSid\">...</p>";
@@ -176,7 +176,7 @@ void _serveTimeSETTINGS()
 
   html = html + "<body>";
   html = html + "<div class=\"myform\">";
-  html = html + "<h1>" + PROJECT + " #Config<span>ESP8266 tech</span><span align=\"right\"> Ver: " + compdate + " " + comptime + "</span></h1>";
+  html = html + "<h1>" + PROJECT + " #Config<span> Comp: " + + compdate + " " + comptime + "</span><span align=\"right\"> Ver: 0x" + String(EEPROM_VAL_VER, HEX) + "</span></h1>";
   html = html + "<form method='get' action='setTimeSettings'>";
 
   html = html + "<div class=\"section\"><span>1</span>Logica</div>";
@@ -328,7 +328,7 @@ void _setTimeSETTINGS()
   html = html + "<body>";
 
   html = html + "<div class=\"myform\">";
-  html = html + "<h1>" + PROJECT + " #Config<span>ESP8266 tech</span><span align=\"right\"> Ver: " + compdate + " " + comptime + "</span></h1>";
+  html = html + "<h1>" + PROJECT + " #Config<span> Comp: " + + compdate + " " + comptime + "</span><span align=\"right\"> Ver: 0x" + String(EEPROM_VAL_VER, HEX) + "</span></h1>";
   
   if (error == 0)
     html += "<p class=\"sansserif\">Configuraci&oacuten guardada correctamente.</p>";
@@ -362,7 +362,7 @@ void _serveCtrSETTINGS()
 
   html = html + "<body>";
   html = html + "<div class=\"myform\">";
-  html = html + "<h1>" + PROJECT + " #Config<span>ESP8266 tech</span><span align=\"right\"> Ver: " + compdate + " " + comptime + "</span></h1>";
+  html = html + "<h1>" + PROJECT + " #Config<span> Comp: " + + compdate + " " + comptime + "</span><span align=\"right\"> Ver: 0x" + String(EEPROM_VAL_VER, HEX) + "</span></h1>";
   html = html + "<form method='get' action='setCtrSettings'>";
 
   // Temporizaciones
@@ -573,7 +573,7 @@ void _setCtrSETTINGS()
   html = html + "<body>";
 
   html = html + "<div class=\"myform\">";
-  html = html + "<h1>" + PROJECT + " #Config<span>ESP8266 tech</span><span align=\"right\"> Ver: " + compdate + " " + comptime + "</span></h1>";
+  html = html + "<h1>" + PROJECT + " #Config<span> Comp: " + + compdate + " " + comptime + "</span><span align=\"right\"> Ver: 0x" + String(EEPROM_VAL_VER, HEX) + "</span></h1>";
   
   if (error == 0)
     html += "<p class=\"sansserif\">Configuraci&oacuten guardada correctamente.</p>";
@@ -606,7 +606,7 @@ void _serveSETTINGS()
 
   html = html + "<body>";
   html = html + "<div class=\"myform\">";
-  html = html + "<h1>" + PROJECT + " #Red Config<span>ESP8266 tech</span><span align=\"right\"> Ver: " + compdate + " " + comptime + "</span></h1>";
+  html = html + "<h1>" + PROJECT + " #Red Config<span> Comp: " + + compdate + " " + comptime + "</span><span align=\"right\"> Ver: 0x" + String(EEPROM_VAL_VER, HEX) + "</span></h1>";
   //html = html + "<form method=\"post\">";
   html = html + "<form method='get' action='networSettings'>";
 
@@ -977,7 +977,7 @@ void _setSETTINGS()
   html = html + "<body>";
 
   html = html + "<div class=\"myform\">";
-  html = html + "<h1>" + PROJECT + " #Config<span>ESP8266 tech</span><span align=\"right\"> Ver: " + compdate + " " + comptime + "</span></h1>";
+  html = html + "<h1>" + PROJECT + " #Red Config<span> Comp: " + + compdate + " " + comptime + "</span><span align=\"right\"> Ver: 0x" + String(EEPROM_VAL_VER, HEX) + "</span></h1>";
   
   if (error == 0)
     html += "<p class=\"sansserif\">Configuraci&oacuten guardada correctamente.</p>";

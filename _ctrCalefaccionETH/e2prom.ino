@@ -139,20 +139,20 @@ void _readCONFIG (void)
     return;
   }
 
-  ok = EEPROM.read(EEPROM_ADD_OK);
+  ok = EEPROM.read(EEPROM_ADD_VER);
   
   #if (_EEPROM_SERIAL_DEBUG_ == 1)
   Serial.print("EEPROM Value: "); Serial.println(ok, HEX);
   #endif
 
   // Si NO esta grabada la configuracion...
-  if (ok != EEPROM_VAL_OK)
+  if (ok != EEPROM_VAL_VER)
   {
     #if (_EEPROM_SERIAL_DEBUG_ == 1)
     Serial.println("Config NOK");
     #endif
   
-    EEPROM.write(EEPROM_ADD_OK, EEPROM_VAL_OK);
+    EEPROM.write(EEPROM_ADD_VER, EEPROM_VAL_VER);
 
     #if (_USE_ETHERNET_ == 1)
     // IP Mode

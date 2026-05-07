@@ -30,16 +30,16 @@ void _readCONFIG (void)
   
   EEPROM.begin(512);
     
-  i = EEPROM.read(EEPROM_ADD_OK);
+  i = EEPROM.read(EEPROM_ADD_VER);
   
   // Si NO esta grabada la configuracion...
-  if (i != EEPROM_VAL_OK)
+  if (i != EEPROM_VAL_VER)
   {
     #if (_EEPROM_SERIAL_DEBUG_ == 1)
     Serial.println("Config NOK");
     #endif
   
-    EEPROM.write(EEPROM_ADD_OK,      EEPROM_VAL_OK);
+    EEPROM.write(EEPROM_ADD_VER,      EEPROM_VAL_VER);
 
     // IP Mode
     EEPROM.write(EEPROM_ADD_IP_MODE, EEPROM_VAL_IP_MODE);

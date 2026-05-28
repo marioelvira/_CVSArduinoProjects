@@ -12,10 +12,8 @@ void mqttDataCallback(char* rtopic, byte* rpayload, unsigned int rlength)
   rpayloadStr[rlength] = 0;
       
   #if (_MQTT_SERIAL_DEBUG_ == 1)
-  Serial.println("$$$$$$$$$$$$$$$$ RX $$$$$$$$$$$$$$$$$$$$$");
-  Serial.print (" Topic :");    Serial.println (rtopic);
-  Serial.print (" Payload :");  Serial.println (rpayloadStr);
-  Serial.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+  Serial.println (" Topic :");   Serial.println (rtopic);
+  Serial.println (" Payload :"); Serial.println (rpayloadStr);
   #endif
 
   // Outs
@@ -202,11 +200,9 @@ void _MQTTSend(int itopic)
   if(mqttPublish((char*)stopic, (char*)spayload))
   {
     #if (_MQTT_SERIAL_DEBUG_ == 1)
-    Serial.println("TOPIC_STATE publish was succeeded");
-    Serial.println("$$$$$$$$$$$$$$$$ RX $$$$$$$$$$$$$$$$$$$$$");
+    Serial.println("TOPIC publish");
     Serial.println(stopic);
     Serial.println(spayload);
-    Serial.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
     #endif
   } 
 }
@@ -244,7 +240,7 @@ void _MQTTLoop(void)
   {
     case MQTT_NOT_CONNECTED:
       #if (_MQTT_SERIAL_DEBUG_ == 1)
-      Serial.println("MQTT Not connected...");
+      Serial.println("MQTT Not connected");
       #endif
       
       mqttStatus = MQTT_CONNECTING;
@@ -259,14 +255,14 @@ void _MQTTLoop(void)
           break;
         
         #if (_MQTT_SERIAL_DEBUG_ == 1)
-        Serial.println("Attempting MQTT connection...");
+        Serial.println("MQTT Attempt connect");
         #endif
       
         mqttTick = millis();
         if (mqttClient.connect(mqttClientId.c_str(), MQTT_USERNAME, MQTT_PASSWORD))
         {
           #if (_MQTT_SERIAL_DEBUG_ == 1)
-          Serial.println("MQTT connected!!!...");
+          Serial.println("MQTT connected");
           #endif
           
           mqttStatus = MQTT_CONNECTED;
@@ -274,7 +270,7 @@ void _MQTTLoop(void)
         else
         {        
           #if (_MQTT_SERIAL_DEBUG_ == 1)
-          Serial.print("Error!  : MQTT Connect failed, rc = ");
+          Serial.print("ErrorMQTT Connect failed, rc = ");
           Serial.print(mqttClient.state());
           Serial.print(" timeout ");
           Serial.println((millis() - mqttTick)/ 1000); 
@@ -304,7 +300,7 @@ void _MQTTLoop(void)
       else
       {
         #if (_MQTT_SERIAL_DEBUG_ == 1)
-        Serial.print("Error!  : MQTT Connect failed, rc = ");
+        Serial.print("ErrorMQTT Connect failed, rc = ");
         Serial.println(mqttClient.state());
         #endif
 
@@ -332,7 +328,7 @@ void _MQTTLoop(void)
       else
       {
         #if (_MQTT_SERIAL_DEBUG_ == 1)
-        Serial.print("Error!  : MQTT Connect failed, rc = ");
+        Serial.print("ErrorMQTT Connect fail, rc = ");
         Serial.println(mqttClient.state());
         #endif
 

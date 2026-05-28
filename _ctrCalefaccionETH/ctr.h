@@ -5,8 +5,10 @@ extern "C" {
 #ifndef _CTR_H_
 #define _CTR_H_
 
-extern String ctrStateString;
 extern int ctrMode;
+extern String ctrStateString;
+
+extern int ctrState;
 extern int ctrInState;
 extern int ctrOutState;
 
@@ -30,7 +32,7 @@ extern int ctrTemp;
          --------------
          2) El circuito estará alimentado con, 230v, 12v, 5v. e internet a traves de Ethernet.
          Termostato en ON  IN0 , GPIO02, Pin 35 en H.
-         Atraves de la PTC 1 , leemos la temperatura del aceite si   < de la temperatura determinada , conecta la resistencia 
+         Atraves de la PTC 1, leemos la temperatura del aceite si < de la temperatura determinada, conecta la resistencia 
          R1  TR0  GPIO33, Pin 5.
          El usuario puede ajustar la temperatura maxima y el porcentaje de alimentación de la resistencia.:  Ejemplo:
          El maximo fijado es de 100 grados- hasta alcanzar los 90 grados, la resistencia recibe el 80%, y despues disminu   
@@ -133,6 +135,9 @@ extern int ctrTemp;
 // Modos de Operación
 #define MODE_TEST   1
 #define MODE_AUTO   0
+
+#define IN_THERMO_OFF   0
+#define IN_THERMO_ON    1
 
 // OUTs Index
 #define AGUA_OUT      3

@@ -42,6 +42,9 @@
 #if (_USE_WDE_ == 1)
 #include "wde.h"
 #endif
+#if (_USE_LCD_ == 1)
+#include "mLCD.h"
+#endif
 
 /////////////
 // Version //
@@ -110,6 +113,10 @@ void setup(void)
   _WDESetup();
   #endif
 
+  #if (_USE_LCD_ == 1)
+  _LCDSetup();
+  #endif
+
   #if (_USE_ETHERNET_ == 1)
   _ETHSetup();
 
@@ -141,6 +148,10 @@ void setup(void)
 void loop()
 {
   _IOLoop();
+  
+  #if (_USE_LCD_ == 1)
+  _LCDLoop();
+  #endif
 
   if (ctrMode == MODE_AUTO)
     _CtrLoop();

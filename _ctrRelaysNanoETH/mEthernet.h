@@ -21,6 +21,9 @@ extern "C" {
 #define ETH_START       0
 #define ETH_OK          1
 #define ETH_ERROR	      2
+#define ETH_WAIT        3
+
+#define ETH_WAIT_MS     60000
 
 #endif // _METH_H_
 

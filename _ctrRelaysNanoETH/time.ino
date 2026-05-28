@@ -99,10 +99,6 @@ void _TimeLoop(void)
     Serial.print(ctrOutState);
     Serial.println(" ");
 
-    Serial.print("crtCIrmsState: ");
-    Serial.print(crtCIrmsState);
-    Serial.println(" ");
-
     /*
     // ADC
     for (i = 0; i< ADC_NUMBER; i++)

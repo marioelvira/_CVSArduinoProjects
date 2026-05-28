@@ -7,6 +7,7 @@
 ////////////////
 void _ETHSetup(void)
 {
+  Ethernet.init(PIN_SPI_CS); // Set the CS pin
   ethStatus = ETH_START;
 }
 
@@ -21,44 +22,58 @@ void _ETHLoop()
   switch (ethStatus)
   {
     case ETH_START:
-      if (ipMode == DHCP_MODE)
+      // Check HW
+      if (Ethernet.hardwareStatus() == EthernetNoHardware)
       {
         #if (_ETH_SERIAL_DEBUG_ == 1)
-        Serial.println("Ethernet DHCP Start");
-        #endif
-        Ethernet.init(PIN_SPI_CS); // Set the CS pin
-        status = Ethernet.begin(macAddress);
-      }
-      else
-      {
-        #if (_ETH_SERIAL_DEBUG_ == 1)
-        Serial.println("Ethernet FIX IP Start");
-        #endif
-        Ethernet.init(PIN_SPI_CS); // Set the CS pin
-        Ethernet.begin(macAddress, ipAddress, dnsAddress, gateWay, netMask);
-        //Ethernet.setRetransmissionCount(1);
-        status = 1;
-      }
-
-      // Check Link
-      if (Ethernet.linkStatus() == LinkOFF)
-      {
-        #if (_ETH_SERIAL_DEBUG_ == 1)
-        Serial.println("Ethernet Init Link OFF");
+        Serial.println("START: Shield not found");
         #endif
         status = 0;
       }
-
-      if (status == 0)
+      // Check Link
+      else if (Ethernet.linkStatus() == LinkOFF)
       {
         #if (_ETH_SERIAL_DEBUG_ == 1)
-        Serial.println("Failed to configure");
+        Serial.println("START: Link OFF");
         #endif
-        ethStatus = ETH_ERROR;
+        status = 0;
+      }     
+      else
+      {
+        if (ipMode == DHCP_MODE)
+        {
+          #if (_ETH_SERIAL_DEBUG_ == 1)
+          Serial.println("START: DHCP");
+          #endif
+
+          status = Ethernet.begin(macAddress);
+          /*
+          Ethernet.begin(macAddress, 10000, 2000);
+          if (Ethernet.localIP() == IPAddress(0,0,0,0))
+            status = 0;
+          else
+            status = 1;
+          */
+        }
+        else
+        {
+          #if (_ETH_SERIAL_DEBUG_ == 1)
+          Serial.println("START: FIX IP");
+          #endif
+
+          Ethernet.begin(macAddress, ipAddress, dnsAddress, gateWay, netMask);
+          //Ethernet.setRetransmissionCount(1);
+          status = 1;
+        }
       }
+
+      if (status == 0)
+        ethStatus = ETH_ERROR;
       else
       {
         ethStatus = ETH_OK;
+
+        ipAddress = Ethernet.localIP();
 
         #if (_ETH_SERIAL_DEBUG_ == 1)
         Serial.println("IP Settings: ");
@@ -84,16 +99,14 @@ void _ETHLoop()
       break;
 
     case ETH_OK:
-
       // Check HW
       if (Ethernet.hardwareStatus() == EthernetNoHardware)
       {
         #if (_ETH_SERIAL_DEBUG_ == 1)
-        Serial.println("HW ERROR: Ethernet shield not found");
+        Serial.println("ETH OK: Ethernet shield not found");
         #endif
         ethStatus = ETH_ERROR;
       }
-
       // Check Link
       if (Ethernet.linkStatus() == LinkOFF)
       {
@@ -164,9 +177,23 @@ void _ETHLoop()
         Serial.println("HW ERROR: Ethernet shield not found");
         #endif
       }
+      // Check Link
+      else if (Ethernet.linkStatus() == LinkOFF)
+      {
+        #if (_ETH_SERIAL_DEBUG_ == 1)
+        Serial.print(".");
+        #endif
+      }
       else
-        ethStatus = ETH_START;  // TODO
+      {
+        ethTick = millis();
+        ethStatus = ETH_WAIT;
+      }
+      break;
 
+    case ETH_WAIT:
+      if (millis() - ethTick >= ETH_WAIT_MS)
+        ethStatus = ETH_START;
       break;
   }
 }

@@ -85,11 +85,6 @@ int           Vval[V_NUMBER];
 int   boardLed;
 #endif
 
-/////////////
-// IO Tick //
-/////////////
-//unsigned long ioTick = 0;
-
 //////////
 // OUTs //
 //////////
@@ -177,13 +172,14 @@ int   mbTcpTxLength;
 #if (_USE_ETHERNET_ == 1)
 int       ipMode;
 
-uint8_t macAddress[6] = {0xF8, 0xDC, 0x7A, 0x00, 0x02, 0x04};
-uint8_t ipAddress[4]  = {192,168,100,200};
-uint8_t gateWay[4]    = {192,168,100,1};
-uint8_t netMask[4]    = {255,255,255,0};
-uint8_t dnsAddress[4];  // Not init
+uint8_t   macAddress[6] = {0xF8,0xDC,0x7A,0x00,0x02,0x04};
+IPAddress ipAddress (192,168,1,130);
+IPAddress gateWay   (192,168,1,1);
+IPAddress netMask   (255,255,255,0);
+uint8_t   dnsAddress[4];  // Not init
 
 int ethStatus;
+unsigned long  ethTick;
 #endif
 
 //////////

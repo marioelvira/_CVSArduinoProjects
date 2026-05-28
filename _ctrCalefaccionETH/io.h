@@ -84,6 +84,10 @@ extern "C" {
 // PWM
 #define PIN_PWM0        23
 
+// I2C
+#define PIN_I2C_SCL     8
+#define PIN_I2C_SDA     7
+
 // PIN DEBUG
 #define PIN_DEBUG       18
 

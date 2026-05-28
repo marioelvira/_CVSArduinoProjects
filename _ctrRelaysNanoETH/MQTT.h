@@ -22,10 +22,18 @@ extern "C" {
 #define MQTT_USERNAME       "sdpelicanos@gmail.com"
 #define MQTT_PASSWORD       "MQTTSup3rP@@sw0rd"
 
+#define _USE_MQTT_DEBUG_    0
+
 // MQTT Topics
 #define MQTT_NUM_TOPICS    2
+
+#if (_USE_MQTT_DEBUG_ == 1)
+#define TOPIC_RCTR         "sdpelicanos@gmail.com/drel_ctr"  // 0
+#define TOPIC_RIOS         "sdpelicanos@gmail.com/drel_ios"  // 1
+#else
 #define TOPIC_RCTR         "sdpelicanos@gmail.com/rel_ctr"   // 0
 #define TOPIC_RIOS         "sdpelicanos@gmail.com/rel_ios"   // 1
+#endif
 
 #define TOPIC_RON          "sdpelicanos@gmail.com/rel_ron"
 #define TOPIC_ROFF         "sdpelicanos@gmail.com/rel_roff"

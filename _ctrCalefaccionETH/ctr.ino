@@ -4,8 +4,10 @@
 ///////////////
 // Variables //
 ///////////////
-String ctrStateString;
 int ctrMode;
+String ctrStateString;
+
+int ctrState;
 int ctrInState;
 int ctrOutState;
 
@@ -22,6 +24,7 @@ void _ctrStateString(void)
 void _CtrSetup(void)
 {
   ctrMode = MODE_AUTO;
+  ctrState = IN_THERMO_OFF;
 }
 
 ///////////////////////
@@ -29,6 +32,16 @@ void _CtrSetup(void)
 ///////////////////////
 void _CtrLoop(void)
 {
+  /*
+  switch (ctrState)
+  {
+    case IN_THERMO_OFF:
+      break;
+
+    case IN_THERMO_ON:
+      break;
+  }
+  */
   /*
   #if (_USE_ALARM_ == 1)
   // TODO

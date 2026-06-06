@@ -784,22 +784,22 @@ void _readINS()
   #if (_USE_MBRTU_ == 1)
   html = html + "<tr>";
   html = html + "<td style=\"width:60%\">Temperatura 1</td>";
-  html = html + "<td style=\"width:40%\">" + String(mbTemp[0]) + "</td>";
+  html = html + "<td style=\"width:40%\">" + mbfTemp[0] + "</td>";
   html = html + "</tr>";
 
   html = html + "<tr>";
   html = html + "<td style=\"width:60%\">Temperatura 2</td>";
-  html = html + "<td style=\"width:40%\">" + String(mbTemp[1]) + "</td>";
+  html = html + "<td style=\"width:40%\">" + mbfTemp[1] + "</td>";
   html = html + "</tr>";
 
   html = html + "<tr>";
   html = html + "<td style=\"width:60%\">Temperatura 3</td>";
-  html = html + "<td style=\"width:40%\">" + String(mbTemp[2]) + "</td>";
+  html = html + "<td style=\"width:40%\">" + mbfTemp[2] + "</td>";
   html = html + "</tr>";
 
   html = html + "<tr>";
   html = html + "<td style=\"width:60%\">Temperatura 4</td>";
-  html = html + "<td style=\"width:40%\">" + String(mbTemp[3]) + "</td>";
+  html = html + "<td style=\"width:40%\">" + mbfTemp[3] + "</td>";
   html = html + "</tr>";
   #endif
 

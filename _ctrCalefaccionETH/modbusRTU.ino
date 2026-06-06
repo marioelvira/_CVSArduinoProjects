@@ -23,6 +23,8 @@ int mbNReply = 0;
 int mbNRetry = 0;
 int mbRetry = 0;
 
+float mbfTemp[MB_NUM_TEMPS];
+
 /**********************************************************************
 *    MODULE PRIVATE VARIABLES.
 ***********************************************************************/
@@ -152,6 +154,12 @@ void _mbUdateTemps()
   mbTemp[1] = ((mrs485RxBuffer[5] & 0x00FF)<<8)|(mrs485RxBuffer[6] & 0x00FF);  // 0.1ºC
   mbTemp[2] = ((mrs485RxBuffer[7] & 0x00FF)<<8)|(mrs485RxBuffer[8] & 0x00FF);  // 0.1ºC
   mbTemp[3] = ((mrs485RxBuffer[9] & 0x00FF)<<8)|(mrs485RxBuffer[10] & 0x00FF); // 0.1ºC
+
+  // Update
+  mbfTemp[0] = ((float)mbTemp[0]/10);
+  mbfTemp[1] = ((float)mbTemp[1]/10);
+  mbfTemp[2] = ((float)mbTemp[2]/10);
+  mbfTemp[3] = ((float)mbTemp[3]/10);
 }
 
 ////////////////////

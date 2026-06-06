@@ -39,6 +39,7 @@ extern int mbRetry;
 
 #define MB_NUM_TEMPS  4
 extern int mbTemp[];
+extern float mbfTemp[];
 
 #endif // _MBRTU_H_
 

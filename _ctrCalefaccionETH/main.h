@@ -26,8 +26,8 @@ extern "C" {
 #define _USE_RS485_                1
 #define _USE_UID_                  1
 #define _USE_TRIAC_                1
-#define _USE_LCD_                  0//1
-#define _USE_PWM_                  1
+#define _USE_LCD_                  1
+#define _USE_PWM_                  0
 
 #if (_USE_ETHERNET_ == 1)
 #define _USE_HTTP_                 1
@@ -48,12 +48,13 @@ extern "C" {
 #define _STATUS_SERIAL_DEBUG_      0
 #define _HTTP_SERIAL_DEBUG_        1
 #define _ETH_SERIAL_DEBUG_         1
+#define _LCD_SERIAL_DEBUG_         0
 #define _MQTT_SERIAL_DEBUG_        1
 #define _NTP_SERIAL_DEBUG_         0
 #define _WD_SERIAL_DEBUG_          0
 #define _TRIAC_SERIAL_DEBUG_       1
 #define _MBRTU_SERIAL_DEBUG_       0
-#define _PWM_SERIAL_DEBUG_         0//1
+#define _PWM_SERIAL_DEBUG_         0
 #endif
 
 #endif // _MAIN_H_

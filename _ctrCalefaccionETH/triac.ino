@@ -23,11 +23,11 @@ float triacZCFrec = 0;
 int triacZCcount = 0;
 int triacZCerror = 0;
 
-int triac1Delay = 0;
+volatile int triac1Delay = 0;
 int triac1Cicle = 50;
-int triac2Delay = 0;
+volatile int triac2Delay = 0;
 int triac2Cicle = 50;
-int triac3Delay = 0;
+volatile int triac3Delay = 0;
 int triac3Cicle = 50;
 
 #if (_TRIAC_PIN_DEBUG_ == 1)
@@ -40,74 +40,79 @@ bool triacZCdebug = false;
 void IRAM_ATTR isrTriac1Timer()
 {
   digitalWrite(PIN_TRIAC1, PIN_TRIAC_ON);
-  delayMicroseconds(10);
+  esp_rom_delay_us(10); // delayMicroseconds(10);
   digitalWrite(PIN_TRIAC1, PIN_TRIAC_OFF);
 }
 
 void IRAM_ATTR isrTriac2Timer()
 {
   digitalWrite(PIN_TRIAC2, PIN_TRIAC_ON);
-  delayMicroseconds(10);
+  esp_rom_delay_us(10); // delayMicroseconds(10);
   digitalWrite(PIN_TRIAC2, PIN_TRIAC_OFF);
 }
 
 void IRAM_ATTR isrTriac3Timer()
 {
   digitalWrite(PIN_TRIAC3, PIN_TRIAC_ON);
-  delayMicroseconds(10);
+  esp_rom_delay_us(10); // delayMicroseconds(10);
   digitalWrite(PIN_TRIAC3, PIN_TRIAC_OFF);
 }
 
 void IRAM_ATTR isrZeroCross()
 {
-  uint32_t periodUs, nowUs = micros();
-
-  #if (_TRIAC_PIN_DEBUG_ == 1)
-  if (triacZCdebug == false)
+  // LEER EL PIN INMEDIATAMENTE: Solo procesamos si el pin está en HIGH
+  // (Si tu pulso es invertido y cae a masa en el cruce por cero, cambia == HIGH por == LOW)
+  if (gpio_get_level(PIN_ZC) == HIGH) 
   {
-    digitalWrite(PIN_DEBUG, PIN_OUT_OFF);
-    triacZCdebug = true;
-  }
-  else
-  {
-    digitalWrite(PIN_DEBUG, PIN_OUT_ON);
-    triacZCdebug = false;
-  }
-  #endif
+    uint32_t periodUs, nowUs = micros();
 
-  // ZC Period
-  periodUs = int (nowUs - triacZCTickUs);
-
-  // Ruido
-  if (periodUs < 10000)
-    triacZCerror++;
-  else
-  {
-    if (TriacCtr[0] == TRIAC_ON)
+    #if (_TRIAC_PIN_DEBUG_ == 1)
+    if (triacZCdebug == false)
     {
-      timerRestart(triac1Timer);
-      // timerAlarm(timer, valor_alarma, autoreload, reload_count)
-      timerAlarm(triac1Timer, triac1Delay, false, 0);
+      digitalWrite(PIN_DEBUG, PIN_OUT_OFF);
+      triacZCdebug = true;
     }
-
-    if (TriacCtr[1] == TRIAC_ON)
+    else
     {
-      timerRestart(triac2Timer);
-      // timerAlarm(timer, valor_alarma, autoreload, reload_count)
-      timerAlarm(triac2Timer, triac2Delay, false, 0);
+      digitalWrite(PIN_DEBUG, PIN_OUT_ON);
+      triacZCdebug = false;
     }
+    #endif
 
-    if (TriacCtr[2] == TRIAC_ON)
+    // ZC Period
+    periodUs = int (nowUs - triacZCTickUs);
+
+    // Ruido
+    if (periodUs < 10000)
+      triacZCerror++;
+    else
     {
-      timerRestart(triac3Timer);
-      // timerAlarm(timer, valor_alarma, autoreload, reload_count)
-      timerAlarm(triac3Timer, triac3Delay, false, 0);
-    }
+      if ((TriacCtr[0] == TRIAC_ON) && (cfgTriacVout[0] < 230))
+      {
+        timerRestart(triac1Timer);
+        // timerAlarm(timer, valor_alarma, autoreload, reload_count)
+        timerAlarm(triac1Timer, triac1Delay, false, 0);
+      }
 
-    triacZCPeriodUs = periodUs;
-    triacZCTickUs = nowUs;
-    triacZCAlarmSec = 0;
-    triacZCcount++;
+      if ((TriacCtr[1] == TRIAC_ON) && (cfgTriacVout[1] < 230))
+      {
+        timerRestart(triac2Timer);
+        // timerAlarm(timer, valor_alarma, autoreload, reload_count)
+        timerAlarm(triac2Timer, triac2Delay, false, 0);
+      }
+
+      if ((TriacCtr[2] == TRIAC_ON) && (cfgTriacVout[2] < 230))
+      {
+        timerRestart(triac3Timer);
+        // timerAlarm(timer, valor_alarma, autoreload, reload_count)
+        timerAlarm(triac3Timer, triac3Delay, false, 0);
+      }
+
+      triacZCPeriodUs = periodUs;
+      triacZCTickUs = nowUs;
+      triacZCAlarmSec = 0;
+      triacZCcount++;
+    }
   }
 }
 
@@ -147,22 +152,27 @@ void _TRIACSetup()
     .mode = GPIO_MODE_INPUT,
     .pull_up_en = GPIO_PULLUP_ENABLE,       // GPIO_PULLUP_DISABLE Tenemos Pull up externo
     .pull_down_en = GPIO_PULLDOWN_DISABLE,  // Tenemos Pull up externo
-    .intr_type = GPIO_INTR_HIGH_LEVEL       // Interrupción en High Level
+    //.intr_type = GPIO_INTR_POSEDGE          // Interrupción en High Level
+    //.intr_type = GPIO_INTR_HIGH_LEVEL     // Interrupción en High Level
+    .intr_type = GPIO_INTR_ANYEDGE          // <--- CAMBIA A ESTO (Cualquier flanco)
   };
   gpio_config(&io_conf);
 
+  /*
   gpio_flex_glitch_filter_config_t filter_config = {
     .clk_src = GLITCH_FILTER_CLK_SRC_DEFAULT,
     .gpio_num = PIN_ZC,
-    .window_width_ns = 1200000,  //10us 
-    .window_thres_ns = 1000000,  //8us
+    //.window_width_ns = 1200000,  //1.2ms 
+    //.window_thres_ns = 1000000,  //0.8ms
+    .window_width_ns = 20000,   // Reduce a 20 microsegundos (antes 1.2ms)
+    .window_thres_ns = 15000,   // Reduce a 15 microsegundos (antes 1.0ms)
   };
 
   gpio_glitch_filter_handle_t filter_handle = NULL;
   if (gpio_new_flex_glitch_filter(&filter_config, &filter_handle) == ESP_OK) {
     gpio_glitch_filter_enable(filter_handle);
   }
-
+  */
   gpio_install_isr_service(0); 
   gpio_isr_handler_add(PIN_ZC, (gpio_isr_t)isrZeroCross, NULL);
 
@@ -184,6 +194,30 @@ void _TRIACSetup()
 ////////////////
 void _TRIACLoop()
 {
+  if (cfgTriacVout[0] >= 230)
+  {
+    if (TriacCtr[0] == TRIAC_ON)
+      digitalWrite(PIN_TRIAC1, PIN_TRIAC_ON);
+    else
+      digitalWrite(PIN_TRIAC1, PIN_TRIAC_OFF);
+  }
+
+  if (cfgTriacVout[1] >= 230)
+  {
+    if (TriacCtr[1] == TRIAC_ON)
+      digitalWrite(PIN_TRIAC2, PIN_TRIAC_ON);
+    else
+      digitalWrite(PIN_TRIAC2, PIN_TRIAC_OFF);
+  }
+
+  if (cfgTriacVout[2] >= 230)
+  {
+    if (TriacCtr[2] == TRIAC_ON)
+      digitalWrite(PIN_TRIAC3, PIN_TRIAC_ON);
+    else
+      digitalWrite(PIN_TRIAC3, PIN_TRIAC_OFF);
+  }
+
   // Check Alarm
   triacZCAlarmSec++;
   if (triacZCAlarmSec > TRIAC_ALARM_ZC_SEC)
@@ -197,8 +231,12 @@ void _TRIACLoop()
   }
   else
   {
-    triacZCFrec = 500000.0 / triacZCPeriodUs;
-
+    if (triacZCPeriodUs > 0) {
+      triacZCFrec = 500000.0 / triacZCPeriodUs;
+    } else {
+      triacZCFrec = 0;
+    }
+    
     #if (_USE_ALARM_ == 1)
     alarmOn[AL_ERROR1] = 0;
     #endif

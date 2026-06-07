@@ -7,7 +7,7 @@ extern "C" {
 
 #define TRIAC_NUMBER        3
 
-#define TRIAC_ALARM_ZC_SEC  15
+#define TRIAC_ALARM_ZC_SEC  2 // 15
 
 #define PIN_TRIAC_OFF       0
 #define PIN_TRIAC_ON        1

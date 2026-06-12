@@ -191,11 +191,11 @@ void _MQTTSend(int itopic)
     str = str + "\"t\":\"";
     str = str + String(timeDay) + "d " + timeOnString;
     str = str + "\",\n";  
-
+    /*
     str = str + "\"ctr\":\"";
     str = str + ctrStateString;
     str = str + "\",\n";
-
+    */
     #if (_USE_MBRTU_ == 1)
     str = str + "\"mer\":\"";
     str = str + String(mbNError) + "-" + String(mbNReply) + "-" + String(mbNRetry);

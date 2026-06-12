@@ -16,6 +16,7 @@ extern int cfgResInyeConsTemp;
 extern int cfgResInyeHystTemp;
 extern int cfgAguaConsTemp;
 extern int cfgAguaHystTemp;
+extern int cfgMaxTemp;
 
 extern int cfgResPrimAlarMin;
 extern int cfgResInyeAlarMin;
@@ -24,11 +25,16 @@ extern int cfgAguaAlarMin;
 #if (_USE_TRIAC_ == 1)
 extern int cfgTriacVout[];
 extern int cfgTriacUse[];
+extern int cfgTriacRedVout;
 #endif
 
 #if (_USE_MBRTU_ == 1)
 extern int cfgTempUse[];
 #endif
+
+extern int cfgAchCont;
+extern int cfgAchSecs;
+extern int cfgAchReset;
 
 #define _ERASE_EEPROM_        0
 #define _READ_EEPROM_         0
@@ -74,19 +80,29 @@ extern int cfgTempUse[];
 #define EEPROM_ADD_RES_PRIM_ALAR_MIN  0xB7
 #define EEPROM_ADD_RES_INYE_ALAR_MIN  0xB8
 #define EEPROM_ADD_AGUA_ALAR_MIN      0xB9
+#define EEPROM_ADD_MAX_TEMP_LO        0xBA
+#define EEPROM_ADD_MAX_TEMP_HI        0xBB
 
-#define EEPROM_ADD_TRIAC1_VOUT        0xBA
-#define EEPROM_ADD_TRIAC2_VOUT        0xBB
-#define EEPROM_ADD_TRIAC3_VOUT        0xBC
+#define EEPROM_ADD_TRIAC1_VOUT        0xBC
+#define EEPROM_ADD_TRIAC2_VOUT        0xBD
+#define EEPROM_ADD_TRIAC3_VOUT        0xBE
+#define EEPROM_ADD_RED_VOUT           0xBF
 
-#define EEPROM_ADD_TRIAC1_USE         0xBD
-#define EEPROM_ADD_TRIAC2_USE         0xBE
-#define EEPROM_ADD_TRIAC3_USE         0xBF
+#define EEPROM_ADD_TRIAC1_USE         0xC0
+#define EEPROM_ADD_TRIAC2_USE         0xC1
+#define EEPROM_ADD_TRIAC3_USE         0xC2
 
-#define EEPROM_ADD_TEMP1_USE          0xC0
-#define EEPROM_ADD_TEMP2_USE          0xC1
-#define EEPROM_ADD_TEMP3_USE          0xC2
-#define EEPROM_ADD_TEMP4_USE          0xC3
+#define EEPROM_ADD_TEMP1_USE          0xC3
+#define EEPROM_ADD_TEMP2_USE          0xC4
+#define EEPROM_ADD_TEMP3_USE          0xC5
+#define EEPROM_ADD_TEMP4_USE          0xC6
+
+#define EEPROM_ADD_ACH_CONT_LO        0xC7
+#define EEPROM_ADD_ACH_CONT_HI        0xC8
+#define EEPROM_ADD_ACH_SEC_LO         0xC9
+#define EEPROM_ADD_ACH_SEC_HI         0xCA
+#define EEPROM_ADD_ACH_RESET_LO       0xCB
+#define EEPROM_ADD_ACH_RESET_HI       0xCC
 
 //#define EEPROM_ADD_MAX              0xFA // 250
 
@@ -112,17 +128,18 @@ extern int cfgTempUse[];
 //#define EEPROM_VAL_MQTT_PSWD
 //#define EEPROM_VAL_BROKER_PORT
 
-#define EEPROM_VAL_LOGIC_INS            1     // Logica Reposo
+#define EEPROM_VAL_LOGIC_INS            0     // Logica Reposo
 #define EEPROM_VAL_LOGIC_OUTS           0     // Logica Reposo
 #define EEPROM_VAL_MBADD1               1
 
-#define EEPROM_VAL_RES_PRIM_INYE_TEMP   70    //º
-#define EEPROM_VAL_RES_PRIM_CONS_TEMP   115   //º
+#define EEPROM_VAL_RES_PRIM_INYE_TEMP   30  // 70    //º
+#define EEPROM_VAL_RES_PRIM_CONS_TEMP   45  // 115   //º
 #define EEPROM_VAL_RES_PRIM_HYST_TEMP   1     //º
 #define EEPROM_VAL_RES_INYE_CONS_TEMP   115   //º
 #define EEPROM_VAL_RES_PRIM_HYST_TEMP   1     //º
 #define EEPROM_VAL_AGUA_CONS_TEMP       60    //º
 #define EEPROM_VAL_AGUA_HYST_TEMP       5     //º
+#define EEPROM_VAL_MAX_TEMP             1258  //.ºC
 
 #define EEPROM_VAL_RES_PRIM_ALAR_MIN    30
 #define EEPROM_VAL_RES_INYE_ALAR_MIN    30
@@ -130,7 +147,8 @@ extern int cfgTempUse[];
 
 #define EEPROM_VAL_TRIAC1_VOUT          110 // Vac
 #define EEPROM_VAL_TRIAC2_VOUT          110 // Vac
-#define EEPROM_VAL_TRIAC3_VOUT          230 // Vac
+#define EEPROM_VAL_TRIAC3_VOUT          240 // Vac
+#define EEPROM_VAL_RED_VOUT             240 // Vac
 
 #define EEPROM_VAL_TRIAC1_USE           1   // 1-> RES_PRIN_TRC
 #define EEPROM_VAL_TRIAC2_USE           2   // 2-> RES_INYE_TRC
@@ -140,6 +158,10 @@ extern int cfgTempUse[];
 #define EEPROM_VAL_TEMP2_USE            2   // 2-> RES_INYE_TEMP
 #define EEPROM_VAL_TEMP3_USE            3   // 3-> BOM_AGUA_TEMP
 #define EEPROM_VAL_TEMP4_USE            0   // 0-> Not used
+
+#define EEPROM_VAL_ACH_CONT             0
+#define EEPROM_VAL_ACH_SEC              30
+#define EEPROM_VAL_ACH_RESET            10
 
 #endif // _E2PROM_H_
 

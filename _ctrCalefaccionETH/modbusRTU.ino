@@ -155,6 +155,29 @@ void _mbUdateTemps()
   mbTemp[2] = ((mrs485RxBuffer[7] & 0x00FF)<<8)|(mrs485RxBuffer[8] & 0x00FF);  // 0.1ºC
   mbTemp[3] = ((mrs485RxBuffer[9] & 0x00FF)<<8)|(mrs485RxBuffer[10] & 0x00FF); // 0.1ºC
 
+  // Alarm
+  #if (_USE_ALARM_ == 1)
+  if (mbTemp[0] >= cfgMaxTemp)
+    alarmOn[AL_ERROR4] = 1;
+  else
+    alarmOn[AL_ERROR4] = 0;
+  
+  if (mbTemp[1] >= cfgMaxTemp)
+    alarmOn[AL_ERROR5] = 1;
+  else
+    alarmOn[AL_ERROR5] = 0;
+
+  if (mbTemp[2] >= cfgMaxTemp)
+    alarmOn[AL_ERROR6] = 1;
+  else
+    alarmOn[AL_ERROR6] = 0;
+
+  if (mbTemp[3] >= cfgMaxTemp)
+    alarmOn[AL_ERROR7] = 1;
+  else
+    alarmOn[AL_ERROR7] = 0;
+  #endif
+
   // Update
   mbfTemp[0] = ((float)mbTemp[0]/10);
   mbfTemp[1] = ((float)mbTemp[1]/10);

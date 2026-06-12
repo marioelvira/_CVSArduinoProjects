@@ -62,8 +62,8 @@ void IRAM_ATTR isrZeroCross()
 {
   // LEER EL PIN INMEDIATAMENTE: Solo procesamos si el pin está en HIGH
   // (Si tu pulso es invertido y cae a masa en el cruce por cero, cambia == HIGH por == LOW)
-  if (gpio_get_level(PIN_ZC) == HIGH) 
-  {
+  //if (gpio_get_level(PIN_ZC) == HIGH) 
+  //{
     uint32_t periodUs, nowUs = micros();
 
     #if (_TRIAC_PIN_DEBUG_ == 1)
@@ -87,21 +87,21 @@ void IRAM_ATTR isrZeroCross()
       triacZCerror++;
     else
     {
-      if ((TriacCtr[0] == TRIAC_ON) && (cfgTriacVout[0] < 230))
+      if ((TriacCtr[0] == TRIAC_ON) && (cfgTriacVout[0] < cfgTriacRedVout))
       {
         timerRestart(triac1Timer);
         // timerAlarm(timer, valor_alarma, autoreload, reload_count)
         timerAlarm(triac1Timer, triac1Delay, false, 0);
       }
 
-      if ((TriacCtr[1] == TRIAC_ON) && (cfgTriacVout[1] < 230))
+      if ((TriacCtr[1] == TRIAC_ON) && (cfgTriacVout[1] < cfgTriacRedVout))
       {
         timerRestart(triac2Timer);
         // timerAlarm(timer, valor_alarma, autoreload, reload_count)
         timerAlarm(triac2Timer, triac2Delay, false, 0);
       }
 
-      if ((TriacCtr[2] == TRIAC_ON) && (cfgTriacVout[2] < 230))
+      if ((TriacCtr[2] == TRIAC_ON) && (cfgTriacVout[2] < cfgTriacRedVout))
       {
         timerRestart(triac3Timer);
         // timerAlarm(timer, valor_alarma, autoreload, reload_count)
@@ -113,7 +113,7 @@ void IRAM_ATTR isrZeroCross()
       triacZCAlarmSec = 0;
       triacZCcount++;
     }
-  }
+  //}
 }
 
 //////////////////
@@ -194,7 +194,7 @@ void _TRIACSetup()
 ////////////////
 void _TRIACLoop()
 {
-  if (cfgTriacVout[0] >= 230)
+  if (cfgTriacVout[0] >= cfgTriacRedVout)
   {
     if (TriacCtr[0] == TRIAC_ON)
       digitalWrite(PIN_TRIAC1, PIN_TRIAC_ON);
@@ -202,7 +202,7 @@ void _TRIACLoop()
       digitalWrite(PIN_TRIAC1, PIN_TRIAC_OFF);
   }
 
-  if (cfgTriacVout[1] >= 230)
+  if (cfgTriacVout[1] >= cfgTriacRedVout)
   {
     if (TriacCtr[1] == TRIAC_ON)
       digitalWrite(PIN_TRIAC2, PIN_TRIAC_ON);
@@ -210,7 +210,7 @@ void _TRIACLoop()
       digitalWrite(PIN_TRIAC2, PIN_TRIAC_OFF);
   }
 
-  if (cfgTriacVout[2] >= 230)
+  if (cfgTriacVout[2] >= cfgTriacRedVout)
   {
     if (TriacCtr[2] == TRIAC_ON)
       digitalWrite(PIN_TRIAC3, PIN_TRIAC_ON);
@@ -245,15 +245,15 @@ void _TRIACLoop()
 
 void _TRIACUpdate()
 {
-  triac1Cicle = (int)(cfgTriacVout[0]*100)/230;
-  triac2Cicle = (int)(cfgTriacVout[1]*100)/230;
-  triac3Cicle = (int)(cfgTriacVout[2]*100)/230;
+  triac1Cicle = (int)(cfgTriacVout[0]*100)/cfgTriacRedVout;
+  triac2Cicle = (int)(cfgTriacVout[1]*100)/cfgTriacRedVout;
+  triac3Cicle = (int)(cfgTriacVout[2]*100)/cfgTriacRedVout;
 
   // En v3.0, el tiempo se maneja según la frecuencia configurada en timerBegin
   // Si configuramos 1,000,000 Hz, 1 tick = 1 microsegundo.
-  triac1Delay = map(triac1Cicle, 0, 100, 8000, 100);
-  triac2Delay = map(triac2Cicle, 0, 100, 8000, 100);
-  triac3Delay = map(triac3Cicle, 0, 100, 8000, 100);
+  triac1Delay = map(triac1Cicle, 0, 100, 9500, 100);
+  triac2Delay = map(triac2Cicle, 0, 100, 9500, 100);
+  triac3Delay = map(triac3Cicle, 0, 100, 9500, 100);
 
   #if (_TRIAC_SERIAL_DEBUG_ == 1)
   Serial.print("triac1Cicle: ");     Serial.println (triac1Cicle);

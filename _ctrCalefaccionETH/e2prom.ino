@@ -23,6 +23,7 @@ int cfgResInyeConsTemp;
 int cfgResInyeHystTemp;
 int cfgAguaConsTemp;
 int cfgAguaHystTemp;
+int cfgMaxTemp;
 
 int cfgResPrimAlarMin;
 int cfgResInyeAlarMin;
@@ -31,11 +32,16 @@ int cfgAguaAlarMin;
 #if (_USE_TRIAC_ == 1)
 int cfgTriacVout[3];
 int cfgTriacUse[3];
+int cfgTriacRedVout;
 #endif
 
 #if (_USE_MBRTU_ == 1)
 int cfgTempUse[4];
 #endif
+
+int cfgAchCont;
+int cfgAchSecs;
+int cfgAchReset;
 
 void _ConfigSetup(void)
 {
@@ -104,11 +110,13 @@ void _printCtrCONFIG(void)
   Serial.print("cfgResPrimAlarMin: ");  Serial.println (cfgResPrimAlarMin);
   Serial.print("cfgResInyeAlarMin: ");  Serial.println (cfgResInyeAlarMin);
   Serial.print("cfgAguaAlarMin: ");     Serial.println (cfgAguaAlarMin);
+  Serial.print("cfgMaxTemp: ");         Serial.println (cfgMaxTemp);
 
   #if (_USE_TRIAC_ == 1)
   Serial.print("cfgTriacVout[0]: ");    Serial.println (cfgTriacVout[0]);
   Serial.print("cfgTriacVout[1]: ");    Serial.println (cfgTriacVout[1]);
   Serial.print("cfgTriacVout[2]: ");    Serial.println (cfgTriacVout[2]);
+  Serial.print("cfgTriacRedVout: ");    Serial.println (cfgTriacRedVout);
 
   Serial.print("cfgTriacUse[0]: ");     Serial.println (cfgTriacUse[0]);
   Serial.print("cfgTriacUse[1]: ");     Serial.println (cfgTriacUse[1]);
@@ -121,6 +129,10 @@ void _printCtrCONFIG(void)
   Serial.print("cfgTempUse[2]: ");      Serial.println (cfgTempUse[2]);
   Serial.print("cfgTempUse[3]: ");      Serial.println (cfgTempUse[3]);
   #endif
+
+  Serial.print("cfgAchCont: ");         Serial.println (cfgAchCont);
+  Serial.print("cfgAchSecs: ");         Serial.println (cfgAchSecs);
+  Serial.print("cfgAchReset: ");        Serial.println (cfgAchReset);
 
   delay(1000);  // 100ms
 }
@@ -212,12 +224,16 @@ void _readCONFIG (void)
     EEPROM.write(EEPROM_ADD_RES_PRIM_ALAR_MIN,  EEPROM_VAL_RES_PRIM_ALAR_MIN);
     EEPROM.write(EEPROM_ADD_RES_INYE_ALAR_MIN,  EEPROM_VAL_RES_INYE_ALAR_MIN);
     EEPROM.write(EEPROM_ADD_AGUA_ALAR_MIN,      EEPROM_VAL_AGUA_ALAR_MIN);
+    eeprom_value_lo = EEPROM_VAL_MAX_TEMP & 0x00FF;
+    EEPROM.write(EEPROM_ADD_MAX_TEMP_LO,        (byte)eeprom_value_lo);
+    eeprom_value_hi = (EEPROM_VAL_MAX_TEMP & 0xFF00)>>8;
+    EEPROM.write(EEPROM_ADD_MAX_TEMP_HI,        (byte)eeprom_value_hi);
 
     #if (_USE_TRIAC_ == 1)
     EEPROM.write(EEPROM_ADD_TRIAC1_VOUT,        EEPROM_VAL_TRIAC1_VOUT);
     EEPROM.write(EEPROM_ADD_TRIAC2_VOUT,        EEPROM_VAL_TRIAC2_VOUT);
     EEPROM.write(EEPROM_ADD_TRIAC3_VOUT,        EEPROM_VAL_TRIAC3_VOUT);
-
+    EEPROM.write(EEPROM_ADD_RED_VOUT,           EEPROM_VAL_RED_VOUT);
     EEPROM.write(EEPROM_ADD_TRIAC1_USE,         EEPROM_VAL_TRIAC1_USE);
     EEPROM.write(EEPROM_ADD_TRIAC2_USE,         EEPROM_VAL_TRIAC2_USE);
     EEPROM.write(EEPROM_ADD_TRIAC3_USE,         EEPROM_VAL_TRIAC3_USE);
@@ -229,6 +245,19 @@ void _readCONFIG (void)
     EEPROM.write(EEPROM_ADD_TEMP3_USE,          EEPROM_VAL_TEMP3_USE);
     EEPROM.write(EEPROM_ADD_TEMP4_USE,          EEPROM_VAL_TEMP4_USE);
     #endif
+
+    eeprom_value_lo = EEPROM_VAL_ACH_CONT & 0x00FF;
+    EEPROM.write(EEPROM_ADD_ACH_CONT_LO,        (byte)eeprom_value_lo);
+    eeprom_value_hi = (EEPROM_VAL_ACH_CONT & 0xFF00)>>8;
+    EEPROM.write(EEPROM_ADD_ACH_CONT_HI,        (byte)eeprom_value_hi);
+    eeprom_value_lo = EEPROM_VAL_ACH_SEC & 0x00FF;
+    EEPROM.write(EEPROM_ADD_ACH_SEC_LO,         (byte)eeprom_value_lo);
+    eeprom_value_hi = (EEPROM_VAL_ACH_SEC & 0xFF00)>>8;
+    EEPROM.write(EEPROM_ADD_ACH_SEC_HI,         (byte)eeprom_value_hi);
+    eeprom_value_lo = EEPROM_VAL_ACH_RESET & 0x00FF;
+    EEPROM.write(EEPROM_ADD_ACH_RESET_LO,       (byte)eeprom_value_lo);
+    eeprom_value_hi = (EEPROM_VAL_ACH_RESET & 0xFF00)>>8;
+    EEPROM.write(EEPROM_ADD_ACH_RESET_HI,       (byte)eeprom_value_hi);    
 
     EEPROM.commit();    // ESPXX Store data to EEPROM
   }
@@ -261,11 +290,17 @@ void _ram2eepromCONFIG (void)
   EEPROM.write(EEPROM_ADD_RES_PRIM_ALAR_MIN,  (byte)cfgResPrimAlarMin);
   EEPROM.write(EEPROM_ADD_RES_INYE_ALAR_MIN,  (byte)cfgResInyeAlarMin);
   EEPROM.write(EEPROM_ADD_AGUA_ALAR_MIN,      (byte)cfgAguaAlarMin);
+  eeprom_value_lo = cfgMaxTemp & 0x00FF;
+  EEPROM.write(EEPROM_ADD_MAX_TEMP_LO,        (byte)eeprom_value_lo);
+  eeprom_value_hi = (cfgMaxTemp & 0xFF00)>>8;
+  EEPROM.write(EEPROM_ADD_MAX_TEMP_HI,        (byte)eeprom_value_hi);
 
   #if (_USE_TRIAC_ == 1)
   EEPROM.write(EEPROM_ADD_TRIAC1_VOUT,      (byte)cfgTriacVout[0]);
   EEPROM.write(EEPROM_ADD_TRIAC2_VOUT,      (byte)cfgTriacVout[1]);
   EEPROM.write(EEPROM_ADD_TRIAC3_VOUT,      (byte)cfgTriacVout[2]);
+
+  EEPROM.write(EEPROM_ADD_RED_VOUT,         (byte)cfgTriacRedVout);
 
   EEPROM.write(EEPROM_ADD_TRIAC1_USE,       (byte)cfgTriacUse[0]);
   EEPROM.write(EEPROM_ADD_TRIAC2_USE,       (byte)cfgTriacUse[1]);
@@ -278,6 +313,19 @@ void _ram2eepromCONFIG (void)
   EEPROM.write(EEPROM_ADD_TEMP3_USE,        (byte)cfgTempUse[2]);
   EEPROM.write(EEPROM_ADD_TEMP4_USE,        (byte)cfgTempUse[3]);
   #endif
+
+  eeprom_value_lo = cfgAchCont & 0x00FF;
+  EEPROM.write(EEPROM_ADD_ACH_CONT_LO,        (byte)eeprom_value_lo);
+  eeprom_value_hi = (cfgAchCont & 0xFF00)>>8;
+  EEPROM.write(EEPROM_ADD_ACH_CONT_HI,        (byte)eeprom_value_hi);
+  eeprom_value_lo = cfgAchSecs & 0x00FF;
+  EEPROM.write(EEPROM_ADD_ACH_SEC_LO,         (byte)eeprom_value_lo);
+  eeprom_value_hi = (cfgAchSecs & 0xFF00)>>8;
+  EEPROM.write(EEPROM_ADD_ACH_SEC_HI,         (byte)eeprom_value_hi);
+  eeprom_value_lo = cfgAchReset & 0x00FF;
+  EEPROM.write(EEPROM_ADD_ACH_RESET_LO,       (byte)eeprom_value_lo);
+  eeprom_value_hi = (cfgAchReset & 0xFF00)>>8;
+  EEPROM.write(EEPROM_ADD_ACH_RESET_HI,       (byte)eeprom_value_hi);   
 
   EEPROM.commit();    //Store data to EEPROM
 
@@ -348,11 +396,16 @@ void _eeprom2ramCONFIG (void)
   cfgResPrimAlarMin   = (int)EEPROM.read(EEPROM_ADD_RES_PRIM_ALAR_MIN);
   cfgResInyeAlarMin   = (int)EEPROM.read(EEPROM_ADD_RES_INYE_ALAR_MIN);
   cfgAguaAlarMin      = (int)EEPROM.read(EEPROM_ADD_AGUA_ALAR_MIN);
+  eeprom_value_hi     = (int)EEPROM.read(EEPROM_ADD_MAX_TEMP_HI);
+  eeprom_value_lo     = (int)EEPROM.read(EEPROM_ADD_MAX_TEMP_LO);   
+  cfgMaxTemp           = (int)((eeprom_value_hi & 0x00FF)<<8)|(eeprom_value_lo & 0x00FF);
 
   #if (_USE_TRIAC_ == 1)
   cfgTriacVout[0] = (int)EEPROM.read(EEPROM_ADD_TRIAC1_VOUT);
   cfgTriacVout[1] = (int)EEPROM.read(EEPROM_ADD_TRIAC2_VOUT);
   cfgTriacVout[2] = (int)EEPROM.read(EEPROM_ADD_TRIAC3_VOUT);
+
+  cfgTriacRedVout = (int)EEPROM.read(EEPROM_ADD_RED_VOUT);
 
   cfgTriacUse[0] = (int)EEPROM.read(EEPROM_ADD_TRIAC1_USE);
   cfgTriacUse[1] = (int)EEPROM.read(EEPROM_ADD_TRIAC2_USE);
@@ -366,6 +419,16 @@ void _eeprom2ramCONFIG (void)
   cfgTempUse[3] = (int)EEPROM.read(EEPROM_ADD_TEMP4_USE);
   #endif
   
+  eeprom_value_hi = (int)EEPROM.read(EEPROM_ADD_ACH_CONT_HI);
+  eeprom_value_lo = (int)EEPROM.read(EEPROM_ADD_ACH_CONT_LO);  
+  cfgAchCont  = (int)((eeprom_value_hi & 0x00FF)<<8)|(eeprom_value_lo & 0x00FF);
+  eeprom_value_hi = (int)EEPROM.read(EEPROM_ADD_ACH_SEC_HI);
+  eeprom_value_lo = (int)EEPROM.read(EEPROM_ADD_ACH_SEC_LO);  
+  cfgAchSecs  = (int)((eeprom_value_hi & 0x00FF)<<8)|(eeprom_value_lo & 0x00FF);
+  eeprom_value_hi = (int)EEPROM.read(EEPROM_ADD_ACH_RESET_HI);
+  eeprom_value_lo = (int)EEPROM.read(EEPROM_ADD_ACH_RESET_LO);  
+  cfgAchReset = (int)((eeprom_value_hi & 0x00FF)<<8)|(eeprom_value_lo & 0x00FF);
+
   #if (_EEPROM_SERIAL_DEBUG_ == 1)
   _printNetworkCONFIG();
   _printCtrCONFIG();

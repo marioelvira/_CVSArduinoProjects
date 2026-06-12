@@ -6,14 +6,9 @@ extern "C" {
 #define _CTR_H_
 
 extern int ctrMode;
-extern String ctrStateString;
+//extern String ctrStateString;
 
 extern int ctrState;
-extern int ctrInState;
-extern int ctrOutState;
-
-extern int ctrTempPrin;
-extern int ctrTemp;
 
 /*      
         Notas Alberto
@@ -133,28 +128,42 @@ extern int ctrTemp;
 */
 
 // Modos de Operación
-#define MODE_TEST   1
-#define MODE_AUTO   0
+#define MODE_TEST         1
+#define MODE_AUTO         0
 
-#define IN_THERMO_OFF   0
-#define IN_THERMO_ON    1
+#define CTR_RES_STANDBY   0
+#define CTR_RES_START     1
+#define CTR_RES_STATE2    2
+#define CTR_RES_STATE3    3
+#define CTR_RES_STOP      4
+
+#define CTR_AGUA_STANDBY  0
+#define CTR_AGUA_START    1
+#define CTR_AGUA_STATE2   2
+#define CTR_AGUA_STATE3   3
+#define CTR_AGUA_STOP     4
+
+#define CTR_THERMO_OFF    0
+#define CTR_THERMO_ON     1
 
 // OUTs Index
-#define AGUA_OUT      3
-#define ACHIQUE_OUT   4
-#define QUEMADOR_OUT  5
+#define AGUA_OUT        3
+#define ACHIQUE_OUT     4
+#define QUEMADOR_OUT    5
 
 // TRIAC Index
-#define RES_PRIN_TRC  0
-#define RES_INYE_TRC  1
-#define RES_AUX_TRC   2
+#define RES_PRIN_TRC    0
+#define RES_INYE_TRC    1
+#define RES_AUX_TRC     2
 
 // INs Index
-#define QUEMADOR_IN   2
-#define TERMOSTATO_IN 3
+#define QUEMADOR_IN     2
+#define TERMOSTATO_IN   3
 
 // TEMPs Index
-// Configuración
+#define TEMP_RES_PRIM   0
+#define TEMP_RES_INYE   1
+#define TEMP_AGUA       2
 
 #endif // _CTR_H_
 

@@ -16,15 +16,17 @@ extern "C" {
 #define AL_ERROR3      3
 #define AL_ERROR4      4
 #define AL_ERROR5      5
+#define AL_ERROR6      6
+#define AL_ERROR7      7
 
 #define AL_ERROR0_STR   "Error Com Temps"
 #define AL_ERROR1_STR   "Error Frecuencia"
-#define AL_ERROR2_STR   "ALARM ERROR 2"
-#define AL_ERROR3_STR   "ALARM ERROR 3"
-#define AL_ERROR4_STR   "ALARM ERROR 4"
-#define AL_ERROR5_STR   "ALARM ERROR 5"
-#define AL_ERROR6_STR   "ALARM ERROR 6"
-#define AL_ERROR7_STR   "ALARM ERROR 7"
+#define AL_ERROR2_STR   "ALARM ERROR 6"
+#define AL_ERROR3_STR   "ALARM ERROR 7"
+#define AL_ERROR4_STR   "Sonda Temp 1"
+#define AL_ERROR5_STR   "Sonda Temp 2"
+#define AL_ERROR6_STR   "Sonda Temp 3"
+#define AL_ERROR7_STR   "Sonda Temp 4"
 
 #define STATE_AL_OFF          0
 #define STATE_AL_ON           1
